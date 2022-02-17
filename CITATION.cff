@@ -1,0 +1,32 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  Neural Implicit Flow: a mesh-agnostic
+  dimensionality reduction paradigm of
+  spatio-temporal data
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Shaowu
+    family-names: Pan
+    email: shawnpan@uw.edu
+    affiliation: 'University of Washington, Seattle'
+    orcid: 'https://orcid.org/0000-0002-2462-362X'
+  - given-names: Steven
+    family-names: Brunton
+    email: sbrunton@uw.edu
+    affiliation: 'University of Washington, Seattle'
+  - given-names: J. Nathan
+    family-names: Kutz
+    email: kutz@uw.edu
+    affiliation: 'University of Washington, Seattle'
+identifiers:
+  - type: doi
+    value: ???
+repository-code: 'https://github.com/pswpswpsw/nif'
+url: '???'
+license: LGPL-2.1

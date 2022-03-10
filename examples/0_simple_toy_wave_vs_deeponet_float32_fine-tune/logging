@@ -1,0 +1,138 @@
+There are non-GPU devices in `tf.distribute.Strategy`, not using nccl allreduce.
+Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:CPU:0',)
+Model failed to serialize as JSON. Ignoring... Layer MLP_SimpleShortCut has arguments in `__init__` and therefore must override `get_config`.
+Epoch      0: avg.loss pe = 1.002e+00, 1718 points/sec, time elapsed = 0.001 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_0/assets
+Model failed to serialize as JSON. Ignoring... Layer MLP_SimpleShortCut has arguments in `__init__` and therefore must override `get_config`.
+Epoch      0: avg.loss pe = 1.017e+00, 3055 points/sec, time elapsed = 0.000 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_0/assets
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./latent_model/assets
+Model failed to serialize as JSON. Ignoring... Layer MLP_SimpleShortCut has arguments in `__init__` and therefore must override `get_config`.
+Epoch      0: avg.loss pe = 1.002e+00, 3087 points/sec, time elapsed = 0.000 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_0/assets
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./latent_model/assets
+Model failed to serialize as JSON. Ignoring... Layer MLP_SimpleShortCut has arguments in `__init__` and therefore must override `get_config`.
+Epoch      0: avg.loss pe = 1.000e+00, 3069 points/sec, time elapsed = 0.000 hours
+Found untraced functions such as dense_1_layer_call_fn, dense_1_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_fn, dense_1_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_0/assets
+Found untraced functions such as dense_1_layer_call_fn, dense_1_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_fn, dense_1_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./latent_model_100/assets
+Model failed to serialize as JSON. Ignoring... Layer MLP_SimpleShortCut has arguments in `__init__` and therefore must override `get_config`.
+Epoch      0: avg.loss pe = 9.998e-01, 17163 points/sec, time elapsed = 0.000 hours
+Found untraced functions such as dense_1_layer_call_fn, dense_1_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_fn, dense_1_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_0/assets
+Found untraced functions such as dense_1_layer_call_fn, dense_1_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_fn, dense_1_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./latent_model_500/assets
+Model failed to serialize as JSON. Ignoring... Layer MLP_SimpleShortCut has arguments in `__init__` and therefore must override `get_config`.
+Epoch      0: avg.loss pe = 1.010e+00, 3303 points/sec, time elapsed = 0.000 hours
+Found untraced functions such as dense_1_layer_call_fn, dense_1_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_fn, dense_1_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_0/assets
+Found untraced functions such as dense_1_layer_call_fn, dense_1_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_fn, dense_1_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./latent_model_100/assets
+Assets written to: ./latent_to_p_100/assets
+Model failed to serialize as JSON. Ignoring... Layer MLP_SimpleShortCut has arguments in `__init__` and therefore must override `get_config`.
+Epoch      0: avg.loss pe = 9.998e-01, 18620 points/sec, time elapsed = 0.000 hours
+Found untraced functions such as dense_1_layer_call_fn, dense_1_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_fn, dense_1_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_0/assets
+Found untraced functions such as dense_1_layer_call_fn, dense_1_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_fn, dense_1_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./latent_model_500/assets
+Assets written to: ./latent_to_p_500/assets
+Model failed to serialize as JSON. Ignoring... Layer MLP_SimpleShortCut has arguments in `__init__` and therefore must override `get_config`.
+Epoch      0: avg.loss pe = 1.025e+00, 3117 points/sec, time elapsed = 0.000 hours
+Found untraced functions such as dense_1_layer_call_fn, dense_1_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_fn, dense_1_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_0/assets
+Found untraced functions such as dense_1_layer_call_fn, dense_1_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_fn, dense_1_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./latent_model_100/assets
+Assets written to: ./latent_to_p_100/assets
+Model failed to serialize as JSON. Ignoring... Layer MLP_SimpleShortCut has arguments in `__init__` and therefore must override `get_config`.
+Epoch      0: avg.loss pe = 1.008e+00, 3729 points/sec, time elapsed = 0.000 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_0/assets
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./latent_model_100/assets
+Assets written to: ./latent_to_p_100/assets
+AutoGraph could not transform <function function_factory.<locals>.assign_new_model_parameters at 0x7f9499b13f80> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: module 'gast' has no attribute 'Index'
+To silence this warning, decorate the function with @tf.autograph.experimental.do_not_convert
+Model failed to serialize as JSON. Ignoring... Layer MLP_SimpleShortCut has arguments in `__init__` and therefore must override `get_config`.
+Epoch      0: avg.loss pe = 1.006e+00, 3749 points/sec, time elapsed = 0.000 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_0/assets
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./latent_model_100/assets
+Assets written to: ./latent_to_p_100/assets
+Model failed to serialize as JSON. Ignoring... Layer MLP_SimpleShortCut has arguments in `__init__` and therefore must override `get_config`.
+Epoch      0: avg.loss pe = 1.006e+00, 2933 points/sec, time elapsed = 0.000 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_0/assets
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./latent_model_100/assets
+Assets written to: ./latent_to_p_100/assets
+AutoGraph could not transform <function function_factory.<locals>.assign_new_model_parameters at 0x7ff062667f80> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: module 'gast' has no attribute 'Index'
+To silence this warning, decorate the function with @tf.autograph.experimental.do_not_convert
+Model failed to serialize as JSON. Ignoring... Layer MLP_SimpleShortCut has arguments in `__init__` and therefore must override `get_config`.
+Epoch      0: avg.loss pe = 1.007e+00, 2272 points/sec, time elapsed = 0.001 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_0/assets
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./latent_model_100/assets
+Assets written to: ./latent_to_p_100/assets
+Model failed to serialize as JSON. Ignoring... Layer MLP_SimpleShortCut has arguments in `__init__` and therefore must override `get_config`.
+Epoch      0: avg.loss pe = 1.001e+00, 3583 points/sec, time elapsed = 0.000 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_0/assets
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./latent_model_100/assets
+Assets written to: ./latent_to_p_100/assets
+AutoGraph could not transform <function function_factory.<locals>.assign_new_model_parameters at 0x7fb1e688c4d0> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: module 'gast' has no attribute 'Index'
+To silence this warning, decorate the function with @tf.autograph.experimental.do_not_convert
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./latent_model_500/assets
+Assets written to: ./latent_to_p_500/assets
+Model failed to serialize as JSON. Ignoring... Layer MLP_SimpleShortCut has arguments in `__init__` and therefore must override `get_config`.
+Epoch      0: avg.loss pe = 1.013e+00, 1342 points/sec, time elapsed = 0.000 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./test/assets
+Model failed to serialize as JSON. Ignoring... Layer MLP_SimpleShortCut has arguments in `__init__` and therefore must override `get_config`.
+Epoch      0: avg.loss pe = 1.004e+00, 1358 points/sec, time elapsed = 0.000 hours
+Model failed to serialize as JSON. Ignoring... Layer MLP_SimpleShortCut has arguments in `__init__` and therefore must override `get_config`.
+Epoch      0: avg.loss pe = 1.002e+00, 947 points/sec, time elapsed = 0.000 hours
+Model failed to serialize as JSON. Ignoring... Layer MLP_SimpleShortCut has arguments in `__init__` and therefore must override `get_config`.
+Epoch      0: avg.loss pe = 1.002e+00, 952 points/sec, time elapsed = 0.000 hours

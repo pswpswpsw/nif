@@ -1,0 +1,30 @@
+#!/bin/bash
+#SBATCH -N 1
+#SBATCH -p GPU-shared
+#SBATCH -t 48:00:00
+#SBATCH --gres=gpu:1
+#type 'man sbatch' for more information and options
+#this job will ask for 1 full GPU node(8 V100 GPUs) for 5 hours
+#this job would potentially charge 40 GPU SUs
+#echo commands to stdout
+# set -x
+#
+#
+#
+#
+#
+#
+# module load AI/anaconda3-tf2.2020.11
+# cd /ocean/projects/cis210061p/span/NIF/NDF_NUT_1
+
+# cd /ocean/projects/cis210061p/span/NIF/test_gpu/4gpu
+#run pre-compiled program which is already in your project space
+#may want to load some particular CUDA module
+
+module load AI/anaconda3-tf2.2020.11
+conda activate tf2
+
+# python train_datafit_surrogate.py --TRAIN_DATA ../tw_train.npz --NETWORK_TYPE DEEPONET --RANK 1 --N_S 30 --N_T 30 --ACT swish --L_R 0.001 --BATCH_SIZE 256 --EPOCH 120001
+
+python simple_toy_waves_using_nif_package.py
+

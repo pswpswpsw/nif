@@ -1,0 +1,338 @@
+Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+Reduce to /job:localhost/replica:0/task:0/device:CPU:0 then broadcast to ('/job:localhost/replica:0/task:0/device:CPU:0',).
+Reduce to /job:localhost/replica:0/task:0/device:CPU:0 then broadcast to ('/job:localhost/replica:0/task:0/device:CPU:0',).
+Reduce to /job:localhost/replica:0/task:0/device:CPU:0 then broadcast to ('/job:localhost/replica:0/task:0/device:CPU:0',).
+Reduce to /job:localhost/replica:0/task:0/device:CPU:0 then broadcast to ('/job:localhost/replica:0/task:0/device:CPU:0',).
+Model failed to serialize as JSON. Ignoring... Layer MLP_SimpleShortCut has arguments in `__init__` and therefore must override `get_config`.
+Reduce to /job:localhost/replica:0/task:0/device:CPU:0 then broadcast to ('/job:localhost/replica:0/task:0/device:CPU:0',).
+Reduce to /job:localhost/replica:0/task:0/device:CPU:0 then broadcast to ('/job:localhost/replica:0/task:0/device:CPU:0',).
+Reduce to /job:localhost/replica:0/task:0/device:CPU:0 then broadcast to ('/job:localhost/replica:0/task:0/device:CPU:0',).
+Reduce to /job:localhost/replica:0/task:0/device:CPU:0 then broadcast to ('/job:localhost/replica:0/task:0/device:CPU:0',).
+Epoch      0: avg.loss pe = 1.017e+00, 5433 points/sec, time elapsed = 0.001 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Reduce to /job:localhost/replica:0/task:0/device:CPU:0 then broadcast to ('/job:localhost/replica:0/task:0/device:CPU:0',).
+Reduce to /job:localhost/replica:0/task:0/device:CPU:0 then broadcast to ('/job:localhost/replica:0/task:0/device:CPU:0',).
+Assets written to: ./ckpt_0/assets
+Epoch    500: avg.loss pe = 9.998e-01, 1152682 points/sec, time elapsed = 0.009 hours
+Epoch   1000: avg.loss pe = 9.997e-01, 1087041 points/sec, time elapsed = 0.016 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_1000/assets
+Epoch   1500: avg.loss pe = 9.966e-01, 1155259 points/sec, time elapsed = 0.023 hours
+Epoch   2000: avg.loss pe = 9.305e-01, 1136366 points/sec, time elapsed = 0.029 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_2000/assets
+Epoch   2500: avg.loss pe = 8.903e-01, 1106772 points/sec, time elapsed = 0.036 hours
+Epoch   3000: avg.loss pe = 7.843e-01, 1150020 points/sec, time elapsed = 0.043 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_3000/assets
+Epoch   3500: avg.loss pe = 6.209e-01, 1100198 points/sec, time elapsed = 0.055 hours
+Epoch   4000: avg.loss pe = 5.619e-01, 1147677 points/sec, time elapsed = 0.063 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_4000/assets
+Epoch   4500: avg.loss pe = 5.561e-01, 1137344 points/sec, time elapsed = 0.076 hours
+Epoch   5000: avg.loss pe = 5.134e-01, 1115087 points/sec, time elapsed = 0.084 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_5000/assets
+Epoch   5500: avg.loss pe = 4.811e-01, 1082571 points/sec, time elapsed = 0.093 hours
+Epoch   6000: avg.loss pe = 4.981e-01, 1070780 points/sec, time elapsed = 0.101 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_6000/assets
+Epoch   6500: avg.loss pe = 4.899e-01, 1053381 points/sec, time elapsed = 0.111 hours
+Epoch   7000: avg.loss pe = 4.240e-01, 1101467 points/sec, time elapsed = 0.119 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_7000/assets
+Epoch   7500: avg.loss pe = 3.998e-01, 1090889 points/sec, time elapsed = 0.129 hours
+Epoch   8000: avg.loss pe = 3.838e-01, 1092137 points/sec, time elapsed = 0.140 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_8000/assets
+Epoch   8500: avg.loss pe = 3.782e-01, 1087127 points/sec, time elapsed = 0.149 hours
+Epoch   9000: avg.loss pe = 4.403e-01, 1165487 points/sec, time elapsed = 0.157 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_9000/assets
+Epoch   9500: avg.loss pe = 3.420e-01, 1133404 points/sec, time elapsed = 0.167 hours
+Epoch  10000: avg.loss pe = 3.326e-01, 1056377 points/sec, time elapsed = 0.175 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_10000/assets
+Epoch  10500: avg.loss pe = 3.222e-01, 1083647 points/sec, time elapsed = 0.187 hours
+Epoch  11000: avg.loss pe = 3.102e-01, 1143590 points/sec, time elapsed = 0.195 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_11000/assets
+Epoch  11500: avg.loss pe = 3.057e-01, 1086319 points/sec, time elapsed = 0.205 hours
+Epoch  12000: avg.loss pe = 3.639e-01, 1103236 points/sec, time elapsed = 0.214 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_12000/assets
+Epoch  12500: avg.loss pe = 3.731e-01, 1115594 points/sec, time elapsed = 0.223 hours
+Epoch  13000: avg.loss pe = 2.846e-01, 1072083 points/sec, time elapsed = 0.231 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_13000/assets
+Epoch  13500: avg.loss pe = 3.673e-01, 1099511 points/sec, time elapsed = 0.240 hours
+Epoch  14000: avg.loss pe = 2.762e-01, 1068632 points/sec, time elapsed = 0.249 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_14000/assets
+Epoch  14500: avg.loss pe = 2.683e-01, 1103005 points/sec, time elapsed = 0.259 hours
+Epoch  15000: avg.loss pe = 2.639e-01, 1077732 points/sec, time elapsed = 0.268 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_15000/assets
+Epoch  15500: avg.loss pe = 2.636e-01, 1073322 points/sec, time elapsed = 0.277 hours
+Epoch  16000: avg.loss pe = 2.565e-01, 1131389 points/sec, time elapsed = 0.286 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_16000/assets
+Epoch  16500: avg.loss pe = 2.519e-01, 1115847 points/sec, time elapsed = 0.294 hours
+Epoch  17000: avg.loss pe = 2.490e-01, 1102068 points/sec, time elapsed = 0.303 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_17000/assets
+Epoch  17500: avg.loss pe = 2.582e-01, 1074127 points/sec, time elapsed = 0.312 hours
+Epoch  18000: avg.loss pe = 2.507e-01, 1136009 points/sec, time elapsed = 0.320 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_18000/assets
+Epoch  18500: avg.loss pe = 2.412e-01, 1100638 points/sec, time elapsed = 0.329 hours
+Epoch  19000: avg.loss pe = 2.789e-01, 1159665 points/sec, time elapsed = 0.339 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_19000/assets
+Epoch  19500: avg.loss pe = 2.521e-01, 1107753 points/sec, time elapsed = 0.350 hours
+Epoch  20000: avg.loss pe = 2.222e-01, 1091738 points/sec, time elapsed = 0.358 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_20000/assets
+Epoch  20500: avg.loss pe = 2.232e-01, 1087591 points/sec, time elapsed = 0.368 hours
+Epoch  21000: avg.loss pe = 2.148e-01, 1076567 points/sec, time elapsed = 0.377 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_21000/assets
+Epoch  21500: avg.loss pe = 2.151e-01, 1041598 points/sec, time elapsed = 0.386 hours
+Epoch  22000: avg.loss pe = 2.107e-01, 1092988 points/sec, time elapsed = 0.396 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_22000/assets
+Epoch  22500: avg.loss pe = 2.155e-01, 1117480 points/sec, time elapsed = 0.405 hours
+Epoch  23000: avg.loss pe = 2.064e-01, 1117989 points/sec, time elapsed = 0.414 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_23000/assets
+Epoch  23500: avg.loss pe = 1.996e-01, 1091825 points/sec, time elapsed = 0.423 hours
+Epoch  24000: avg.loss pe = 1.953e-01, 1091201 points/sec, time elapsed = 0.431 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_24000/assets
+Epoch  24500: avg.loss pe = 1.918e-01, 1113713 points/sec, time elapsed = 0.442 hours
+Epoch  25000: avg.loss pe = 1.904e-01, 1095567 points/sec, time elapsed = 0.450 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_25000/assets
+Epoch  25500: avg.loss pe = 1.864e-01, 1157205 points/sec, time elapsed = 0.460 hours
+Epoch  26000: avg.loss pe = 2.061e-01, 1093319 points/sec, time elapsed = 0.468 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_26000/assets
+Epoch  26500: avg.loss pe = 1.804e-01, 1119738 points/sec, time elapsed = 0.478 hours
+Epoch  27000: avg.loss pe = 1.792e-01, 1115141 points/sec, time elapsed = 0.486 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_27000/assets
+Epoch  27500: avg.loss pe = 2.413e-01, 1066940 points/sec, time elapsed = 0.495 hours
+Epoch  28000: avg.loss pe = 1.749e-01, 1072736 points/sec, time elapsed = 0.504 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_28000/assets
+Epoch  28500: avg.loss pe = 1.705e-01, 1100039 points/sec, time elapsed = 0.513 hours
+Epoch  29000: avg.loss pe = 1.627e-01, 1120688 points/sec, time elapsed = 0.522 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_29000/assets
+Epoch  29500: avg.loss pe = 1.587e-01, 1133162 points/sec, time elapsed = 0.531 hours
+Epoch  30000: avg.loss pe = 1.564e-01, 1101874 points/sec, time elapsed = 0.539 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_30000/assets
+Epoch  30500: avg.loss pe = 1.541e-01, 1134284 points/sec, time elapsed = 0.548 hours
+Epoch  31000: avg.loss pe = 1.432e-01, 1174149 points/sec, time elapsed = 0.557 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_31000/assets
+Epoch  31500: avg.loss pe = 2.021e-01, 1161096 points/sec, time elapsed = 0.568 hours
+Epoch  32000: avg.loss pe = 1.451e-01, 1112703 points/sec, time elapsed = 0.577 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_32000/assets
+Epoch  32500: avg.loss pe = 1.435e-01, 1092432 points/sec, time elapsed = 0.586 hours
+Epoch  33000: avg.loss pe = 1.306e-01, 1094311 points/sec, time elapsed = 0.595 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_33000/assets
+Epoch  33500: avg.loss pe = 2.661e-01, 1090975 points/sec, time elapsed = 0.607 hours
+Epoch  34000: avg.loss pe = 1.402e-01, 1085084 points/sec, time elapsed = 0.616 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_34000/assets
+Epoch  34500: avg.loss pe = 1.204e-01, 1080528 points/sec, time elapsed = 0.626 hours
+Epoch  35000: avg.loss pe = 2.569e-01, 1100797 points/sec, time elapsed = 0.635 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_35000/assets
+Epoch  35500: avg.loss pe = 1.234e-01, 1107753 points/sec, time elapsed = 0.645 hours
+Epoch  36000: avg.loss pe = 1.117e-01, 1083629 points/sec, time elapsed = 0.653 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_36000/assets
+Epoch  36500: avg.loss pe = 1.092e-01, 1075354 points/sec, time elapsed = 0.662 hours
+Epoch  37000: avg.loss pe = 1.109e-01, 1066079 points/sec, time elapsed = 0.671 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_37000/assets
+Epoch  37500: avg.loss pe = 1.057e-01, 1079612 points/sec, time elapsed = 0.682 hours
+Epoch  38000: avg.loss pe = 1.041e-01, 1075607 points/sec, time elapsed = 0.691 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_38000/assets
+Epoch  38500: avg.loss pe = 1.211e-01, 1085770 points/sec, time elapsed = 0.701 hours
+Epoch  39000: avg.loss pe = 1.030e-01, 1082145 points/sec, time elapsed = 0.710 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_39000/assets
+Epoch  39500: avg.loss pe = 1.015e-01, 1124061 points/sec, time elapsed = 0.719 hours
+Epoch  40000: avg.loss pe = 1.695e-01, 1118390 points/sec, time elapsed = 0.726 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_40000/assets
+Epoch  40500: avg.loss pe = 9.770e-02, 1094450 points/sec, time elapsed = 0.735 hours
+Epoch  41000: avg.loss pe = 1.050e-01, 1150925 points/sec, time elapsed = 0.742 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_41000/assets
+Epoch  41500: avg.loss pe = 1.039e-01, 1115141 points/sec, time elapsed = 0.750 hours
+Epoch  42000: avg.loss pe = 9.801e-02, 1146738 points/sec, time elapsed = 0.757 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_42000/assets
+Epoch  42500: avg.loss pe = 9.362e-02, 1122225 points/sec, time elapsed = 0.764 hours
+Epoch  43000: avg.loss pe = 9.756e-02, 1124263 points/sec, time elapsed = 0.771 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_43000/assets
+Epoch  43500: avg.loss pe = 9.419e-02, 1147409 points/sec, time elapsed = 0.779 hours
+Epoch  44000: avg.loss pe = 1.557e-01, 1136742 points/sec, time elapsed = 0.787 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_44000/assets
+Epoch  44500: avg.loss pe = 9.771e-02, 1099810 points/sec, time elapsed = 0.795 hours
+Epoch  45000: avg.loss pe = 9.312e-02, 1152489 points/sec, time elapsed = 0.802 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_45000/assets
+Epoch  45500: avg.loss pe = 9.009e-02, 1106451 points/sec, time elapsed = 0.809 hours
+Epoch  46000: avg.loss pe = 8.824e-02, 1120578 points/sec, time elapsed = 0.816 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_46000/assets
+Epoch  46500: avg.loss pe = 8.754e-02, 1070263 points/sec, time elapsed = 0.823 hours
+Epoch  47000: avg.loss pe = 1.339e-01, 1078646 points/sec, time elapsed = 0.830 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_47000/assets
+Epoch  47500: avg.loss pe = 1.234e-01, 1121511 points/sec, time elapsed = 0.838 hours
+Epoch  48000: avg.loss pe = 9.862e-02, 1078138 points/sec, time elapsed = 0.848 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_48000/assets
+Epoch  48500: avg.loss pe = 8.526e-02, 1069297 points/sec, time elapsed = 0.857 hours
+Epoch  49000: avg.loss pe = 8.480e-02, 1067487 points/sec, time elapsed = 0.866 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_49000/assets
+Epoch  49500: avg.loss pe = 8.450e-02, 1083322 points/sec, time elapsed = 0.875 hours
+Epoch  50000: avg.loss pe = 8.442e-02, 1097334 points/sec, time elapsed = 0.884 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_50000/assets
+Epoch  50500: avg.loss pe = 9.484e-02, 1079442 points/sec, time elapsed = 0.894 hours
+Epoch  51000: avg.loss pe = 1.628e-01, 1087488 points/sec, time elapsed = 0.903 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_51000/assets
+Epoch  51500: avg.loss pe = 8.367e-02, 1100638 points/sec, time elapsed = 0.912 hours
+Epoch  52000: avg.loss pe = 8.200e-02, 1132041 points/sec, time elapsed = 0.920 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_52000/assets
+Epoch  52500: avg.loss pe = 8.167e-02, 1132881 points/sec, time elapsed = 0.930 hours
+Epoch  53000: avg.loss pe = 8.771e-02, 1088297 points/sec, time elapsed = 0.939 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_53000/assets
+Epoch  53500: avg.loss pe = 2.212e-01, 1137607 points/sec, time elapsed = 0.949 hours
+Epoch  54000: avg.loss pe = 8.223e-02, 1103112 points/sec, time elapsed = 0.957 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_54000/assets
+Epoch  54500: avg.loss pe = 8.020e-02, 1196369 points/sec, time elapsed = 0.967 hours
+Epoch  55000: avg.loss pe = 2.312e-01, 1096634 points/sec, time elapsed = 0.976 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_55000/assets
+Epoch  55500: avg.loss pe = 7.989e-02, 1061468 points/sec, time elapsed = 0.986 hours
+Epoch  56000: avg.loss pe = 2.095e-01, 1119428 points/sec, time elapsed = 0.994 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_56000/assets
+Epoch  56500: avg.loss pe = 7.926e-02, 1074295 points/sec, time elapsed = 1.004 hours
+Epoch  57000: avg.loss pe = 1.193e-01, 1105543 points/sec, time elapsed = 1.012 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_57000/assets
+Epoch  57500: avg.loss pe = 7.842e-02, 1142544 points/sec, time elapsed = 1.024 hours
+Epoch  58000: avg.loss pe = 7.927e-02, 1116337 points/sec, time elapsed = 1.033 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_58000/assets
+Epoch  58500: avg.loss pe = 8.564e-02, 1077023 points/sec, time elapsed = 1.042 hours
+Epoch  59000: avg.loss pe = 7.759e-02, 1152141 points/sec, time elapsed = 1.053 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_59000/assets
+Epoch  59500: avg.loss pe = 7.791e-02, 1129715 points/sec, time elapsed = 1.062 hours
+Epoch  60000: avg.loss pe = 7.954e-02, 1114381 points/sec, time elapsed = 1.071 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_60000/assets
+Epoch  60500: avg.loss pe = 7.682e-02, 1075624 points/sec, time elapsed = 1.080 hours
+Epoch  61000: avg.loss pe = 7.631e-02, 1092224 points/sec, time elapsed = 1.089 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_61000/assets
+Epoch  61500: avg.loss pe = 7.612e-02, 1099494 points/sec, time elapsed = 1.098 hours
+Epoch  62000: avg.loss pe = 7.627e-02, 1070596 points/sec, time elapsed = 1.107 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_62000/assets
+Epoch  62500: avg.loss pe = 1.415e-01, 1117880 points/sec, time elapsed = 1.116 hours
+Epoch  63000: avg.loss pe = 8.800e-02, 1172367 points/sec, time elapsed = 1.126 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_63000/assets
+Epoch  63500: avg.loss pe = 7.539e-02, 1166061 points/sec, time elapsed = 1.136 hours
+Epoch  64000: avg.loss pe = 7.665e-02, 1176320 points/sec, time elapsed = 1.145 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./ckpt_64000/assets
+Epoch  64500: avg.loss pe = 7.703e-02, 1115213 points/sec, time elapsed = 1.154 hours
+Epoch  65000: avg.loss pe = 7.963e-02, 1115720 points/sec, time elapsed = 1.163 hours

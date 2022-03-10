@@ -1,0 +1,255 @@
+Unloaded dependency: anaconda3/2020.11
+Unloading the anaconda2 module (if loaded)...
+Loaded dependency: anaconda3/2020.11
+AI/Version: anaconda3.2020.11
+-----------------------------
+
+Description
+-----------
+The modulefile AI/anaconda3.2020.11 provides a unified, rich, anaconda3 based
+environment for Artificial Intelligence(AI)/Machine Learning(ML)/Big Data(BD)
+on top of based on Python 3.
+
+Module contents
+---------------
+Several popular AI/ML/BD packages are included in this environment, such as:
+    tensorflow-gpu, theano, keras-gpu, pytorch, opencv, pandas, scikit-learn,
+scikit-image etc.
+
+To check the full list of available packages in this environment, first
+activate it and then run the command
+    conda list
+
+Main packages included in this module:
+* astropy 4.2
+* blas 1.0
+* bokeh 2.2.3
+* cudatoolkit 10.0.130
+* cudnn 7.6.5
+* h5py 2.8.0
+* hdf5 1.10.2
+* ipython 7.19.0
+* jupyter 1.0.0
+* jupyterlab 2.2.6
+* keras-gpu 2.3.1
+* matplotlib 3.3.2
+* mkl 2019.4
+* nccl 1.3.5
+* networkx 2.5
+* ninja 1.10.2
+* nltk 3.5
+* notebook 6.1.6
+* numba 0.51.2
+* numpy 1.17.0
+* opencv 3.4.2
+* pandas 1.2.0
+* pillow 8.1.0
+* pip 20.3.3
+* python 3.7.9
+* pytorch 1.5.0
+* scikit-learn 0.23.2
+* scipy 1.5.2
+* seaborn 0.11.1
+* tensorboard 2.0.0
+* tensorflow-gpu 2.0.0
+* theano 1.0.4
+
+If you need to further customize this environment (e.g., install additional
+packages, or upgrade a particular package),
+you should first clone this environment as follows:
+    conda create --prefix <path to a dir in which you can write> --clone
+$AI_ENV
+Then activate the newly spawned environment and proceed with your
+customization.
+
+To get further help with conda usage, you can try one of the following:
+    conda -h
+    conda <command> -h
+
+Activate the module
+-------------------
+[1;32mNew!:[0m You are NOT required to manually activate this module anymore.
+
+It should get activated automatically after running the module load command
+since the following commands are being run on your behalf:
+    # module load AI/anaconda3.2020.11
+    # source /opt/packages/anaconda3/2020.11/etc/profile.d/conda.sh # conda
+init
+    # conda activate $AI_ENV
+    # (/opt/packages/AI/anaconda3-tf2.2020.11) USERNAME@BRIDGES-2:~ $ # << Your
+prompt should have changed to something similar.
+
+
+
+CommandNotFoundError: Your shell has not been properly configured to use 'conda deactivate'.
+To initialize your shell, run
+
+    $ conda init <SHELL_NAME>
+
+Currently supported shells are:
+  - bash
+  - fish
+  - tcsh
+  - xonsh
+  - zsh
+  - powershell
+
+See 'conda init --help' for more information and options.
+
+IMPORTANT: You may need to close and restart your shell after running 'conda init'.
+
+
+
+CommandNotFoundError: Your shell has not been properly configured to use 'conda deactivate'.
+To initialize your shell, run
+
+    $ conda init <SHELL_NAME>
+
+Currently supported shells are:
+  - bash
+  - fish
+  - tcsh
+  - xonsh
+  - zsh
+  - powershell
+
+See 'conda init --help' for more information and options.
+
+IMPORTANT: You may need to close and restart your shell after running 'conda init'.
+
+
+2022-03-03 23:17:13.129666: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.10.1
+2022-03-03 23:17:18.248640: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set
+2022-03-03 23:17:18.252033: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcuda.so.1
+2022-03-03 23:17:18.492448: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 0 with properties: 
+pciBusID: 0000:15:00.0 name: Tesla V100-SXM2-32GB computeCapability: 7.0
+coreClock: 1.53GHz coreCount: 80 deviceMemorySize: 31.75GiB deviceMemoryBandwidth: 836.37GiB/s
+2022-03-03 23:17:18.493842: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 1 with properties: 
+pciBusID: 0000:16:00.0 name: Tesla V100-SXM2-32GB computeCapability: 7.0
+coreClock: 1.53GHz coreCount: 80 deviceMemorySize: 31.75GiB deviceMemoryBandwidth: 836.37GiB/s
+2022-03-03 23:17:18.495116: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 2 with properties: 
+pciBusID: 0000:89:00.0 name: Tesla V100-SXM2-32GB computeCapability: 7.0
+coreClock: 1.53GHz coreCount: 80 deviceMemorySize: 31.75GiB deviceMemoryBandwidth: 836.37GiB/s
+2022-03-03 23:17:18.496389: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 3 with properties: 
+pciBusID: 0000:b2:00.0 name: Tesla V100-SXM2-32GB computeCapability: 7.0
+coreClock: 1.53GHz coreCount: 80 deviceMemorySize: 31.75GiB deviceMemoryBandwidth: 836.37GiB/s
+2022-03-03 23:17:18.496417: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.10.1
+2022-03-03 23:17:18.614487: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.10
+2022-03-03 23:17:18.614588: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.10
+2022-03-03 23:17:18.712996: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcufft.so.10
+2022-03-03 23:17:18.722842: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcurand.so.10
+2022-03-03 23:17:18.857553: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusolver.so.10
+2022-03-03 23:17:18.885705: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusparse.so.10
+2022-03-03 23:17:19.073740: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.7
+2022-03-03 23:17:19.084132: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1862] Adding visible gpu devices: 0, 1, 2, 3
+2022-03-03 23:17:19.116884: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2022-03-03 23:17:19.617966: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 0 with properties: 
+pciBusID: 0000:15:00.0 name: Tesla V100-SXM2-32GB computeCapability: 7.0
+coreClock: 1.53GHz coreCount: 80 deviceMemorySize: 31.75GiB deviceMemoryBandwidth: 836.37GiB/s
+2022-03-03 23:17:19.619301: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 1 with properties: 
+pciBusID: 0000:16:00.0 name: Tesla V100-SXM2-32GB computeCapability: 7.0
+coreClock: 1.53GHz coreCount: 80 deviceMemorySize: 31.75GiB deviceMemoryBandwidth: 836.37GiB/s
+2022-03-03 23:17:19.620538: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 2 with properties: 
+pciBusID: 0000:89:00.0 name: Tesla V100-SXM2-32GB computeCapability: 7.0
+coreClock: 1.53GHz coreCount: 80 deviceMemorySize: 31.75GiB deviceMemoryBandwidth: 836.37GiB/s
+2022-03-03 23:17:19.621795: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 3 with properties: 
+pciBusID: 0000:b2:00.0 name: Tesla V100-SXM2-32GB computeCapability: 7.0
+coreClock: 1.53GHz coreCount: 80 deviceMemorySize: 31.75GiB deviceMemoryBandwidth: 836.37GiB/s
+2022-03-03 23:17:19.621827: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.10.1
+2022-03-03 23:17:19.621861: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.10
+2022-03-03 23:17:19.621872: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.10
+2022-03-03 23:17:19.621888: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcufft.so.10
+2022-03-03 23:17:19.621899: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcurand.so.10
+2022-03-03 23:17:19.621910: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusolver.so.10
+2022-03-03 23:17:19.621941: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcusparse.so.10
+2022-03-03 23:17:19.621953: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.7
+2022-03-03 23:17:19.631325: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1862] Adding visible gpu devices: 0, 1, 2, 3
+2022-03-03 23:17:19.631377: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.10.1
+2022-03-03 23:17:21.912172: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1261] Device interconnect StreamExecutor with strength 1 edge matrix:
+2022-03-03 23:17:21.912267: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1267]      0 1 2 3 
+2022-03-03 23:17:21.912289: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1280] 0:   N Y Y Y 
+2022-03-03 23:17:21.912298: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1280] 1:   Y N Y Y 
+2022-03-03 23:17:21.912305: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1280] 2:   Y Y N Y 
+2022-03-03 23:17:21.912312: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1280] 3:   Y Y Y N 
+2022-03-03 23:17:21.920587: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1406] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 30132 MB memory) -> physical GPU (device: 0, name: Tesla V100-SXM2-32GB, pci bus id: 0000:15:00.0, compute capability: 7.0)
+2022-03-03 23:17:21.924481: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1406] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:1 with 30132 MB memory) -> physical GPU (device: 1, name: Tesla V100-SXM2-32GB, pci bus id: 0000:16:00.0, compute capability: 7.0)
+2022-03-03 23:17:21.927160: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1406] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:2 with 30132 MB memory) -> physical GPU (device: 2, name: Tesla V100-SXM2-32GB, pci bus id: 0000:89:00.0, compute capability: 7.0)
+2022-03-03 23:17:21.929845: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1406] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:3 with 30132 MB memory) -> physical GPU (device: 3, name: Tesla V100-SXM2-32GB, pci bus id: 0000:b2:00.0, compute capability: 7.0)
+2022-03-03 23:17:21.930123: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set
+2022-03-03 23:17:21.944967: I tensorflow/core/profiler/lib/profiler_session.cc:136] Profiler session initializing.
+2022-03-03 23:17:21.945128: I tensorflow/core/profiler/lib/profiler_session.cc:155] Profiler session started.
+2022-03-03 23:17:21.945163: I tensorflow/core/profiler/internal/gpu/cupti_tracer.cc:1365] Profiler found 4 GPUs
+2022-03-03 23:17:21.988328: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcupti.so.10.1
+2022-03-03 23:17:22.847471: I tensorflow/core/profiler/lib/profiler_session.cc:172] Profiler session tear down.
+2022-03-03 23:17:22.847684: I tensorflow/core/profiler/internal/gpu/cupti_tracer.cc:1487] CUPTI activity buffer flushed
+INFO:tensorflow:Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0', '/job:localhost/replica:0/task:0/device:GPU:1', '/job:localhost/replica:0/task:0/device:GPU:2', '/job:localhost/replica:0/task:0/device:GPU:3')
+INFO:tensorflow:Reduce to /job:localhost/replica:0/task:0/device:CPU:0 then broadcast to ('/job:localhost/replica:0/task:0/device:CPU:0',).
+INFO:tensorflow:Reduce to /job:localhost/replica:0/task:0/device:CPU:0 then broadcast to ('/job:localhost/replica:0/task:0/device:CPU:0',).
+INFO:tensorflow:Reduce to /job:localhost/replica:0/task:0/device:CPU:0 then broadcast to ('/job:localhost/replica:0/task:0/device:CPU:0',).
+INFO:tensorflow:Reduce to /job:localhost/replica:0/task:0/device:CPU:0 then broadcast to ('/job:localhost/replica:0/task:0/device:CPU:0',).
+2022-03-03 23:17:23.101108: W tensorflow/core/grappler/optimizers/data/auto_shard.cc:656] In AUTO-mode, and switching to DATA-based sharding, instead of FILE-based sharding as we cannot find appropriate reader dataset op(s) to shard. Error: Found an unshardable source dataset: name: "TensorSliceDataset/_2"
+op: "TensorSliceDataset"
+input: "Placeholder/_0"
+input: "Placeholder/_1"
+attr {
+  key: "Toutput_types"
+  value {
+    list {
+      type: DT_DOUBLE
+      type: DT_DOUBLE
+    }
+  }
+}
+attr {
+  key: "output_shapes"
+  value {
+    list {
+      shape {
+        dim {
+          size: 2
+        }
+      }
+      shape {
+        dim {
+          size: 1
+        }
+      }
+    }
+  }
+}
+
+WARNING:tensorflow:Model failed to serialize as JSON. Ignoring... Layer MLP_SimpleShortCut has arguments in `__init__` and therefore must override `get_config`.
+2022-03-03 23:17:23.260307: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:116] None of the MLIR optimization passes are enabled (registered 2)
+2022-03-03 23:17:23.274160: I tensorflow/core/platform/profile_utils/cpu_utils.cc:112] CPU Frequency: 2500000000 Hz
+INFO:tensorflow:batch_all_reduce: 10 all-reduces with algorithm = nccl, num_packs = 1
+INFO:tensorflow:Reduce to /job:localhost/replica:0/task:0/device:CPU:0 then broadcast to ('/job:localhost/replica:0/task:0/device:CPU:0',).
+INFO:tensorflow:Reduce to /job:localhost/replica:0/task:0/device:CPU:0 then broadcast to ('/job:localhost/replica:0/task:0/device:CPU:0',).
+INFO:tensorflow:batch_all_reduce: 10 all-reduces with algorithm = nccl, num_packs = 1
+INFO:tensorflow:Reduce to /job:localhost/replica:0/task:0/device:CPU:0 then broadcast to ('/job:localhost/replica:0/task:0/device:CPU:0',).
+INFO:tensorflow:Reduce to /job:localhost/replica:0/task:0/device:CPU:0 then broadcast to ('/job:localhost/replica:0/task:0/device:CPU:0',).
+2022-03-03 23:17:28.431521: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.10
+2022-03-03 23:17:30.353853: I tensorflow/core/profiler/lib/profiler_session.cc:136] Profiler session initializing.
+2022-03-03 23:17:30.354113: I tensorflow/core/profiler/lib/profiler_session.cc:155] Profiler session started.
+2022-03-03 23:17:30.367849: I tensorflow/core/profiler/lib/profiler_session.cc:71] Profiler session collecting data.
+2022-03-03 23:17:30.369319: I tensorflow/core/profiler/internal/gpu/cupti_tracer.cc:1487] CUPTI activity buffer flushed
+2022-03-03 23:17:30.374774: I tensorflow/core/profiler/internal/gpu/cupti_collector.cc:228]  GpuTracer has collected 798 callback api events and 797 activity events. 
+2022-03-03 23:17:30.402884: I tensorflow/core/profiler/lib/profiler_session.cc:172] Profiler session tear down.
+2022-03-03 23:17:30.425845: I tensorflow/core/profiler/rpc/client/save_profile.cc:137] Creating directory: ./tb-logs/train/plugins/profile/2022_03_03_23_17_30
+2022-03-03 23:17:30.442607: I tensorflow/core/profiler/rpc/client/save_profile.cc:143] Dumped gzipped tool data for trace.json.gz to ./tb-logs/train/plugins/profile/2022_03_03_23_17_30/v011.ib.bridges2.psc.edu.trace.json.gz
+2022-03-03 23:17:30.480011: I tensorflow/core/profiler/rpc/client/save_profile.cc:137] Creating directory: ./tb-logs/train/plugins/profile/2022_03_03_23_17_30
+2022-03-03 23:17:30.485667: I tensorflow/core/profiler/rpc/client/save_profile.cc:143] Dumped gzipped tool data for memory_profile.json.gz to ./tb-logs/train/plugins/profile/2022_03_03_23_17_30/v011.ib.bridges2.psc.edu.memory_profile.json.gz
+2022-03-03 23:17:30.491831: I tensorflow/core/profiler/rpc/client/capture_profile.cc:251] Creating directory: ./tb-logs/train/plugins/profile/2022_03_03_23_17_30Dumped tool data for xplane.pb to ./tb-logs/train/plugins/profile/2022_03_03_23_17_30/v011.ib.bridges2.psc.edu.xplane.pb
+Dumped tool data for overview_page.pb to ./tb-logs/train/plugins/profile/2022_03_03_23_17_30/v011.ib.bridges2.psc.edu.overview_page.pb
+Dumped tool data for input_pipeline.pb to ./tb-logs/train/plugins/profile/2022_03_03_23_17_30/v011.ib.bridges2.psc.edu.input_pipeline.pb
+Dumped tool data for tensorflow_stats.pb to ./tb-logs/train/plugins/profile/2022_03_03_23_17_30/v011.ib.bridges2.psc.edu.tensorflow_stats.pb
+Dumped tool data for kernel_stats.pb to ./tb-logs/train/plugins/profile/2022_03_03_23_17_30/v011.ib.bridges2.psc.edu.kernel_stats.pb
+
+WARNING:tensorflow:Callback method `on_train_batch_end` is slow compared to the batch time (batch time: 0.0058s vs `on_train_batch_end` time: 0.0472s). Check your callbacks.
+QStandardPaths: XDG_RUNTIME_DIR points to non-existing path '/run/user/55807', please create it with 0700 permissions.
+2022-03-03 23:17:34.716951: W tensorflow/python/util/util.cc:348] Sets are not currently considered sequences, but this may change in the future, so consider avoiding using them.
+INFO:tensorflow:Reduce to /job:localhost/replica:0/task:0/device:CPU:0 then broadcast to ('/job:localhost/replica:0/task:0/device:CPU:0',).
+INFO:tensorflow:Reduce to /job:localhost/replica:0/task:0/device:CPU:0 then broadcast to ('/job:localhost/replica:0/task:0/device:CPU:0',).
+INFO:tensorflow:Assets written to: ./ckpt_0/assets
+INFO:tensorflow:Assets written to: ./ckpt_1000/assets
+slurmstepd: error: *** JOB 6972850 ON v011 CANCELLED AT 2022-03-03T23:21:41 ***

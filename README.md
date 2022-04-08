@@ -17,7 +17,7 @@ NIF is built on top of Keras.
 
 ## How to cite
 
-If you find NIF is helpful to you, you can cite the following
+If you find NIF is helpful to you, you can cite our [paper](https://arxiv.org/abs/2204.03216) in the following bibtex format
 
 ```
 @misc{pan2022neural,

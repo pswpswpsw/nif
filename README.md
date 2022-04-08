@@ -20,7 +20,14 @@ NIF is built on top of Keras.
 If you find NIF is helpful to you, you can cite the following
 
 ```
-some citation
+@misc{pan2022neural,
+      title={Neural Implicit Flow: a mesh-agnostic dimensionality reduction paradigm of spatio-temporal data}, 
+      author={Shaowu Pan and Steven L. Brunton and J. Nathan Kutz},
+      year={2022},
+      eprint={2204.03216},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
 ```
 
 ## License

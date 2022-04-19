@@ -4,7 +4,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow_probability.python.optimizer import lbfgs_minimize
 
-def function_factory(model, loss, train_x, train_y):
+def function_factory(model, loss, train_x, train_y, display_epoch):
     """A factory to create a function required by tfp.optimizer.lbfgs_minimize.
 
     Args:
@@ -76,7 +76,7 @@ def function_factory(model, loss, train_x, train_y):
         # print out iteration & loss
         f.iter.assign_add(1)
 
-        if f.iter % 1 == 0:
+        if f.iter % display_epoch == 0:
             tf.print("Epoch:", f.iter, "loss:", loss_value)
 
         # store loss value so we can retrieve later
@@ -95,9 +95,9 @@ def function_factory(model, loss, train_x, train_y):
     return f
 
 class TFPLBFGS(object):
-    def __init__(self, model, loss_fun, inps, outs):
+    def __init__(self, model, loss_fun, inps, outs, display_epoch=1):
         # data + keras model -> function for l-bfgs
-        self.func = function_factory(model, loss_fun, inps, outs)
+        self.func = function_factory(model, loss_fun, inps, outs, display_epoch)
         self.model = model
 
     def minimize(self, rounds=50, max_iter=50):

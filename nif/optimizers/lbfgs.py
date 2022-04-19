@@ -76,7 +76,7 @@ def function_factory(model, loss, train_x, train_y):
         # print out iteration & loss
         f.iter.assign_add(1)
 
-        if f.iter % 50 == 0:
+        if f.iter % 1 == 0:
             tf.print("Epoch:", f.iter, "loss:", loss_value)
 
         # store loss value so we can retrieve later

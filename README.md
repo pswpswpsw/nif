@@ -4,16 +4,16 @@ NIF is a mesh-agnostic dimensionality reduction paradigm for parametric spatial 
 
 NIF is built on top of Keras. 
 
-**Documentation** 
-
-**Papers**
-
 ## Features
 
 - built on top of tensorflow 2 with Keras, hassle-free for many up-to-date advanced concepts and features
 - distributed learning: data parallelism across multiple GPUs on a single node
 - flexible training schedule: e.g., first Adam then fine-tunning with L-BFGS
 - performance monitoring: model weights checkpoints and restoration
+
+## Tutorial
+
+- [Hello NIF world! A simple fitting on 1D travelling wave](https://colab.research.google.com/drive/1odreAOvjlkLVJsHXDMOjqc_CTaXil_ha?usp=sharing)
 
 ## How to cite
 

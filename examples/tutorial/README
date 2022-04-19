@@ -2,15 +2,13 @@
 
 1. simple_1d_wave [DONE]
 	- it will include simple training, output of p_to_lr, output of lr_to_w
+    - restore_then_fine_tune_with_lbfgs
 
-2. restore_then_fine_tune_with_lbfgs
-	- with output of p_to_lr, lr_to_w, as well
-
-3. multi-scale example
+2. multi-scale example
     - simple 2D turbulence snapshot, compare the result with not using
     multi-scale
 
-4. extracting linear representation in fluids
+3. extracting linear representation in fluids
     - flow over cylinder. compare the result with not using
     multi-scale.
     - p_to_lr, reweighting as well

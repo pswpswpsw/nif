@@ -69,11 +69,11 @@ std = raw_data.std(axis=0)
 
 # ok. we change our mind, try -1,1 for
 # [t,x,u]
-# for i in range(2):
-#     mean[i] = 0.5*(np.min(raw_data[:,i])+np.max(raw_data[:,i]))
-#     std[i] = 0.5*(-np.min(raw_data[:,i])+np.max(raw_data[:,i]))
-#
-# std[-1] = std[-1] * 5
+for i in range(2):
+    mean[i] = 0.5*(np.min(raw_data[:,i])+np.max(raw_data[:,i]))
+    std[i] = 0.5*(-np.min(raw_data[:,i])+np.max(raw_data[:,i]))
+
+std[-1] = std[-1] * 2.5
 
 normalized_data = (raw_data - mean)/std
 

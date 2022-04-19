@@ -10,13 +10,14 @@ def gen_hypernetwork_weights_bias_for_siren_shapenet(
         num_weight_last,
         input_dim,
         width,
-        omega_0
+        omega_0,
+        variable_dtype
 ):
     w_init = tf.random.uniform((num_inputs, num_outputs),
                                -np.sqrt(6.0/num_inputs)*weight_factor,
                                np.sqrt(6.0/num_inputs)*weight_factor)
 
-    scale_matrix = np.ones((num_outputs), dtype=np.float32)
+    scale_matrix = np.ones((num_outputs), dtype=variable_dtype)
     scale_matrix[:num_weight_first] /= input_dim  # 1st layer weights
     scale_matrix[num_weight_first:
                  num_weight_first + num_weight_hidden] *= np.sqrt(6.0/width)/omega_0  # hidden layer weights
@@ -25,11 +26,10 @@ def gen_hypernetwork_weights_bias_for_siren_shapenet(
     # we choose GlorotUniform
     scale_matrix[num_weight_first + num_weight_hidden + num_weight_last:] /= width  # all biases
 
-    b_init = tf.random.uniform((num_outputs,), -scale_matrix, scale_matrix)
+    b_init = tf.random.uniform((num_outputs,), -scale_matrix, scale_matrix, dtype=variable_dtype)
     return w_init, b_init
 
-
-def compute_weight_index_for_shapenet(cfg_shape_net):
+def compute_number_of_weightbias_by_its_position_for_shapenet(cfg_shape_net):
     si_dim = cfg_shape_net['input_dim']
     so_dim = cfg_shape_net['output_dim']
     n_sx = cfg_shape_net['units']
@@ -49,34 +49,37 @@ def compute_weight_index_for_shapenet(cfg_shape_net):
     num_weight_last = so_dim*n_sx
     return num_weight_first, num_weight_hidden, num_weight_last
 
-
 class SIREN(tf.keras.layers.Layer):
     def __init__(self, num_inputs, num_outputs, layer_position,
-                 omega_0=30., omega_0_e=30., cfg_shape_net=None,
-                 mixed_policy=None):
+                 omega_0=30., cfg_shape_net=None,
+                 mixed_policy=tf.keras.mixed_precision.Policy('float32')):
         super(SIREN, self).__init__()
-        self.omega_0 = omega_0
+        self.mixed_policy = mixed_policy
+        self.compute_Dtype = self.mixed_policy.compute_dtype
+        self.variable_Dtype = self.mixed_policy.variable_dtype
         self.layer_position = layer_position
-        self.TF_DTYPE = tf.float16 if mixed_policy == 'mixed_float16' else tf.float32
+        self.omega_0 = tf.cast(omega_0, self.variable_Dtype)
 
         # initialize the weights
         if layer_position == 'first':
             w_init = tf.random.uniform((num_inputs, num_outputs),
                                        -1./num_inputs,
-                                       1./num_inputs)
+                                       1./num_inputs,
+                                       dtype=self.variable_Dtype)
             b_init = tf.random.uniform((num_outputs,),
                                        -1./np.sqrt(num_inputs),
-                                       1./np.sqrt(num_inputs))
+                                       1./np.sqrt(num_inputs),
+                                       dtype=self.variable_Dtype)
 
         elif layer_position == 'hidden' or layer_position == 'bottleneck':
             w_init = tf.random.uniform((num_inputs, num_outputs),
-                                       -tf.math.sqrt(
-                                           6.0/num_inputs)/omega_0_e,
-                                       tf.math.sqrt(
-                                           6.0/num_inputs)/omega_0_e)
+                                       -tf.math.sqrt(6.0/num_inputs)/self.omega_0,
+                                       tf.math.sqrt(6.0/num_inputs)/self.omega_0,
+                                       dtype=self.variable_Dtype)
             b_init = tf.random.uniform((num_outputs,),
                                        -1./np.sqrt(num_inputs),
-                                       1./np.sqrt(num_inputs))
+                                       1./np.sqrt(num_inputs),
+                                       dtype=self.variable_Dtype)
 
         elif layer_position == 'last':
             if isinstance(cfg_shape_net, dict):
@@ -84,7 +87,14 @@ class SIREN(tf.keras.layers.Layer):
                     "No value for dictionary: cfg_shape_net for {} SIREN layer {}".format(layer_position, self.name))
 
             # compute the indices needed for generating weights for shapenet
-            num_weight_first, num_weight_hidden, num_weight_last = compute_weight_index_for_shapenet(cfg_shape_net)
+            # if connectivity_e == 'full':
+            num_weight_first, num_weight_hidden, num_weight_last = compute_number_of_weightbias_by_its_position_for_shapenet(cfg_shape_net)
+            # elif connectivity_e == 'last_layer':
+            #     num_weight_first = 0
+            #     num_weight_hidden = 0
+            #     num_weight_last = num_outputs // cfg_shape_net['output_dim']  # po_dim*so_dim / so_dim = po_dim
+            # else:
+            #     raise ValueError("`connectivity_e` has an invalid value {}".format(connectivity_e))
 
             w_init, b_init = gen_hypernetwork_weights_bias_for_siren_shapenet(
                 num_inputs=num_inputs,
@@ -95,7 +105,8 @@ class SIREN(tf.keras.layers.Layer):
                 num_weight_last=num_weight_last,
                 input_dim=cfg_shape_net['input_dim'],
                 width=cfg_shape_net['units'],
-                omega_0=self.omega_0
+                omega_0=self.omega_0,
+                variable_dtype=self.variable_Dtype
             )
 
         else:
@@ -103,31 +114,15 @@ class SIREN(tf.keras.layers.Layer):
 
         self.w_init = w_init
         self.b_init = b_init
-        self.w = tf.Variable(self.w_init)
-        self.b = tf.Variable(self.b_init)
+        self.w = tf.Variable(self.w_init, dtype=self.variable_Dtype)
+        self.b = tf.Variable(self.b_init, dtype=self.variable_Dtype)
 
-    # def _compute_number_weights_for_hypernetwork(self, cfg_shape_net):
-    #     si_dim = cfg_shape_net['input_dim']
-    #     so_dim = cfg_shape_net['output_dim']
-    #     n_sx = cfg_shape_net['units']
-    #     l_sx = cfg_shape_net['nlayers']
-    #
-    #     num_weight_first = si_dim*n_sx
-    #     num_weight_hidden = (2*self.l_sx)*self.n_sx**2 + self.so_dim*self.n_sx
-    #     num_weight_hidden = self.l_sx*self.n_sx**2 + self.so_dim*self.n_sx
-    #
-    #     return num_weight_first, num_weight_hidden
-
-    def call(self, inputs, training=None, mask=None):
+    def call(self, x, **kwargs):
         if self.layer_position == 'last' or self.layer_position == 'bottleneck':
-            y = tf.matmul(inputs, tf.cast(self.w, self.TF_DTYPE)) + tf.cast(
-                self.b, self.TF_DTYPE)
-            # y = tf.matmul(inputs, self.w) + self.b
+            y = tf.matmul(x,  tf.cast(self.w, self.compute_Dtype)) + tf.cast(self.b, self.compute_Dtype)
         else:
-            y = tf.math.sin(
-                self.omega_0*tf.matmul(inputs,tf.cast(self.w, self.TF_DTYPE)) + tf.cast(self.b, self.TF_DTYPE)
-            )
-            # y = tf.math.sin(self.omega_0 * tf.matmul(inputs, self.w) + self.b)
+            y = tf.math.sin(self.omega_0*tf.matmul(x, tf.cast(self.w, self.compute_Dtype)) +
+                            tf.cast(self.b,self.compute_Dtype))
         return y
 
 
@@ -135,34 +130,34 @@ class SIREN_ResNet(SIREN):
     def __init__(self, num_inputs,
                  num_outputs,
                  omega_0=30.,
-                 omega_0_e=30.,
-                 mixed_policy=None):
+                 mixed_policy=tf.keras.mixed_precision.Policy('float32')):
         super(SIREN_ResNet, self).__init__(num_inputs, num_outputs,
                                            layer_position='hidden',
-                                           omega_0=omega_0, omega_0_e=omega_0_e,
+                                           omega_0=omega_0,
                                            mixed_policy=mixed_policy)
-        self.w2 = tf.Variable(self.w_init)
-        self.b2 = tf.Variable(self.b_init)
+        self.w2 = tf.Variable(self.w_init, dtype=self.variable_Dtype)
+        self.b2 = tf.Variable(self.b_init, dtype=self.variable_Dtype)
 
     def call(self, x, training=None, mask=None):
-        h = tf.math.sin(
-            self.omega_0*tf.matmul(x, tf.cast(self.w, self.TF_DTYPE)) + tf.cast(self.b, self.TF_DTYPE))
-        return 0.5*(x + tf.math.sin(
-            self.omega_0*tf.matmul(h, tf.cast(self.w2, self.TF_DTYPE)) + tf.cast(self.b2, self.TF_DTYPE)))
-
+        h = tf.math.sin(self.omega_0*tf.matmul(x, tf.cast(self.w, self.compute_Dtype)) +
+                        tf.cast(self.b,self.compute_Dtype))
+        return 0.5*(x + tf.math.sin(self.omega_0*tf.matmul(h, tf.cast(self.w2, self.compute_Dtype)) +
+                                            tf.cast(self.b2, self.compute_Dtype)))
 
 class HyperLinearForSIREN(tf.keras.layers.Layer):
-    def __init__(self,
-                 num_inputs,
-                 num_outputs,
-                 cfg_shape_net,
-                 mixed_policy
-                 ):
+    def __init__(self, num_inputs, num_outputs, cfg_shape_net, mixed_policy, connectivity='full'):
         super(HyperLinearForSIREN, self).__init__()
-        self.TF_DTYPE = tf.float16 if mixed_policy == 'mixed_float16' else tf.float32
+        self.mixed_policy = mixed_policy
+        self.compute_Dtype = self.mixed_policy.compute_dtype
+        self.variable_Dtype = self.mixed_policy.variable_dtype
 
         # compute the indices needed for generating weights for shapenet
-        num_weight_first, num_weight_hidden, num_weight_last = compute_weight_index_for_shapenet(cfg_shape_net)
+        if connectivity == 'full':
+            num_weight_first, num_weight_hidden, num_weight_last = compute_number_of_weightbias_by_its_position_for_shapenet(cfg_shape_net)
+        elif connectivity == 'last_layer':
+            num_weight_first, num_weight_hidden, num_weight_last = 0, 0, num_outputs
+        else:
+            raise ValueError("connectivity should be set to `full` or `last_layer`")
 
         w_init, b_init = gen_hypernetwork_weights_bias_for_siren_shapenet(
             num_inputs=num_inputs,
@@ -173,13 +168,14 @@ class HyperLinearForSIREN(tf.keras.layers.Layer):
             num_weight_last=num_weight_last,
             input_dim=cfg_shape_net['input_dim'],
             width=cfg_shape_net['units'],
-            omega_0=cfg_shape_net['omega_0']
+            omega_0=cfg_shape_net['omega_0'],
+            variable_dtype=self.variable_Dtype
         )
 
-        self.w = tf.Variable(w_init)
-        self.b = tf.Variable(b_init)
+        self.w = tf.Variable(w_init, self.variable_Dtype)
+        self.b = tf.Variable(b_init, self.variable_Dtype)
 
     def call(self, x, **kwargs):
-        y = tf.matmul(x, tf.cast(self.w, self.TF_DTYPE)) + tf.cast(self.b, self.TF_DTYPE)
+        y = tf.matmul(x, tf.cast(self.w, self.compute_Dtype)) + tf.cast(self.b, self.compute_Dtype)
         return y
 

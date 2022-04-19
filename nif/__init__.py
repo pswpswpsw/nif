@@ -20,5 +20,6 @@ __all__ = [
     "tf",
     "NIFMultiScale",
     "NIF",
-    "mixed_precision"
+    "mixed_precision",
+    "optimizers"
 ]

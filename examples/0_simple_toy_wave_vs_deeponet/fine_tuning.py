@@ -3,7 +3,8 @@ sys.path.append("../../")
 
 import numpy as np
 from matplotlib import pyplot as plt
-from nif import *
+import tensorflow as tf
+import nif
 from nif.optimizers import TFPLBFGS
 
 # load model
@@ -26,30 +27,29 @@ mixed_policy = None
 lr = 2e-4
 optimizer = tf.keras.optimizers.Adam(lr)
 loss_fun = tf.keras.losses.MeanSquaredError()
-model_ori = NIF(cfg_shape_net, cfg_parameter_net, mixed_policy)
+model_ori = nif.NIF(cfg_shape_net, cfg_parameter_net, mixed_policy)
 model = model_ori.model()
-latent_model = model_ori.model_pnet()
-latent_to_p_model = model_ori.model_latent_to_weights()
 model.summary()
 model.compile(optimizer, loss_fun)
 
 # load weights
-model.load_weights("./ckpt-0/ckpt")
+model.load_weights("./ckpt-90000/ckpt")
 # load_status = model.load_weights("./fine-tuned/ckpt")
 
 # read data from disk
 train_data = np.load('./data/train.npz')['data']  # t,x,u
-inps, outs = train_data[:, :2], train_data[:, -1:]
+data_feature, data_label = train_data[:, :2], train_data[:, -1:]
 
 # fine tuning
 # data + keras model -> function for l-bfgs
-fine_tuner = TFPLBFGS(model, loss_fun, inps, outs)
-fine_tuner.minimize(2, max_iter=10)
+fine_tuner = TFPLBFGS(model, loss_fun, data_feature, data_label)
+fine_tuner.minimize(rounds=20, max_iter=10)
 history = fine_tuner.history
 model.save_weights("./fine-tuned/ckpt")
 
-plt.figure()
-plt.plot(history['iteration'], history['loss'])
+plt.figure(figsize=(32,2))
+plt.semilogy(history['iteration'], history['loss'],'k-o')
+plt.ylim([1e-5,1e-2])
 plt.xlabel('iteration')
 plt.ylabel('loss')
 plt.savefig('./fine_tune_loss.png')

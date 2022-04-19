@@ -16,10 +16,14 @@
 ## Google Colab Tutorial
 
 - [Hello world! A simple fitting on 1D travelling wave](https://colab.research.google.com/drive/1odreAOvjlkLVJsHXDMOjqc_CTaXil_ha?usp=sharing)
-	- case setup
+	- case setup with `nif.NIF`
 	- model checkpoints/restoration
 	- mixed precision training
 	- L-BFGS fine tuning
+
+- [Tackling multi-scale data](https://colab.research.google.com/drive/1GtbgfmfkwyZnNJFrz-zf_qeY-25-eKMY?usp=sharing)
+    - the use of class `nif.NIFMultiScale`
+    - demonstrate the effectiveness of learning high frequency data
 
 ## How to cite
 

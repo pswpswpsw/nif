@@ -4,7 +4,7 @@ from .point_wise_data import PointWiseData, dir_path
 class TravelingWave(PointWiseData):
     def __init__(self):
         print('path = ')
-        print(dir_path)
+        self.dir_path = dir_path
         data = np.load('./data/traveling_wave.npz')['data']
         parameter_data = data[:,[0]]
         x_data = data[:,[1]]

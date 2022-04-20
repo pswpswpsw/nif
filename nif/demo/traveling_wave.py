@@ -7,7 +7,7 @@ class TravelingWave(PointWiseData):
         path = os.path.abspath(__file__)
         dir_path = os.path.dirname(path)
         self.dir_path = dir_path
-        data = np.load('./data/traveling_wave.npz')['data']
+        data = np.load(self.dir_path+'/data/traveling_wave.npz')['data']
         parameter_data = data[:,[0]]
         x_data = data[:,[1]]
         u_data = data[:,[2]]

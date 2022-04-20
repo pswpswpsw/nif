@@ -1,9 +1,11 @@
 import numpy as np
-from .point_wise_data import PointWiseData, dir_path
+from .point_wise_data import PointWiseData
+import os
 
 class TravelingWave(PointWiseData):
     def __init__(self):
-        print('path = ')
+        path = os.path.abspath(__file__)
+        dir_path = os.path.dirname(path)
         self.dir_path = dir_path
         data = np.load('./data/traveling_wave.npz')['data']
         parameter_data = data[:,[0]]

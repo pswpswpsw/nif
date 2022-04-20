@@ -3,7 +3,7 @@ from .point_wise_data import PointWiseData
 
 class CylinderFlow(PointWiseData):
     def __init__(self):
-        data = np.load('data/cylinderflow.npz')['data']
+        data = np.load('./data/cylinderflow.npz')['data']
         parameter_data = data[:,[0]]
         x_data = data[:,[1,2]]
         u_data = data[:,[3,4]]

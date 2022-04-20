@@ -3,7 +3,7 @@ from .point_wise_data import PointWiseData
 
 class TravelingWave(PointWiseData):
     def __init__(self):
-        data = np.load('data/traveling_wave.npz')['data']
+        data = np.load('./data/traveling_wave.npz')['data']
         parameter_data = data[:,[0]]
         x_data = data[:,[1]]
         u_data = data[:,[2]]

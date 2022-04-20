@@ -54,8 +54,8 @@ checkpt_epoch = 10000
 display_epoch = 1000
 print_figure_epoch = 5000
 
-# get training data set
-train_data = np.load('./data/train.npz')['data']
+# get training demo set
+train_data = np.load('./data/train.npz')['demo']
 num_total_data = train_data.shape[0]
 train_dataset = tf.data.Dataset.from_tensor_slices((train_data[:, :2], train_data[:, -1:]))
 train_dataset = train_dataset.shuffle(num_total_data).batch(batch_size).prefetch(tf.data.experimental.AUTOTUNE)

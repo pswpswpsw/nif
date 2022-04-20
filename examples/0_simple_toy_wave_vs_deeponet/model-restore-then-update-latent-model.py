@@ -34,8 +34,8 @@ model = model_ori.model()
 model.summary()
 model.compile(optimizer, loss_fun)
 
-# get training data set
-train_data = np.load('./data/train.npz')['data']
+# get training demo set
+train_data = np.load('./data/train.npz')['demo']
 input_t = np.linspace(train_data[:,0].min(),train_data[:,0].max(), 100)
 num_total_data = train_data.shape[0]
 train_dataset = tf.data.Dataset.from_tensor_slices((train_data[:, :2], train_data[:, -1:]))

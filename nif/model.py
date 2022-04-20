@@ -1,4 +1,4 @@
-__all__ = ["NIFMultiScale", "NIF"]
+__all__ = ["NIFMultiScale", "NIF", "NIFMultiScaleLastLayerParameterized"]
 
 import tensorflow as tf
 from tensorflow.keras import Model, initializers
@@ -422,6 +422,12 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         # this model: t, mu -> hidden LR
         return Model(inputs=[input_p], outputs=[self._call_parameter_net(input_p, self.pnet_list)[0]])
 
+    def model_x_to_phi(self):
+        input_s = tf.keras.layers.Input(shape=(self.si_dim))
+        return Model(inputs=[input_s],
+                     outputs=[tf.cast(self._call_shape_net_get_phi_x(input_s, self.snet_list, self.so_dim,
+                                                                     self.pi_hidden), self.variable_Dtype)])
+
     def model_lr_to_w(self):
         raise ValueError("In this class: NIFMultiScaleLastLayerParameterization, `w` is the same as `lr`")
 
@@ -443,11 +449,10 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         # create a simple feedfowrard, with resblock or not, that maps self.si_dim to
         # self.so_dim*self.pi_hidden
 
-        assert cfg_shape_net['connectivity'] == 'last_layer'
         snet_layers_list = []
         # 1. first layer
-        layer_1 = SIREN(self.pi_dim, self.n_sx, 'first',
-                        cfg_parameter_net['omega_0'],
+        layer_1 = SIREN(self.si_dim, self.n_sx, 'first',
+                        cfg_shape_net['omega_0'],
                         cfg_shape_net,
                         self.mixed_policy)
         snet_layers_list.append(layer_1)
@@ -456,20 +461,20 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         if cfg_shape_net['use_resblock']:
             for i in range(self.l_sx):
                 tmp_layer = SIREN_ResNet(self.n_sx, self.n_sx,
-                                         cfg_parameter_net['omega_0'],
+                                         cfg_shape_net['omega_0'],
                                          self.mixed_policy)
                 snet_layers_list.append(tmp_layer)
         else:
             for i in range(self.l_sx):
                 tmp_layer = SIREN(self.n_sx, self.n_sx, 'hidden',
-                                  cfg_parameter_net['omega_0'],
+                                  cfg_shape_net['omega_0'],
                                   cfg_shape_net,
                                   self.mixed_policy)
                 snet_layers_list.append(tmp_layer)
 
         # 3. bottleneck AND the same time, last layer for spatial basis
         bottle_last_layer = SIREN(self.n_sx, self.po_dim*self.so_dim, 'bottleneck',
-                                  cfg_parameter_net['omega_0'],
+                                  cfg_shape_net['omega_0'],
                                   cfg_shape_net,
                                   self.mixed_policy)
         snet_layers_list.append(bottle_last_layer)
@@ -480,18 +485,18 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
 
         return snet_layers_list, last_layer_bias
 
-    @staticmethod
-    def _call_shape_net_mres_only_para_last_layer(input_s, snet_layers_list, last_layer_bias, pnet_output,
-                                                  so_dim, pi_hidden, variable_dtype):
+    def _call_shape_net_get_phi_x(self, input_s, snet_layers_list, so_dim, pi_hidden):
         # 1. x -> phi_x
         phi_x = input_s
         for l in snet_layers_list:
             phi_x = l(phi_x)
         # 2. phi_x * a_t + bias
-        u_list = []
-        for i in range(so_dim):
-            tmp = tf.einsum('ai,aij->aj', phi_x[:, i*pi_hidden:(i+1)*pi_hidden], pnet_output)
-            u_list.append(tmp)
-        u = tf.concat(u_list,axis=-1) + last_layer_bias
-        return tf.cast(u, variable_dtype), tf.cast(phi_x, variable_dtype)
+        phi_x_matrix = tf.reshape(phi_x, [-1, so_dim, pi_hidden])
+        return phi_x_matrix
+
+    def _call_shape_net_mres_only_para_last_layer(self, input_s, snet_layers_list, last_layer_bias, pnet_output,
+                                                  so_dim, pi_hidden, variable_dtype):
+        phi_x_matrix = self._call_shape_net_get_phi_x(input_s, snet_layers_list, so_dim, pi_hidden)
+        u = tf.keras.layers.Dot(axes=(2, 1))([phi_x_matrix, pnet_output]) + last_layer_bias
+        return tf.cast(u, variable_dtype)  #, tf.cast(phi_x, variable_dtype)
 

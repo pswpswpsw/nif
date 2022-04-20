@@ -10,8 +10,8 @@ def function_factory(model, loss, train_x, train_y, display_epoch):
     Args:
         model [in]: an instance of `tf.keras.Model` or its subclasses.
         loss [in]: a function with signature loss_value = loss(pred_y, true_y).
-        train_x [in]: the input part of training data.
-        train_y [in]: the output part of training data.
+        train_x [in]: the input part of training demo.
+        train_y [in]: the output part of training demo.
 
     Returns:
         A function that has a signature of:
@@ -96,7 +96,7 @@ def function_factory(model, loss, train_x, train_y, display_epoch):
 
 class TFPLBFGS(object):
     def __init__(self, model, loss_fun, inps, outs, display_epoch=1):
-        # data + keras model -> function for l-bfgs
+        # demo + keras model -> function for l-bfgs
         self.func = function_factory(model, loss_fun, inps, outs, display_epoch)
         self.model = model
 

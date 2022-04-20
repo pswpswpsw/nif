@@ -3,7 +3,7 @@ from .__about__ import __version__
 import tensorflow as tf
 from tensorflow.keras import mixed_precision
 
-from .model import NIFMultiScale, NIF
+from .model import NIFMultiScale, NIF, NIFMultiScaleLastLayerParameterized
 
 # tf.keras.backend.set_floatx("float64")
 
@@ -19,7 +19,9 @@ if len(gpus) > 0:
 __all__ = [
     "tf",
     "NIFMultiScale",
+    "NIFMultiScaleLastLayerParameterized",
     "NIF",
     "mixed_precision",
-    "optimizers"
+    "optimizers",
+    "demo"
 ]

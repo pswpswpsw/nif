@@ -36,12 +36,12 @@ model.compile(optimizer, loss_fun)
 model.load_weights("./ckpt-90000/ckpt")
 # load_status = model.load_weights("./fine-tuned/ckpt")
 
-# read data from disk
+# read demo from disk
 train_data = np.load('./data/train.npz')['data']  # t,x,u
 data_feature, data_label = train_data[:, :2], train_data[:, -1:]
 
 # fine tuning
-# data + keras model -> function for l-bfgs
+# demo + keras model -> function for l-bfgs
 fine_tuner = TFPLBFGS(model, loss_fun, data_feature, data_label)
 fine_tuner.minimize(rounds=20, max_iter=10)
 history = fine_tuner.history

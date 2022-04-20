@@ -49,7 +49,7 @@ plt.tight_layout()
 plt.savefig('3d.png')
 
 
-# prepare tensor product data
+# prepare tensor product demo
 # (20,300) # t,x
 print(xx.shape)
 # I need x,t,mu
@@ -62,7 +62,7 @@ raw_data = raw_data.astype('float32')
 
 # print(raw_data.shape)
 
-# normalize the data
+# normalize the demo
 # just simply all 0-1
 mean = raw_data.mean(axis=0)
 std = raw_data.std(axis=0)
@@ -78,10 +78,10 @@ std[-1] = std[-1] * 2.5
 normalized_data = (raw_data - mean)/std
 
 
-print('normalized data mean = ',normalized_data.mean(axis=0))
-print('normalized data std = ',normalized_data.std(axis=0))
+print('normalized demo mean = ',normalized_data.mean(axis=0))
+print('normalized demo std = ',normalized_data.std(axis=0))
 
-print('normalized data min = ',normalized_data.min(axis=0))
-print('normalized data max = ',normalized_data.max(axis=0))
+print('normalized demo min = ',normalized_data.min(axis=0))
+print('normalized demo max = ',normalized_data.max(axis=0))
 
 np.savez('train.npz',data=normalized_data, std=std, mean=mean)

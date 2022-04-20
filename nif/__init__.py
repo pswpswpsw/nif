@@ -5,8 +5,6 @@ from tensorflow.keras import mixed_precision
 
 from .model import NIFMultiScale, NIF, NIFMultiScaleLastLayerParameterized
 
-# tf.keras.backend.set_floatx("float64")
-
 gpus = tf.config.experimental.list_physical_devices('GPU')
 if len(gpus) > 0:
     # Currently, memory growth needs to be the same across GPUs

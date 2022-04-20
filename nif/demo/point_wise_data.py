@@ -1,4 +1,7 @@
 import numpy as np
+import os
+path = os.path.abspath(__file__)
+dir_path = os.path.dirname(path)
 
 class PointWiseData(object):
     def __init__(self, parameter_data, x_data, u_data, sample_weight_data=None):

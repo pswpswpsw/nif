@@ -4,6 +4,8 @@ import tensorflow as tf
 from tensorflow.keras import mixed_precision
 
 from .model import NIFMultiScale, NIF, NIFMultiScaleLastLayerParameterized
+import demo
+import optimizers
 
 gpus = tf.config.experimental.list_physical_devices('GPU')
 if len(gpus) > 0:

@@ -1,5 +1,5 @@
 import numpy as np
-from point_wise_data import PointWiseData
+from .point_wise_data import PointWiseData
 
 class TravelingWaveHighFreq(PointWiseData):
     def __init__(self):

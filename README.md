@@ -13,7 +13,8 @@
 - flexible training schedule: e.g., first Adam then fine-tunning with L-BFGS
 - performance monitoring: model weights checkpoints and restoration
 
-## Google Colab Tutorial[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/)]
+## Google Colab Tutorial
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/)
 
 1. [Hello world! A simple fitting on 1D travelling wave](https://colab.research.google.com/drive/1odreAOvjlkLVJsHXDMOjqc_CTaXil_ha?usp=sharing)
 	- learn how to use class `nif.NIF`

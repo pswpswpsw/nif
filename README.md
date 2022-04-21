@@ -15,15 +15,19 @@
 
 ## Google Colab Tutorial
 
-- [Hello world! A simple fitting on 1D travelling wave](https://colab.research.google.com/drive/1odreAOvjlkLVJsHXDMOjqc_CTaXil_ha?usp=sharing)
-	- case setup with `nif.NIF`
+1. [Hello world! A simple fitting on 1D travelling wave](https://colab.research.google.com/drive/1odreAOvjlkLVJsHXDMOjqc_CTaXil_ha?usp=sharing)
+	- learn how to use class `nif.NIF`
 	- model checkpoints/restoration
 	- mixed precision training
 	- L-BFGS fine tuning
 
-- [Tackling multi-scale data](https://colab.research.google.com/drive/1GtbgfmfkwyZnNJFrz-zf_qeY-25-eKMY?usp=sharing)
-    - the use of class `nif.NIFMultiScale`
+2. [Tackling multi-scale data](https://colab.research.google.com/drive/1GtbgfmfkwyZnNJFrz-zf_qeY-25-eKMY?usp=sharing)
+    - learn how to use class `nif.NIFMultiScale`
     - demonstrate the effectiveness of learning high frequency data
+
+3. [](https://colab.research.google.com/drive/19TTaMhddNpFIA2f-ogosLtE0l0wvDKk3?usp=sharing)
+	- learn how ot use class `nif.NIFMultiScaleLastLayerParameterized`
+	- demonstrate on a (shortened) flow over a cylinder case from AMR solver
 
 ## How to cite
 

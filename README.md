@@ -14,21 +14,19 @@
 - performance monitoring: model weights checkpoints and restoration
 
 ## Google Colab Tutorial
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/1_simple_1d_wave.ipynb)
 
-1. [Hello world! A simple fitting on 1D travelling wave](https://colab.research.google.com/drive/1odreAOvjlkLVJsHXDMOjqc_CTaXil_ha?usp=sharing)
+1. **[Hello world! A simple fitting on 1D travelling wave**[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/1_simple_1d_wave.ipynb)
 	- learn how to use class `nif.NIF`
 	- model checkpoints/restoration
 	- mixed precision training
 	- L-BFGS fine tuning
 
-2. [Tackling multi-scale data](https://colab.research.google.com/drive/1GtbgfmfkwyZnNJFrz-zf_qeY-25-eKMY?usp=sharing)
+2. **Tackling multi-scale data**[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/2_multi_scale_NIF.ipynb)
 
     - learn how to use class `nif.NIFMultiScale`
     - demonstrate the effectiveness of learning high frequency data
 
-
-3. [Learning linear representation](https://colab.research.google.com/drive/19TTaMhddNpFIA2f-ogosLtE0l0wvDKk3?usp=sharing)
+3. **Learning linear representation**[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/3_multi_scale_linear_NIF.ipynb)
 	- learn how ot use class `nif.NIFMultiScaleLastLayerParameterized`
 	- demonstrate on a (shortened) flow over a cylinder case from AMR solver
 

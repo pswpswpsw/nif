@@ -25,11 +25,13 @@ class PointWiseData(object):
     def standard_normalize(raw_data, area_weighted=False):
         mean = raw_data.mean(axis=0)
         std = raw_data.std(axis=0)
-        normalized_data = (raw_data - mean)/std
-
         if area_weighted:
+            mean[-1] = 0.
+            std[-1] = np.mean(raw_data[:,-1])
+            normalized_data = (raw_data - mean)/std
             return normalized_data[:,:-1], mean, std,normalized_data[:,-1]
         else:
+            normalized_data = (raw_data - mean)/std
             return normalized_data, mean, std
 
     @staticmethod
@@ -44,8 +46,9 @@ class PointWiseData(object):
         for j in range(n_para + n_x, n_para + n_x + n_target):
             std[j] = np.max(np.abs(raw_data[:,j]))
 
-        # for area, simply take the mean as std for normalize
         if area_weighted:
+            # for area, simply take the mean as std for normalize
+            mean[-1] = 0.
             std[-1] = np.mean(raw_data[:,-1])
             normalized_data = (raw_data - mean)/std
             return normalized_data[:,:-1], mean, std, normalized_data[:,-1]

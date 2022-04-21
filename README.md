@@ -25,7 +25,7 @@
     - learn how to use class `nif.NIFMultiScale`
     - demonstrate the effectiveness of learning high frequency data
 
-3. [](https://colab.research.google.com/drive/19TTaMhddNpFIA2f-ogosLtE0l0wvDKk3?usp=sharing)
+3. [Learning linear representation](https://colab.research.google.com/drive/19TTaMhddNpFIA2f-ogosLtE0l0wvDKk3?usp=sharing)
 	- learn how ot use class `nif.NIFMultiScaleLastLayerParameterized`
 	- demonstrate on a (shortened) flow over a cylinder case from AMR solver
 

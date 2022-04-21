@@ -1,10 +1,15 @@
 # Neural Implicit Flow (NIF): mesh-agnostic dimensionality reduction
 
+<p align="center">
+  <img src="./misc/myimage.gif" alt="animated" />
+</p>
+
 - NIF is a mesh-agnostic dimensionality reduction paradigm for parametric spatial temporal fields. For decades, dimensionality reduction (e.g., proper orthogonal decomposition, convolutional autoencoders) has been the very first step in reduced-order modeling of any large-scale spatial-temporal dynamics. 
 
 - Unfortunately, these frameworks are either not extendable to realistic industry scenario, e.g., adaptive mesh refinement, or cannot preceed nonlinear operations without resorting to lossy interpolation on a uniform grid. Details can be found in our [paper](https://arxiv.org/pdf/2204.03216.pdf).
 
 - NIF is built on top of Keras, in order to minimize user's efforts in using the code and maximize the existing functionality in Keras. 
+
 
 ## Features
 
@@ -27,7 +32,7 @@
     - demonstrate the effectiveness of learning high frequency data
 
 3. **Learning linear representation**[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/3_multi_scale_linear_NIF.ipynb)
-	- learn how ot use class `nif.NIFMultiScaleLastLayerParameterized`
+	- learn how to use class `nif.NIFMultiScaleLastLayerParameterized`
 	- demonstrate on a (shortened) flow over a cylinder case from AMR solver
 
 ## How to cite

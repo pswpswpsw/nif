@@ -35,5 +35,9 @@ class PointWiseData(object):
         for i in range(n_para + n_x):
             mean[i] = 0.5*(np.min(raw_data[:,i])+np.max(raw_data[:,i]))
             std[i] = 0.5*(-np.min(raw_data[:,i])+np.max(raw_data[:,i]))
+
+        # also we normalize the output target to make sure the maximal is most 1
+        for j in range(n_para + n_x, raw_data.shape[1]):
+            std[j] = std[j] * np.max(np.abs(raw_data[:,j]))
         normalized_data = (raw_data - mean)/std
         return normalized_data, mean, std

@@ -15,7 +15,7 @@
 
 ## Google Colab Tutorial
 
-1. **[Hello world! A simple fitting on 1D travelling wave**[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/1_simple_1d_wave.ipynb)
+1. **Hello world! A simple fitting on 1D travelling wave**[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/1_simple_1d_wave.ipynb)
 	- learn how to use class `nif.NIF`
 	- model checkpoints/restoration
 	- mixed precision training

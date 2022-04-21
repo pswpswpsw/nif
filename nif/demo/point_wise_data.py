@@ -29,7 +29,7 @@ class PointWiseData(object):
         return normalized_data, mean, std
 
     @staticmethod
-    def minmax_normalize(raw_data, n_para, n_x):
+    def minmax_normalize(raw_data, n_para, n_x, n_target, area_weighted=False):
         mean = raw_data.mean(axis=0)
         std = raw_data.std(axis=0)
         for i in range(n_para + n_x):
@@ -37,7 +37,12 @@ class PointWiseData(object):
             std[i] = 0.5*(-np.min(raw_data[:,i])+np.max(raw_data[:,i]))
 
         # also we normalize the output target to make sure the maximal is most 1
-        for j in range(n_para + n_x, raw_data.shape[1]):
+        for j in range(n_para + n_x, n_para + n_x + n_target):
             std[j] = np.max(np.abs(raw_data[:,j]))
+
+        # for area, simply take the mean as std for normalize
+        if area_weighted:
+            std[-1] = np.mean(raw_data[:,-1])
+
         normalized_data = (raw_data - mean)/std
         return normalized_data, mean, std

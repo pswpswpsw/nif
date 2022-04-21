@@ -11,7 +11,7 @@ class TravelingWaveHighFreq(PointWiseData):
         x_data = data[:,[1]]
         u_data = data[:,[2]]
         super(TravelingWaveHighFreq, self).__init__(parameter_data, x_data, u_data)
-        self.data, self.mean, self.std = self.minmax_normalize(self.data_raw, n_para=self.n_p, n_x=self.n_x)
+        self.data, self.mean, self.std = self.minmax_normalize(self.data_raw, n_para=self.n_p, n_x=self.n_x, n_target=1)
 
 if __name__=='__main__':
     tw = TravelingWaveHighFreq()

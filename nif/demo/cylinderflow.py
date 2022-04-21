@@ -12,7 +12,8 @@ class CylinderFlow(PointWiseData):
         u_data = data[:,[3,4]]
         sample_weight_data = data[:,[-1]]
         super(CylinderFlow, self).__init__(parameter_data, x_data, u_data, sample_weight_data=sample_weight_data)
-        self.data, self.mean, self.std = self.minmax_normalize(self.data_raw, n_para=self.n_p, n_x=self.n_x)
+        self.data, self.mean, self.std = self.minmax_normalize(self.data_raw, n_para=self.n_p, n_x=self.n_x,
+                                                               n_target=2, area_weighted=True)
 
 if __name__=='__main__':
     tw = CylinderFlow()

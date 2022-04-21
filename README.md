@@ -13,7 +13,7 @@
 - flexible training schedule: e.g., first Adam then fine-tunning with L-BFGS
 - performance monitoring: model weights checkpoints and restoration
 
-## Google Colab Tutorial
+## Google Colab Tutorial[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/)]
 
 1. [Hello world! A simple fitting on 1D travelling wave](https://colab.research.google.com/drive/1odreAOvjlkLVJsHXDMOjqc_CTaXil_ha?usp=sharing)
 	- learn how to use class `nif.NIF`
@@ -22,8 +22,10 @@
 	- L-BFGS fine tuning
 
 2. [Tackling multi-scale data](https://colab.research.google.com/drive/1GtbgfmfkwyZnNJFrz-zf_qeY-25-eKMY?usp=sharing)
+
     - learn how to use class `nif.NIFMultiScale`
     - demonstrate the effectiveness of learning high frequency data
+
 
 3. [Learning linear representation](https://colab.research.google.com/drive/19TTaMhddNpFIA2f-ogosLtE0l0wvDKk3?usp=sharing)
 	- learn how ot use class `nif.NIFMultiScaleLastLayerParameterized`

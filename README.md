@@ -20,18 +20,18 @@
 
 ## Google Colab Tutorial
 
-1. [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/1_simple_1d_wave.ipynb)**Hello world! A simple fitting on 1D travelling wave**
+1. **Hello world! A simple fitting on 1D travelling wave** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/1_simple_1d_wave.ipynb)
 	- learn how to use class `nif.NIF`
 	- model checkpoints/restoration
 	- mixed precision training
 	- L-BFGS fine tuning
 
-2. [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/2_multi_scale_NIF.ipynb)**Tackling multi-scale data**
+2. **Tackling multi-scale data** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/2_multi_scale_NIF.ipynb)
 
     - learn how to use class `nif.NIFMultiScale`
     - demonstrate the effectiveness of learning high frequency data
 
-3. [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/3_multi_scale_linear_NIF.ipynb)**Learning linear representation**
+3. **Learning linear representation** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/3_multi_scale_linear_NIF.ipynb)
 	- learn how to use class `nif.NIFMultiScaleLastLayerParameterized`
 	- demonstrate on a (shortened) flow over a cylinder case from AMR solver
 

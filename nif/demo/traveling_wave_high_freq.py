@@ -1,9 +1,12 @@
 import numpy as np
+import os
 from .point_wise_data import PointWiseData
 
 class TravelingWaveHighFreq(PointWiseData):
     def __init__(self):
-        data = np.load('./data/traveling_wave_high_freq.npz')['data']
+        path = os.path.abspath(__file__)
+        dir_path = os.path.dirname(path)
+        data = np.load(dir_path+'/data/traveling_wave_high_freq.npz')['data']
         parameter_data = data[:,[0]]
         x_data = data[:,[1]]
         u_data = data[:,[2]]

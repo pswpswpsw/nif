@@ -38,6 +38,6 @@ class PointWiseData(object):
 
         # also we normalize the output target to make sure the maximal is most 1
         for j in range(n_para + n_x, raw_data.shape[1]):
-            std[j] = std[j] * np.max(np.abs(raw_data[:,j]))
+            std[j] = np.max(np.abs(raw_data[:,j]))
         normalized_data = (raw_data - mean)/std
         return normalized_data, mean, std

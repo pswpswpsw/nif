@@ -1,10 +1,10 @@
 import numpy as np
 
 class PointWiseData(object):
-    def __init__(self, parameter_data, x_data, u_data, sample_weight_data=None):
-        self.sample_weight_data = sample_weight_data
+    def __init__(self, parameter_data, x_data, u_data):
         self.data_raw = np.hstack([parameter_data, x_data, u_data])
         self.data = None
+        self.sample_weight = None
         self.n_p = parameter_data.shape[-1]
         self.n_x = x_data.shape[-1]
         self.n_o = u_data.shape[-1]
@@ -43,6 +43,8 @@ class PointWiseData(object):
         # for area, simply take the mean as std for normalize
         if area_weighted:
             std[-1] = np.mean(raw_data[:,-1])
-
-        normalized_data = (raw_data - mean)/std
-        return normalized_data, mean, std
+            normalized_data = (raw_data - mean)/std
+            return normalized_data[:,:n_para + n_x + n_target], mean, std, normalized_data[:,-1]
+        else:
+            normalized_data = (raw_data - mean)/std
+            return normalized_data, mean, std

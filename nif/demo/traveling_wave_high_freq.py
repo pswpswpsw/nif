@@ -17,6 +17,7 @@ if __name__=='__main__':
     tw = TravelingWaveHighFreq()
     print(tw.data.mean(axis=0))
     print(tw.data.std(axis=0))
+    print(tw.data.max(axis=0))
     print(tw.parameter.shape)
     print(tw.x.shape)
     print(tw.u.shape)

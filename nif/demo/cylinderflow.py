@@ -1,6 +1,6 @@
 import numpy as np
 import os
-from point_wise_data import PointWiseData
+from .point_wise_data import PointWiseData
 
 class CylinderFlow(PointWiseData):
     def __init__(self):

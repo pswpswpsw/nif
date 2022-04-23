@@ -144,10 +144,11 @@ def scheduler(epoch, lr):
         
 scheduler_callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
 
+from nif.optimizers import AdamShaowuOptimizer
 
 cm = tf.distribute.MirroredStrategy().scope() if enable_multi_gpu else contextlib.nullcontext()
 with cm:
-    optimizer = tf.keras.optimizers.Adam(lr)
+    optimizer = AdamShaowuOptimizer(lr) # tf.keras.optimizers.Adam(lr)
     loss_fun = tf.keras.losses.MeanSquaredError()
     model_ori = nif.NIF(cfg_shape_net, cfg_parameter_net, mixed_policy)
     model = model_ori.model()

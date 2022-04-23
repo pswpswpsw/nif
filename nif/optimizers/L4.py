@@ -257,9 +257,9 @@ class AdamShaowuOptimizer(tf.keras.optimizers.Optimizer):
         """Call super().__init__() and use _set_hyper() to store hyperparameters"""
         super().__init__(name, **kwargs)
         self._set_hyper("learning_rate", kwargs.get("lr", learning_rate)) # handle lr=learning_rate
-        self._set_hyper("beta_1", kwargs.get("beta_1", beta_1))
-        self._set_hyper("beta_2", kwargs.get("beta_2", beta_2))
-        self._set_hyper("epsilon", kwargs.get("epsilon", epsilon))
+        self._set_hyper("beta_1", kwargs.get("b1", beta_1))
+        self._set_hyper("beta_2", kwargs.get("b2", beta_2))
+        self._set_hyper("epsilon", kwargs.get("eps", epsilon))
         self._is_first = True
 
     def _create_slots(self, var_list):
@@ -271,23 +271,8 @@ class AdamShaowuOptimizer(tf.keras.optimizers.Optimizer):
             self.add_slot(var, 'm')
         for var in var_list:
             self.add_slot(var, 'v')
-        # for var in var_list:
-        #    self.add_slot(var, "pv") #previous variable i.e. weight or bias
-        # for var in var_list:
-        #    self.add_slot(var, "pg") #previous gradient
 
-    # def get_decay_rate(self):
-    #     lr_t = self._get_hyper("learning_rate", var_dtype)
-    #     if isinstance(lr_t, learning_rate_schedule.LearningRateSchedule):
-    #         local_step = math_ops.cast(self.iterations, var_dtype)
-    #         lr_t = math_ops.cast(lr_t(local_step), var_dtype)
-    #     if self._initial_decay > 0.:
-    #         local_step = math_ops.cast(self.iterations, var_dtype)
-    #         decay_t = self._get_hyper("decay", var_dtype)
-    #         lr_t = lr_t / (1. + decay_t * local_step)
-    #     return lr_t
-
-    # @tf.function
+    @tf.function
     def _resource_apply_dense(self, grad, var, apply_state=None):
         """Update the slots and perform one optimization step for one model variable
         """
@@ -315,7 +300,7 @@ class AdamShaowuOptimizer(tf.keras.optimizers.Optimizer):
 
         mhat = m/(1. - beta_1_power)
         vhat = v/(1. - beta_2_power)
-        new_var = var - alpha*mhat/(math_ops.sqrt(math_ops.pow(vhat, 2)) + epsilon)
+        new_var = var - alpha*mhat/(math_ops.sqrt(vhat) + epsilon)
 
         return state_ops.assign(var, new_var, use_locking=self._use_locking)
 

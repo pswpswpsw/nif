@@ -1,2 +1,7 @@
-Epoch      0: avg.loss pe = 1.008e+00, 510 points/sec, time elapsed = 0.000 hours
-Epoch      0: avg.loss pe = 1.001e+00, 30 points/sec, time elapsed = 0.005 hours
+Epoch      0: avg.loss pe =  nan, 320 points/sec, time elapsed = 0.000 hours
+Epoch    100: avg.loss pe =  nan, 9001 points/sec, time elapsed = 0.003 hours
+Epoch    200: avg.loss pe =  nan, 8258 points/sec, time elapsed = 0.005 hours
+Epoch    300: avg.loss pe =  nan, 6170 points/sec, time elapsed = 0.007 hours
+Epoch      0: avg.loss pe = 1.003e+00, 287 points/sec, time elapsed = 0.000 hours
+Epoch    100: avg.loss pe = 1.001e+00, 8743 points/sec, time elapsed = 0.003 hours
+Epoch    200: avg.loss pe = 9.705e-01, 7997 points/sec, time elapsed = 0.006 hours

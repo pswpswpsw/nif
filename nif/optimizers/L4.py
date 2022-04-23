@@ -250,11 +250,16 @@ from tensorflow.python.util.tf_export import keras_export
 #         return config
 
 
-class SGOptimizer(tf.keras.optimizers.Optimizer):
-    def __init__(self, learning_rate=0.01, name="SGOptimizer", **kwargs):
+class AdamShaowuOptimizer(tf.keras.optimizers.Optimizer):
+    _HAS_AGGREGATE_GRAD = True
+    def __init__(self, learning_rate=0.01, beta_1=0.9, beta_2=0.999, epsilon=1e-8, name="AdamShaowuOptimizer",
+                 **kwargs):
         """Call super().__init__() and use _set_hyper() to store hyperparameters"""
         super().__init__(name, **kwargs)
         self._set_hyper("learning_rate", kwargs.get("lr", learning_rate)) # handle lr=learning_rate
+        self._set_hyper("beta_1", kwargs.get("beta_1", beta_1))
+        self._set_hyper("beta_2", kwargs.get("beta_2", beta_2))
+        self._set_hyper("epsilon", kwargs.get("epsilon", epsilon))
         self._is_first = True
 
     def _create_slots(self, var_list):
@@ -263,31 +268,56 @@ class SGOptimizer(tf.keras.optimizers.Optimizer):
         For momentum optimization, we need one momentum slot per model variable.
         """
         for var in var_list:
-            self.add_slot(var, "pv") #previous variable i.e. weight or bias
+            self.add_slot(var, 'm')
         for var in var_list:
-            self.add_slot(var, "pg") #previous gradient
+            self.add_slot(var, 'v')
+        # for var in var_list:
+        #    self.add_slot(var, "pv") #previous variable i.e. weight or bias
+        # for var in var_list:
+        #    self.add_slot(var, "pg") #previous gradient
 
-    @tf.function
-    def _resource_apply_dense(self, grad, var):
+    # def get_decay_rate(self):
+    #     lr_t = self._get_hyper("learning_rate", var_dtype)
+    #     if isinstance(lr_t, learning_rate_schedule.LearningRateSchedule):
+    #         local_step = math_ops.cast(self.iterations, var_dtype)
+    #         lr_t = math_ops.cast(lr_t(local_step), var_dtype)
+    #     if self._initial_decay > 0.:
+    #         local_step = math_ops.cast(self.iterations, var_dtype)
+    #         decay_t = self._get_hyper("decay", var_dtype)
+    #         lr_t = lr_t / (1. + decay_t * local_step)
+    #     return lr_t
+
+    # @tf.function
+    def _resource_apply_dense(self, grad, var, apply_state=None):
         """Update the slots and perform one optimization step for one model variable
         """
         var_dtype = var.dtype.base_dtype
-        lr_t = self._decayed_lr(var_dtype) # handle learning rate decay
-        new_var_m = var - grad * lr_t
-        pv_var = self.get_slot(var, "pv")
-        pg_var = self.get_slot(var, "pg")
+        alpha = self._decayed_lr(var_dtype)
+
+        local_step = math_ops.cast(self.iterations + 1, var_dtype)
+        beta_1_t = array_ops.identity(self._get_hyper('beta_1', var_dtype))
+        beta_2_t = array_ops.identity(self._get_hyper('beta_2', var_dtype))
+        beta_1_power = math_ops.pow(beta_1_t, local_step)
+        beta_2_power = math_ops.pow(beta_2_t, local_step)
+        epsilon = array_ops.identity(self._get_hyper('epsilon', var_dtype))
+
+        # new_var_m = var - grad * lr_t
+        m = self.get_slot(var, "m")
+        v = self.get_slot(var, "v")
 
         if self._is_first:
             self._is_first = False
-            new_var = new_var_m
+            m = 0 + (1. - beta_1_t)*grad
+            v = 0 + (1. - beta_2_t)*math_ops.pow(grad, 2)
         else:
-            cond = grad*pg_var >= 0
-            print(cond)
-            avg_weights = (pv_var + var)/2.0
-            new_var = tf.where(cond, new_var_m, avg_weights)
-        pv_var.assign(var)
-        pg_var.assign(grad)
-        var.assign(new_var)
+            m = beta_1_t*m + (1. - beta_1_t)*grad
+            v = beta_2_t*v + (1. - beta_2_t)*math_ops.pow(grad, 2)
+
+        mhat = m/(1. - beta_1_power)
+        vhat = v/(1. - beta_2_power)
+        new_var = var - alpha*mhat/(math_ops.sqrt(math_ops.pow(vhat, 2)) + epsilon)
+
+        return state_ops.assign(var, new_var, use_locking=self._use_locking)
 
     def _resource_apply_sparse(self, grad, var, indices, apply_state=None):
         raise NotImplementedError

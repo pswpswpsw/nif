@@ -1,7 +1,8 @@
 from tensorflow_probability.python.optimizer import lbfgs_minimize
 from .lbfgs import function_factory, TFPLBFGS
 from .lbfgs_V2 import LBFGSOptimizer
-from .external_optimizers import L4Adam, AdaBeliefOptimizer
+from .external_optimizers import L4Adam
+from .external_optimizers import AdaBeliefOptimizer
 
 __all__ = [
     "function_factory",

@@ -286,26 +286,7 @@ class AdaBeliefOptimizer(tf.keras.optimizers.Optimizer):
     config = tf.keras.optimizers.serialize(optimizer)
     new_optimizer = tf.keras.optimizers.deserialize(config, custom_objects={"AdaBeliefOptimizer": AdaBeliefOptimizer})
     ```
-    """
-
-    def __init__(
-            self,
-            learning_rate=0.001,
-            beta_1=0.9,
-            beta_2=0.999,
-            epsilon=1e-14,
-            weight_decay=0.0,
-            rectify=True,
-            amsgrad=False,
-            sma_threshold=5.0,
-            total_steps=0,
-            warmup_proportion=0.1,
-            min_lr=0.0,
-            name="AdaBeliefOptimizer",
-            print_change_log = True,
-            **kwargs):
-        r"""Construct a new AdaBelief optimizer.
-        Args:
+            Args:
             learning_rate: A `Tensor` or a floating point value, or a schedule
                 that is a `tf.keras.optimizers.schedules.LearningRateSchedule`.
                 The learning rate.
@@ -336,11 +317,25 @@ class AdaBeliefOptimizer(tf.keras.optimizers.Optimizer):
                 included for backward compatibility to allow time inverse
                 decay of learning rate. `lr` is included for backward
                 compatibility, recommended to use `learning_rate` instead.
-        """
-        super().__init__(name, **kwargs)
+    """
 
-        # ------------------------------------------------------------------------------
-        # ------------------------------------------------------------------------------
+    def __init__(
+            self,
+            learning_rate=0.001,
+            beta_1=0.9,
+            beta_2=0.999,
+            epsilon=1e-14,
+            weight_decay=0.0,
+            rectify=True,
+            amsgrad=False,
+            sma_threshold=5.0,
+            total_steps=0,
+            warmup_proportion=0.1,
+            min_lr=0.0,
+            name="AdaBeliefOptimizer",
+            print_change_log = True,
+            **kwargs):
+        super().__init__(name, **kwargs)
 
         self._set_hyper("learning_rate", kwargs.get("lr", learning_rate))
         self._set_hyper("beta_1", beta_1)

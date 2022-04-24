@@ -249,8 +249,8 @@ import sys
 #         })
 #         return config
 
-
-class AdamShaowuOptimizer(tf.keras.optimizers.Optimizer):
+@keras_export('keras.optimizers.AdamShaowu')
+class AdamShaowuOptimizer(optimizer_v2.OptimizerV2):
     _HAS_AGGREGATE_GRAD = True
     def __init__(self, learning_rate=0.001, beta_1=0.9, beta_2=0.999, epsilon=backend_config.epsilon(),
                  name="AdamShaowuOptimizer", **kwargs):

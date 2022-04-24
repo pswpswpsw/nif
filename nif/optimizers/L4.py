@@ -1,14 +1,22 @@
+import functools
 import tensorflow as tf
-from tensorflow.python.keras.optimizer_v2 import optimizer_v2
-# from tensorflow.python.eager import def_function
-# from tensorflow.python.framework import ops
-# from tensorflow.python.keras import backend_config
-# from tensorflow.python.ops import array_ops
 from tensorflow.python.ops import control_flow_ops
 from tensorflow.python.ops import math_ops
 from tensorflow.python.ops import state_ops
-# from tensorflow.python.training import gen_training_ops
-# from tensorflow.python.util.tf_export import keras_export
+from tensorflow.python.ops import array_ops
+from tensorflow.python.framework import ops
+from tensorflow.python.keras import backend_config
+from tensorflow.python.util.tf_export import keras_export
+from tensorflow.python.eager import backprop
+from tensorflow.python.eager import context
+from tensorflow.python.util import nest
+from tensorflow.python.framework import dtypes
+from tensorflow.python.keras.optimizer_v2 import utils as optimizer_utils
+from tensorflow.python.distribute import distribution_strategy_context as distribute_ctx
+from tensorflow.python.distribute import parameter_server_strategy
+from tensorflow.python.distribute import values as ds_values
+from tensorflow.python.keras.utils import tf_utils
+
 # import sys
 #
 # def n_inner_product(list_of_tensors1, list_of_tensors2):
@@ -249,49 +257,215 @@ from tensorflow.python.ops import state_ops
 #         })
 #         return config
 
-# @keras_export('keras.optimizers.AdamShaowu')
-class AdamShaowuOptimizer(tf.keras.optimizers.Optimizer):
+@keras_export('keras.optimizers.L4Adam')
+class L4Adam(tf.keras.optimizers.Optimizer):
     # _HAS_AGGREGATE_GRAD = True
-    def __init__(self, learning_rate=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-7,
-                 name="AdamShaowuOptimizer", **kwargs):
-        """Call super().__init__() and use _set_hyper() to store hyperparameters"""
+    def __init__(self, learning_rate=0.15, tau_m=10., tau_s=1000., tau=1000., gamma_0=0.75,
+                 gamma=0.9, epsilon=1e-7, name="L4Adam", **kwargs):
         super().__init__(name, **kwargs)
-        self._set_hyper("learning_rate", kwargs.get("lr", learning_rate)) # handle lr=learning_rate
-        self._set_hyper("beta_1", kwargs.get("b1", beta_1))
-        self._set_hyper("beta_2", kwargs.get("b2", beta_2))
-        self._set_hyper("epsilon", kwargs.get("eps", epsilon))
+        self._set_hyper("learning_rate", kwargs.get("learning_rate", learning_rate))
+        self._set_hyper("tau_m", kwargs.get("tau_m", tau_m))
+        self._set_hyper("tau_s", kwargs.get("tau_s", tau_s))
+        self._set_hyper("tau", kwargs.get("tau", tau))
+        self._set_hyper("gamma", kwargs.get("gamma", gamma))
+        self.epsilon = epsilon or backend_config.epsilon()
+        self.l_min = 1e6
+        self.gamma_0 = kwargs.get("gamma_0", gamma_0)
+        self._is_first = True
 
     def _create_slots(self, var_list):
         for var in var_list:
-            self.add_slot(var, 'm')
+            self.add_slot(var, 'g')
         for var in var_list:
-            self.add_slot(var, 'v')
+            self.add_slot(var, 'g2')
 
-    def _resource_apply_dense(self, grad, var, apply_state=None):
+    def _prepare_local(self, var_device, var_dtype, apply_state):
+        super(L4Adam, self)._prepare_local(var_device, var_dtype, apply_state)
+
+        local_step = math_ops.cast(self.iterations + 1, var_dtype)
+        lr = self._decayed_lr(var_dtype)
+        tau_m = array_ops.identity(self._get_hyper('tau_m', var_dtype))
+        tau_s = array_ops.identity(self._get_hyper('tau_s', var_dtype))
+        tau = array_ops.identity(self._get_hyper('tau', var_dtype))
+        gamma = array_ops.identity(self._get_hyper('gamma', var_dtype))
+
+        # derived quantity
+        one_over_tau_s = 1./tau_s
+        one_over_tau_m = 1./tau_m
+        normal_factor_m = 1.0 - math_ops.pow(1. - one_over_tau_m, local_step)
+        normal_factor_s = 1.0 - math_ops.pow(1. - one_over_tau_s, local_step)
+
+        apply_state[(var_device, var_dtype)].update(dict(
+            lr=lr,
+            epsilon=ops.convert_to_tensor(self.epsilon, var_dtype),
+            tau_m=tau_m,
+            tau_s=tau_s,
+            normal_factor_m=normal_factor_m,
+            normal_factor_s=normal_factor_s,
+            one_over_tau_s=one_over_tau_s,
+            one_over_tau_m=one_over_tau_m,
+            gamma=gamma,
+            one_plus_one_over_tau=1. + 1./tau,
+            one_minus_one_over_tau_s=1. - one_over_tau_s,
+            one_minus_one_over_tau_m=1. - one_over_tau_m
+        ))
+
+    def _momentum_add(self, m, x, one_minus_one_over_tau, one_over_tau, factor):
+        return (one_minus_one_over_tau*m + one_over_tau*x)/factor
+
+    def _resource_apply_dense(self, grad, var, apply_state=None, loss=None):
         """Update the slots and perform one optimization step for one model variable
         """
-        var_dtype = var.dtype.base_dtype
-        alpha = self._decayed_lr(var_dtype)
+        var_device, var_dtype = var.device, var.dtype.base_dtype
+        coefficients = ((apply_state or {}).get((var_device, var_dtype))
+                        or self._fallback_apply_state(var_device, var_dtype))
 
-        t = math_ops.cast(self.iterations + 1, var_dtype)
-        beta_1 = self._get_hyper('beta_1', var_dtype)
-        beta_2 = self._get_hyper('beta_2', var_dtype)
-        beta_1_t = math_ops.pow(beta_1, t)
-        beta_2_t = math_ops.pow(beta_2, t)
-        epsilon = self._get_hyper('epsilon', var_dtype)
+        # t = math_ops.cast(self.iterations + 1, var_dtype)
+        # tau_m = self._get_hyper('tau_m', var_dtype)
+        # tau_s = self._get_hyper('tau_s', var_dtype)
+        #
+        # epsilon = self._get_hyper('epsilon', var_dtype)
 
-        # new_var_m = var - grad * lr_t
-        m = self.get_slot(var, "m")
-        v = self.get_slot(var, "v")
-        m_t = beta_1*m + (1. - beta_1)*grad
-        v_t = beta_2*v + (1. - beta_2)*math_ops.pow(grad, 2)
-        new_var = var - alpha*m*math_ops.sqrt(1. - beta_2_t)/((math_ops.sqrt(v) + epsilon)*(1.-beta_1_t))
+        g = self.get_slot(var, "g")
+        g2 = self.get_slot(var, "g2")
+        g_new = self._momentum_add(g, grad,
+                                   coefficients['one_minus_one_over_tau_m'],
+                                   coefficients['one_over_tau_m'],
+                                   coefficients['normal_factor_m'])
+        g2_new = self._momentum_add(g2, grad*grad,
+                                    coefficients['one_minus_one_over_tau_s'],
+                                    coefficients['one_over_tau_s'],
+                                    coefficients['normal_factor_s'])
+        nu_new = g_new / (math_ops.sqrt(g2_new) + coefficients['epsilon'])
 
-        m_update = state_ops.assign(m, m_t)
-        v_update = state_ops.assign(v, v_t)
+        new_var = None
+        #TODO(shaowu: it seems that implementing L4 can be quite troublesome in tensorflow 2)..
+        # mostly because of the g^T * nu term, maybe it is easier in pytorch
+        # new_var = var - coefficients['lr'] * nu_new * (loss - coefficients["gamma"]*self.l_min)\
+        #           /(coefficients["epsilon"] + )
+
+        # create the ops for updating
+        g_update = state_ops.assign(g, g_new, use_locking=self._use_locking)
+        g2_update = state_ops.assign(g2, g2_new, use_locking=self._use_locking)
         var_update = state_ops.assign(var, new_var, use_locking=self._use_locking)
 
-        return control_flow_ops.group(*[var_update, m_update, v_update])
+        return control_flow_ops.group(*[var_update, g_update, g2_update])
+
+    def minimize(self, loss, var_list, grad_loss=None, name=None, tape=None):
+        grads_and_vars = self._compute_gradients(
+            loss, var_list=var_list, grad_loss=grad_loss, tape=tape)
+        return self.apply_gradients(grads_and_vars, name=name, loss=loss)
+
+    def apply_gradients(self,
+                        grads_and_vars,
+                        name=None,
+                        experimental_aggregate_gradients=True,
+                        loss=None):
+        # update l_min
+        if self.iterations == 0:
+            self.l_min = ops.convert_to_tensor(self.gamma_0) * loss
+        else:
+            self.l_min = math_ops.minimum(self.l_min, loss)
+
+        grads_and_vars = optimizer_utils.filter_empty_gradients(grads_and_vars)
+        var_list = [v for (_, v) in grads_and_vars]
+
+        with ops.name_scope_v2(self._name):
+            # Create iteration if necessary.
+            with ops.init_scope():
+                self._create_all_weights(var_list)
+
+            if not grads_and_vars:
+                # Distribution strategy does not support reducing an empty list of
+                # gradients
+                return control_flow_ops.no_op()
+
+            if distribute_ctx.in_cross_replica_context():
+                raise RuntimeError(
+                    "`apply_gradients() cannot be called in cross-replica context. "
+                    "Use `tf.distribute.Strategy.run` to enter replica "
+                    "context.")
+
+            strategy = distribute_ctx.get_strategy()
+            if (not experimental_aggregate_gradients and strategy and isinstance(
+                    strategy.extended,
+                    parameter_server_strategy.ParameterServerStrategyExtended)):
+                raise NotImplementedError(
+                    "`experimental_aggregate_gradients=False is not supported for "
+                    "ParameterServerStrategy and CentralStorageStrategy")
+
+            apply_state = self._prepare(var_list)
+            if experimental_aggregate_gradients:
+                grads_and_vars = self._transform_unaggregated_gradients(grads_and_vars)
+                grads_and_vars = self._aggregate_gradients(grads_and_vars)
+            grads_and_vars = self._transform_gradients(grads_and_vars)
+
+            return distribute_ctx.get_replica_context().merge_call(
+                functools.partial(self._distributed_apply, apply_state=apply_state, loss=loss),
+                args=(grads_and_vars,),
+                kwargs={
+                    "name": name,
+                })
+
+    def _distributed_apply(self, distribution, grads_and_vars, name, apply_state, loss=None):
+        """`apply_gradients` using a `DistributionStrategy`."""
+
+        def apply_grad_to_update_var(var, grad):
+            """Apply gradient to variable."""
+            if isinstance(var, ops.Tensor):
+                raise NotImplementedError("Trying to update a Tensor ", var)
+
+            apply_kwargs = {}
+            if isinstance(grad, ops.IndexedSlices):
+                if var.constraint is not None:
+                    raise RuntimeError(
+                        "Cannot use a constraint function on a sparse variable.")
+                if "apply_state" in self._sparse_apply_args:
+                    apply_kwargs["apply_state"] = apply_state
+                return self._resource_apply_sparse_duplicate_indices(
+                    grad.values, var, grad.indices, **apply_kwargs)
+
+            if "apply_state" in self._dense_apply_args:
+                apply_kwargs["apply_state"] = apply_state
+            apply_kwargs["loss"] = loss
+            update_op = self._resource_apply_dense(grad, var, **apply_kwargs)
+            if var.constraint is not None:
+                with ops.control_dependencies([update_op]):
+                    return var.assign(var.constraint(var))
+            else:
+                return update_op
+
+        eagerly_outside_functions = ops.executing_eagerly_outside_functions()
+        update_ops = []
+        with ops.name_scope(name or self._name, skip_on_eager=True):
+            for grad, var in grads_and_vars:
+                # TODO(crccw): It's not allowed to assign PerReplica value to
+                # MirroredVariable.  Remove this after we relax this restriction.
+                def _assume_mirrored(grad):
+                    if isinstance(grad, ds_values.PerReplica):
+                        return ds_values.Mirrored(grad.values)
+                    return grad
+
+                grad = nest.map_structure(_assume_mirrored, grad)
+                # Colocate the update with variables to avoid unnecessary communication
+                # delays. See b/136304694.
+                with distribution.extended.colocate_vars_with(var):
+                    with ops.name_scope("update" if eagerly_outside_functions else
+                                        "update_" + var.op.name, skip_on_eager=True):
+                        update_ops.extend(distribution.extended.update(
+                            var, apply_grad_to_update_var, args=(grad,), group=False))
+
+            any_symbolic = any(isinstance(i, ops.Operation) or
+                               tf_utils.is_symbolic_tensor(i) for i in update_ops)
+            if not context.executing_eagerly() or any_symbolic:
+                # If the current context is graph mode or any of the update ops are
+                # symbolic then the step update should be carried out under a graph
+                # context. (eager updates execute immediately)
+                with ops._get_graph_from_inputs(update_ops).as_default():  # pylint: disable=protected-access
+                    with ops.control_dependencies([control_flow_ops.group(update_ops)]):
+                        return self._iterations.assign_add(1, read_value=False)
+
+            return self._iterations.assign_add(1)
 
 
     def _resource_apply_sparse(self, grad, var, indices, apply_state=None):

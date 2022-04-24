@@ -16,3 +16,4 @@ Epoch    100: avg.loss pe =  nan, 7692 points/sec, time elapsed = 0.003 hours
 Epoch    200: avg.loss pe =  nan, 7860 points/sec, time elapsed = 0.005 hours
 Epoch      0: avg.loss pe = 9.997e-01, 318 points/sec, time elapsed = 0.000 hours
 Epoch      0: avg.loss pe = 1.000e+00, 337 points/sec, time elapsed = 0.000 hours
+Epoch      0: avg.loss pe = 1.003e+00, 319 points/sec, time elapsed = 0.000 hours

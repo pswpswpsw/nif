@@ -249,7 +249,7 @@ import sys
 #         })
 #         return config
 
-@keras_export('keras.optimizers.AdamShaowu')
+# @keras_export('keras.optimizers.AdamShaowu')
 class AdamShaowuOptimizer(optimizer_v2.OptimizerV2):
     _HAS_AGGREGATE_GRAD = True
     def __init__(self, learning_rate=0.001, beta_1=0.9, beta_2=0.999, epsilon=backend_config.epsilon(),
@@ -275,11 +275,11 @@ class AdamShaowuOptimizer(optimizer_v2.OptimizerV2):
         alpha = self._decayed_lr(var_dtype)
 
         local_step = math_ops.cast(self.iterations + 1, var_dtype)
-        beta_1_t = math_ops.cast(self._get_hyper('beta_1', var_dtype))
-        beta_2_t = math_ops.cast(self._get_hyper('beta_2', var_dtype))
+        beta_1_t = self._get_hyper('beta_1', var_dtype)
+        beta_2_t = self._get_hyper('beta_2', var_dtype)
         beta_1_power = math_ops.pow(beta_1_t, local_step)
         beta_2_power = math_ops.pow(beta_2_t, local_step)
-        epsilon = math_ops.cast(self._get_hyper('epsilon', var_dtype))
+        epsilon = self._get_hyper('epsilon', var_dtype)
 
         # new_var_m = var - grad * lr_t
         m = self.get_slot(var, "m")

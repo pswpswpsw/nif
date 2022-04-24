@@ -5,3 +5,14 @@ Epoch    300: avg.loss pe =  nan, 6170 points/sec, time elapsed = 0.007 hours
 Epoch      0: avg.loss pe = 1.003e+00, 287 points/sec, time elapsed = 0.000 hours
 Epoch    100: avg.loss pe = 1.001e+00, 8743 points/sec, time elapsed = 0.003 hours
 Epoch    200: avg.loss pe = 9.705e-01, 7997 points/sec, time elapsed = 0.006 hours
+Epoch      0: avg.loss pe =  nan, 158 points/sec, time elapsed = 0.001 hours
+Epoch    100: avg.loss pe =  nan, 4409 points/sec, time elapsed = 0.004 hours
+Epoch    200: avg.loss pe =  nan, 8214 points/sec, time elapsed = 0.007 hours
+Epoch    300: avg.loss pe =  nan, 8166 points/sec, time elapsed = 0.010 hours
+Epoch    400: avg.loss pe =  nan, 8175 points/sec, time elapsed = 0.012 hours
+Epoch    500: avg.loss pe =  nan, 5440 points/sec, time elapsed = 0.015 hours
+Epoch      0: avg.loss pe =  nan, 277 points/sec, time elapsed = 0.001 hours
+Epoch    100: avg.loss pe =  nan, 7692 points/sec, time elapsed = 0.003 hours
+Epoch    200: avg.loss pe =  nan, 7860 points/sec, time elapsed = 0.005 hours
+Epoch      0: avg.loss pe = 9.997e-01, 318 points/sec, time elapsed = 0.000 hours
+Epoch      0: avg.loss pe = 1.000e+00, 337 points/sec, time elapsed = 0.000 hours

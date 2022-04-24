@@ -1,15 +1,15 @@
 import tensorflow as tf
 from tensorflow.python.keras.optimizer_v2 import optimizer_v2
-from tensorflow.python.eager import def_function
-from tensorflow.python.framework import ops
-from tensorflow.python.keras import backend_config
-from tensorflow.python.ops import array_ops
-from tensorflow.python.ops import control_flow_ops
+# from tensorflow.python.eager import def_function
+# from tensorflow.python.framework import ops
+# from tensorflow.python.keras import backend_config
+# from tensorflow.python.ops import array_ops
+# from tensorflow.python.ops import control_flow_ops
 from tensorflow.python.ops import math_ops
 from tensorflow.python.ops import state_ops
-from tensorflow.python.training import gen_training_ops
-from tensorflow.python.util.tf_export import keras_export
-import sys
+# from tensorflow.python.training import gen_training_ops
+# from tensorflow.python.util.tf_export import keras_export
+# import sys
 #
 # def n_inner_product(list_of_tensors1, list_of_tensors2):
 #     return tf.add_n([tf.reduce_sum(t1*t2) for t1, t2 in zip(list_of_tensors1, list_of_tensors2)])
@@ -250,7 +250,7 @@ import sys
 #         return config
 
 # @keras_export('keras.optimizers.AdamShaowu')
-class AdamShaowuOptimizer(optimizer_v2.OptimizerV2):
+class AdamShaowuOptimizer(tf.keras.optimizers.Optimizer):
     _HAS_AGGREGATE_GRAD = True
     def __init__(self, learning_rate=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-7,
                  name="AdamShaowuOptimizer", **kwargs):

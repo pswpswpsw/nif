@@ -252,27 +252,22 @@ import sys
 
 class AdamShaowuOptimizer(tf.keras.optimizers.Optimizer):
     _HAS_AGGREGATE_GRAD = True
-    def __init__(self, learning_rate=0.01, beta_1=0.9, beta_2=0.999, epsilon=1e-8, name="AdamShaowuOptimizer",
-                 **kwargs):
+    def __init__(self, learning_rate=0.001, beta_1=0.9, beta_2=0.999, epsilon=backend_config.epsilon(),
+                 name="AdamShaowuOptimizer", **kwargs):
         """Call super().__init__() and use _set_hyper() to store hyperparameters"""
         super().__init__(name, **kwargs)
         self._set_hyper("learning_rate", kwargs.get("lr", learning_rate)) # handle lr=learning_rate
         self._set_hyper("beta_1", kwargs.get("b1", beta_1))
         self._set_hyper("beta_2", kwargs.get("b2", beta_2))
         self._set_hyper("epsilon", kwargs.get("eps", epsilon))
-        # self._is_first = True
 
     def _create_slots(self, var_list):
-        """For each model variable, create the optimizer variable associated with it.
-        TensorFlow calls these optimizer variables "slots".
-        For momentum optimization, we need one momentum slot per model variable.
-        """
         for var in var_list:
             self.add_slot(var, 'm')
         for var in var_list:
             self.add_slot(var, 'v')
 
-    # @tf.function
+    @tf.function
     def _resource_apply_dense(self, grad, var, apply_state=None):
         """Update the slots and perform one optimization step for one model variable
         """
@@ -289,21 +284,9 @@ class AdamShaowuOptimizer(tf.keras.optimizers.Optimizer):
         # new_var_m = var - grad * lr_t
         m = self.get_slot(var, "m")
         v = self.get_slot(var, "v")
-
-        # if self._is_first:
-        #     self._is_first = False
-        # m = 0
-        # v = 0
-        # m = 0 + (1. - beta_1_t)*grad
-        # v = 0 + (1. - beta_2_t)*math_ops.pow(grad, 2)
-        # else:
         m = beta_1_t*m + (1. - beta_1_t)*grad
         v = beta_2_t*v + (1. - beta_2_t)*grad*grad
-
-        # mhat = m/(1. - beta_1_power)
-        # vhat = v/(1. - beta_2_power)
         new_var = var - alpha*m*math_ops.sqrt(1 - beta_2_power)/((math_ops.sqrt(v) + epsilon)*(1-beta_1_power))
-
         return state_ops.assign(var, new_var, use_locking=self._use_locking)
 
     def _resource_apply_sparse(self, grad, var, indices, apply_state=None):
@@ -314,6 +297,9 @@ class AdamShaowuOptimizer(tf.keras.optimizers.Optimizer):
         return {
             **base_config,
             "learning_rate": self._serialize_hyperparameter("learning_rate"),
+            "beta_1": self._serialize_hyperparameter("beta_1"),
+            "beta_2": self._serialize_hyperparameter("beta_2"),
+            "epsilon": self._serialize_hyperparameter("epsilon"),
         }
 
 

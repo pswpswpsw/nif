@@ -4,7 +4,7 @@ from tensorflow.python.keras.optimizer_v2 import optimizer_v2
 # from tensorflow.python.framework import ops
 # from tensorflow.python.keras import backend_config
 # from tensorflow.python.ops import array_ops
-# from tensorflow.python.ops import control_flow_ops
+from tensorflow.python.ops import control_flow_ops
 from tensorflow.python.ops import math_ops
 from tensorflow.python.ops import state_ops
 # from tensorflow.python.training import gen_training_ops
@@ -267,7 +267,6 @@ class AdamShaowuOptimizer(tf.keras.optimizers.Optimizer):
         for var in var_list:
             self.add_slot(var, 'v')
 
-    # @tf.function
     def _resource_apply_dense(self, grad, var, apply_state=None):
         """Update the slots and perform one optimization step for one model variable
         """
@@ -284,10 +283,16 @@ class AdamShaowuOptimizer(tf.keras.optimizers.Optimizer):
         # new_var_m = var - grad * lr_t
         m = self.get_slot(var, "m")
         v = self.get_slot(var, "v")
-        m = beta_1*m + (1. - beta_1)*grad
-        v = beta_2*v + (1. - beta_2)*grad*grad
+        m_t = beta_1*m + (1. - beta_1)*grad
+        v_t = beta_2*v + (1. - beta_2)*math_ops.pow(grad, 2)
         new_var = var - alpha*m*math_ops.sqrt(1. - beta_2_t)/((math_ops.sqrt(v) + epsilon)*(1.-beta_1_t))
-        return state_ops.assign(var, new_var, use_locking=self._use_locking)
+
+        m_update = state_ops.assign(m, m_t)
+        v_update = state_ops.assign(v, v_t)
+        var_update = state_ops.assign(var, new_var, use_locking=self._use_locking)
+
+        return control_flow_ops.group(*[var_update, m_update, v_update])
+
 
     def _resource_apply_sparse(self, grad, var, indices, apply_state=None):
         raise NotImplementedError

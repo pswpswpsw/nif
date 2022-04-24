@@ -252,7 +252,7 @@ import sys
 # @keras_export('keras.optimizers.AdamShaowu')
 class AdamShaowuOptimizer(optimizer_v2.OptimizerV2):
     _HAS_AGGREGATE_GRAD = True
-    def __init__(self, learning_rate=0.001, beta_1=0.9, beta_2=0.999, epsilon=backend_config.epsilon(),
+    def __init__(self, learning_rate=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-7,
                  name="AdamShaowuOptimizer", **kwargs):
         """Call super().__init__() and use _set_hyper() to store hyperparameters"""
         super().__init__(name, **kwargs)

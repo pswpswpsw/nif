@@ -241,7 +241,7 @@ class L4Adam(tf.keras.optimizers.Optimizer):
             "epsilon": self._serialize_hyperparameter("epsilon"),
         }
 
-
+@keras_export('keras.optimizers.AdaBelief')
 class AdaBeliefOptimizer(tf.keras.optimizers.Optimizer):
     """
     It implements the AdaBeliefOptimizer proposed by

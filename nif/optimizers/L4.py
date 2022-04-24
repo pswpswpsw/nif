@@ -251,7 +251,7 @@ from tensorflow.python.ops import state_ops
 
 # @keras_export('keras.optimizers.AdamShaowu')
 class AdamShaowuOptimizer(tf.keras.optimizers.Optimizer):
-    _HAS_AGGREGATE_GRAD = True
+    # _HAS_AGGREGATE_GRAD = True
     def __init__(self, learning_rate=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-7,
                  name="AdamShaowuOptimizer", **kwargs):
         """Call super().__init__() and use _set_hyper() to store hyperparameters"""
@@ -267,26 +267,26 @@ class AdamShaowuOptimizer(tf.keras.optimizers.Optimizer):
         for var in var_list:
             self.add_slot(var, 'v')
 
-    @tf.function
+    # @tf.function
     def _resource_apply_dense(self, grad, var, apply_state=None):
         """Update the slots and perform one optimization step for one model variable
         """
         var_dtype = var.dtype.base_dtype
         alpha = self._decayed_lr(var_dtype)
 
-        local_step = math_ops.cast(self.iterations + 1, var_dtype)
-        beta_1_t = self._get_hyper('beta_1', var_dtype)
-        beta_2_t = self._get_hyper('beta_2', var_dtype)
-        beta_1_power = math_ops.pow(beta_1_t, local_step)
-        beta_2_power = math_ops.pow(beta_2_t, local_step)
+        t = math_ops.cast(self.iterations + 1, var_dtype)
+        beta_1 = self._get_hyper('beta_1', var_dtype)
+        beta_2 = self._get_hyper('beta_2', var_dtype)
+        beta_1_t = math_ops.pow(beta_1, t)
+        beta_2_t = math_ops.pow(beta_2, t)
         epsilon = self._get_hyper('epsilon', var_dtype)
 
         # new_var_m = var - grad * lr_t
         m = self.get_slot(var, "m")
         v = self.get_slot(var, "v")
-        m = beta_1_t*m + (1. - beta_1_t)*grad
-        v = beta_2_t*v + (1. - beta_2_t)*grad*grad
-        new_var = var - alpha*m*math_ops.sqrt(1 - beta_2_power)/((math_ops.sqrt(v) + epsilon)*(1-beta_1_power))
+        m = beta_1*m + (1. - beta_1)*grad
+        v = beta_2*v + (1. - beta_2)*grad*grad
+        new_var = var - alpha*m*math_ops.sqrt(1. - beta_2_t)/((math_ops.sqrt(v) + epsilon)*(1.-beta_1_t))
         return state_ops.assign(var, new_var, use_locking=self._use_locking)
 
     def _resource_apply_sparse(self, grad, var, indices, apply_state=None):

@@ -3,6 +3,7 @@ from .lbfgs import function_factory, TFPLBFGS
 from .lbfgs_V2 import LBFGSOptimizer
 from .external_optimizers import L4Adam
 from .external_optimizers import AdaBeliefOptimizer
+from .gtcf import centralized_gradients_for_optimizer
 
 __all__ = [
     "function_factory",
@@ -10,5 +11,6 @@ __all__ = [
     "LBFGSOptimizer",
     "TFPLBFGS",
     "L4Adam",
-    "AdaBeliefOptimizer"
+    "AdaBeliefOptimizer",
+    "centralized_gradients_for_optimizer"
 ]

@@ -1,0 +1,19 @@
+AutoGraph could not transform <function loss_fun at 0x7f6c7459b320> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: module 'gast' has no attribute 'Index'
+To silence this warning, decorate the function with @tf.autograph.experimental.do_not_convert
+AutoGraph could not transform <function loss_fun at 0x7f61d446ef80> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: module 'gast' has no attribute 'Index'
+To silence this warning, decorate the function with @tf.autograph.experimental.do_not_convert
+AutoGraph could not transform <function loss_fun at 0x7f26d8488f80> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: module 'gast' has no attribute 'Index'
+To silence this warning, decorate the function with @tf.autograph.experimental.do_not_convert
+Epoch      0: avg.loss pe = 1.002e+00, 491 points/sec, time elapsed = 0.000 hours
+AutoGraph could not transform <function loss_fun at 0x7fde95f9ff80> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: module 'gast' has no attribute 'Index'
+To silence this warning, decorate the function with @tf.autograph.experimental.do_not_convert
+Epoch      0: avg.loss pe = 1.072e+00, 493 points/sec, time elapsed = 0.000 hours
+Epoch      0: avg.loss pe = 1.003e+00, 507 points/sec, time elapsed = 0.000 hours

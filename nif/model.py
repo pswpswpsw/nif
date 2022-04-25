@@ -3,6 +3,8 @@ __all__ = ["NIFMultiScale", "NIF", "NIFMultiScaleLastLayerParameterized"]
 import tensorflow as tf
 from tensorflow.keras import Model, initializers
 from .layers import *
+from tensorflow.python.eager import backprop
+from tensorflow.python.keras.engine import data_adapter
 
 class NIF(Model):
     def __init__(self, cfg_shape_net, cfg_parameter_net, mixed_policy='float32'):
@@ -38,6 +40,42 @@ class NIF(Model):
                                     l_sx=self.l_sx,
                                     activation=self.cfg_shape_net['activation'],
                                     variable_dtype=self.variable_Dtype)
+
+    def train_step(self, data):
+        """The logic for one training step.
+
+        This method can be overridden to support custom training logic.
+        This method is called by `Model.make_train_function`.
+
+        This method should contain the mathematical logic for one step of training.
+        This typically includes the forward pass, loss calculation, backpropagation,
+        and metric updates.
+
+        Configuration details for *how* this logic is run (e.g. `tf.function` and
+        `tf.distribute.Strategy` settings), should be left to
+        `Model.make_train_function`, which can also be overridden.
+
+        Arguments:
+          data: A nested structure of `Tensor`s.
+
+        Returns:
+          A `dict` containing values that will be passed to
+          `tf.keras.callbacks.CallbackList.on_train_batch_end`. Typically, the
+          values of the `Model`'s metrics are returned. Example:
+          `{'loss': 0.2, 'accuracy': 0.7}`.
+
+        """
+        # These are the only transformations `Model.fit` applies to user-input
+        # data when a `tf.data.Dataset` is provided.
+        data = data_adapter.expand_1d(data)
+        x, y, sample_weight = data_adapter.unpack_x_y_sample_weight(data)
+
+        with backprop.GradientTape() as tape:
+            y_pred = self(x, training=True)
+            loss = self.compiled_loss(y, y_pred, sample_weight, regularization_losses=self.losses)
+        self.optimizer.minimize(loss, self.trainable_variables, tape=tape)
+        self.compiled_metrics.update_state(y, y_pred, sample_weight)
+        return {m.name: m.result() for m in self.metrics}
 
     def _initialize_pnet(self, cfg_parameter_net, cfg_shape_net):
         # just simple implementation of a shortcut connected parameter net with a similar shapenet
@@ -126,7 +164,7 @@ class NIF(Model):
         return output_final, latent
 
     def model(self):
-        input_tot = tf.keras.layers.Input(shape=(self.si_dim + self.pi_dim))
+        input_tot = tf.keras.layers.Input(shape=(self.si_dim + self.pi_dim), name='input')
         return Model(inputs=[input_tot], outputs=[self.call(input_tot)])
 
     def model_p_to_lr(self):

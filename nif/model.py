@@ -5,8 +5,53 @@ from tensorflow.keras import Model, initializers
 from .layers import *
 from tensorflow.python.eager import backprop
 from tensorflow.python.keras.engine import data_adapter
+import tensorflow.keras.backend as K
 
-class NIF(Model):
+# class ModelTest(Model):
+#     def train_step(self, data):
+#         """The logic for one training step.
+#
+#         This method can be overridden to support custom training logic.
+#         This method is called by `Model.make_train_function`.
+#
+#         This method should contain the mathematical logic for one step of training.
+#         This typically includes the forward pass, loss calculation, backpropagation,
+#         and metric updates.
+#
+#         Configuration details for *how* this logic is run (e.g. `tf.function` and
+#         `tf.distribute.Strategy` settings), should be left to
+#         `Model.make_train_function`, which can also be overridden.
+#
+#         Arguments:
+#           data: A nested structure of `Tensor`s.
+#
+#         Returns:
+#           A `dict` containing values that will be passed to
+#           `tf.keras.callbacks.CallbackList.on_train_batch_end`. Typically, the
+#           values of the `Model`'s metrics are returned. Example:
+#           `{'loss': 0.2, 'accuracy': 0.7}`.
+#
+#         """
+#         # These are the only transformations `Model.fit` applies to user-input
+#         # data when a `tf.data.Dataset` is provided.
+#         data = data_adapter.expand_1d(data)
+#         x, y, sample_weight = data_adapter.unpack_x_y_sample_weight(data)
+#
+#         # loss = loss + K.mean(K.square(jac2))
+#
+#         with backprop.GradientTape() as tape:
+#             y_pred = self(x, training=True)
+#             loss = self.compiled_loss(y, y_pred, sample_weight, regularization_losses=self.losses)
+#
+#         # jac = tape.gradient(y_pred, x)
+#         # jac2 = tape.gradient(y_pred, x)
+#
+#         self.optimizer.minimize(loss, self.trainable_variables, tape=tape)
+#         self.compiled_metrics.update_state(y, y_pred, sample_weight)
+#         return {m.name: m.result() for m in self.metrics}
+
+
+class NIF(object):
     def __init__(self, cfg_shape_net, cfg_parameter_net, mixed_policy='float32'):
         super(NIF, self).__init__()
         self.cfg_shape_net = cfg_shape_net
@@ -19,6 +64,9 @@ class NIF(Model):
         self.n_st = cfg_parameter_net['units']
         self.l_st = cfg_parameter_net['nlayers']
 
+        # additional regularization
+        self.p_jac_reg = cfg_parameter_net.get('jac_reg', None)
+
         self.mixed_policy = tf.keras.mixed_precision.Policy(mixed_policy) # policy object can be feed into keras.layer
         self.variable_Dtype = self.mixed_policy.variable_dtype
         self.compute_Dtype = self.mixed_policy.compute_dtype
@@ -26,11 +74,12 @@ class NIF(Model):
         # initialize the parameter net structure
         self.pnet_list = self._initialize_pnet(cfg_parameter_net, cfg_shape_net)
 
+        # initialize the layer
+        # self.PNET = GradientLayerV2(layer_list=self.pnet_list, l1=100., mixed_policy=self.mixed_policy)
 
     def call(self, inputs, training=None, mask=None):
         input_p = inputs[:, 0:self.pi_dim]
         input_s = inputs[:, self.pi_dim:self.pi_dim+self.si_dim]
-        # get parameter from parameter_net
         self.pnet_output = self._call_parameter_net(input_p, self.pnet_list)[0]
         return self._call_shape_net(tf.cast(input_s,self.compute_Dtype),
                                     self.pnet_output,
@@ -40,42 +89,6 @@ class NIF(Model):
                                     l_sx=self.l_sx,
                                     activation=self.cfg_shape_net['activation'],
                                     variable_dtype=self.variable_Dtype)
-
-    def train_step(self, data):
-        """The logic for one training step.
-
-        This method can be overridden to support custom training logic.
-        This method is called by `Model.make_train_function`.
-
-        This method should contain the mathematical logic for one step of training.
-        This typically includes the forward pass, loss calculation, backpropagation,
-        and metric updates.
-
-        Configuration details for *how* this logic is run (e.g. `tf.function` and
-        `tf.distribute.Strategy` settings), should be left to
-        `Model.make_train_function`, which can also be overridden.
-
-        Arguments:
-          data: A nested structure of `Tensor`s.
-
-        Returns:
-          A `dict` containing values that will be passed to
-          `tf.keras.callbacks.CallbackList.on_train_batch_end`. Typically, the
-          values of the `Model`'s metrics are returned. Example:
-          `{'loss': 0.2, 'accuracy': 0.7}`.
-
-        """
-        # These are the only transformations `Model.fit` applies to user-input
-        # data when a `tf.data.Dataset` is provided.
-        data = data_adapter.expand_1d(data)
-        x, y, sample_weight = data_adapter.unpack_x_y_sample_weight(data)
-
-        with backprop.GradientTape() as tape:
-            y_pred = self(x, training=True)
-            loss = self.compiled_loss(y, y_pred, sample_weight, regularization_losses=self.losses)
-        self.optimizer.minimize(loss, self.trainable_variables, tape=tape)
-        self.compiled_metrics.update_state(y, y_pred, sample_weight)
-        return {m.name: m.result() for m in self.metrics}
 
     def _initialize_pnet(self, cfg_parameter_net, cfg_shape_net):
         # just simple implementation of a shortcut connected parameter net with a similar shapenet
@@ -155,6 +168,16 @@ class NIF(Model):
         u = tf.einsum('ai,aij->aj', u, w_l) + b_l
         return tf.cast(u, variable_dtype)
 
+
+    # if isinstance(self.p_jac_reg, (float, int)) and training==True:
+    #     print("...enable Jacobian regularization during training with coef = {}".format(self.p_jac_reg))
+    #     gradient_layer = GradientLayer(model, l1=self.p_jac_reg, mixed_policy=self.mixed_policy)
+    #     model = Model(inputs=[input_tot], outputs=[gradient_layer(input_tot)])
+
+    # @staticmethod
+    # def _call_parameter_net(self, input_p, pnet_list):
+    #     return self.PNET(input_p)
+
     @staticmethod
     def _call_parameter_net(input_p, pnet_list):
         latent = input_p
@@ -163,23 +186,53 @@ class NIF(Model):
         output_final = pnet_list[-1](latent)
         return output_final, latent
 
+# todo write a code to convert BIG npz to tf.records
+
+    def build(self):
+        if isinstance(self.p_jac_reg, (float, int)):
+            input_tot = tf.keras.layers.Input(shape=(self.si_dim + self.pi_dim), name='input')
+            # input_p = tf.keras.layers.Input(shape=(self.pi_dim))# input_tot[:, 0:self.pi_dim]
+
+            # todo : rewrite the interface of Input layer for all the model, please change it to input_p and input_s...
+
+            # todo: write a customized gradient layer to compute the Jacobian of output[1] w.r.t. input_p then add
+            #  that into the loss function
+
+            # todo: 2. write a customized loss function to deal with the model.compile because of the
+
+
+            aug_latent_model = Model(inputs=[input_tot], outputs=[self.call(input_tot),
+                self._call_parameter_net(input_tot[:,:self.pi_dim],self.pnet_list)[1]])
+            # augmented_model = Model(inputs=[input_tot], outputs=[gradient_layer(model(input_tot))])
+            # print("...enable Jacobian regularization during training with coef = {}".format(self.p_jac_reg))
+            # jac_layer = InputOutputJacobianLayer(model_p_to_lr, l1=self.p_jac_reg, mixed_policy=self.mixed_policy)
+            print('here')
+            # model_tmp = Model(inputs=[input_p], outputs=[jac_layer(input_p)])
+            # model_tmp.summary()
+            return self.model()
+        else:
+            return self.model()
+
     def model(self):
-        input_tot = tf.keras.layers.Input(shape=(self.si_dim + self.pi_dim), name='input')
-        return Model(inputs=[input_tot], outputs=[self.call(input_tot)])
+        input_p = tf.keras.layers.Input(shape=(self.pi_dim), name='input_p')
+        input_s = tf.keras.layers.Input(shape=(self.si_dim), name='input_s')
+        # input_tot = tf.keras.layers.Input(shape=(self.si_dim + self.pi_dim), name='input')
+        input_tot = tf.concat([input_p, input_s], -1)
+        return Model(inputs=[input_p, input_s], outputs=[self.call(input_tot)])
 
     def model_p_to_lr(self):
-        input_p = tf.keras.layers.Input(shape=(self.pi_dim))
+        input_p = tf.keras.layers.Input(shape=(self.pi_dim), name='input_p')
         # this model: t, mu -> hidden LR
         return Model(inputs=[input_p], outputs=[self._call_parameter_net(input_p, self.pnet_list)[1]])
 
     def model_lr_to_w(self):
-        input_lr = tf.keras.layers.Input(shape=(self.pi_hidden))
+        input_lr = tf.keras.layers.Input(shape=(self.pi_hidden), name='latent_representation')
         # this model: hidden LR -> weights and biases of shapenet
         return Model(inputs=[input_lr],outputs=[self.pnet_list[-1](input_lr)])
 
     def model_x_to_u_given_w(self):
-        input_s = tf.keras.layers.Input(shape=(self.si_dim), dtype=self.variable_Dtype)
-        input_pnet = tf.keras.layers.Input(shape=(self.pnet_list[-1].output_shape[1]), dtype=self.variable_Dtype)
+        input_s = tf.keras.layers.Input(shape=(self.si_dim), name='input_s')
+        input_pnet = tf.keras.layers.Input(shape=(self.pnet_list[-1].output_shape[1]), name='pnet_outputs')
         return Model(inputs=[input_s, input_pnet],
                      outputs=[self._call_shape_net(tf.cast(input_s,self.compute_Dtype),
                                                    tf.cast(input_pnet,self.compute_Dtype),

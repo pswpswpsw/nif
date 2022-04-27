@@ -17,3 +17,146 @@ Cause: module 'gast' has no attribute 'Index'
 To silence this warning, decorate the function with @tf.autograph.experimental.do_not_convert
 Epoch      0: avg.loss pe = 1.072e+00, 493 points/sec, time elapsed = 0.000 hours
 Epoch      0: avg.loss pe = 1.003e+00, 507 points/sec, time elapsed = 0.000 hours
+Epoch      0: avg.loss pe = 1.003e+00, 303 points/sec, time elapsed = 0.000 hours
+Epoch    100: avg.loss pe = 9.974e-01, 7767 points/sec, time elapsed = 0.004 hours
+Epoch      0: avg.loss pe = 1.002e+00, 268 points/sec, time elapsed = 0.001 hours
+Epoch    100: avg.loss pe = 9.990e-01, 7854 points/sec, time elapsed = 0.004 hours
+Epoch    200: avg.loss pe = 7.009e-01, 7504 points/sec, time elapsed = 0.007 hours
+AutoGraph could not transform <bound method NIF.call of <nif.model.NIF object at 0x7f80f29262d0>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: module 'gast' has no attribute 'Index'
+To silence this warning, decorate the function with @tf.autograph.experimental.do_not_convert
+AutoGraph could not transform <bound method NIF.call of <nif.model.NIF object at 0x7f5a18675450>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: module 'gast' has no attribute 'Index'
+To silence this warning, decorate the function with @tf.autograph.experimental.do_not_convert
+Epoch      0: avg.loss pe = 1.001e+00, 522 points/sec, time elapsed = 0.000 hours
+Epoch      0: avg.loss pe = 1.001e+00, 549 points/sec, time elapsed = 0.000 hours
+Epoch      0: avg.loss pe = 1.007e+00, 318 points/sec, time elapsed = 0.000 hours
+Epoch      0: avg.loss pe = 1.006e+00, 526 points/sec, time elapsed = 0.000 hours
+Epoch      0: avg.loss pe = 1.024e+00, 416 points/sec, time elapsed = 0.000 hours
+Epoch    100: avg.loss pe = 9.980e-01, 9217 points/sec, time elapsed = 0.003 hours
+Epoch    200: avg.loss pe = 9.972e-01, 8580 points/sec, time elapsed = 0.005 hours
+Epoch    300: avg.loss pe = 3.504e-02, 8352 points/sec, time elapsed = 0.007 hours
+Epoch    400: avg.loss pe = 1.136e-02, 8409 points/sec, time elapsed = 0.009 hours
+Epoch      0: avg.loss pe = 1.005e+00, 431 points/sec, time elapsed = 0.000 hours
+Epoch      0: avg.loss pe = 0.000e+00, 335 points/sec, time elapsed = 0.000 hours
+Epoch      0: avg.loss pe = 1.006e+00, 328 points/sec, time elapsed = 0.000 hours
+Epoch      0: avg.loss pe = 1.002e+00, 513 points/sec, time elapsed = 0.000 hours
+Epoch      0: avg.loss pe = 1.002e+00, 401 points/sec, time elapsed = 0.000 hours
+Epoch      0: avg.loss pe = 1.003e+00, 497 points/sec, time elapsed = 0.000 hours
+Epoch      0: avg.loss pe = 2.002e+00, 133 points/sec, time elapsed = 0.001 hours
+Epoch      0: avg.loss pe = 1.005e+00, 552 points/sec, time elapsed = 0.000 hours
+Epoch      0: avg.loss pe = 1.002e+00, 549 points/sec, time elapsed = 0.000 hours
+Epoch      0: avg.loss pe = 1.008e+00, 519 points/sec, time elapsed = 0.000 hours
+Epoch      0: avg.loss pe = 1.017e+00, 547 points/sec, time elapsed = 0.000 hours
+Epoch    100: avg.loss pe = 9.977e-01, 8827 points/sec, time elapsed = 0.003 hours
+Epoch    200: avg.loss pe = 9.885e-01, 8784 points/sec, time elapsed = 0.005 hours
+Epoch      0: avg.loss pe = 1.010e+00, 509 points/sec, time elapsed = 0.000 hours
+Epoch    100: avg.loss pe = 9.982e-01, 7607 points/sec, time elapsed = 0.003 hours
+Epoch    200: avg.loss pe = 3.170e-01, 8062 points/sec, time elapsed = 0.005 hours
+Epoch    300: avg.loss pe = 5.826e-03, 7361 points/sec, time elapsed = 0.008 hours
+Epoch      0: avg.loss pe = 2.114e+05, 123 points/sec, time elapsed = 0.001 hours
+Epoch      0: avg.loss pe = 1.214e+05, 140 points/sec, time elapsed = 0.001 hours
+Epoch    100: avg.loss pe = 1.118e+00, 4170 points/sec, time elapsed = 0.006 hours
+Epoch    200: avg.loss pe = 1.098e+00, 3797 points/sec, time elapsed = 0.010 hours
+Epoch    300: avg.loss pe = 1.082e+00, 3791 points/sec, time elapsed = 0.014 hours
+Epoch    400: avg.loss pe = 1.068e+00, 3829 points/sec, time elapsed = 0.018 hours
+Epoch    500: avg.loss pe = 1.076e+00, 3739 points/sec, time elapsed = 0.022 hours
+Epoch    600: avg.loss pe = 1.061e+00, 3846 points/sec, time elapsed = 0.027 hours
+Epoch    700: avg.loss pe = 1.050e+00, 3495 points/sec, time elapsed = 0.031 hours
+Epoch    800: avg.loss pe = 1.673e+00, 3807 points/sec, time elapsed = 0.035 hours
+Epoch    900: avg.loss pe = 1.071e+00, 3849 points/sec, time elapsed = 0.039 hours
+Epoch   1000: avg.loss pe = 2.657e+00, 3718 points/sec, time elapsed = 0.044 hours
+Epoch   1100: avg.loss pe = 1.019e+00, 3765 points/sec, time elapsed = 0.048 hours
+Epoch   1200: avg.loss pe = 1.018e+00, 3689 points/sec, time elapsed = 0.052 hours
+Epoch   1300: avg.loss pe = 1.016e+00, 3707 points/sec, time elapsed = 0.056 hours
+Epoch   1400: avg.loss pe = 1.015e+00, 3783 points/sec, time elapsed = 0.061 hours
+Epoch   1500: avg.loss pe = 1.014e+00, 3815 points/sec, time elapsed = 0.065 hours
+Epoch   1600: avg.loss pe = 1.013e+00, 3340 points/sec, time elapsed = 0.069 hours
+Epoch      0: avg.loss pe = 1.875e+05, 71 points/sec, time elapsed = 0.002 hours
+Epoch    100: avg.loss pe = 1.065e+00, 3680 points/sec, time elapsed = 0.007 hours
+Epoch    200: avg.loss pe = 1.059e+00, 3757 points/sec, time elapsed = 0.012 hours
+Epoch    300: avg.loss pe = 1.053e+00, 3441 points/sec, time elapsed = 0.016 hours
+Epoch    400: avg.loss pe = 1.049e+00, 3027 points/sec, time elapsed = 0.022 hours
+Epoch      0: avg.loss pe = 7.274e+04, 125 points/sec, time elapsed = 0.001 hours
+Epoch      0: avg.loss pe = 1.001e+00, 139 points/sec, time elapsed = 0.001 hours
+Epoch      0: avg.loss pe = 1.015e+00, 99 points/sec, time elapsed = 0.001 hours
+Epoch    100: avg.loss pe = 9.994e-01, 1272 points/sec, time elapsed = 0.007 hours
+Epoch    200: avg.loss pe = 9.998e-01, 3707 points/sec, time elapsed = 0.011 hours
+Epoch      0: avg.loss pe = 1.000e+00, 75 points/sec, time elapsed = 0.002 hours
+Epoch      0: avg.loss pe = 1.403e+00, 77 points/sec, time elapsed = 0.002 hours
+Epoch      0: avg.loss pe = 1.391e+01, 67 points/sec, time elapsed = 0.002 hours
+Epoch      0: avg.loss pe = 1.435e+01, 78 points/sec, time elapsed = 0.002 hours
+Epoch      0: avg.loss pe =  nan, 90 points/sec, time elapsed = 0.002 hours
+Callback method `on_train_batch_end` is slow compared to the batch time (batch time: 0.0378s vs `on_train_batch_end` time: 0.0455s). Check your callbacks.
+Epoch      0: avg.loss pe =  nan, 83 points/sec, time elapsed = 0.002 hours
+Callback method `on_train_batch_end` is slow compared to the batch time (batch time: 0.0234s vs `on_train_batch_end` time: 0.0247s). Check your callbacks.
+Epoch      0: avg.loss pe =  nan, 78 points/sec, time elapsed = 0.002 hours
+Callback method `on_train_batch_end` is slow compared to the batch time (batch time: 0.0400s vs `on_train_batch_end` time: 0.0461s). Check your callbacks.
+Epoch      0: avg.loss pe = 1.041e+00, 229 points/sec, time elapsed = 0.001 hours
+Epoch      0: avg.loss pe = 1.001e+00, 131 points/sec, time elapsed = 0.001 hours
+Epoch      0: avg.loss pe = 1.003e+00, 138 points/sec, time elapsed = 0.001 hours
+Epoch      0: avg.loss pe = 1.011e+00, 214 points/sec, time elapsed = 0.001 hours
+Epoch    100: avg.loss pe = 9.992e-01, 8370 points/sec, time elapsed = 0.003 hours
+Epoch      0: avg.loss pe = 1.009e+00, 217 points/sec, time elapsed = 0.001 hours
+Epoch      0: avg.loss pe = 1.014e+00, 189 points/sec, time elapsed = 0.001 hours
+Epoch      0: avg.loss pe = 1.005e+00, 199 points/sec, time elapsed = 0.001 hours
+Epoch      0: avg.loss pe = 1.011e+00, 235 points/sec, time elapsed = 0.001 hours
+Epoch      0: avg.loss pe = 1.047e+00, 237 points/sec, time elapsed = 0.001 hours
+Epoch    100: avg.loss pe = 9.992e-01, 8948 points/sec, time elapsed = 0.003 hours
+Epoch    200: avg.loss pe = 9.985e-01, 8919 points/sec, time elapsed = 0.005 hours
+Epoch    300: avg.loss pe = 9.975e-01, 8845 points/sec, time elapsed = 0.007 hours
+Epoch    400: avg.loss pe = 9.559e-01, 8053 points/sec, time elapsed = 0.009 hours
+Epoch    500: avg.loss pe = 7.312e-03, 8023 points/sec, time elapsed = 0.011 hours
+Epoch    600: avg.loss pe = 2.076e-03, 8079 points/sec, time elapsed = 0.013 hours
+Epoch    700: avg.loss pe = 2.481e-03, 6640 points/sec, time elapsed = 0.015 hours
+Epoch    800: avg.loss pe = 4.645e-02, 7760 points/sec, time elapsed = 0.018 hours
+Epoch    900: avg.loss pe = 1.498e-03, 8009 points/sec, time elapsed = 0.020 hours
+Epoch   1000: avg.loss pe = 5.997e-04, 8394 points/sec, time elapsed = 0.022 hours
+Epoch   1100: avg.loss pe = 3.652e-04, 8263 points/sec, time elapsed = 0.024 hours
+Epoch   1200: avg.loss pe = 3.454e-04, 8237 points/sec, time elapsed = 0.026 hours
+Epoch   1300: avg.loss pe = 3.397e-04, 7960 points/sec, time elapsed = 0.029 hours
+Epoch   1400: avg.loss pe = 3.064e-04, 7691 points/sec, time elapsed = 0.031 hours
+Epoch   1500: avg.loss pe = 2.631e-04, 8086 points/sec, time elapsed = 0.033 hours
+Epoch   1600: avg.loss pe = 2.815e-04, 8042 points/sec, time elapsed = 0.035 hours
+Epoch   1700: avg.loss pe = 4.530e-04, 8195 points/sec, time elapsed = 0.038 hours
+Epoch   1800: avg.loss pe = 3.865e-04, 8074 points/sec, time elapsed = 0.040 hours
+Epoch   1900: avg.loss pe = 4.317e-04, 8085 points/sec, time elapsed = 0.042 hours
+Epoch   2000: avg.loss pe = 8.712e-04, 8187 points/sec, time elapsed = 0.045 hours
+Epoch   2100: avg.loss pe = 1.395e-04, 8021 points/sec, time elapsed = 0.047 hours
+Epoch   2200: avg.loss pe = 2.091e-04, 8124 points/sec, time elapsed = 0.049 hours
+Epoch   2300: avg.loss pe = 3.906e-04, 8103 points/sec, time elapsed = 0.052 hours
+Epoch   2400: avg.loss pe = 1.070e-04, 7605 points/sec, time elapsed = 0.054 hours
+Epoch   2500: avg.loss pe = 1.095e-04, 7811 points/sec, time elapsed = 0.056 hours
+Epoch   2600: avg.loss pe = 1.630e-04, 8183 points/sec, time elapsed = 0.058 hours
+Epoch   2700: avg.loss pe = 1.090e-04, 7978 points/sec, time elapsed = 0.061 hours
+Epoch   2800: avg.loss pe = 1.125e-04, 6250 points/sec, time elapsed = 0.063 hours
+Epoch   2900: avg.loss pe = 1.376e-04, 4682 points/sec, time elapsed = 0.067 hours
+Epoch   3000: avg.loss pe = 3.299e-03, 7954 points/sec, time elapsed = 0.070 hours
+Epoch   3100: avg.loss pe = 5.199e-04, 4524 points/sec, time elapsed = 0.073 hours
+Epoch   3200: avg.loss pe = 2.060e-04, 7068 points/sec, time elapsed = 0.076 hours
+Epoch   3300: avg.loss pe = 1.009e-03, 2980 points/sec, time elapsed = 0.080 hours
+Epoch   3400: avg.loss pe = 7.750e-05, 7299 points/sec, time elapsed = 0.085 hours
+Epoch   3500: avg.loss pe = 1.126e-04, 5535 points/sec, time elapsed = 0.088 hours
+Epoch   3600: avg.loss pe = 1.154e-04, 4212 points/sec, time elapsed = 0.091 hours
+Epoch   3700: avg.loss pe = 1.013e-04, 7734 points/sec, time elapsed = 0.094 hours
+Epoch   3800: avg.loss pe = 2.679e-04, 3031 points/sec, time elapsed = 0.096 hours
+Epoch   3900: avg.loss pe = 6.519e-05, 8068 points/sec, time elapsed = 0.099 hours
+Epoch   4000: avg.loss pe = 9.213e-05, 7060 points/sec, time elapsed = 0.102 hours
+Epoch   4100: avg.loss pe = 3.628e-05, 7776 points/sec, time elapsed = 0.105 hours
+Epoch   4200: avg.loss pe = 3.505e-05, 7093 points/sec, time elapsed = 0.108 hours
+Epoch   4300: avg.loss pe = 3.799e-05, 7559 points/sec, time elapsed = 0.111 hours
+Epoch   4400: avg.loss pe = 3.873e-05, 3078 points/sec, time elapsed = 0.113 hours
+Epoch   4500: avg.loss pe = 4.924e-05, 4417 points/sec, time elapsed = 0.116 hours
+Epoch   4600: avg.loss pe = 4.966e-05, 7681 points/sec, time elapsed = 0.119 hours
+Epoch   4700: avg.loss pe = 3.871e-05, 7751 points/sec, time elapsed = 0.123 hours
+Epoch   4800: avg.loss pe = 3.360e-05, 7404 points/sec, time elapsed = 0.126 hours
+Epoch   4900: avg.loss pe = 3.354e-05, 7909 points/sec, time elapsed = 0.129 hours
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Found untraced functions such as dense_1_layer_call_and_return_conditional_losses, dense_1_layer_call_fn, dense_2_layer_call_and_return_conditional_losses, dense_2_layer_call_fn, dense_1_layer_call_fn while saving (showing 5 of 10). These functions will not be directly callable after loading.
+Assets written to: ./model_p_to_lr/assets
+AutoGraph could not transform <function function_factory.<locals>.assign_new_model_parameters at 0x7fc3be1b2ef0> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: module 'gast' has no attribute 'Index'
+To silence this warning, decorate the function with @tf.autograph.experimental.do_not_convert

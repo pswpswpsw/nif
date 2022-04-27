@@ -8,10 +8,6 @@ from matplotlib import pyplot as plt
 from mpl_toolkits import mplot3d
 from nif.optimizers import gtcf
 
-
-from tensorflow.keras import backend as K
-# tf.compat.v1.disable_eager_execution()
-
 NT=10 # 20
 NX=200
 
@@ -42,6 +38,7 @@ cfg_parameter_net = {
     "units": 30,
     "nlayers": 2,
     "activation": 'swish',
+    "jac_reg": 1e5
 }
 
 enable_multi_gpu = False
@@ -60,7 +57,12 @@ tw=TravelingWave()
 train_data = tw.data
 
 num_total_data = train_data.shape[0]
-train_dataset = tf.data.Dataset.from_tensor_slices((train_data[:, :2], train_data[:, -1:]))
+
+# train_dataset = tf.data.Dataset.from_tensor_slices((train_data[:, :1], train_data[:, 1:2], train_data[:, -1:]))
+dataset_inputs = tf.data.Dataset.from_tensor_slices((train_data[:, :1], train_data[:, 1:2]))
+dataset_outputs = tf.data.Dataset.from_tensor_slices(train_data[:, -1:])
+train_dataset = tf.data.Dataset.zip((dataset_inputs, dataset_outputs))
+
 train_dataset = train_dataset.shuffle(num_total_data).batch(batch_size).prefetch(tf.data.experimental.AUTOTUNE)
 
 # mixed precision?
@@ -88,6 +90,7 @@ class LossAndErrorPrintingCallback(tf.keras.callbacks.Callback):
             logging.info("Epoch {:6d}: avg.loss pe = {:4.3e}, {:d} points/sec, time elapsed = {:4.3f} hours".format(
                 epoch, logs['loss'], int(batch_size / te), (tnow - self.train_begin_time) / 3600.0))
             self.history_loss.append(logs['loss'])
+
         if epoch % print_figure_epoch == 0:
             plt.figure()
             plt.semilogy(self.history_loss)
@@ -96,7 +99,7 @@ class LossAndErrorPrintingCallback(tf.keras.callbacks.Callback):
             plt.savefig('./loss.png')
             plt.close()
 
-            u_pred = self.model.predict(train_data[:,:2]).reshape(10,200)
+            u_pred = self.model.predict((train_data[:,:1],train_data[:,1:2])).reshape(10,200)
             fig,axs=plt.subplots(1,3,figsize=(16,4))
             im1=axs[0].contourf(tt, xx, train_data[:,-1].reshape(10,200),vmin=-5,vmax=5,levels=50,cmap='seismic')
             plt.colorbar(im1,ax=axs[0])
@@ -104,7 +107,8 @@ class LossAndErrorPrintingCallback(tf.keras.callbacks.Callback):
             im2=axs[1].contourf(tt, xx, u_pred,vmin=-5,vmax=5,levels=50,cmap='seismic')
             plt.colorbar(im2,ax=axs[1])
 
-            im3=axs[2].contourf(tt, xx, (u_pred-train_data[:,-1].reshape(10,200)),vmin=-5,vmax=5,levels=50,cmap='seismic')
+            im3=axs[2].contourf(tt, xx, (u_pred - train_data[:,-1].reshape(10,200)), vmin=-5, vmax=5, levels=50,
+                                cmap='seismic')
             plt.colorbar(im3,ax=axs[2])
 
             axs[0].set_xlabel('t')
@@ -137,41 +141,22 @@ tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="./tb-logs", updat
 
 cm = tf.distribute.MirroredStrategy().scope() if enable_multi_gpu else contextlib.nullcontext()
 with cm:
-    optimizer = tf.keras.optimizers.Adam(lr)
 
+    # optimizer = tf.keras.optimizers.Adam(lr)
+    optimizer = nif.optimizers.AdaBeliefOptimizer(lr)
     optimizer.get_gradients = gtcf.centralized_gradients_for_optimizer(optimizer)
 
     model_ori = nif.NIF(cfg_shape_net, cfg_parameter_net, mixed_policy)
-    model = model_ori.model()
+    model_opt = model_ori.build()
 
-    loss_fun = tf.keras.losses.MeanSquaredError()
-    # def loss_fun(y_pred, y_true):
-    #     MSE_LOSS = K.mean(tf.math.squared_difference(y_true, y_pred), axis=-1)
-    #
-    #     # W = K.variable(value=model.get_layer('input').get_weights()[0])  # N x N_hidden
-    #     # W = K.transpose(W)  # N_hidden x N
-    #     # h = model.get_layer('encoded').output
-    #     # dh = h * (1 - h)  # N_batch x N_hidden
-    #     #
-    #     # jac = model.optimizer.get_gradients(model.output, model.inputs)
-    #     # jac = K.gradients(model.outputs[0], model.inputs)
-    #     # # N_batch x N_hidden * N_hidden x 1 = N_batch x 1
-    #     # contractive = 0.1 * K.sum(dh**2 * K.sum(W**2, axis=1), axis=1)
-    #
-    #     return MSE_LOSS # + contractive
-
-    # model.add_loss(K.gradients(model.output, model.inputs))
-    # model.add_loss(tf.gradients(model.output, model.input))
-
-    model.compile(optimizer, loss_fun)
+    model_opt.compile(optimizer, loss='mse')
 
 # callbacks = []
 # callbacks = [LossAndErrorPrintingCallback(), scheduler_callback]
 # callbacks = [tensorboard_callback, ]
 callbacks = [tensorboard_callback, LossAndErrorPrintingCallback(), scheduler_callback]
-model.fit(train_dataset, epochs=nepoch, batch_size=batch_size, 
-          shuffle=False, verbose=0, callbacks=callbacks, 
-          use_multiprocessing=True)
+model_opt.fit(train_dataset, epochs=nepoch, batch_size=batch_size, shuffle=False,
+              verbose=0, callbacks=callbacks, use_multiprocessing=True)
 
 
 from IPython.display import Image, display
@@ -211,7 +196,8 @@ cfg_parameter_net = {
 # mixed_policy = 'float32'
 new_model_ori = nif.NIF(cfg_shape_net, cfg_parameter_net, mixed_policy)
 
-new_model = new_model_ori.model()
+#new_model = new_model_ori.model()
+new_model = new_model_ori.build()
 loss_fun = tf.keras.losses.MeanSquaredError()
 optimizer = tf.keras.optimizers.Adam(1e-5)
 new_model.compile(optimizer, loss_fun)
@@ -220,7 +206,7 @@ new_model.load_weights("./saved_weights/ckpt-4999/ckpt")
 
 from nif.optimizers import TFPLBFGS
 
-data_feature = train_data[:,:2]
+data_feature = (train_data[:,:1], train_data[:,1:2])
 data_label = train_data[:,-1:]
 
 fine_tuner = TFPLBFGS(new_model, loss_fun, data_feature, data_label, display_epoch=10)

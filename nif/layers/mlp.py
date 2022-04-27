@@ -40,13 +40,17 @@ class MLP_SimpleShortCut(tf.keras.layers.Layer):
     def __init__(self, width, activation, kernel_initializer, bias_initializer, mixed_policy):
         super(MLP_SimpleShortCut, self).__init__()
         # dtype = tf.float16 if mixed_policy == 'mixed_float16' else tf.float32
+        self.width = width
+        self.activation = activation
+        self.kernel_initializer = kernel_initializer
+        self.bias_initializer = bias_initializer
         self.compute_Dtype = mixed_policy.compute_dtype
         self.variable_Dtype = mixed_policy.variable_dtype
-        act = tf.keras.activations.get(activation)
-        self.L1 = tf.keras.layers.Dense(width, activation=act,
-                                        kernel_initializer=kernel_initializer,
-                                        bias_initializer=bias_initializer,
-                                        dtype=mixed_policy
+        self.mixed_policy = mixed_policy
+        self.L1 = tf.keras.layers.Dense(width, activation=tf.keras.activations.get(self.activation),
+                                        kernel_initializer=self.kernel_initializer,
+                                        bias_initializer=self.bias_initializer,
+                                        dtype=self.mixed_policy
                                         )
 
     def call(self, x, **kwargs):
@@ -61,6 +65,8 @@ class MLP_SimpleShortCut(tf.keras.layers.Layer):
             "activation": self.activation,
             "kernel_initializer": self.kernel_initializer,
             "bias_initializer": self.bias_initializer,
-            "mixed_policy": self.mixed_policy
+            "mixed_policy": self.mixed_policy,
+            "compute_Dtype": self.compute_Dtype,
+            "variable_Dtype": self.variable_Dtype
         })
         return config

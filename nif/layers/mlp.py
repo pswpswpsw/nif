@@ -25,6 +25,16 @@ class MLP_ResNet(tf.keras.layers.Layer):
         y = self.act(x + tf.cast(h2, self.compute_Dtype))
         return tf.cast(y, self.variable_Dtype)
 
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "width": self.width,
+            "activation": self.activation,
+            "kernel_initializer": self.kernel_initializer,
+            "bias_initializer": self.bias_initializer,
+            "mixed_policy": self.mixed_policy
+        })
+        return config
 
 class MLP_SimpleShortCut(tf.keras.layers.Layer):
     def __init__(self, width, activation, kernel_initializer, bias_initializer, mixed_policy):
@@ -43,3 +53,14 @@ class MLP_SimpleShortCut(tf.keras.layers.Layer):
         # classic ResNet, replace ReLU with Swish
         y = x + self.L1(x)
         return y
+
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "width": self.width,
+            "activation": self.activation,
+            "kernel_initializer": self.kernel_initializer,
+            "bias_initializer": self.bias_initializer,
+            "mixed_policy": self.mixed_policy
+        })
+        return config

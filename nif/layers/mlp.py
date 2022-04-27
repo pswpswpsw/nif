@@ -65,8 +65,6 @@ class MLP_SimpleShortCut(tf.keras.layers.Layer):
             "activation": self.activation,
             "kernel_initializer": self.kernel_initializer,
             "bias_initializer": self.bias_initializer,
-            "mixed_policy": self.mixed_policy,
-            "compute_Dtype": self.compute_Dtype,
-            "variable_Dtype": self.variable_Dtype
+            "mixed_policy": self.mixed_policy
         })
         return config

@@ -1,11 +1,9 @@
 import tensorflow as tf
 
-class InputOutputGradientLayer(tf.keras.layers.Layer):
+class GradientLayer(tf.keras.layers.Layer):
     def __init__(self, model, y_index, x_index,
-                 mixed_policy=tf.keras.mixed_precision.Policy('float32'),
-                 **kwargs):
-
-        super().__init__(**kwargs)
+                 mixed_policy=tf.keras.mixed_precision.Policy('float32')):
+        super().__init__()
         self.model = model
         # self.l1 = tf.cast(l1, self.mixed_policy.compute_dtype)
         self.y_index = y_index
@@ -13,52 +11,21 @@ class InputOutputGradientLayer(tf.keras.layers.Layer):
         self.mixed_policy = mixed_policy
 
     def call(self, x, **kwargs):
-        with tf.GradientTape() as g:
-            g.watch(x)
-            y = self.model(x)
+        y, dys_dxs = compute_output_and_gradient(self.model, x, self.x_index, self.y_index)
+        return y, dys_dxs
 
-            ys = y[:,self.y_index]
+class JacobianRegLayer(GradientLayer):
+    def __init__(self, model, y_index, x_index,
+                 mixed_policy=tf.keras.mixed_precision.Policy('float32'),
+                 l1=1e-2):
+        super().__init__(model, y_index, x_index, mixed_policy)
+        self.l1 = tf.cast(l1, self.mixed_policy.compute_dtype)
 
-        dys_dxs_list = []
-        for j in range(len(self.y_index)):
-            dys_dx = g.gradient(ys[:,j],x)
-            dys_dxs = dys_dx[:,self.x_index]
-            dys_dxs_list.append(dys_dxs)
-
-        return y, dys_dxs_list
-
-# with tf.GradientTape(persistent=True) as g:
-#
-#     g.watch(x2)
-#
-#     # y = model(x_list)
-#
-#
-#
-#     h = tf.concat([x,x2],-1)
-#     h = Dense(4,activation='sigmoid')(h)
-#     y = h
-#
-#
-#     z = []
-#     for i in range(1,4):
-#         q = y[:,i]
-#         z.append(q)
-#
-# print(y)
-# print(z)
-#
-# for i in range(1,4):
-#     print('this is the dy{}/dx'.format(i))
-#     # z2=x2
-#     # z2 = x2[:-1,0:2]
-#     # z2 = tf.slice(x2, [0,0], [10,2])
-#     # print(z2)
-#     dy_dx = g.gradient(z[i-1],x2)
-#     print(dy_dx)
-#     print("==========")
-#     print('')
-
+    def call(self, x, **kwargs):
+        y, dys_dxs = compute_output_and_gradient(self.model, x, self.x_index, self.y_index)
+        jac_reg_loss = self.l1*tf.reduce_mean(tf.square(dys_dxs))
+        self.add_loss(jac_reg_loss)
+        return y
 
 class GradientLayerV2(tf.keras.layers.Layer):
     """
@@ -99,3 +66,14 @@ class GradientLayerV2(tf.keras.layers.Layer):
         self.add_loss(jac_loss)
         y = self.layer_list[-1](latent)
         return y, latent
+
+
+
+def compute_output_and_gradient(model, x, x_index, y_index):
+    with tf.GradientTape() as tape:
+        tape.watch(x)
+        y = model(x)
+        ys = tf.gather(y, y_index, axis=-1)
+    dys_dx = tape.batch_jacobian(ys,x)
+    dys_dxs = tf.gather(dys_dx, x_index, axis=-1)
+    return y, dys_dxs

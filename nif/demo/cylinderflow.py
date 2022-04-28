@@ -1,6 +1,6 @@
 import numpy as np
 import os
-from .point_wise_data import PointWiseData
+from point_wise_data import PointWiseData
 
 class CylinderFlow(PointWiseData):
     def __init__(self):
@@ -22,8 +22,13 @@ class CylinderFlow(PointWiseData):
 
 if __name__=='__main__':
     tw = CylinderFlow()
+    print(tw.mean)
+    print(tw.std)
+    print('')
+    print('normalized')
     print(tw.data.mean(axis=0))
     print(tw.data.std(axis=0))
+    print('')
     print(tw.parameter.shape)
     print(tw.x.shape)
     print(tw.u.shape)

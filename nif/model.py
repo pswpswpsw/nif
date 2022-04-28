@@ -260,7 +260,7 @@ class NIFMultiScale(NIF):
                                              so_dim=self.so_dim,
                                              n_sx=self.n_sx,
                                              l_sx=self.l_sx,
-                                             variable_dtype=self.variable_dtype
+                                             variable_dtype=self.variable_Dtype
                                              )
 
     def _initialize_pnet(self, cfg_parameter_net, cfg_shape_net):

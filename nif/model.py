@@ -168,16 +168,6 @@ class NIF(object):
         u = tf.einsum('ai,aij->aj', u, w_l) + b_l
         return tf.cast(u, variable_dtype)
 
-
-    # if isinstance(self.p_jac_reg, (float, int)) and training==True:
-    #     print("...enable Jacobian regularization during training with coef = {}".format(self.p_jac_reg))
-    #     gradient_layer = GradientLayer(model, l1=self.p_jac_reg, mixed_policy=self.mixed_policy)
-    #     model = Model(inputs=[input_tot], outputs=[gradient_layer(input_tot)])
-
-    # @staticmethod
-    # def _call_parameter_net(self, input_p, pnet_list):
-    #     return self.PNET(input_p)
-
     @staticmethod
     def _call_parameter_net(input_p, pnet_list):
         latent = input_p
@@ -190,33 +180,36 @@ class NIF(object):
 
     def build(self):
         if isinstance(self.p_jac_reg, (float, int)):
-            input_tot = tf.keras.layers.Input(shape=(self.si_dim + self.pi_dim), name='input')
-            # input_p = tf.keras.layers.Input(shape=(self.pi_dim))# input_tot[:, 0:self.pi_dim]
-
-            # todo : rewrite the interface of Input layer for all the model, please change it to input_p and input_s...
+            input_p = tf.keras.layers.Input(shape=(self.pi_dim), name='input_p')
+            input_s = tf.keras.layers.Input(shape=(self.si_dim), name='input_s')
 
             # todo: write a customized gradient layer to compute the Jacobian of output[1] w.r.t. input_p then add
             #  that into the loss function
 
-            # todo: 2. write a customized loss function to deal with the model.compile because of the
+            # todo: write a customized loss function to deal with the model.compile because of the
+            input_tot = tf.concat([input_p, input_s], -1)
 
-
-            aug_latent_model = Model(inputs=[input_tot], outputs=[self.call(input_tot),
-                self._call_parameter_net(input_tot[:,:self.pi_dim],self.pnet_list)[1]])
+            aug_latent_model = Model(inputs=[input_p, input_s],
+                                     outputs=[self.call(input_tot),
+                                              self._call_parameter_net(input_p,self.pnet_list)[1]])
+            y_index = [1]
+            x_index = [0]
+            l1 = 1e2
+            output,_ = JacobianRegLayer(aug_latent_model, y_index, x_index, l1)([input_p, input_s])
+            # output,_ = jacreglayer(input_tot)
             # augmented_model = Model(inputs=[input_tot], outputs=[gradient_layer(model(input_tot))])
             # print("...enable Jacobian regularization during training with coef = {}".format(self.p_jac_reg))
             # jac_layer = InputOutputJacobianLayer(model_p_to_lr, l1=self.p_jac_reg, mixed_policy=self.mixed_policy)
             print('here')
             # model_tmp = Model(inputs=[input_p], outputs=[jac_layer(input_p)])
             # model_tmp.summary()
-            return self.model()
+            return Model(inputs=[input_p, input_s], outputs=[output])
         else:
             return self.model()
 
     def model(self):
         input_p = tf.keras.layers.Input(shape=(self.pi_dim), name='input_p')
         input_s = tf.keras.layers.Input(shape=(self.si_dim), name='input_s')
-        # input_tot = tf.keras.layers.Input(shape=(self.si_dim + self.pi_dim), name='input')
         input_tot = tf.concat([input_p, input_s], -1)
         return Model(inputs=[input_p, input_s], outputs=[self.call(input_tot)])
 

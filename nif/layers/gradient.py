@@ -15,15 +15,14 @@ class GradientLayer(tf.keras.layers.Layer):
         return y, dys_dxs
 
 class JacobianRegLayer(GradientLayer):
-    def __init__(self, model, y_index, x_index,
-                 mixed_policy=tf.keras.mixed_precision.Policy('float32'),
-                 l1=1e-2):
+    def __init__(self, model, y_index, x_index, l1=1e-2,
+                 mixed_policy=tf.keras.mixed_precision.Policy('float32')):
         super().__init__(model, y_index, x_index, mixed_policy)
         self.l1 = tf.cast(l1, self.mixed_policy.compute_dtype)
 
     def call(self, x, **kwargs):
         y, dys_dxs = compute_output_and_gradient(self.model, x, self.x_index, self.y_index)
-        jac_reg_loss = self.l1*tf.reduce_mean(tf.square(dys_dxs))
+        jac_reg_loss = self.l1 * tf.reduce_mean(tf.square(dys_dxs))
         self.add_loss(jac_reg_loss)
         return y
 

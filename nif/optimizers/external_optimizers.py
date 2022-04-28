@@ -103,6 +103,7 @@ class L4Adam(tf.keras.optimizers.Optimizer):
         # mostly because of the g^T * nu term, maybe it is easier in pytorch
         # new_var = var - coefficients['lr'] * nu_new * (loss - coefficients["gamma"]*self.l_min)\
         #           /(coefficients["epsilon"] + )
+        # indeed, I can implement it in customized training loop. but anyway, it maybe not worth it.
 
         # create the ops for updating
         g_update = state_ops.assign(g, g_new, use_locking=self._use_locking)

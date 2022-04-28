@@ -57,11 +57,11 @@ class SIREN(tf.keras.layers.Layer):
         self.num_inputs = num_inputs
         self.num_outputs = num_outputs
         self.layer_position = layer_position
-        self.omega_0 = tf.cast(omega_0, self.variable_Dtype)
         self.cfg_shape_net = cfg_shape_net
         self.mixed_policy = mixed_policy
         self.compute_Dtype = self.mixed_policy.compute_dtype
         self.variable_Dtype = self.mixed_policy.variable_dtype
+        self.omega_0 = tf.cast(omega_0, self.variable_Dtype)
 
         # initialize the weights
         if layer_position == 'first':

@@ -1,27 +1,63 @@
 import tensorflow as tf
 
-class InputOutputJacobianLayer(tf.keras.layers.Layer):
-    def __init__(self, model, l1=1e-3, diff_target_index=None,
+class InputOutputGradientLayer(tf.keras.layers.Layer):
+    def __init__(self, model, y_index, x_index,
                  mixed_policy=tf.keras.mixed_precision.Policy('float32'),
                  **kwargs):
 
-        self.model = model
-        self.mixed_policy = mixed_policy
-        self.l1 = tf.cast(l1, self.mixed_policy.compute_dtype)
-        self.diff_target_index = diff_target_index
         super().__init__(**kwargs)
+        self.model = model
+        # self.l1 = tf.cast(l1, self.mixed_policy.compute_dtype)
+        self.y_index = y_index
+        self.x_index = x_index
+        self.mixed_policy = mixed_policy
 
     def call(self, x, **kwargs):
-        with tf.GradientTape(persistent=True) as g:
+        with tf.GradientTape() as g:
             g.watch(x)
             y = self.model(x)
 
-        dy0_dx0 = g.gradient(y[0],x[0])
-        dy_dx = g.gradient(y,x)
-        # jac_tensor = g.batch_jacobian(y, x)
-        # jac_loss = self.l1*tf.reduce_sum(tf.reduce_mean(tf.square(jac_tensor),axis=1))
-        # self.add_loss(jac_loss)
-        return y
+            ys = y[:,self.y_index]
+
+        dys_dxs_list = []
+        for j in range(len(self.y_index)):
+            dys_dx = g.gradient(ys[:,j],x)
+            dys_dxs = dys_dx[:,self.x_index]
+            dys_dxs_list.append(dys_dxs)
+
+        return y, dys_dxs_list
+
+# with tf.GradientTape(persistent=True) as g:
+#
+#     g.watch(x2)
+#
+#     # y = model(x_list)
+#
+#
+#
+#     h = tf.concat([x,x2],-1)
+#     h = Dense(4,activation='sigmoid')(h)
+#     y = h
+#
+#
+#     z = []
+#     for i in range(1,4):
+#         q = y[:,i]
+#         z.append(q)
+#
+# print(y)
+# print(z)
+#
+# for i in range(1,4):
+#     print('this is the dy{}/dx'.format(i))
+#     # z2=x2
+#     # z2 = x2[:-1,0:2]
+#     # z2 = tf.slice(x2, [0,0], [10,2])
+#     # print(z2)
+#     dy_dx = g.gradient(z[i-1],x2)
+#     print(dy_dx)
+#     print("==========")
+#     print('')
 
 
 class GradientLayerV2(tf.keras.layers.Layer):

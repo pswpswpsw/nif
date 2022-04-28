@@ -54,11 +54,14 @@ class SIREN(tf.keras.layers.Layer):
                  omega_0=30., cfg_shape_net=None,
                  mixed_policy=tf.keras.mixed_precision.Policy('float32')):
         super(SIREN, self).__init__()
+        self.num_inputs = num_inputs
+        self.num_outputs = num_outputs
+        self.layer_position = layer_position
+        self.omega_0 = tf.cast(omega_0, self.variable_Dtype)
+        self.cfg_shape_net = cfg_shape_net
         self.mixed_policy = mixed_policy
         self.compute_Dtype = self.mixed_policy.compute_dtype
         self.variable_Dtype = self.mixed_policy.variable_dtype
-        self.layer_position = layer_position
-        self.omega_0 = tf.cast(omega_0, self.variable_Dtype)
 
         # initialize the weights
         if layer_position == 'first':
@@ -125,6 +128,17 @@ class SIREN(tf.keras.layers.Layer):
                             tf.cast(self.b,self.compute_Dtype))
         return y
 
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "num_inputs": self.num_inputs,
+            "num_outputs": self.num_outputs,
+            "layer_position": self.layer_position,
+            "omega_0": self.omega_0,
+            "cfg_shape_net": self.cfg_shape_net,
+            "mixed_policy": self.mixed_policy
+        })
+        return config
 
 class SIREN_ResNet(SIREN):
     def __init__(self, num_inputs,
@@ -144,12 +158,16 @@ class SIREN_ResNet(SIREN):
         return 0.5*(x + tf.math.sin(self.omega_0*tf.matmul(h, tf.cast(self.w2, self.compute_Dtype)) +
                                             tf.cast(self.b2, self.compute_Dtype)))
 
+
 class HyperLinearForSIREN(tf.keras.layers.Layer):
     def __init__(self, num_inputs, num_outputs, cfg_shape_net, mixed_policy, connectivity='full'):
         super(HyperLinearForSIREN, self).__init__()
+        self.num_inputs = num_inputs
+        self.num_outputs = num_outputs
         self.mixed_policy = mixed_policy
         self.compute_Dtype = self.mixed_policy.compute_dtype
         self.variable_Dtype = self.mixed_policy.variable_dtype
+        self.connectivity = connectivity
 
         # compute the indices needed for generating weights for shapenet
         if connectivity == 'full':
@@ -179,3 +197,13 @@ class HyperLinearForSIREN(tf.keras.layers.Layer):
         y = tf.matmul(x, tf.cast(self.w, self.compute_Dtype)) + tf.cast(self.b, self.compute_Dtype)
         return y
 
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "num_inputs": self.num_inputs,
+            "num_outputs": self.num_outputs,
+            "cfg_shape_net": self.cfg_shape_net,
+            "mixed_policy": self.mixed_policy,
+            "connectivity": self.connectivity
+        })
+        return config

@@ -485,7 +485,7 @@ class NIFMultiScale(NIF):
                                                         so_dim=self.so_dim,
                                                         n_sx=self.n_sx,
                                                         l_sx=self.l_sx,
-                                                        variable_dtype=self.variable_dtype
+                                                        variable_dtype=self.variable_Dtype
                                                         )])
 
 
@@ -506,7 +506,7 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
                                                               self.pnet_output,
                                                               self.so_dim,
                                                               self.pi_hidden,
-                                                              self.variable_dtype)
+                                                              self.variable_Dtype)
 
     def model_p_to_lr(self):
         input_p = tf.keras.layers.Input(shape=(self.pi_dim))
@@ -532,7 +532,7 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
                                                                              tf.cast(input_pnet, self.compute_Dtype),
                                                                              self.so_dim,
                                                                              self.pi_hidden,
-                                                                             self.variable_dtype)])
+                                                                             self.variable_Dtype)])
 
 
 

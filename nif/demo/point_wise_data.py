@@ -2,7 +2,7 @@ import numpy as np
 
 class PointWiseData(object):
     def __init__(self, parameter_data, x_data, u_data, sample_weight=None):
-        if sample_weight != None:
+        if type(sample_weight) != type(None):
             self.data_raw = np.hstack([parameter_data, x_data, u_data, sample_weight])
         else:
             self.data_raw = np.hstack([parameter_data, x_data, u_data])

@@ -16,4 +16,6 @@ __all__ = [
     "MLP_ResNet",
     "MLP_SimpleShortCut",
     "JacRegLatentLayer",
+    "JacobianLayer",
+    "HessianLayer"
 ]

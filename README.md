@@ -35,6 +35,9 @@
 	- learn how to use class `nif.NIFMultiScaleLastLayerParameterized`
 	- demonstrate on a (shortened) flow over a cylinder case from AMR solver
 
+4. **Getting derivatives is super easy** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/4_get_gradients_by_wrapping_model_with_layer.ipynb)
+	- learn how to use `nif.layers.JacobianLayer`, `nif.layers.HessianLayer`
+
 ## How to cite
 
 If you find NIF is helpful to you, you can cite our [paper](https://arxiv.org/abs/2204.03216) in the following bibtex format

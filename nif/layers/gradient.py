@@ -7,6 +7,7 @@ class JacobianLayer(tf.keras.layers.Layer):
         self.y_index = y_index
         self.x_index = x_index
 
+    @tf.function
     def call(self, x, **kwargs):
         y, dys_dxs = compute_output_and_grad(self.model, x, self.x_index, self.y_index)
         return y, dys_dxs
@@ -46,6 +47,7 @@ class HessianLayer(tf.keras.layers.Layer):
         self.y_index = y_index
         self.x_index = x_index
 
+    @tf.function
     def call(self, x, **kwargs):
         y, dys_dxs, dys2_dxs2 = compute_output_and_grad_and_hessian(self.model, x, self.x_index, self.y_index)
         return y, dys_dxs, dys2_dxs2

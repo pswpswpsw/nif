@@ -15,5 +15,5 @@ __all__ = [
     "HyperLinearForSIREN",
     "MLP_ResNet",
     "MLP_SimpleShortCut",
-    "JacobianRegLayer",
+    "JacRegLatentLayer",
 ]

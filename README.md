@@ -110,8 +110,8 @@
 
 - Get input-output Jacobian or Hessian.
     ```python
-    model = ...
-    
+    model = ... # your keras.Model
+    x = ... # your data
     # define both the indices of target and source 
     
     x_index = [0,1,2,3]
@@ -133,6 +133,13 @@
     
     model_with_jacobian_and_hessian = Model([x], [y, dydx, dy2dx2])
     
+    ```
+
+- Normalization for multi-scale problem
+  - just simply feed `n_para`: number of parameters, `n_x`: input dimension of shapenet, `n_target`: output dimension of shapenet, and `raw_data`: numpy array with shape = `(number of pointwise data points, number of features, target, coordinates, etc.)`
+    ```python
+    from nif.demo.data import PointWiseData
+    data_n, mean, std = PointWiseData.minmax_normalize(raw_data=data, n_para=1, n_x=3, n_target=1) 
     ```
 
 ## Google Colab Tutorial

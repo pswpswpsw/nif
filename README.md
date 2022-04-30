@@ -171,7 +171,3 @@ If you find NIF is helpful to you, you can cite our [paper](https://arxiv.org/ab
 ## License
 
 [LGPL-2.1 License](https://github.com/pswpswpsw/nif/blob/master/LICENSE)
-
-```
-
-```

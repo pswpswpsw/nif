@@ -18,7 +18,7 @@
     ```python
     from nif import NIF
     
-    # set up the configurations, loading data, etc...
+    # set up the configurations, loading dataset, etc...
     
     model_ori = nif.NIF(...)
     model_opt = model_ori.build()
@@ -49,7 +49,7 @@
     new_model_ori = nif.NIF(cfg_shape_net, cfg_parameter_net, mixed_policy)
     new_model.load_weights(...)
     
-    # prepare the data
+    # prepare the dataset
     data_feature = ... #
     data_label = ... # 
     
@@ -111,7 +111,7 @@
 - Get input-output Jacobian or Hessian.
     ```python
     model = ... # your keras.Model
-    x = ... # your data
+    x = ... # your dataset
     # define both the indices of target and source 
     
     x_index = [0,1,2,3]
@@ -140,7 +140,7 @@
     - just simply feed `n_para`: number of parameters, `n_x`: input dimension of shapenet, `n_target`: output dimension of shapenet, and `raw_data`: numpy array with shape = `(number of pointwise data points, number of features, target, coordinates, etc.)`
 
     ```python
-    from nif.demo.data import PointWiseData
+    from nif.demo.dataset import PointWiseData
     data_n, mean, std = PointWiseData.minmax_normalize(raw_data=data, n_para=1, n_x=3, n_target=1) 
     ```
 

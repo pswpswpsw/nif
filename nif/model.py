@@ -130,7 +130,7 @@ class NIF(object):
         output_final = pnet_list[-1](latent)
         return output_final, latent
 
-# todo write a code to convert BIG npz to tf.records
+    # todo write a code to convert BIG npz to tf.records
 
     def build(self):
         if isinstance(self.p_jac_reg, (float, int)):

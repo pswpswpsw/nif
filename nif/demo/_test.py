@@ -1,4 +1,4 @@
-from point_wise_data import PointWiseData
+from nif.data.point_wise_data import PointWiseData
 import numpy as np
 
 data = np.random.rand(100,3)

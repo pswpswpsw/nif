@@ -1,10 +1,10 @@
-from .siren import SIREN
-from .siren import SIREN_ResNet
-from .siren import HyperLinearForSIREN
-from .mlp import MLP_ResNet
-from .mlp import MLP_SimpleShortCut
+from nif.layers.siren import SIREN
+from nif.layers.siren import SIREN_ResNet
+from nif.layers.siren import HyperLinearForSIREN
+from nif.layers.mlp import MLP_ResNet
+from nif.layers.mlp import MLP_SimpleShortCut
 
-from .gradient import *
+from nif.layers.gradient import *
 
 from tensorflow.keras.layers import Dense
 

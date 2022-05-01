@@ -1,9 +1,9 @@
 from tensorflow_probability.python.optimizer import lbfgs_minimize
-from .lbfgs import function_factory, TFPLBFGS
-from .lbfgs_V2 import LBFGSOptimizer
-from .external_optimizers import L4Adam
-from .external_optimizers import AdaBeliefOptimizer
-from .gtcf import centralized_gradients_for_optimizer
+from nif.optimizers.lbfgs import function_factory, TFPLBFGS
+from nif.optimizers.lbfgs_V2 import LBFGSOptimizer
+from nif.optimizers.external_optimizers import L4Adam
+from nif.optimizers.external_optimizers import AdaBeliefOptimizer
+from nif.optimizers.gtcf import centralized_gradients_for_optimizer
 
 __all__ = [
     "function_factory",

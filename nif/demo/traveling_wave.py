@@ -1,5 +1,5 @@
 import numpy as np
-from .point_wise_data import PointWiseData
+from nif.data.point_wise_data import PointWiseData
 import os
 
 class TravelingWave(PointWiseData):

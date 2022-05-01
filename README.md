@@ -141,7 +141,7 @@
     - just simply feed `n_para`: number of parameters, `n_x`: input dimension of shapenet, `n_target`: output dimension of shapenet, and `raw_data`: numpy array with shape = `(number of pointwise data points, number of features, target, coordinates, etc.)`
 
     ```python
-    from nif.demo.dataset import PointWiseData
+    from nif.data import PointWiseData
     data_n, mean, std = PointWiseData.minmax_normalize(raw_data=data, n_para=1, n_x=3, n_target=1) 
     ```
 

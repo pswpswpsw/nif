@@ -6,7 +6,7 @@ class TravelingWaveHighFreq(PointWiseData):
     def __init__(self):
         path = os.path.abspath(__file__)
         dir_path = os.path.dirname(path)
-        data = np.load(dir_path+'/dataset/traveling_wave_high_freq.npz')['dataset']
+        data = np.load(dir_path+'/dataset/traveling_wave_high_freq.npz')['data']
         parameter_data = data[:,[0]]
         x_data = data[:,[1]]
         u_data = data[:,[2]]

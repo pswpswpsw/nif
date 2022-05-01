@@ -32,6 +32,7 @@
 - **Distributed learning**: data parallelism across multiple GPUs on a single node
 
     ```python
+    enable_multi_gpu = True
     cm = tf.distribute.MirroredStrategy().scope() if enable_multi_gpu else contextlib.nullcontext()
     with cm:
         

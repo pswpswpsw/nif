@@ -21,5 +21,6 @@ __all__ = [
     "NIF",
     "mixed_precision",
     "optimizers",
-    "demo"
+    "demo",
+    "data"
 ]

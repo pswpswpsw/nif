@@ -1,2 +1,9 @@
+tensorboard=2.4.0
+tensorboard-plugin-wit=1.6.0
+tensorflow=2.4.1
+tensorflow-addons=0.13.0
+tensorflow-estimator=2.6.0
+tensorflow-gpu=2.4.1
+tensorflow-probability=0.12.2
 matplotlib
 numpy

@@ -1,4 +1,3 @@
-tensorflow
 tensorflow-gpu
 tensorflow-probability==0.12.2
 matplotlib

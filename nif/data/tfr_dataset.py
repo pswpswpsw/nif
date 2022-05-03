@@ -10,7 +10,7 @@ class TFRDataset(object):
         self.n_target = n_target
         self.area_weight = area_weight
 
-    def create_from_npz(self, num_pts_per_file, npz_path, npz_key, write_tfr_path, prefix):
+    def create_from_npz(self, num_pts_per_file, npz_path, npz_key, tfr_path, prefix):
         num_pts_per_file = int(num_pts_per_file)
         npz_data = np.load(npz_path)[npz_key]
         NUM_TOTAL_PTS, N_COL = npz_data.shape
@@ -30,11 +30,11 @@ class TFRDataset(object):
         np.random.shuffle(npz_data)
 
         # make dir
-        mkdir(write_tfr_path)
+        mkdir(tfr_path)
 
         for i in range(total_num_files):
             print('working in {}-th file... total {}'.format(i + 1, total_num_files))
-            filename = write_tfr_path + '/{}_{}.tfrecord'.format(prefix, i)
+            filename = tfr_path + '/{}_{}.tfrecord'.format(prefix, i)
 
             i0 = i * num_pts_per_file
             i1 = i0 + num_pts_per_file
@@ -68,11 +68,11 @@ class TFRDataset(object):
         batch_dataset = batch_dataset.shuffle(features.shape[0]).batch(batch_size).prefetch(self.AUTOTUNE)
         return batch_dataset
 
-    def get_tfr_meta_dataset(self, path, epoch):
+    def get_tfr_meta_dataset(self, tfr_path, epoch, tfr_shuffle_buffer_size=1):
         # I used an abnormal way to create tfrecord data, I cannot use point wise data line by line for example.
         # because it will end up with an unacceptable create-file time.
 
-        filenames = tf.io.gfile.glob(f"{path}/*.tfrecord")
+        filenames = tf.io.gfile.glob(f"{tfr_path}/*.tfrecord")
         self.num_pts_per_file = len(filenames)
 
         def prepare_sample(example):
@@ -86,38 +86,15 @@ class TFRDataset(object):
             data_dict = tf.io.parse_single_example(example, schema)
             return list(data_dict.values())
 
-        dataset = tf.data.TFRecordDataset(filenames, num_parallel_reads=self.AUTOTUNE)
+        dataset = tf.data.TFRecordDataset(filenames, num_parallel_calls=self.AUTOTUNE)
         dataset = dataset.map(prepare_sample, num_parallel_calls=self.AUTOTUNE)
-        dataset = dataset.shuffle(buffer_size=len(filenames))
+        if tfr_shuffle_buffer_size > 1:
+            dataset = dataset.shuffle(buffer_size=tfr_shuffle_buffer_size)
+        # dataset = dataset.shuffle(buffer_size=len(filenames))
         dataset = dataset.repeat(epoch)
-        dataset = dataset.batch(1)
+        dataset = dataset.batch(1)  # each time only take on tfrecord out. then we will do sub-batching inside.
         dataset = dataset.prefetch(self.AUTOTUNE)
         return dataset
-
-    def prepare_sample(self, data_dict):
-        feature = data_dict["feature"]
-        feature = tf.io.decode_raw(feature, tf.float32)
-        feature = tf.reshape(feature, (-1, self.n_feature))
-
-        target = data_dict["target"]
-        target = tf.io.decode_raw(target, tf.float32)
-        target = tf.reshape(target, (-1, self.n_target))
-
-        if self.area_weight:
-            weight = data_dict["weight"]
-            weight = tf.io.decode_raw(weight, tf.float32)
-            weight = tf.reshape(weight, (-1, 1))
-            return feature, target, weight
-        else:
-            return feature, target
-
-    def decode_fn(self, example):
-        tfrecord_format = {"feature": tf.io.FixedLenFeature([], tf.string),
-                           "target": tf.io.FixedLenFeature([], tf.string)}
-        if self.area_weight:
-            tfrecord_format["weight"] = tf.io.FixedLenFeature([], tf.string)
-        return tf.io.parse_single_example(example, tfrecord_format)
-
 
 def mkdir(directory):
     if not os.path.exists(directory):

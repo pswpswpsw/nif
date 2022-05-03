@@ -4,10 +4,10 @@ import time
 import logging
 
 # create tfr from npz
-# fh = TFRDataset(n_feature=3, n_target=3)
-# fh.create_from_npz(num_pts_per_file=1e6, npz_path='test2.npz', npz_key='data', write_tfr_path='mytest', prefix="case1")
-#
-# sys.exit()
+fh = TFRDataset(n_feature=3, n_target=3)
+fh.create_from_npz(num_pts_per_file=1e6, npz_path='test2.npz', npz_key='data', write_tfr_path='mytest', prefix="case1")
+
+sys.exit()
 
 # get tf.dataset from tfr
 fh = TFRDataset(n_feature=3, n_target=3)

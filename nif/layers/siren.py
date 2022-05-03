@@ -202,7 +202,6 @@ class HyperLinearForSIREN(tf.keras.layers.Layer):
         config.update({
             "num_inputs": self.num_inputs,
             "num_outputs": self.num_outputs,
-            "cfg_shape_net": self.cfg_shape_net,
             "mixed_policy": self.mixed_policy,
             "connectivity": self.connectivity
         })

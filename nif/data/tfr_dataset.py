@@ -86,7 +86,7 @@ class TFRDataset(object):
             data_dict = tf.io.parse_single_example(example, schema)
             return list(data_dict.values())
 
-        dataset = tf.data.TFRecordDataset(filenames, num_parallel_calls=self.AUTOTUNE)
+        dataset = tf.data.TFRecordDataset(filenames)
         dataset = dataset.map(prepare_sample, num_parallel_calls=self.AUTOTUNE)
         if tfr_shuffle_buffer_size > 1:
             dataset = dataset.shuffle(buffer_size=tfr_shuffle_buffer_size)

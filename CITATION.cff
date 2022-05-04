@@ -26,7 +26,7 @@ authors:
     affiliation: 'University of Washington, Seattle'
 identifiers:
   - type: doi
-    value: ???
+    value: https://doi.org/10.48550/arXiv.2204.03216
 repository-code: 'https://github.com/pswpswpsw/nif'
-url: '???'
+url: 'https://arxiv.org/abs/2204.03216'
 license: LGPL-2.1

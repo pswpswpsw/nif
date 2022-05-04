@@ -145,6 +145,32 @@
     data_n, mean, std = PointWiseData.minmax_normalize(raw_data=data, n_para=1, n_x=3, n_target=1) 
     ```
 
+- Large-scale training with tfrecord converter
+
+	- all you need is to prepare a BIG npz file that contains all the point-wise data
+	- `.get_tfr_meta_dataset` will read all files under the searched directory that ends with `.tfrecord`
+
+    ```python
+    from nif.data.tfr_dataset import TFRDataset
+    fh = TFRDataset(n_feature=4, n_target=3)
+    
+    # generating tfrecord files from a single big npz file (say gigabytes)
+    fh.create_from_npz(...)
+
+    # prepare some model
+    model = ...
+    model.compile(...)
+
+    # obtaining a meta dataset
+    meta_dataset = fh.get_tfr_meta_dataset(...)
+
+    # start sub-dataset-batching
+    for batch_file in meta_dataset:
+	    batch_dataset = fh.gen_dataset_from_batch_file(batch_file, batch_size)
+	    model.fit(...)
+
+    ```
+
 ## Google Colab Tutorial
 
 1. **Hello world! A simple fitting on 1D travelling wave** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/1_simple_1d_wave.ipynb)
@@ -164,6 +190,11 @@
 
 4. **Getting input-output derivatives is super easy** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/4_get_gradients_by_wrapping_model_with_layer.ipynb)
 	- learn how to use `nif.layers.JacobianLayer`, `nif.layers.HessianLayer`
+
+5. **Scaling to hundreds of GB data** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/5_large_scale_training_on_tensorflow_record_data.ipynb)
+	- learn how to use `nif.data.tfr_dataset.TFRDataset` to create `tfrecord` from `npz`
+	- learn how to perform sub-dataset-batch training with `model.fit`
+
 
 ## How to cite
 

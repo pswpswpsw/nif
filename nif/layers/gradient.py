@@ -52,7 +52,6 @@ class HessianLayer(tf.keras.layers.Layer):
         y, dys_dxs, dys2_dxs2 = compute_output_and_grad_and_hessian(self.model, x, self.x_index, self.y_index)
         return y, dys_dxs, dys2_dxs2
 
-
 def compute_output_and_augment_grad(model, x, x_index, y_index):
     with tf.GradientTape() as tape:
         tape.watch(x)
@@ -63,13 +62,17 @@ def compute_output_and_augment_grad(model, x, x_index, y_index):
     return y, dls_dxs
 
 def compute_output_and_grad(model, x, x_index, y_index):
-    with tf.GradientTape() as tape:
+    ys_list = []
+    with tf.GradientTape(persistent=True) as tape:
         tape.watch(x)
         y = model(x)
-        ys = tf.gather(y, y_index, axis=-1)
-    dys_dx = tape.batch_jacobian(ys,x)
+        for i in y_index:
+            ys_list.append(y[:, i])
+    dys_dx = tf.stack([tape.gradient(q, x) for q in ys_list], 1)
     dys_dxs = tf.gather(dys_dx, x_index, axis=-1)
+    del tape
     return y, dys_dxs
+
 
 def compute_output_and_grad_and_hessian(model, x, x_index, y_index):
     with tf.GradientTape() as g:

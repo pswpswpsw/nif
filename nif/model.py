@@ -242,7 +242,7 @@ class NIFMultiScale(NIF):
                                              self.mixed_policy)
                     pnet_layers_list.append(tmp_layer)
             else:
-                for i in range(self.l_sx):
+                for i in range(self.l_st):
                     tmp_layer = SIREN(self.n_st, self.n_st, 'hidden',
                                       cfg_parameter_net['omega_0'],
                                       cfg_shape_net,

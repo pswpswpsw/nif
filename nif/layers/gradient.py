@@ -14,22 +14,19 @@ class JacobianLayer(tf.keras.layers.Layer):
 
 class JacRegLatentLayer(JacobianLayer):
     """
-    jacobian regularization of parameter net:
-    y = f_{para}(x)
-
-    Loss = mean((df/dx)^2)
-
+    Jacobian regularization of parameter net:
+        y = f_{para}(x)
+        Loss = mean((df/dx)^2)
     """
     def __init__(self, model, y_index, x_index, l1=1e-2,
                  mixed_policy=tf.keras.mixed_precision.Policy('float32')):
         super().__init__(model, y_index, x_index, mixed_policy)
         self.l1 = tf.cast(l1, self.mixed_policy.compute_dtype).numpy()
 
+    @tf.function
     def call(self, x, **kwargs):
         y, dls_dxs = compute_output_and_augment_grad(self.model, x, self.x_index, self.y_index)
         jac_reg_loss = self.l1 * tf.reduce_mean(tf.square(dls_dxs))
-        # tf.print(dls_dxs.shape)
-        # tf.print(jac_reg_loss)
         self.add_loss(jac_reg_loss)
         return y
 

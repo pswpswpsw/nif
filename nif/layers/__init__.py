@@ -5,6 +5,7 @@ from nif.layers.mlp import MLP_ResNet
 from nif.layers.mlp import MLP_SimpleShortCut
 
 from nif.layers.gradient import *
+from nif.layers.regularization import *
 
 from tensorflow.keras.layers import Dense
 
@@ -17,5 +18,6 @@ __all__ = [
     "MLP_SimpleShortCut",
     "JacRegLatentLayer",
     "JacobianLayer",
-    "HessianLayer"
+    "HessianLayer",
+    "ParameterOutputL1ActReg"
 ]

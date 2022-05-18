@@ -92,9 +92,9 @@ class NIF(object):
             tmp_layer = MLP_SimpleShortCut(self.n_st, cfg_parameter_net['activation'],
                                            kernel_initializer=initializers.TruncatedNormal(stddev=0.1),
                                            bias_initializer=initializers.TruncatedNormal(stddev=0.1),
-                                           mixed_policy=self.mixed_policy,
                                            kernel_regularizer=self.pnet_kernel_regularizer,
-                                           bias_regularizer=self.pnet_bias_regularizer
+                                           bias_regularizer=self.pnet_bias_regularizer,
+                                           mixed_policy=self.mixed_policy,
                                            )
             # identity_layer = Lambda(lambda x: x)
             # tmp_layer =tf.keras.layers.Add()(identity_layer,tmp_layer)
@@ -348,6 +348,7 @@ class NIFMultiScale(NIF):
                                                    kernel_initializer=initializers.TruncatedNormal(stddev=0.1),
                                                    bias_initializer=initializers.TruncatedNormal(stddev=0.1),
                                                    kernel_regularizer=self.pnet_kernel_regularizer,
+                                                   bias_regularizer=self.pnet_bias_regularizer,
                                                    mixed_policy=self.mixed_policy)
                     # identity_layer = Lambda(lambda x: x)
                     # tmp_layer =tf.keras.layers.Add()(identity_layer,tmp_layer)

@@ -2,6 +2,7 @@ __all__ = ["NIFMultiScale", "NIF", "NIFMultiScaleLastLayerParameterized"]
 
 import tensorflow as tf
 from tensorflow.keras import Model, initializers
+from tensorflow.keras import regularizers
 from .layers import *
 
 
@@ -26,6 +27,8 @@ class NIF(object):
         # additional regularization
         self.p_jac_reg = cfg_parameter_net.get('jac_reg', None)
         self.p_po_reg = cfg_parameter_net.get('po_reg', None)
+        self.p_l2_reg = cfg_parameter_net.get('l2_reg', None)
+        self.p_l1_reg = cfg_parameter_net.get('l1_reg', None)
 
         self.mixed_policy = tf.keras.mixed_precision.Policy(mixed_policy)  # policy object can be feed into keras.layer
         self.variable_Dtype = self.mixed_policy.variable_dtype
@@ -78,9 +81,18 @@ class NIF(object):
         pnet_layers_list.append(bottleneck_layer)
 
         # 4. last layer
+        ## add regularization
+        if isinstance(self.p_l2_reg, (float, int)):
+            activity_regularizer = regularizers.L2(self.p_l2_reg)
+        elif isinstance(self.p_l1_reg, (float, int)):
+            activity_regularizer = regularizers.L1(self.p_l1_reg)
+        else:
+            activity_regularizer = None
+
         last_layer = Dense(self.po_dim,
                            kernel_initializer=initializers.TruncatedNormal(stddev=0.1),
                            bias_initializer=initializers.TruncatedNormal(stddev=0.1),
+                           activity_regularizer=activity_regularizer,
                            dtype=self.mixed_policy)
         pnet_layers_list.append(last_layer)
         return pnet_layers_list
@@ -133,8 +145,6 @@ class NIF(object):
         output_final = pnet_list[-1](latent)
         return output_final, latent
 
-    # todo write a code to convert BIG npz to tf.records
-
     def build(self):
         if isinstance(self.p_jac_reg, (float, int)):
             input_tot = tf.keras.layers.Input(shape=(self.pi_dim + self.si_dim), name='input_tot')
@@ -147,16 +157,6 @@ class NIF(object):
             x_index = range(0, self.pi_dim)
             output = JacRegLatentLayer(model_augment_latent, y_index, x_index, self.p_jac_reg)(input_tot)
             return Model(inputs=[input_tot], outputs=[output])
-
-        elif isinstance(self.p_po_reg, (float, int)):
-            input_tot = tf.keras.layers.Input(shape=(self.pi_dim + self.si_dim), name='input_tot')
-            input_p = input_tot[:, :self.pi_dim]
-            model_augment_po = Model(inputs=[input_tot],
-                                     outputs=[self.call(input_tot),
-                                              self._call_parameter_net(input_p, self.pnet_list)[0]])
-            output = ParameterOutputL1ActReg(model_augment_po, self.p_po_reg)(input_tot)
-            return Model(inputs=[input_tot], outputs=[output])
-
         else:
             return self.model()
 
@@ -271,10 +271,19 @@ class NIFMultiScale(NIF):
             pnet_layers_list.append(bottleneck_layer)
 
             # 4. last layer
+            if isinstance(self.p_l2_reg, (float, int)):
+                activity_regularizer = regularizers.L2(self.p_l2_reg)
+            elif isinstance(self.p_l1_reg, (float, int)):
+                activity_regularizer = regularizers.L1(self.p_l1_reg)
+            else:
+                activity_regularizer = None
+
             last_layer = HyperLinearForSIREN(self.pi_hidden, self.po_dim,
                                              cfg_shape_net,
                                              self.mixed_policy,
-                                             connectivity=cfg_shape_net['connectivity'])
+                                             connectivity=cfg_shape_net['connectivity'],
+                                             activity_regularizer=activity_regularizer)
+
             # last_layer = SIREN(self.pi_hidden, self.po_dim, 'last',
             #                    cfg_parameter_net['omega_0'],
             #                    cfg_shape_net['omega_0'], cfg_shape_net,
@@ -318,10 +327,18 @@ class NIFMultiScale(NIF):
             pnet_layers_list.append(bottleneck_layer)
 
             # 4. last layer
+            if isinstance(self.p_l2_reg, (float, int)):
+                activity_regularizer = regularizers.L2(self.p_l2_reg)
+            elif isinstance(self.p_l1_reg, (float, int)):
+                activity_regularizer = regularizers.L1(self.p_l1_reg)
+            else:
+                activity_regularizer = None
+
             last_layer = HyperLinearForSIREN(self.pi_hidden, self.po_dim,
                                              cfg_shape_net,
                                              self.mixed_policy,
-                                             connectivity=cfg_shape_net['connectivity'])
+                                             connectivity=cfg_shape_net['connectivity'],
+                                             activity_regularizer=activity_regularizer)
             pnet_layers_list.append(last_layer)
 
         return pnet_layers_list

@@ -1,7 +1,8 @@
 import tensorflow as tf
 
 class MLP_ResNet(tf.keras.layers.Layer):
-    def __init__(self, width, activation, kernel_initializer, bias_initializer, kernel_regularizer, mixed_policy):
+    def __init__(self, width, activation, kernel_initializer, bias_initializer,
+                 kernel_regularizer, bias_regularizer, mixed_policy):
         super(MLP_ResNet, self).__init__()
         self.compute_Dtype = mixed_policy.compute_dtype
         self.variable_Dtype = mixed_policy.variable_dtype
@@ -10,12 +11,14 @@ class MLP_ResNet(tf.keras.layers.Layer):
                                         kernel_initializer=kernel_initializer,
                                         bias_initializer=bias_initializer,
                                         kernel_regularizer=kernel_regularizer,
+                                        bias_regularizer=bias_regularizer,
                                         dtype=mixed_policy
                                         )
         self.L2 = tf.keras.layers.Dense(width,
                                         kernel_initializer=kernel_initializer,
                                         bias_initializer=bias_initializer,
                                         kernel_regularizer=kernel_regularizer,
+                                        bias_regularizer=bias_regularizer,
                                         dtype=mixed_policy
                                         )
 
@@ -40,7 +43,7 @@ class MLP_ResNet(tf.keras.layers.Layer):
 
 class MLP_SimpleShortCut(tf.keras.layers.Layer):
     def __init__(self, width, activation, kernel_initializer, bias_initializer,
-                 kernel_regularizer, mixed_policy):
+                 kernel_regularizer, bias_regularizer, mixed_policy):
         super(MLP_SimpleShortCut, self).__init__()
         # dtype = tf.float16 if mixed_policy == 'mixed_float16' else tf.float32
         # self.width = width
@@ -54,6 +57,7 @@ class MLP_SimpleShortCut(tf.keras.layers.Layer):
                                         kernel_initializer=kernel_initializer,
                                         bias_initializer=bias_initializer,
                                         kernel_regularizer=kernel_regularizer,
+                                        bias_regularizer=bias_regularizer,
                                         dtype=mixed_policy
                                         )
 

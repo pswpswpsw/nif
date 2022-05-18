@@ -53,8 +53,9 @@ class SIREN(tf.keras.layers.Layer):
     def __init__(self, num_inputs, num_outputs, layer_position,
                  omega_0=30., cfg_shape_net=None,
                  kernel_regularizer=None,
+                 bias_regularizer=None,
                  mixed_policy=tf.keras.mixed_precision.Policy('float32')):
-        super(SIREN, self).__init__(kernel_regularizer=kernel_regularizer)
+        super(SIREN, self).__init__()
         # self.num_inputs = num_inputs
         # self.num_outputs = num_outputs
         self.layer_position = layer_position
@@ -64,6 +65,8 @@ class SIREN(tf.keras.layers.Layer):
         # self.\
         variable_Dtype = mixed_policy.variable_dtype
         self.omega_0 = tf.cast(omega_0, self.variable_Dtype)
+        self.kernel_regularizer = kernel_regularizer,
+        self.bias_regularizer = bias_regularizer
 
         # initialize the weights
         if layer_position == 'first':
@@ -123,11 +126,16 @@ class SIREN(tf.keras.layers.Layer):
         self.b = tf.Variable(b_init, dtype=variable_Dtype)
 
     def call(self, x, **kwargs):
+        if type(self.kernel_regularizer) != type(None):
+            self.add_loss(self.kernel_regularizer(self.w))
+        if type(self.bias_regularizer) != type(None):
+            self.add_loss(self.bias_regularizer(self.b))
+
         if self.layer_position == 'last' or self.layer_position == 'bottleneck':
-            y = tf.matmul(x,  tf.cast(self.w, self.compute_Dtype)) + tf.cast(self.b, self.compute_Dtype)
+            y = tf.matmul(x, tf.cast(self.w, self.compute_Dtype)) + tf.cast(self.b, self.compute_Dtype)
         else:
-            y = tf.math.sin(self.omega_0*tf.matmul(x, tf.cast(self.w, self.compute_Dtype)) +
-                            tf.cast(self.b,self.compute_Dtype))
+            y = tf.math.sin(self.omega_0 * tf.matmul(x, tf.cast(self.w, self.compute_Dtype)) +
+                            tf.cast(self.b, self.compute_Dtype))
         return y
 
     def get_config(self):
@@ -147,32 +155,43 @@ class SIREN_ResNet(SIREN):
                  num_outputs,
                  omega_0=30.,
                  kernel_regularizer=None,
+                 bias_regularizer=None,
                  mixed_policy=tf.keras.mixed_precision.Policy('float32')):
         super(SIREN_ResNet, self).__init__(num_inputs, num_outputs,
                                            layer_position='hidden',
                                            omega_0=omega_0,
                                            kernel_regularizer=kernel_regularizer,
+                                           bias_regularizer=bias_regularizer,
                                            mixed_policy=mixed_policy)
         self.w2 = tf.Variable(self.w_init, dtype=mixed_policy.variable_dtype)
         self.b2 = tf.Variable(self.b_init, dtype=mixed_policy.variable_dtype)
 
     def call(self, x, training=None, mask=None):
+        if type(self.kernel_regularizer) != type(None):
+            self.add_loss(self.kernel_regularizer(self.w))
+            self.add_loss(self.kernel_regularizer(self.w2))
+        if type(self.bias_regularizer) != type(None):
+            self.add_loss(self.bias_regularizer(self.b))
+            self.add_loss(self.bias_regularizer(self.b2))
+
         h = tf.math.sin(self.omega_0 * tf.matmul(x, tf.cast(self.w, self.compute_Dtype)) +
                         tf.cast(self.b, self.compute_Dtype))
-        return 0.5*(x + tf.math.sin(self.omega_0*tf.matmul(h, tf.cast(self.w2, self.compute_Dtype)) +
-                                            tf.cast(self.b2, self.compute_Dtype)))
+        return 0.5 * (x + tf.math.sin(self.omega_0 * tf.matmul(h, tf.cast(self.w2, self.compute_Dtype)) +
+                                      tf.cast(self.b2, self.compute_Dtype)))
 
 
 class HyperLinearForSIREN(tf.keras.layers.Layer):
     def __init__(self, num_inputs, num_outputs, cfg_shape_net, mixed_policy, connectivity='full',
-                 activity_regularizer=None):
+                 kernel_regularizer=None, bias_regularizer=None, activity_regularizer=None):
         super(HyperLinearForSIREN, self).__init__(activity_regularizer=activity_regularizer)
-        self.num_inputs = num_inputs
-        self.num_outputs = num_outputs
-        self.mixed_policy = mixed_policy
-        self.compute_Dtype = self.mixed_policy.compute_dtype
-        self.variable_Dtype = self.mixed_policy.variable_dtype
-        self.connectivity = connectivity
+        self.kernel_regularizer = kernel_regularizer
+        self.bias_regularizer = bias_regularizer
+        # self.num_inputs = num_inputs
+        # self.num_outputs = num_outputs
+        # self.mixed_policy = mixed_policy
+        self.compute_Dtype = mixed_policy.compute_dtype
+        # self.variable_Dtype = mixed_policy.variable_dtype
+        # self.connectivity = connectivity
 
         # compute the indices needed for generating weights for shapenet
         if connectivity == 'full':
@@ -192,22 +211,27 @@ class HyperLinearForSIREN(tf.keras.layers.Layer):
             input_dim=cfg_shape_net['input_dim'],
             width=cfg_shape_net['units'],
             omega_0=cfg_shape_net['omega_0'],
-            variable_dtype=self.variable_Dtype
+            variable_dtype=mixed_policy.variable_dtype
         )
 
         self.w = tf.Variable(w_init, self.variable_Dtype)
         self.b = tf.Variable(b_init, self.variable_Dtype)
 
     def call(self, x, **kwargs):
+        if type(self.kernel_regularizer) != type(None):
+            self.add_loss(self.kernel_regularizer(self.w))
+        if type(self.bias_regularizer) != type(None):
+            self.add_loss(self.bias_regularizer(self.b))
+
         y = tf.matmul(x, tf.cast(self.w, self.compute_Dtype)) + tf.cast(self.b, self.compute_Dtype)
         return y
 
     def get_config(self):
         config = super().get_config()
         config.update({
-            "num_inputs": self.num_inputs,
-            "num_outputs": self.num_outputs,
-            "mixed_policy": self.mixed_policy,
-            "connectivity": self.connectivity
+            # "num_inputs": self.num_inputs,
+            # "num_outputs": self.num_outputs,
+            # "mixed_policy": self.mixed_policy,
+            # "connectivity": self.connectivity
         })
         return config

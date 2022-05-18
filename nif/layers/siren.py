@@ -162,7 +162,7 @@ class SIREN_ResNet(SIREN):
 class HyperLinearForSIREN(tf.keras.layers.Layer):
     def __init__(self, num_inputs, num_outputs, cfg_shape_net, mixed_policy, connectivity='full',
                  activity_regularizer=None):
-        super(HyperLinearForSIREN, self).__init__(activity_regularizer)
+        super(HyperLinearForSIREN, self).__init__(activity_regularizer=activity_regularizer)
         self.num_inputs = num_inputs
         self.num_outputs = num_outputs
         self.mixed_policy = mixed_policy

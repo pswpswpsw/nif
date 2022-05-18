@@ -26,9 +26,11 @@ class NIF(object):
 
         # additional regularization
         self.p_jac_reg = cfg_parameter_net.get('jac_reg', None)
-        self.p_po_reg = cfg_parameter_net.get('po_reg', None)
-        self.p_l2_reg = cfg_parameter_net.get('l2_reg', None)
+        # self.p_po_reg = cfg_parameter_net.get('po_reg', None)
         self.p_l1_reg = cfg_parameter_net.get('l1_reg', None)
+        self.p_l2_reg = cfg_parameter_net.get('l2_reg', None)
+        self.p_act_l2_reg = cfg_parameter_net.get('act_l2_reg', None)
+        self.p_act_l1_reg = cfg_parameter_net.get('act_l1_reg', None)
 
         self.mixed_policy = tf.keras.mixed_precision.Policy(mixed_policy)  # policy object can be feed into keras.layer
         self.variable_Dtype = self.mixed_policy.variable_dtype
@@ -36,6 +38,23 @@ class NIF(object):
 
         # initialize the parameter net structure
         self.pnet_list = self._initialize_pnet(cfg_parameter_net, cfg_shape_net)
+
+        # setup for standard regularization
+        # 1. regularization for kernel in parameter net
+        if isinstance(self.p_l2_reg, (float, int)):
+            self.pnet_kernel_regularizer = regularizers.L2(self.p_l2_reg)
+        elif isinstance(self.p_l1_reg, (float, int)):
+            self.pnet_kernel_regularizer = regularizers.L1(self.p_l1_reg)
+        else:
+            self.pnet_kernel_regularizer = None
+
+        # 2. output of parameter net regularization
+        if isinstance(self.p_act_l2_reg, (float, int)):
+            self.pnet_act_regularizer = regularizers.L2(self.p_act_l2_reg)
+        elif isinstance(self.p_act_l1_reg, (float, int)):
+            self.pnet_act_regularizer = regularizers.L1(self.p_act_l1_reg)
+        else:
+            self.pnet_act_regularizer = None
 
     def call(self, inputs, training=None, mask=None):
         input_p = inputs[:, 0:self.pi_dim]
@@ -60,7 +79,8 @@ class NIF(object):
         layer_1 = Dense(self.n_st, cfg_parameter_net['activation'],
                         kernel_initializer=initializers.TruncatedNormal(stddev=0.1),
                         bias_initializer=initializers.TruncatedNormal(stddev=0.1),
-                        dtype=self.mixed_policy)
+                        dtype=self.mixed_policy,
+                        kernel_regularizer=self.pnet_kernel_regularizer)
         pnet_layers_list.append(layer_1)
 
         # 2. hidden layer
@@ -68,7 +88,8 @@ class NIF(object):
             tmp_layer = MLP_SimpleShortCut(self.n_st, cfg_parameter_net['activation'],
                                            kernel_initializer=initializers.TruncatedNormal(stddev=0.1),
                                            bias_initializer=initializers.TruncatedNormal(stddev=0.1),
-                                           mixed_policy=self.mixed_policy)
+                                           mixed_policy=self.mixed_policy,
+                                           kernel_regularizer=self.pnet_kernel_regularizer)
             # identity_layer = Lambda(lambda x: x)
             # tmp_layer =tf.keras.layers.Add()(identity_layer,tmp_layer)
             pnet_layers_list.append(tmp_layer)
@@ -77,22 +98,18 @@ class NIF(object):
         bottleneck_layer = Dense(self.pi_hidden,
                                  kernel_initializer=initializers.TruncatedNormal(stddev=0.1),
                                  bias_initializer=initializers.TruncatedNormal(stddev=0.1),
-                                 dtype=self.mixed_policy)
+                                 dtype=self.mixed_policy,
+                                 kernel_regularizer=self.pnet_kernel_regularizer)
         pnet_layers_list.append(bottleneck_layer)
 
         # 4. last layer
         ## add regularization
-        if isinstance(self.p_l2_reg, (float, int)):
-            activity_regularizer = regularizers.L2(self.p_l2_reg)
-        elif isinstance(self.p_l1_reg, (float, int)):
-            activity_regularizer = regularizers.L1(self.p_l1_reg)
-        else:
-            activity_regularizer = None
+
 
         last_layer = Dense(self.po_dim,
                            kernel_initializer=initializers.TruncatedNormal(stddev=0.1),
                            bias_initializer=initializers.TruncatedNormal(stddev=0.1),
-                           activity_regularizer=activity_regularizer,
+                           activity_regularizer=self.pnet_act_regularizer,
                            dtype=self.mixed_policy)
         pnet_layers_list.append(last_layer)
         return pnet_layers_list
@@ -245,6 +262,7 @@ class NIFMultiScale(NIF):
             layer_1 = SIREN(self.pi_dim, self.n_st, 'first',
                             cfg_parameter_net['omega_0'],
                             cfg_shape_net,
+                            self.pnet_kernel_regularizer,
                             self.mixed_policy)
             pnet_layers_list.append(layer_1)
 
@@ -253,6 +271,7 @@ class NIFMultiScale(NIF):
                 for i in range(self.l_st):
                     tmp_layer = SIREN_ResNet(self.n_st, self.n_st,
                                              cfg_parameter_net['omega_0'],
+                                             self.pnet_kernel_regularizer,
                                              self.mixed_policy)
                     pnet_layers_list.append(tmp_layer)
             else:
@@ -260,6 +279,7 @@ class NIFMultiScale(NIF):
                     tmp_layer = SIREN(self.n_st, self.n_st, 'hidden',
                                       cfg_parameter_net['omega_0'],
                                       cfg_shape_net,
+                                      self.pnet_kernel_regularizer,
                                       self.mixed_policy)
                     pnet_layers_list.append(tmp_layer)
 
@@ -271,18 +291,11 @@ class NIFMultiScale(NIF):
             pnet_layers_list.append(bottleneck_layer)
 
             # 4. last layer
-            if isinstance(self.p_l2_reg, (float, int)):
-                activity_regularizer = regularizers.L2(self.p_l2_reg)
-            elif isinstance(self.p_l1_reg, (float, int)):
-                activity_regularizer = regularizers.L1(self.p_l1_reg)
-            else:
-                activity_regularizer = None
-
             last_layer = HyperLinearForSIREN(self.pi_hidden, self.po_dim,
                                              cfg_shape_net,
                                              self.mixed_policy,
                                              connectivity=cfg_shape_net['connectivity'],
-                                             activity_regularizer=activity_regularizer)
+                                             activity_regularizer=self.pnet_act_regularizer)
 
             # last_layer = SIREN(self.pi_hidden, self.po_dim, 'last',
             #                    cfg_parameter_net['omega_0'],
@@ -297,6 +310,7 @@ class NIFMultiScale(NIF):
             layer_1 = Dense(self.n_st, cfg_parameter_net['activation'],
                             kernel_initializer=initializers.TruncatedNormal(stddev=0.1),
                             bias_initializer=initializers.TruncatedNormal(stddev=0.1),
+                            kernel_regularizer=self.pnet_kernel_regularizer,
                             dtype=self.mixed_policy)
             pnet_layers_list.append(layer_1)
 
@@ -307,6 +321,7 @@ class NIFMultiScale(NIF):
                                            activation=cfg_parameter_net['activation'],
                                            kernel_initializer=initializers.TruncatedNormal(stddev=0.1),
                                            bias_initializer=initializers.TruncatedNormal(stddev=0.1),
+                                           kernel_regularizer=self.pnet_kernel_regularizer,
                                            mixed_policy=self.mixed_policy)
                     pnet_layers_list.append(tmp_layer)
             else:
@@ -314,6 +329,7 @@ class NIFMultiScale(NIF):
                     tmp_layer = MLP_SimpleShortCut(self.n_st, cfg_parameter_net['activation'],
                                                    kernel_initializer=initializers.TruncatedNormal(stddev=0.1),
                                                    bias_initializer=initializers.TruncatedNormal(stddev=0.1),
+                                                   kernel_regularizer=self.pnet_kernel_regularizer,
                                                    mixed_policy=self.mixed_policy)
                     # identity_layer = Lambda(lambda x: x)
                     # tmp_layer =tf.keras.layers.Add()(identity_layer,tmp_layer)
@@ -323,22 +339,16 @@ class NIFMultiScale(NIF):
             bottleneck_layer = Dense(self.pi_hidden,
                                      kernel_initializer=initializers.TruncatedNormal(stddev=0.1),
                                      bias_initializer=initializers.TruncatedNormal(stddev=0.1),
+                                     kernel_regularizer=self.pnet_kernel_regularizer,
                                      dtype=self.mixed_policy)
             pnet_layers_list.append(bottleneck_layer)
 
             # 4. last layer
-            if isinstance(self.p_l2_reg, (float, int)):
-                activity_regularizer = regularizers.L2(self.p_l2_reg)
-            elif isinstance(self.p_l1_reg, (float, int)):
-                activity_regularizer = regularizers.L1(self.p_l1_reg)
-            else:
-                activity_regularizer = None
-
             last_layer = HyperLinearForSIREN(self.pi_hidden, self.po_dim,
                                              cfg_shape_net,
                                              self.mixed_policy,
                                              connectivity=cfg_shape_net['connectivity'],
-                                             activity_regularizer=activity_regularizer)
+                                             activity_regularizer=self.pnet_act_regularizer)
             pnet_layers_list.append(last_layer)
 
         return pnet_layers_list

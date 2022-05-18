@@ -52,37 +52,39 @@ def compute_number_of_weightbias_by_its_position_for_shapenet(cfg_shape_net):
 class SIREN(tf.keras.layers.Layer):
     def __init__(self, num_inputs, num_outputs, layer_position,
                  omega_0=30., cfg_shape_net=None,
+                 kernel_regularizer=None,
                  mixed_policy=tf.keras.mixed_precision.Policy('float32')):
-        super(SIREN, self).__init__()
-        self.num_inputs = num_inputs
-        self.num_outputs = num_outputs
+        super(SIREN, self).__init__(kernel_regularizer=kernel_regularizer)
+        # self.num_inputs = num_inputs
+        # self.num_outputs = num_outputs
         self.layer_position = layer_position
-        self.cfg_shape_net = cfg_shape_net
-        self.mixed_policy = mixed_policy
-        self.compute_Dtype = self.mixed_policy.compute_dtype
-        self.variable_Dtype = self.mixed_policy.variable_dtype
+        # self.cfg_shape_net = cfg_shape_net
+        # self.mixed_policy = mixed_policy
+        self.compute_Dtype = mixed_policy.compute_dtype
+        # self.\
+        variable_Dtype = mixed_policy.variable_dtype
         self.omega_0 = tf.cast(omega_0, self.variable_Dtype)
 
         # initialize the weights
         if layer_position == 'first':
             w_init = tf.random.uniform((num_inputs, num_outputs),
-                                       -1./num_inputs,
-                                       1./num_inputs,
-                                       dtype=self.variable_Dtype)
+                                       -1. / num_inputs,
+                                       1. / num_inputs,
+                                       dtype=variable_Dtype)
             b_init = tf.random.uniform((num_outputs,),
-                                       -1./np.sqrt(num_inputs),
-                                       1./np.sqrt(num_inputs),
-                                       dtype=self.variable_Dtype)
+                                       -1. / np.sqrt(num_inputs),
+                                       1. / np.sqrt(num_inputs),
+                                       dtype=variable_Dtype)
 
         elif layer_position == 'hidden' or layer_position == 'bottleneck':
             w_init = tf.random.uniform((num_inputs, num_outputs),
-                                       -tf.math.sqrt(6.0/num_inputs)/self.omega_0,
-                                       tf.math.sqrt(6.0/num_inputs)/self.omega_0,
-                                       dtype=self.variable_Dtype)
+                                       -tf.math.sqrt(6.0 / num_inputs) / self.omega_0,
+                                       tf.math.sqrt(6.0 / num_inputs) / self.omega_0,
+                                       dtype=variable_Dtype)
             b_init = tf.random.uniform((num_outputs,),
-                                       -1./np.sqrt(num_inputs),
-                                       1./np.sqrt(num_inputs),
-                                       dtype=self.variable_Dtype)
+                                       -1. / np.sqrt(num_inputs),
+                                       1. / np.sqrt(num_inputs),
+                                       dtype=variable_Dtype)
 
         elif layer_position == 'last':
             if isinstance(cfg_shape_net, dict):
@@ -109,7 +111,7 @@ class SIREN(tf.keras.layers.Layer):
                 input_dim=cfg_shape_net['input_dim'],
                 width=cfg_shape_net['units'],
                 omega_0=self.omega_0,
-                variable_dtype=self.variable_Dtype
+                variable_dtype=variable_Dtype
             )
 
         else:
@@ -117,8 +119,8 @@ class SIREN(tf.keras.layers.Layer):
 
         self.w_init = w_init
         self.b_init = b_init
-        self.w = tf.Variable(self.w_init, dtype=self.variable_Dtype)
-        self.b = tf.Variable(self.b_init, dtype=self.variable_Dtype)
+        self.w = tf.Variable(w_init, dtype=variable_Dtype)
+        self.b = tf.Variable(b_init, dtype=variable_Dtype)
 
     def call(self, x, **kwargs):
         if self.layer_position == 'last' or self.layer_position == 'bottleneck':
@@ -131,12 +133,12 @@ class SIREN(tf.keras.layers.Layer):
     def get_config(self):
         config = super().get_config()
         config.update({
-            "num_inputs": self.num_inputs,
-            "num_outputs": self.num_outputs,
+            # "num_inputs": self.num_inputs,
+            # "num_outputs": self.num_outputs,
             "layer_position": self.layer_position,
             "omega_0": self.omega_0,
-            "cfg_shape_net": self.cfg_shape_net,
-            "mixed_policy": self.mixed_policy
+            # "cfg_shape_net": self.cfg_shape_net,
+            # "mixed_policy": self.mixed_policy
         })
         return config
 
@@ -144,17 +146,19 @@ class SIREN_ResNet(SIREN):
     def __init__(self, num_inputs,
                  num_outputs,
                  omega_0=30.,
+                 kernel_regularizer=None,
                  mixed_policy=tf.keras.mixed_precision.Policy('float32')):
         super(SIREN_ResNet, self).__init__(num_inputs, num_outputs,
                                            layer_position='hidden',
                                            omega_0=omega_0,
+                                           kernel_regularizer=kernel_regularizer,
                                            mixed_policy=mixed_policy)
-        self.w2 = tf.Variable(self.w_init, dtype=self.variable_Dtype)
-        self.b2 = tf.Variable(self.b_init, dtype=self.variable_Dtype)
+        self.w2 = tf.Variable(self.w_init, dtype=mixed_policy.variable_dtype)
+        self.b2 = tf.Variable(self.b_init, dtype=mixed_policy.variable_dtype)
 
     def call(self, x, training=None, mask=None):
-        h = tf.math.sin(self.omega_0*tf.matmul(x, tf.cast(self.w, self.compute_Dtype)) +
-                        tf.cast(self.b,self.compute_Dtype))
+        h = tf.math.sin(self.omega_0 * tf.matmul(x, tf.cast(self.w, self.compute_Dtype)) +
+                        tf.cast(self.b, self.compute_Dtype))
         return 0.5*(x + tf.math.sin(self.omega_0*tf.matmul(h, tf.cast(self.w2, self.compute_Dtype)) +
                                             tf.cast(self.b2, self.compute_Dtype)))
 

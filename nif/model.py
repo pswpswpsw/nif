@@ -313,6 +313,8 @@ class NIFMultiScale(NIF):
                                              cfg_shape_net,
                                              self.mixed_policy,
                                              connectivity=cfg_shape_net['connectivity'],
+                                             kernel_regularizer=self.pnet_kernel_regularizer,
+                                             bias_regularizer=self.pnet_bias_regularizer,
                                              activity_regularizer=self.pnet_act_regularizer)
 
             # last_layer = SIREN(self.pi_hidden, self.po_dim, 'last',
@@ -329,6 +331,7 @@ class NIFMultiScale(NIF):
                             kernel_initializer=initializers.TruncatedNormal(stddev=0.1),
                             bias_initializer=initializers.TruncatedNormal(stddev=0.1),
                             kernel_regularizer=self.pnet_kernel_regularizer,
+                            bias_regularizer=self.pnet_bias_regularizer,
                             dtype=self.mixed_policy)
             pnet_layers_list.append(layer_1)
 
@@ -340,6 +343,7 @@ class NIFMultiScale(NIF):
                                            kernel_initializer=initializers.TruncatedNormal(stddev=0.1),
                                            bias_initializer=initializers.TruncatedNormal(stddev=0.1),
                                            kernel_regularizer=self.pnet_kernel_regularizer,
+                                           bias_regularizer=self.pnet_bias_regularizer,
                                            mixed_policy=self.mixed_policy)
                     pnet_layers_list.append(tmp_layer)
             else:
@@ -359,6 +363,7 @@ class NIFMultiScale(NIF):
                                      kernel_initializer=initializers.TruncatedNormal(stddev=0.1),
                                      bias_initializer=initializers.TruncatedNormal(stddev=0.1),
                                      kernel_regularizer=self.pnet_kernel_regularizer,
+                                     bias_regularizer=self.pnet_bias_regularizer,
                                      dtype=self.mixed_policy)
             pnet_layers_list.append(bottleneck_layer)
 
@@ -367,6 +372,8 @@ class NIFMultiScale(NIF):
                                              cfg_shape_net,
                                              self.mixed_policy,
                                              connectivity=cfg_shape_net['connectivity'],
+                                             kernel_regularizer=self.pnet_kernel_regularizer,
+                                             bias_regularizer=self.pnet_bias_regularizer,
                                              activity_regularizer=self.pnet_act_regularizer)
             pnet_layers_list.append(last_layer)
 

@@ -29,15 +29,12 @@ class NIF(object):
         # self.p_po_reg = cfg_parameter_net.get('po_reg', None)
         self.p_l1_reg = cfg_parameter_net.get('l1_reg', None)
         self.p_l2_reg = cfg_parameter_net.get('l2_reg', None)
-        self.p_act_l2_reg = cfg_parameter_net.get('act_l2_reg', None)
         self.p_act_l1_reg = cfg_parameter_net.get('act_l1_reg', None)
+        self.p_act_l2_reg = cfg_parameter_net.get('act_l2_reg', None)
 
         self.mixed_policy = tf.keras.mixed_precision.Policy(mixed_policy)  # policy object can be feed into keras.layer
         self.variable_Dtype = self.mixed_policy.variable_dtype
         self.compute_Dtype = self.mixed_policy.compute_dtype
-
-        # initialize the parameter net structure
-        self.pnet_list = self._initialize_pnet(cfg_parameter_net, cfg_shape_net)
 
         # setup for standard regularization
         # 1. regularization for kernel in parameter net
@@ -55,6 +52,9 @@ class NIF(object):
             self.pnet_act_regularizer = regularizers.L1(self.p_act_l1_reg)
         else:
             self.pnet_act_regularizer = None
+
+        # finally initialize the parameter net structure
+        self.pnet_list = self._initialize_pnet(cfg_parameter_net, cfg_shape_net)
 
     def call(self, inputs, training=None, mask=None):
         input_p = inputs[:, 0:self.pi_dim]

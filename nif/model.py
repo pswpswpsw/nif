@@ -181,6 +181,10 @@ class NIF(object):
         input_tot = tf.keras.layers.Input(shape=(self.pi_dim + self.si_dim), name='input_tot')
         return Model(inputs=[input_tot], outputs=[self.call(input_tot)])
 
+    def model_p_to_w(self):
+        input_p = tf.keras.layers.Input(shape=(self.pi_dim), name='input_p')
+        return Model(inputs=[input_p], outputs=[self._call_parameter_net(input_p, self.pnet_list)[0]])
+
     def model_p_to_lr(self):
         input_p = tf.keras.layers.Input(shape=(self.pi_dim), name='input_p')
         # this model: t, mu -> hidden LR

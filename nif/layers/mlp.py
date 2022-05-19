@@ -66,6 +66,9 @@ class MLP_SimpleShortCut(tf.keras.layers.Layer):
         y = x + self.L1(x)
         return y
 
+    @classmethod
+    def from_config(cls, config):
+        return cls(**config)
     # def get_config(self):
     #     config = super().get_config()
     #     config.update({

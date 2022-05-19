@@ -195,6 +195,11 @@
 	- learn how to use `nif.data.tfr_dataset.TFRDataset` to create `tfrecord` from `npz`
 	- learn how to perform sub-dataset-batch training with `model.fit`
 
+6. **Revisit NIF on multi-scale data with regularization** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/6_revisit_multi_scale_NIF_with_L1_L2_regularization.ipynb)
+	- learn how to use L1 or L2 regularization for weights and bias in ParameterNet.
+	- a demonstration for the failure of NIF-Multiscale in terms of simple spatial interpolation on high-frequency signal. 
+		- this means you need to be cautious about increasing spatial sampling resolution when dealing with high-frequency signal. 
+	- learn that L2 or L1 regularization does not seem to help resolving the above issue. 
 
 ## How to cite
 

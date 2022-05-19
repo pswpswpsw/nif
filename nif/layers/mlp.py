@@ -46,13 +46,15 @@ class MLP_SimpleShortCut(tf.keras.layers.Layer):
                  kernel_regularizer, bias_regularizer, mixed_policy):
         super(MLP_SimpleShortCut, self).__init__()
         # dtype = tf.float16 if mixed_policy == 'mixed_float16' else tf.float32
-        # self.width = width
-        # self.activation = activation
-        # self.kernel_initializer = kernel_initializer
-        # self.bias_initializer = bias_initializer
+        self.width = width
+        self.activation = activation
+        self.kernel_initializer = kernel_initializer
+        self.bias_initializer = bias_initializer
+        self.kernel_regularizer = kernel_regularizer
+        self.bias_regularizer = bias_regularizer
         # self.compute_Dtype = mixed_policy.compute_dtype
         # self.variable_Dtype = mixed_policy.variable_dtype
-        # self.mixed_policy = mixed_policy
+        self.mixed_policy = mixed_policy
         self.L1 = tf.keras.layers.Dense(width, activation=tf.keras.activations.get(activation),
                                         kernel_initializer=kernel_initializer,
                                         bias_initializer=bias_initializer,
@@ -66,16 +68,15 @@ class MLP_SimpleShortCut(tf.keras.layers.Layer):
         y = x + self.L1(x)
         return y
 
-    @classmethod
-    def from_config(cls, config):
-        return cls(**config)
-    # def get_config(self):
-    #     config = super().get_config()
-    #     config.update({
-    #         "width": self.width,
-    #         "activation": self.activation,
-    #         "kernel_initializer": self.kernel_initializer,
-    #         "bias_initializer": self.bias_initializer,
-    #         "mixed_policy": self.mixed_policy
-    #     })
-    #     return config
+    def get_config(self):
+        config = super().get_config().copy()
+        config.update({
+            "width": self.width,
+            "activation": self.activation,
+            "kernel_initializer": self.kernel_initializer,
+            "bias_initializer": self.bias_initializer,
+            "kernel_regularizer": self.kernel_regularizer,
+            "bias_regularizer": self.bias_regularizer,
+            "mixed_policy": self.mixed_policy
+        })
+        return config

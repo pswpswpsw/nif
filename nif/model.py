@@ -26,7 +26,6 @@ class NIF(object):
 
         # additional regularization
         self.p_jac_reg = cfg_parameter_net.get('jac_reg', None)
-        # self.p_po_reg = cfg_parameter_net.get('po_reg', None)
         self.p_l1_reg = cfg_parameter_net.get('l1_reg', None)
         self.p_l2_reg = cfg_parameter_net.get('l2_reg', None)
         self.p_act_l1_reg = cfg_parameter_net.get('act_l1_reg', None)

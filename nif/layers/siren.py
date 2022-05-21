@@ -241,4 +241,4 @@ class HyperLinearForSIREN(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLa
 
     def get_prunable_weights(self):
         # Prune bias also, though that usually harms model accuracy too much.
-        return [self.kernel, self.bias]
+        return [self.w]

@@ -2,7 +2,7 @@ from nif.layers.siren import SIREN
 from nif.layers.siren import SIREN_ResNet
 from nif.layers.siren import HyperLinearForSIREN
 from nif.layers.mlp import MLP_ResNet
-from nif.layers.mlp import MLP_SimpleShortCut
+from nif.layers.mlp import MLP_SimpleShortCut, EinsumLayer
 
 from nif.layers.gradient import *
 from nif.layers.regularization import *
@@ -19,5 +19,6 @@ __all__ = [
     "JacRegLatentLayer",
     "JacobianLayer",
     "HessianLayer",
-    "ParameterOutputL1ActReg"
+    "ParameterOutputL1ActReg",
+    "EinsumLayer"
 ]

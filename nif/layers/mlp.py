@@ -80,3 +80,21 @@ class MLP_SimpleShortCut(tf.keras.layers.Layer):
             "mixed_policy": self.mixed_policy
         })
         return config
+
+class EinsumLayer(tf.keras.layers.Layer):
+    """
+    Layer wrapping a single tf.einsum operation.
+
+    Usage:
+    x = EinsumLayer("bmhwf,bmoh->bmowf")((x1, x2))
+    """
+
+    def __init__(self, equation: str):
+        super().__init__()
+        self.equation = equation
+
+    def call(self, inputs, *args, **kwargs):
+        return tf.einsum(self.equation, *inputs)
+
+    def get_config(self):
+        return {"equation": self.equation}

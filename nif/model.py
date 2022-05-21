@@ -153,13 +153,16 @@ class NIF(object):
 
         # construct shape net
         act_fun = tf.keras.activations.get(activation)
-        u = act_fun(tf.einsum('ai,aij->aj', input_s, w_1) + b_1)
+        u = act_fun(EinsumLayer('ai,aij-aj')((input_s, w_1)) + b_1)
+        # u = act_fun(tf.einsum('ai,aij->aj', input_s, w_1) + b_1)
 
         for i in range(l_sx):
             w_tmp = w_hidden_list[i]
             b_tmp = b_hidden_list[i]
-            u = act_fun(tf.einsum('ai,aij->aj', u, w_tmp) + b_tmp) + u
-        u = tf.einsum('ai,aij->aj', u, w_l) + b_l
+            u = act_fun(EinsumLayer('ai,aij-aj')((u, w_tmp)) + b_tmp) + u
+            # u = act_fun(tf.einsum('ai,aij->aj', u, w_tmp) + b_tmp) + u
+        u = EinsumLayer('ai,aij-aj')((u, w_l)) + b_l
+        # u = tf.einsum('ai,aij->aj', u, w_l) + b_l
         return tf.cast(u, variable_dtype)
 
     @staticmethod
@@ -426,11 +429,15 @@ class NIFMultiScale(NIF):
             b_l = tf.reshape(pnet_output[:, n_weights + (2 * l_sx + 1) * n_sx:], [-1, so_dim])
 
             # construct shape net
-            u = tf.math.sin(omega_0 * tf.einsum('ai,aij->aj', input_s, w_1) + b_1)
+            u = tf.math.sin(omega_0 * EinsumLayer('ai,aij-aj')((input_s, w_1)) + b_1)
+            # u = tf.math.sin(omega_0 * tf.einsum('ai,aij->aj', input_s, w_1) + b_1)
             for i in range(l_sx):
-                h = tf.math.sin(omega_0 * tf.einsum('ai,aij->aj', u, w_hidden_list[i][0]) + b_hidden_list[i][0])
-                u = 0.5 * (u + tf.math.sin(omega_0 * tf.einsum('ai,aij->aj', h, w_hidden_list[i][1]) + b_hidden_list[i][1]))
-            u = tf.einsum('ai,aij->aj', u, w_l) + b_l
+                h = tf.math.sin(omega_0 * EinsumLayer('ai,aij-aj')((u, w_hidden_list[i][0])) + b_hidden_list[i][0])
+                # h = tf.math.sin(omega_0 * tf.einsum('ai,aij->aj', u, w_hidden_list[i][0]) + b_hidden_list[i][0])
+                u = 0.5 * (u + tf.math.sin(omega_0 * EinsumLayer('ai,aij-aj')((h, w_hidden_list[i][1])) + b_hidden_list[i][1]))
+                # u = 0.5 * (u + tf.math.sin(omega_0 * tf.einsum('ai,aij->aj', h, w_hidden_list[i][1]) + b_hidden_list[i][1]))
+            u = EinsumLayer('ai,aij-aj')((u, w_l)) + b_l
+            # u = tf.einsum('ai,aij->aj', u, w_l) + b_l
 
         else:
             # distribute weights
@@ -462,10 +469,13 @@ class NIFMultiScale(NIF):
                              [-1, so_dim])
 
             # construct shape net
-            u = tf.math.sin(omega_0 * tf.einsum('ai,aij->aj', input_s, w_1) + b_1)
+            u = tf.math.sin(omega_0 * EinsumLayer('ai,aij-aj')((input_s, w_1)) + b_1)
+            # u = tf.math.sin(omega_0 * tf.einsum('ai,aij->aj', input_s, w_1) + b_1)
             for i in range(l_sx):
-                u = tf.math.sin(omega_0 * tf.einsum('ai,aij->aj', u, w_hidden_list[i]) + b_hidden_list[i])
-            u = tf.einsum('ai,aij->aj', u, w_l) + b_l
+                u = tf.math.sin(omega_0 * EinsumLayer('ai,aij-aj')((u, w_hidden_list[i])) + b_hidden_list[i])
+                # u = tf.math.sin(omega_0 * tf.einsum('ai,aij->aj', u, w_hidden_list[i]) + b_hidden_list[i])
+            u = EinsumLayer('ai,aij-aj')((u, w_l)) + b_l
+            # u = tf.einsum('ai,aij->aj', u, w_l) + b_l
 
         return tf.cast(u, variable_dtype)
 

@@ -1,5 +1,6 @@
 import tensorflow as tf
 import numpy as np
+import tensorflow_model_optimization as tfmot
 
 def gen_hypernetwork_weights_bias_for_siren_shapenet(
         num_inputs,
@@ -180,10 +181,11 @@ class SIREN_ResNet(SIREN):
                                       tf.cast(self.b2, self.compute_Dtype)))
 
 
-class HyperLinearForSIREN(tf.keras.layers.Layer):
+class HyperLinearForSIREN(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):
     def __init__(self, num_inputs, num_outputs, cfg_shape_net, mixed_policy, connectivity='full',
                  kernel_regularizer=None, bias_regularizer=None, activity_regularizer=None):
-        super(HyperLinearForSIREN, self).__init__(activity_regularizer=activity_regularizer)
+        super(HyperLinearForSIREN, self).__init__(activity_regularizer=activity_regularizer,
+                                                  name='HyperLinearSIREN')
         self.kernel_regularizer = kernel_regularizer
         self.bias_regularizer = bias_regularizer
         # self.num_inputs = num_inputs
@@ -192,6 +194,7 @@ class HyperLinearForSIREN(tf.keras.layers.Layer):
         self.compute_Dtype = mixed_policy.compute_dtype
         # self.variable_Dtype = mixed_policy.variable_dtype
         # self.connectivity = connectivity
+
 
         # compute the indices needed for generating weights for shapenet
         if connectivity == 'full':
@@ -235,3 +238,7 @@ class HyperLinearForSIREN(tf.keras.layers.Layer):
             # "connectivity": self.connectivity
         })
         return config
+
+    def get_prunable_weights(self):
+        # Prune bias also, though that usually harms model accuracy too much.
+        return [self.kernel, self.bias]

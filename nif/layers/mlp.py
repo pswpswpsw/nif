@@ -7,6 +7,7 @@ class MLP_ResNet(tf.keras.layers.Layer):
         self.compute_Dtype = mixed_policy.compute_dtype
         self.variable_Dtype = mixed_policy.variable_dtype
         # dtype = tf.float16 if mixed_policy == 'mixed_float16' else tf.float32
+        self.act = tf.keras.activations.get(activation)
         self.L1 = tf.keras.layers.Dense(width, activation=tf.keras.activations.get(activation),
                                         kernel_initializer=kernel_initializer,
                                         bias_initializer=bias_initializer,

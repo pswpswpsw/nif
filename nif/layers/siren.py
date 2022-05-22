@@ -66,7 +66,7 @@ class SIREN(tf.keras.layers.Layer):
         # self.\
         variable_Dtype = mixed_policy.variable_dtype
         self.omega_0 = tf.cast(omega_0, variable_Dtype)
-        self.kernel_regularizer = kernel_regularizer,
+        self.kernel_regularizer = kernel_regularizer
         self.bias_regularizer = bias_regularizer
 
         # initialize the weights

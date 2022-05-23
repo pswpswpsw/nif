@@ -1,8 +1,8 @@
 import tensorflow as tf
 
 class JacobianLayer(tf.keras.layers.Layer):
-    def __init__(self, model, y_index, x_index):
-        super().__init__()
+    def __init__(self, model, y_index, x_index, **kwargs):
+        super().__init__(**kwargs)
         self.model = model
         self.y_index = y_index
         self.x_index = x_index
@@ -18,9 +18,10 @@ class JacRegLatentLayer(JacobianLayer):
         y = f_{para}(x)
         Loss = mean((df/dx)^2)
     """
+
     def __init__(self, model, y_index, x_index, l1=1e-2,
-                 mixed_policy=tf.keras.mixed_precision.Policy('float32')):
-        super().__init__(model, y_index, x_index, mixed_policy)
+                 mixed_policy=tf.keras.mixed_precision.Policy('float32'), **kwargs):
+        super().__init__(model, y_index, x_index, mixed_policy=mixed_policy, **kwargs)
         self.l1 = tf.cast(l1, self.mixed_policy.compute_dtype).numpy()
 
     @tf.function

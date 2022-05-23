@@ -6,11 +6,6 @@ from tensorflow.keras import regularizers
 from .layers import *
 
 
-# from tensorflow.python.eager import backprop
-# from tensorflow.python.keras.engine import data_adapter
-# import tensorflow.keras.backend as K
-
-
 class NIF(object):
     def __init__(self, cfg_shape_net, cfg_parameter_net, mixed_policy='float32'):
         super(NIF, self).__init__()
@@ -83,7 +78,8 @@ class NIF(object):
                         bias_initializer=initializers.TruncatedNormal(stddev=0.1),
                         dtype=self.mixed_policy,
                         kernel_regularizer=self.pnet_kernel_regularizer,
-                        bias_regularizer=self.pnet_bias_regularizer)
+                        bias_regularizer=self.pnet_bias_regularizer,
+                        name='first_dense_pnet')
         pnet_layers_list.append(layer_1)
 
         # 2. hidden layer
@@ -94,7 +90,7 @@ class NIF(object):
                                            kernel_regularizer=self.pnet_kernel_regularizer,
                                            bias_regularizer=self.pnet_bias_regularizer,
                                            mixed_policy=self.mixed_policy,
-                                           )
+                                           name='hidden_mlpshortcut_pnet_{}'.format(i))
             # identity_layer = Lambda(lambda x: x)
             # tmp_layer =tf.keras.layers.Add()(identity_layer,tmp_layer)
             pnet_layers_list.append(tmp_layer)
@@ -105,65 +101,64 @@ class NIF(object):
                                  bias_initializer=initializers.TruncatedNormal(stddev=0.1),
                                  dtype=self.mixed_policy,
                                  kernel_regularizer=self.pnet_kernel_regularizer,
-                                 bias_regularizer=self.pnet_bias_regularizer)
+                                 bias_regularizer=self.pnet_bias_regularizer,
+                                 name='bottleneck_pnet')
         pnet_layers_list.append(bottleneck_layer)
 
         # 4. last layer
         ## add regularization
-
-
         last_layer = Dense(self.po_dim,
                            kernel_initializer=initializers.TruncatedNormal(stddev=0.1),
                            bias_initializer=initializers.TruncatedNormal(stddev=0.1),
                            kernel_regularizer=self.pnet_kernel_regularizer,
                            bias_regularizer=self.pnet_bias_regularizer,
                            activity_regularizer=self.pnet_act_regularizer,
-                           dtype=self.mixed_policy)
+                           dtype=self.mixed_policy,
+                           name='last_pnet')
         pnet_layers_list.append(last_layer)
         return pnet_layers_list
 
     @staticmethod
     def _call_shape_net(input_s, pnet_output, si_dim, so_dim, n_sx, l_sx, activation, variable_dtype):
-        w_1 = tf.reshape(pnet_output[:, :si_dim * n_sx],
-                         [-1, si_dim, n_sx])
+        w_1 = tf.reshape(pnet_output[:, :si_dim * n_sx], [-1, si_dim, n_sx], name='w_first_snet')
         w_hidden_list = []
         for i in range(l_sx):
             w_tmp = tf.reshape(pnet_output[:,
                                si_dim * n_sx + i * n_sx**2:
                                si_dim * n_sx + (i + 1) * n_sx**2],
-                               [-1, n_sx, n_sx])
+                               [-1, n_sx, n_sx],
+                               name='w_hidden_snet_{}'.format(i))
             w_hidden_list.append(w_tmp)
         w_l = tf.reshape(pnet_output[:,
                          si_dim * n_sx + l_sx * n_sx**2:
                          si_dim * n_sx + l_sx * n_sx**2 + so_dim * n_sx],
-                         [-1, n_sx, so_dim])
+                         [-1, n_sx, so_dim],
+                         name='w_last_snet')
         n_weights = si_dim * n_sx + l_sx * n_sx**2 + so_dim * n_sx
 
         # distribute bias
-        b_1 = tf.reshape(pnet_output[:, n_weights: n_weights + n_sx],
-                         [-1, n_sx])
+        b_1 = tf.reshape(pnet_output[:, n_weights: n_weights + n_sx], [-1, n_sx], name='b_first_snet')
         b_hidden_list = []
         for i in range(l_sx):
             b_tmp = tf.reshape(pnet_output[:, n_weights + n_sx + i * n_sx:
-                                              n_weights + n_sx + (i + 1) * n_sx], [-1, n_sx])
+                                              n_weights + n_sx + (i + 1) * n_sx], [-1, n_sx],
+                               name='b_hidden_snet_{}'.format(i))
             b_hidden_list.append(b_tmp)
-        b_l = tf.reshape(pnet_output[:,
-                         n_weights + (l_sx + 1) * n_sx:],
-                         [-1, so_dim])
+        b_l = tf.reshape(pnet_output[:, n_weights + (l_sx + 1) * n_sx:], [-1, so_dim], name='b_last_snet')
 
         # construct shape net
         act_fun = tf.keras.activations.get(activation)
-        u = act_fun(EinsumLayer('ai,aij->aj')((input_s, w_1)) + b_1)
+        u = act_fun(EinsumLayer('ai,aij->aj', name='first_einsum_snet')((input_s, w_1)) + b_1)
         # u = act_fun(tf.einsum('ai,aij->aj', input_s, w_1) + b_1)
 
         for i in range(l_sx):
             w_tmp = w_hidden_list[i]
             b_tmp = b_hidden_list[i]
-            u = act_fun(EinsumLayer('ai,aij->aj')((u, w_tmp)) + b_tmp) + u
+            u = act_fun(EinsumLayer('ai,aij->aj', name='hidden_einsum_snet_{}'.format(i))((u, w_tmp)) + b_tmp) + u
             # u = act_fun(tf.einsum('ai,aij->aj', u, w_tmp) + b_tmp) + u
-        u = EinsumLayer('ai,aij->aj')((u, w_l)) + b_l
+        u = EinsumLayer('ai,aij->aj', name='last_einsum_snet')((u, w_l)) + b_l
         # u = tf.einsum('ai,aij->aj', u, w_l) + b_l
-        return tf.cast(u, variable_dtype)
+        return tf.cast(u, variable_dtype, name='output_cast_snet')
 
     @staticmethod
     def _call_parameter_net(input_p, pnet_list):
@@ -183,7 +178,7 @@ class NIF(object):
             # we take d latent / d parameter
             y_index = range(0, self.pi_hidden)
             x_index = range(0, self.pi_dim)
-            output = JacRegLatentLayer(model_augment_latent, y_index, x_index, self.p_jac_reg)(input_tot)
+            output = JacRegLatentLayer(model_augment_latent, y_index, x_index, self.p_jac_reg, name='jac_reg_latent')(input_tot)
             return Model(inputs=[input_tot], outputs=[output])
         else:
             return self.model()
@@ -193,22 +188,22 @@ class NIF(object):
         return Model(inputs=[input_tot], outputs=[self.call(input_tot)])
 
     def model_p_to_w(self):
-        input_p = tf.keras.layers.Input(shape=(self.pi_dim), name='input_p')
+        input_p = tf.keras.layers.Input(shape=(self.pi_dim), name='input_p_to_w')
         return Model(inputs=[input_p], outputs=[self._call_parameter_net(input_p, self.pnet_list)[0]])
 
     def model_p_to_lr(self):
-        input_p = tf.keras.layers.Input(shape=(self.pi_dim), name='input_p')
+        input_p = tf.keras.layers.Input(shape=(self.pi_dim), name='input_p_to_lr')
         # this model: t, mu -> hidden LR
         return Model(inputs=[input_p], outputs=[self._call_parameter_net(input_p, self.pnet_list)[1]])
 
     def model_lr_to_w(self):
-        input_lr = tf.keras.layers.Input(shape=(self.pi_hidden), name='latent_representation')
+        input_lr = tf.keras.layers.Input(shape=(self.pi_hidden), name='input_lr_to_w')
         # this model: hidden LR -> weights and biases of shapenet
         return Model(inputs=[input_lr], outputs=[self.pnet_list[-1](input_lr)])
 
     def model_x_to_u_given_w(self):
-        input_s = tf.keras.layers.Input(shape=(self.si_dim), name='input_s')
-        input_pnet = tf.keras.layers.Input(shape=(self.pnet_list[-1].output_shape[1]), name='pnet_outputs')
+        input_s = tf.keras.layers.Input(shape=(self.si_dim), name='input_x_to_u_given_w')
+        input_pnet = tf.keras.layers.Input(shape=(self.pnet_list[-1].output_shape[1]), name='input_w_and_b_from_pnet')
         return Model(inputs=[input_s, input_pnet],
                      outputs=[self._call_shape_net(tf.cast(input_s, self.compute_Dtype),
                                                    tf.cast(input_pnet, self.compute_Dtype),
@@ -279,7 +274,8 @@ class NIFMultiScale(NIF):
                             cfg_shape_net,
                             self.pnet_kernel_regularizer,
                             self.pnet_bias_regularizer,
-                            self.mixed_policy)
+                            self.mixed_policy,
+                            name='siren_first_pnet')
             pnet_layers_list.append(layer_1)
 
             # 2. hidden layers
@@ -289,7 +285,8 @@ class NIFMultiScale(NIF):
                                              cfg_parameter_net['omega_0'],
                                              self.pnet_kernel_regularizer,
                                              self.pnet_bias_regularizer,
-                                             self.mixed_policy)
+                                             self.mixed_policy,
+                                             name='siren_hidden_resblock_pnet_{}'.format(i))
                     pnet_layers_list.append(tmp_layer)
             else:
                 for i in range(self.l_st):
@@ -298,7 +295,8 @@ class NIFMultiScale(NIF):
                                       cfg_shape_net,
                                       self.pnet_kernel_regularizer,
                                       self.pnet_bias_regularizer,
-                                      self.mixed_policy)
+                                      self.mixed_policy,
+                                      name='siren_hidden_pnet_{}'.format(i))
                     pnet_layers_list.append(tmp_layer)
 
             # 3. bottleneck layer
@@ -307,7 +305,8 @@ class NIFMultiScale(NIF):
                                      cfg_shape_net,
                                      self.pnet_kernel_regularizer,
                                      self.pnet_bias_regularizer,
-                                     self.mixed_policy)
+                                     self.mixed_policy,
+                                     name='siren_bottleneck_pnet')
             pnet_layers_list.append(bottleneck_layer)
 
             # 4. last layer
@@ -317,12 +316,8 @@ class NIFMultiScale(NIF):
                                              connectivity=cfg_shape_net['connectivity'],
                                              kernel_regularizer=self.pnet_kernel_regularizer,
                                              bias_regularizer=self.pnet_bias_regularizer,
-                                             activity_regularizer=self.pnet_act_regularizer)
-
-            # last_layer = SIREN(self.pi_hidden, self.po_dim, 'last',
-            #                    cfg_parameter_net['omega_0'],
-            #                    cfg_shape_net['omega_0'], cfg_shape_net,
-            #                    self.mixed_policy)
+                                             activity_regularizer=self.pnet_act_regularizer,
+                                             name='HyperLinearForSIREN')
 
             pnet_layers_list.append(last_layer)
 
@@ -334,7 +329,8 @@ class NIFMultiScale(NIF):
                             bias_initializer=initializers.TruncatedNormal(stddev=0.1),
                             kernel_regularizer=self.pnet_kernel_regularizer,
                             bias_regularizer=self.pnet_bias_regularizer,
-                            dtype=self.mixed_policy)
+                            dtype=self.mixed_policy,
+                            name='mlp_first_pnet')
             pnet_layers_list.append(layer_1)
 
             # 2. hidden layer
@@ -346,7 +342,8 @@ class NIFMultiScale(NIF):
                                            bias_initializer=initializers.TruncatedNormal(stddev=0.1),
                                            kernel_regularizer=self.pnet_kernel_regularizer,
                                            bias_regularizer=self.pnet_bias_regularizer,
-                                           mixed_policy=self.mixed_policy)
+                                           mixed_policy=self.mixed_policy,
+                                           name='mlp_hidden_resblock_pnet_{}'.format(i))
                     pnet_layers_list.append(tmp_layer)
             else:
                 for i in range(self.l_st):
@@ -355,7 +352,8 @@ class NIFMultiScale(NIF):
                                                    bias_initializer=initializers.TruncatedNormal(stddev=0.1),
                                                    kernel_regularizer=self.pnet_kernel_regularizer,
                                                    bias_regularizer=self.pnet_bias_regularizer,
-                                                   mixed_policy=self.mixed_policy)
+                                                   mixed_policy=self.mixed_policy,
+                                                   name='mlp_hidden_pnet_{}'.format(i))
                     # identity_layer = Lambda(lambda x: x)
                     # tmp_layer =tf.keras.layers.Add()(identity_layer,tmp_layer)
                     pnet_layers_list.append(tmp_layer)
@@ -366,7 +364,8 @@ class NIFMultiScale(NIF):
                                      bias_initializer=initializers.TruncatedNormal(stddev=0.1),
                                      kernel_regularizer=self.pnet_kernel_regularizer,
                                      bias_regularizer=self.pnet_bias_regularizer,
-                                     dtype=self.mixed_policy)
+                                     dtype=self.mixed_policy,
+                                     name='bottleneck_pnet')
             pnet_layers_list.append(bottleneck_layer)
 
             # 4. last layer
@@ -376,7 +375,8 @@ class NIFMultiScale(NIF):
                                              connectivity=cfg_shape_net['connectivity'],
                                              kernel_regularizer=self.pnet_kernel_regularizer,
                                              bias_regularizer=self.pnet_bias_regularizer,
-                                             activity_regularizer=self.pnet_act_regularizer)
+                                             activity_regularizer=self.pnet_act_regularizer,
+                                             name='HyperLinearForSIREN')
             pnet_layers_list.append(last_layer)
 
         return pnet_layers_list
@@ -392,96 +392,101 @@ class NIFMultiScale(NIF):
         """
         if flag_resblock:
             # distribute weights
-            w_1 = tf.reshape(pnet_output[:, :si_dim * n_sx],
-                             [-1, si_dim, n_sx])
+            w_1 = tf.reshape(pnet_output[:, :si_dim * n_sx], [-1, si_dim, n_sx], name='w_first_snet')
             w_hidden_list = []
             for i in range(l_sx):
                 w1_tmp = tf.reshape(pnet_output[:,
                                     si_dim * n_sx + 2 * i * n_sx**2:
                                     si_dim * n_sx + (2 * i + 1) * n_sx**2],
-                                    [-1, n_sx, n_sx])
+                                    [-1, n_sx, n_sx], name='w1_hidden_snet_{}'.format(i))
                 w2_tmp = tf.reshape(pnet_output[:,
                                     si_dim * n_sx + (2 * i + 1) * n_sx**2:
                                     si_dim * n_sx + (2 * i + 2) * n_sx**2],
-                                    [-1, n_sx, n_sx])
+                                    [-1, n_sx, n_sx], name='w2_hidden_snet_{}'.format(i))
                 w_hidden_list.append([w1_tmp, w2_tmp])
             w_l = tf.reshape(pnet_output[:,
                              si_dim * n_sx + (2 * l_sx) * n_sx**2:
                              si_dim * n_sx + (2 * l_sx) * n_sx**2 + so_dim * n_sx],
-                             [-1, n_sx, so_dim])
+                             [-1, n_sx, so_dim], name='w_last_snet')
 
             n_weights = si_dim * n_sx + (2 * l_sx) * n_sx**2 + so_dim * n_sx
 
             # distribute bias
             b_1 = tf.reshape(pnet_output[:, n_weights: n_weights + n_sx],
-                             [-1, n_sx])
+                             [-1, n_sx], name='b_first_snet')
             b_hidden_list = []
             for i in range(l_sx):
                 b1_tmp = tf.reshape(pnet_output[:,
                                     n_weights + n_sx + 2 * i * n_sx:
                                     n_weights + n_sx + (2 * i + 1) * n_sx],
-                                    [-1, n_sx])
+                                    [-1, n_sx], name='b1_hidden_snet_{}'.format(i))
                 b2_tmp = tf.reshape(pnet_output[:,
                                     n_weights + n_sx + (2 * i + 1) * n_sx:
                                     n_weights + n_sx + (2 * i + 2) * n_sx],
-                                    [-1, n_sx])
+                                    [-1, n_sx], name='b1_hidden_snet_{}'.format(i))
                 b_hidden_list.append([b1_tmp, b2_tmp])
-            b_l = tf.reshape(pnet_output[:, n_weights + (2 * l_sx + 1) * n_sx:], [-1, so_dim])
+            b_l = tf.reshape(pnet_output[:, n_weights + (2 * l_sx + 1) * n_sx:], [-1, so_dim],
+                             name='b_last_snet')
 
             # construct shape net
-            u = tf.math.sin(omega_0 * EinsumLayer('ai,aij->aj')((input_s, w_1)) + b_1)
+            u = tf.math.sin(omega_0 * EinsumLayer('ai,aij->aj', name='first_einsum_snet')((input_s, w_1)) + b_1)
             # u = tf.math.sin(omega_0 * tf.einsum('ai,aij->aj', input_s, w_1) + b_1)
             for i in range(l_sx):
-                h = tf.math.sin(omega_0 * EinsumLayer('ai,aij->aj')((u, w_hidden_list[i][0])) + b_hidden_list[i][0])
+                h = tf.math.sin(omega_0 * EinsumLayer('ai,aij->aj', name='hidden_1_einsum_snet_{}'.format(i))((u, w_hidden_list[i][0])) +
+                                b_hidden_list[i][0])
                 # h = tf.math.sin(omega_0 * tf.einsum('ai,aij->aj', u, w_hidden_list[i][0]) + b_hidden_list[i][0])
-                u = 0.5 * (u + tf.math.sin(omega_0 * EinsumLayer('ai,aij->aj')((h, w_hidden_list[i][1])) + b_hidden_list[i][1]))
+                u = 0.5 * (u + tf.math.sin(omega_0 * EinsumLayer('ai,aij->aj', name='hidden_2_einsum_snet_{}'.format(i))((h, w_hidden_list[i][1])) +
+                                           b_hidden_list[i][1]))
                 # u = 0.5 * (u + tf.math.sin(omega_0 * tf.einsum('ai,aij->aj', h, w_hidden_list[i][1]) + b_hidden_list[i][1]))
-            u = EinsumLayer('ai,aij->aj')((u, w_l)) + b_l
+            u = EinsumLayer('ai,aij->aj', name='last_einsum_snet')((u, w_l)) + b_l
             # u = tf.einsum('ai,aij->aj', u, w_l) + b_l
 
         else:
+            # disable resblock for parameter net
             # distribute weights
-            w_1 = tf.reshape(pnet_output[:, :si_dim * n_sx],
-                             [-1, si_dim, n_sx])
+            w_1 = tf.reshape(pnet_output[:, :si_dim * n_sx], [-1, si_dim, n_sx], name='w_first_snet')
             w_hidden_list = []
             for i in range(l_sx):
                 w_tmp = tf.reshape(pnet_output[:,
                                    si_dim * n_sx + i * n_sx**2:
                                    si_dim * n_sx + (i + 1) * n_sx**2],
-                                   [-1, n_sx, n_sx])
+                                   [-1, n_sx, n_sx],
+                                   name='w_hidden_snet_{}'.format(i))
                 w_hidden_list.append(w_tmp)
             w_l = tf.reshape(pnet_output[:,
                              si_dim * n_sx + l_sx * n_sx**2:
                              si_dim * n_sx + l_sx * n_sx**2 + so_dim * n_sx],
-                             [-1, n_sx, so_dim])
+                             [-1, n_sx, so_dim],
+                             name='w_last_snet')
             n_weights = si_dim * n_sx + l_sx * n_sx**2 + so_dim * n_sx
 
             # distribute bias
             b_1 = tf.reshape(pnet_output[:, n_weights: n_weights + n_sx],
-                             [-1, n_sx])
+                             [-1, n_sx], name='b_first_snet')
             b_hidden_list = []
             for i in range(l_sx):
                 b_tmp = tf.reshape(pnet_output[:, n_weights + n_sx + i * n_sx:
-                                                  n_weights + n_sx + (i + 1) * n_sx], [-1, n_sx])
+                                                  n_weights + n_sx + (i + 1) * n_sx], [-1, n_sx],
+                                   name='b_hidden_snet_{}'.format(i))
                 b_hidden_list.append(b_tmp)
             b_l = tf.reshape(pnet_output[:,
                              n_weights + (l_sx + 1) * n_sx:],
-                             [-1, so_dim])
+                             [-1, so_dim], name='b_last_snet')
 
             # construct shape net
-            u = tf.math.sin(omega_0 * EinsumLayer('ai,aij->aj')((input_s, w_1)) + b_1)
+            u = tf.math.sin(omega_0 * EinsumLayer('ai,aij->aj', name='first_einsum_snet')((input_s, w_1)) + b_1)
             # u = tf.math.sin(omega_0 * tf.einsum('ai,aij->aj', input_s, w_1) + b_1)
             for i in range(l_sx):
-                u = tf.math.sin(omega_0 * EinsumLayer('ai,aij->aj')((u, w_hidden_list[i])) + b_hidden_list[i])
+                u = tf.math.sin(omega_0 * EinsumLayer('ai,aij->aj', name='hidden_einsum_snet_{}'.format(i))((u, w_hidden_list[i])) + b_hidden_list[i])
                 # u = tf.math.sin(omega_0 * tf.einsum('ai,aij->aj', u, w_hidden_list[i]) + b_hidden_list[i])
-            u = EinsumLayer('ai,aij->aj')((u, w_l)) + b_l
+            u = EinsumLayer('ai,aij->aj', name='last_einsum_snet')((u, w_l)) + b_l
             # u = tf.einsum('ai,aij->aj', u, w_l) + b_l
 
-        return tf.cast(u, variable_dtype)
+        return tf.cast(u, variable_dtype, name='output_cast_snet')
 
     def model_x_to_u_given_w(self):
-        input_s = tf.keras.layers.Input(shape=(self.si_dim))
-        input_pnet = tf.keras.layers.Input(shape=(self.pnet_list[-1].output_shape[1]))
+        input_s = tf.keras.layers.Input(shape=(self.si_dim), name='input_x_to_u_given_w')
+        input_pnet = tf.keras.layers.Input(shape=(self.pnet_list[-1].output_shape[1]), name='input_w_and_b_from_pnet')
         return Model(inputs=[input_s, input_pnet],
                      outputs=[self._call_shape_net_mres(tf.cast(input_s, self.compute_Dtype),
                                                         tf.cast(input_pnet, self.compute_Dtype),
@@ -499,8 +504,23 @@ class NIFMultiScale(NIF):
 class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
     def __init__(self, cfg_shape_net, cfg_parameter_net, mixed_policy='float32'):
         super(NIFMultiScaleLastLayerParameterized, self).__init__(cfg_shape_net, cfg_parameter_net, mixed_policy)
-        assert cfg_shape_net['connectivity'] == 'last_layer'
-        self.snet_list, self.last_layer_bias = self._initialize_snet(cfg_shape_net, cfg_parameter_net)
+        assert cfg_shape_net['connectivity'] == 'last_layer', \
+            "you should assign cfg_shape_net['connectivity'] == 'last_layer'"
+
+        self.s_l1_reg = cfg_shape_net.get('l1_reg', None)
+        self.s_l2_reg = cfg_shape_net.get('l2_reg', None)
+
+        if isinstance(self.s_l2_reg, (float, int)):
+            self.snet_kernel_regularizer = regularizers.L2(self.p_l2_reg)
+            self.snet_bias_regularizer = regularizers.L2(self.p_l2_reg)
+        elif isinstance(self.s_l1_reg, (float, int)):
+            self.snet_kernel_regularizer = regularizers.L1(self.p_l1_reg)
+            self.snet_bias_regularizer = regularizers.L1(self.p_l1_reg)
+        else:
+            self.snet_kernel_regularizer = None
+            self.snet_bias_regularizer = None
+
+        self.snet_list, self.last_layer_bias = self._initialize_snet(cfg_shape_net)
 
     def call(self, inputs, training=None, mask=None):
         input_p = inputs[:, 0:self.pi_dim]
@@ -516,12 +536,12 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
                                                               self.variable_Dtype)
 
     def model_p_to_lr(self):
-        input_p = tf.keras.layers.Input(shape=(self.pi_dim))
+        input_p = tf.keras.layers.Input(shape=(self.pi_dim), name='input_p_to_lr')
         # this model: t, mu -> hidden LR
         return Model(inputs=[input_p], outputs=[self._call_parameter_net(input_p, self.pnet_list)[0]])
 
     def model_x_to_phi(self):
-        input_s = tf.keras.layers.Input(shape=(self.si_dim))
+        input_s = tf.keras.layers.Input(shape=(self.si_dim), name='input_x_to_phi')
         return Model(inputs=[input_s],
                      outputs=[tf.cast(self._call_shape_net_get_phi_x(input_s, self.snet_list, self.so_dim,
                                                                      self.pi_hidden), self.variable_Dtype)])
@@ -530,8 +550,8 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         raise ValueError("In this class: NIFMultiScaleLastLayerParameterization, `w` is the same as `lr`")
 
     def model_x_to_u_given_w(self):
-        input_s = tf.keras.layers.Input(shape=(self.si_dim))
-        input_pnet = tf.keras.layers.Input(shape=(self.pnet_list[-1].output_shape[1]))
+        input_s = tf.keras.layers.Input(shape=(self.si_dim), name='input_x_to_u_given_w')
+        input_pnet = tf.keras.layers.Input(shape=(self.pnet_list[-1].output_shape[1]), name='input_w_and_b_from_pnet')
         return Model(inputs=[input_s, input_pnet],
                      outputs=[self._call_shape_net_mres_only_para_last_layer(tf.cast(input_s, self.compute_Dtype),
                                                                              self.snet_list,
@@ -541,7 +561,7 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
                                                                              self.pi_hidden,
                                                                              self.variable_Dtype)])
 
-    def _initialize_snet(self, cfg_shape_net, cfg_parameter_net):
+    def _initialize_snet(self, cfg_shape_net):
         # create a simple feedfowrard, with resblock or not, that maps self.si_dim to
         # self.so_dim*self.pi_hidden
 
@@ -550,7 +570,10 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         layer_1 = SIREN(self.si_dim, self.n_sx, 'first',
                         cfg_shape_net['omega_0'],
                         cfg_shape_net,
-                        self.mixed_policy)
+                        self.snet_kernel_regularizer,
+                        self.snet_bias_regularizer,
+                        self.mixed_policy,
+                        name='siren_first_snet')
         snet_layers_list.append(layer_1)
 
         # 2. hidden layers
@@ -558,26 +581,36 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
             for i in range(self.l_sx):
                 tmp_layer = SIREN_ResNet(self.n_sx, self.n_sx,
                                          cfg_shape_net['omega_0'],
-                                         self.mixed_policy)
+                                         self.snet_kernel_regularizer,
+                                         self.snet_bias_regularizer,
+                                         self.mixed_policy,
+                                         name='siren_hidden_resblock_snet_{}'.format(i))
                 snet_layers_list.append(tmp_layer)
         else:
             for i in range(self.l_sx):
                 tmp_layer = SIREN(self.n_sx, self.n_sx, 'hidden',
                                   cfg_shape_net['omega_0'],
                                   cfg_shape_net,
-                                  self.mixed_policy)
+                                  self.snet_kernel_regularizer,
+                                  self.snet_bias_regularizer,
+                                  self.mixed_policy,
+                                  name='siren_hidden_snet_{}'.format(i))
                 snet_layers_list.append(tmp_layer)
 
         # 3. bottleneck AND the same time, last layer for spatial basis
         bottle_last_layer = SIREN(self.n_sx, self.po_dim * self.so_dim, 'bottleneck',
                                   cfg_shape_net['omega_0'],
                                   cfg_shape_net,
-                                  self.mixed_policy)
+                                  self.snet_kernel_regularizer,
+                                  self.snet_bias_regularizer,
+                                  self.mixed_policy,
+                                  name='siren_bottleneck_snet')
         snet_layers_list.append(bottle_last_layer)
 
         # create bias for the last layer
         last_layer_init = initializers.TruncatedNormal(stddev=0.1)
-        last_layer_bias = tf.Variable(last_layer_init([self.so_dim, ]), dtype=self.mixed_policy.variable_dtype)
+        last_layer_bias = tf.Variable(last_layer_init([self.so_dim, ]),
+                                      dtype=self.mixed_policy.variable_dtype, name='last_layer_bias_snet')
 
         return snet_layers_list, last_layer_bias
 
@@ -587,11 +620,11 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         for l in snet_layers_list:
             phi_x = l(phi_x)
         # 2. phi_x * a_t + bias
-        phi_x_matrix = tf.reshape(phi_x, [-1, so_dim, pi_hidden])
+        phi_x_matrix = tf.reshape(phi_x, [-1, so_dim, pi_hidden], name='phi_snet')
         return phi_x_matrix
 
     def _call_shape_net_mres_only_para_last_layer(self, input_s, snet_layers_list, last_layer_bias, pnet_output,
                                                   so_dim, pi_hidden, variable_dtype):
         phi_x_matrix = self._call_shape_net_get_phi_x(input_s, snet_layers_list, so_dim, pi_hidden)
         u = tf.keras.layers.Dot(axes=(2, 1))([phi_x_matrix, pnet_output]) + last_layer_bias
-        return tf.cast(u, variable_dtype)  # , tf.cast(phi_x, variable_dtype)
+        return tf.cast(u, variable_dtype, name='output_cast')  # , tf.cast(phi_x, variable_dtype)

@@ -2,26 +2,25 @@ import tensorflow as tf
 
 class MLP_ResNet(tf.keras.layers.Layer):
     def __init__(self, width, activation, kernel_initializer, bias_initializer,
-                 kernel_regularizer, bias_regularizer, mixed_policy):
-        super(MLP_ResNet, self).__init__()
+                 kernel_regularizer, bias_regularizer, mixed_policy, **kwargs):
+        super(MLP_ResNet, self).__init__(**kwargs)
         self.compute_Dtype = mixed_policy.compute_dtype
         self.variable_Dtype = mixed_policy.variable_dtype
         # dtype = tf.float16 if mixed_policy == 'mixed_float16' else tf.float32
         self.act = tf.keras.activations.get(activation)
-        self.L1 = tf.keras.layers.Dense(width, activation=tf.keras.activations.get(activation),
+        self.L1 = tf.keras.layers.Dense(width,
+                                        activation=tf.keras.activations.get(activation),
                                         kernel_initializer=kernel_initializer,
                                         bias_initializer=bias_initializer,
                                         kernel_regularizer=kernel_regularizer,
                                         bias_regularizer=bias_regularizer,
-                                        dtype=mixed_policy
-                                        )
+                                        dtype=mixed_policy)
         self.L2 = tf.keras.layers.Dense(width,
                                         kernel_initializer=kernel_initializer,
                                         bias_initializer=bias_initializer,
                                         kernel_regularizer=kernel_regularizer,
                                         bias_regularizer=bias_regularizer,
-                                        dtype=mixed_policy
-                                        )
+                                        dtype=mixed_policy)
 
     def call(self, x, **kwargs):
         # classic ResNet, replace ReLU with Swish
@@ -44,8 +43,8 @@ class MLP_ResNet(tf.keras.layers.Layer):
 
 class MLP_SimpleShortCut(tf.keras.layers.Layer):
     def __init__(self, width, activation, kernel_initializer, bias_initializer,
-                 kernel_regularizer, bias_regularizer, mixed_policy):
-        super(MLP_SimpleShortCut, self).__init__()
+                 kernel_regularizer, bias_regularizer, mixed_policy, **kwargs):
+        super(MLP_SimpleShortCut, self).__init__(**kwargs)
         # dtype = tf.float16 if mixed_policy == 'mixed_float16' else tf.float32
         self.width = width
         self.activation = activation
@@ -90,8 +89,8 @@ class EinsumLayer(tf.keras.layers.Layer):
     x = EinsumLayer("bmhwf,bmoh->bmowf")((x1, x2))
     """
 
-    def __init__(self, equation: str):
-        super().__init__()
+    def __init__(self, equation: str, **kwargs):
+        super().__init__(**kwargs)
         self.equation = equation
 
     def call(self, inputs, *args, **kwargs):

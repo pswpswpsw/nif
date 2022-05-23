@@ -55,8 +55,9 @@ class SIREN(tf.keras.layers.Layer):
                  omega_0, cfg_shape_net=None,
                  kernel_regularizer=None,
                  bias_regularizer=None,
-                 mixed_policy=tf.keras.mixed_precision.Policy('float32')):
-        super(SIREN, self).__init__()
+                 mixed_policy=tf.keras.mixed_precision.Policy('float32'),
+                 **kwargs):
+        super(SIREN, self).__init__(**kwargs)
         # self.num_inputs = num_inputs
         # self.num_outputs = num_outputs
         self.layer_position = layer_position
@@ -157,13 +158,15 @@ class SIREN_ResNet(SIREN):
                  omega_0,
                  kernel_regularizer=None,
                  bias_regularizer=None,
-                 mixed_policy=tf.keras.mixed_precision.Policy('float32')):
+                 mixed_policy=tf.keras.mixed_precision.Policy('float32'),
+                 **kwargs):
         super(SIREN_ResNet, self).__init__(num_inputs, num_outputs,
                                            layer_position='hidden',
                                            omega_0=omega_0,
                                            kernel_regularizer=kernel_regularizer,
                                            bias_regularizer=bias_regularizer,
-                                           mixed_policy=mixed_policy)
+                                           mixed_policy=mixed_policy,
+                                           **kwargs)
         self.w2 = tf.Variable(self.w_init, dtype=mixed_policy.variable_dtype)
         self.b2 = tf.Variable(self.b_init, dtype=mixed_policy.variable_dtype)
 
@@ -183,9 +186,8 @@ class SIREN_ResNet(SIREN):
 
 class HyperLinearForSIREN(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):
     def __init__(self, num_inputs, num_outputs, cfg_shape_net, mixed_policy, connectivity='full',
-                 kernel_regularizer=None, bias_regularizer=None, activity_regularizer=None):
-        super(HyperLinearForSIREN, self).__init__(activity_regularizer=activity_regularizer,
-                                                  name='HyperLinearSIREN')
+                 kernel_regularizer=None, bias_regularizer=None, activity_regularizer=None, **kwargs):
+        super(HyperLinearForSIREN, self).__init__(activity_regularizer=activity_regularizer, **kwargs)
         self.kernel_regularizer = kernel_regularizer
         self.bias_regularizer = bias_regularizer
         # self.num_inputs = num_inputs

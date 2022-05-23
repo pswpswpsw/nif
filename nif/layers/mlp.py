@@ -14,20 +14,22 @@ class MLP_ResNet(tf.keras.layers.Layer):
                                         bias_initializer=bias_initializer,
                                         kernel_regularizer=kernel_regularizer,
                                         bias_regularizer=bias_regularizer,
-                                        dtype=mixed_policy)
+                                        dtype=mixed_policy,
+                                        name=kwargs.get('name', 'MLP_ResNet') + '_dense_1')
         self.L2 = tf.keras.layers.Dense(width,
                                         kernel_initializer=kernel_initializer,
                                         bias_initializer=bias_initializer,
                                         kernel_regularizer=kernel_regularizer,
                                         bias_regularizer=bias_regularizer,
-                                        dtype=mixed_policy)
+                                        dtype=mixed_policy,
+                                        name=kwargs.get('name', 'MLP_ResNet') + '_dense_1')
 
     def call(self, x, **kwargs):
         # classic ResNet, replace ReLU with Swish
         h1 = self.L1(x)
         h2 = self.L2(h1)
-        y = self.act(x + tf.cast(h2, self.compute_Dtype))
-        return tf.cast(y, self.variable_Dtype)
+        y = self.act(x + tf.cast(h2, self.compute_Dtype), name=kwargs.get('name', 'MLP_ResNet') + '_act')
+        return tf.cast(y, self.variable_Dtype, name=kwargs.get('name', 'MLP_ResNet') + '_output_cast')
 
     def get_config(self):
         config = super().get_config()
@@ -60,7 +62,8 @@ class MLP_SimpleShortCut(tf.keras.layers.Layer):
                                         bias_initializer=bias_initializer,
                                         kernel_regularizer=kernel_regularizer,
                                         bias_regularizer=bias_regularizer,
-                                        dtype=mixed_policy
+                                        dtype=mixed_policy,
+                                        name=kwargs.get('name', 'MLP_SimpleShortCut') + '_dense'
                                         )
 
     def call(self, x, **kwargs):

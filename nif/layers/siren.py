@@ -219,8 +219,8 @@ class HyperLinearForSIREN(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLa
             variable_dtype=mixed_policy.variable_dtype
         )
 
-        self.w = tf.Variable(w_init, mixed_policy.variable_dtype)
-        self.b = tf.Variable(b_init, mixed_policy.variable_dtype)
+        self.w = tf.Variable(w_init, mixed_policy.variable_dtype, name=kwargs.get('name', 'hyper_siren') + '_w')
+        self.b = tf.Variable(b_init, mixed_policy.variable_dtype, name=kwargs.get('name', 'hyper_siren') + '_b')
 
     def call(self, x, **kwargs):
         if type(self.kernel_regularizer) != type(None):

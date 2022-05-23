@@ -124,8 +124,8 @@ class SIREN(tf.keras.layers.Layer):
 
         self.w_init = w_init
         self.b_init = b_init
-        self.w = tf.Variable(w_init, dtype=variable_Dtype)
-        self.b = tf.Variable(b_init, dtype=variable_Dtype)
+        self.w = tf.Variable(w_init, dtype=variable_Dtype, name=kwargs.get('name', 'siren') + '_w')
+        self.b = tf.Variable(b_init, dtype=variable_Dtype, name=kwargs.get('name', 'siren') + '_w')
 
     def call(self, x, **kwargs):
         if type(self.kernel_regularizer) != type(None):
@@ -167,8 +167,8 @@ class SIREN_ResNet(SIREN):
                                            bias_regularizer=bias_regularizer,
                                            mixed_policy=mixed_policy,
                                            **kwargs)
-        self.w2 = tf.Variable(self.w_init, dtype=mixed_policy.variable_dtype)
-        self.b2 = tf.Variable(self.b_init, dtype=mixed_policy.variable_dtype)
+        self.w2 = tf.Variable(self.w_init, dtype=mixed_policy.variable_dtype, name=kwargs.get('name', 'siren_ResNet') + '_w2')
+        self.b2 = tf.Variable(self.b_init, dtype=mixed_policy.variable_dtype, name=kwargs.get('name', 'siren_ResNet') + '_b2')
 
     def call(self, x, training=None, mask=None):
         if type(self.kernel_regularizer) != type(None):

@@ -125,7 +125,7 @@ class SIREN(tf.keras.layers.Layer):
         self.w_init = w_init
         self.b_init = b_init
         self.w = tf.Variable(w_init, dtype=variable_Dtype, name=kwargs.get('name', 'siren') + '_w')
-        self.b = tf.Variable(b_init, dtype=variable_Dtype, name=kwargs.get('name', 'siren') + '_w')
+        self.b = tf.Variable(b_init, dtype=variable_Dtype, name=kwargs.get('name', 'siren') + '_b')
 
     def call(self, x, **kwargs):
         if type(self.kernel_regularizer) != type(None):

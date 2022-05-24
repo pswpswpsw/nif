@@ -202,8 +202,6 @@ class HyperLinearForSIREN(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLa
         self.compute_Dtype = mixed_policy.compute_dtype
         # self.variable_Dtype = mixed_policy.variable_dtype
         # self.connectivity = connectivity
-
-
         # compute the indices needed for generating weights for shapenet
         if connectivity == 'full':
             num_weight_first, num_weight_hidden, num_weight_last = compute_number_of_weightbias_by_its_position_for_shapenet(cfg_shape_net)
@@ -233,7 +231,6 @@ class HyperLinearForSIREN(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLa
             self.add_loss(self.kernel_regularizer(self.w))
         if type(self.bias_regularizer) != type(None):
             self.add_loss(self.bias_regularizer(self.b))
-
         y = tf.matmul(x, tf.cast(self.w, self.compute_Dtype)) + tf.cast(self.b, self.compute_Dtype)
         return y
 

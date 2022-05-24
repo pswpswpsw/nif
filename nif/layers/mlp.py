@@ -1,6 +1,8 @@
 import tensorflow as tf
+import tensorflow_model_optimization as tfmot
 
-class MLP_ResNet(tf.keras.layers.Layer):
+
+class MLP_ResNet(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):
     def __init__(self, width, activation, kernel_initializer, bias_initializer,
                  kernel_regularizer, bias_regularizer, mixed_policy, **kwargs):
         super(MLP_ResNet, self).__init__(**kwargs)
@@ -41,6 +43,9 @@ class MLP_ResNet(tf.keras.layers.Layer):
             # "mixed_policy": self.mixed_policy
         })
         return config
+
+    def get_prunable_weights(self):
+        return self.L1.weights + self.L2.weights
 
 
 class MLP_SimpleShortCut(tf.keras.layers.Layer):
@@ -83,6 +88,10 @@ class MLP_SimpleShortCut(tf.keras.layers.Layer):
             "mixed_policy": self.mixed_policy
         })
         return config
+
+    def get_prunable_weights(self):
+        return self.L1.weights
+
 
 class EinsumLayer(tf.keras.layers.Layer):
     """

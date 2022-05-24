@@ -152,6 +152,9 @@ class SIREN(tf.keras.layers.Layer):
         })
         return config
 
+    def get_prunable_weights(self):
+        return [self.w]
+
 class SIREN_ResNet(SIREN):
     def __init__(self, num_inputs,
                  num_outputs,
@@ -182,6 +185,9 @@ class SIREN_ResNet(SIREN):
                         tf.cast(self.b, self.compute_Dtype))
         return 0.5 * (x + tf.math.sin(self.omega_0 * tf.matmul(h, tf.cast(self.w2, self.compute_Dtype)) +
                                       tf.cast(self.b2, self.compute_Dtype)))
+
+    def get_prunable_weights(self):
+        return [self.w, self.w2]
 
 
 class HyperLinearForSIREN(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):

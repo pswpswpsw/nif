@@ -50,7 +50,7 @@ def compute_number_of_weightbias_by_its_position_for_shapenet(cfg_shape_net):
     num_weight_last = so_dim*n_sx
     return num_weight_first, num_weight_hidden, num_weight_last
 
-class SIREN(tf.keras.layers.Layer):
+class SIREN(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):
     def __init__(self, num_inputs, num_outputs, layer_position,
                  omega_0, cfg_shape_net=None,
                  kernel_regularizer=None,

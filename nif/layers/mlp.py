@@ -48,7 +48,7 @@ class MLP_ResNet(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):
         return self.L1.weights + self.L2.weights
 
 
-class MLP_SimpleShortCut(tf.keras.layers.Layer):
+class MLP_SimpleShortCut(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):
     def __init__(self, width, activation, kernel_initializer, bias_initializer,
                  kernel_regularizer, bias_regularizer, mixed_policy, **kwargs):
         super(MLP_SimpleShortCut, self).__init__(**kwargs)

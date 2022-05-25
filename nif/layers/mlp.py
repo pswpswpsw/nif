@@ -88,7 +88,6 @@ class MLP_SimpleShortCut(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLay
             "mixed_policy": self.mixed_policy
         })
         return config
-
     def get_prunable_weights(self):
         return self.L1.weights
 

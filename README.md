@@ -170,6 +170,7 @@
 	    model.fit(...)
 
     ```
+- Network pruning and quantization
 
 ## Google Colab Tutorial
 

@@ -203,6 +203,10 @@
 		  high-frequency signal.
 	- learn that L2 or L1 regularization does not seem to help resolving the above issue.
 
+7. **NIF Compression** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/7_model_pruning_and_quantization.ipynb)
+	- learn how to use low magnititute pruning and quantization to compress ParameterNet
+
+
 ## How to cite
 
 If you find NIF is helpful to you, you can cite our [paper](https://arxiv.org/abs/2204.03216) in the following bibtex format

@@ -30,7 +30,7 @@ class MLP_ResNet(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):
         # classic ResNet, replace ReLU with Swish
         h1 = self.L1(x)
         h2 = self.L2(h1)
-        y = self.act(x + tf.cast(h2, self.compute_Dtype), name=kwargs.get('name', 'MLP_ResNet') + '_act')
+        y = self.act(x + tf.cast(h2, self.compute_Dtype))  # , name=kwargs.get('name', 'MLP_ResNet') + '_act')
         return tf.cast(y, self.variable_Dtype, name=kwargs.get('name', 'MLP_ResNet') + '_output_cast')
 
     def get_config(self):

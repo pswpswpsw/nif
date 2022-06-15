@@ -66,7 +66,7 @@ def compute_output_and_grad(model, x, x_index, y_index):
         y = model(x)
         for i in y_index:
             ys_list.append(y[:, i])
-    dys_dx = tf.stack([tape.gradient(q, x)[0] for q in ys_list], 1)
+    dys_dx = tf.stack([tape.gradient(q, x) for q in ys_list], 1)
     dys_dxs = tf.gather(dys_dx, x_index, axis=-1)
     del tape
     return y, dys_dxs

@@ -108,18 +108,18 @@ if enable_sobolov:
     from nif.layers import JacobianLayer
 
     y_and_dydx = JacobianLayer(model, y_index, x_index)
-    y, dy_dx = y_and_dydx(model.inputs)
-    model = tf.keras.Model([model.inputs], [y, dy_dx])
+    y, dy_dx = y_and_dydx(model.inputs[0])  ##  use[0] to make sure shape is good
+    dy_dx_1d = tf.reshape(dy_dx, [-1,3*n_output])
+    y_and_dydx_1d = tf.concat([y, dy_dx_1d],-1)
+    model = tf.keras.Model([model.inputs[0]], [y_and_dydx_1d])
 
+    class Sobolov_MSE(tf.keras.losses.Loss):
+        def call(self, y_true, y_pred):
+            sd_field = tf.square(y_true[:, :n_output] - y_pred[:, :n_output])
+            sd_grad = tf.square(y_true[:, n_output:] - y_pred[:, n_output:])
+            return tf.reduce_mean(sd_field,axis=-1) + 0.01*tf.reduce_mean(sd_grad,axis=-1)
 
-    def sobolov_mse(y_true, y_pred):
-        sd_field = tf.square(y_true[:, :n_output] - y_pred[:, :n_output])
-        sd_grad = tf.square(y_true[:, n_output:] - y_pred[:, n_output:])
-        total_sd = sd_grad + sd_field
-        return tf.reduce_mean(total_sd, axis=-1)
-
-
-    model.compile(optimizer, loss=sobolov_mse)
+    model.compile(optimizer, loss=Sobolov_MSE())
 else:
     model.compile(optimizer, loss='mse')
 model.summary()

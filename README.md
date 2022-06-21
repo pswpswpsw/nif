@@ -208,9 +208,9 @@
 	- learn how to use low magnititute pruning and quantization to compress ParameterNet
 
 8. **Revisit NIF on multi-scale data: Sobolov training helps removing spurious signals** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/8_revisit_multi_scale_NIF_with_sobolov_training.ipynb)
-  - learn how to use `nif.layers.JacobianLayer` to perform Sobolov training
-  - learn how to monitor different loss terms using customized Keras metrics
-  - learn that feeding derivative information to the system help resolve the super-resolution issue
+  	- learn how to use `nif.layers.JacobianLayer` to perform Sobolov training
+  	- learn how to monitor different loss terms using customized Keras metrics
+  	- learn that feeding derivative information to the system help resolve the super-resolution issue
 
 ## How to cite
 

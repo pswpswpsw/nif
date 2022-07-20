@@ -1,3 +1,4 @@
 matplotlib
 numpy
+tensorflow_probability
 tensorflow_model_optimization

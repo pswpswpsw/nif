@@ -212,6 +212,10 @@
   	- learn how to monitor different loss terms using customized Keras metrics
   	- learn that feeding derivative information to the system help resolve the super-resolution issue
 
+## Issues, bugs, requests, ideas
+
+Use the [issues](https://github.com/pswpswpsw/nif/issues) tracker to report bugs.
+
 ## How to cite
 
 If you find NIF is helpful to you, you can cite our [paper](https://arxiv.org/abs/2204.03216) in the following bibtex format

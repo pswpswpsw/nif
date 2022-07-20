@@ -20,7 +20,7 @@
     
     # set up the configurations, loading dataset, etc...
     
-    model_ori = nif.NIF(...)
+    model_ori = NIF(...)
     model_opt = model_ori.build()
     
     model_opt.compile(optimizer, loss='mse')
@@ -47,7 +47,7 @@
     from nif.optimizers import TFPLBFGS
     
     # load previous model
-    new_model_ori = nif.NIF(cfg_shape_net, cfg_parameter_net, mixed_policy)
+    new_model_ori = NIF(cfg_shape_net, cfg_parameter_net, mixed_policy)
     new_model.load_weights(...)
     
     # prepare the dataset
@@ -92,7 +92,7 @@
 - Simple extraction of subnetworks
 
     ```python
-    model_ori = nif.NIF(...)
+    model_ori = NIF(...)
     
     # ....
     

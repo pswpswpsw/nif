@@ -1,0 +1,24 @@
+# Settings for pre-commit
+fail_fast: false
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: main
+  hooks:
+    - id: check-added-large-files
+      args: ["--maxkb=775"]
+    - id: check-merge-conflict
+- repo: https://github.com/asottile/reorder_python_imports
+  rev: v1.0.1
+  hooks:
+    - id: reorder-python-imports
+- repo: https://github.com/ambv/black
+  rev: stable
+  hooks:
+    - id: black
+- repo: https://gitlab.com/pycqa/flake8
+  rev: master
+  hooks:
+    - id: flake8
+      args: ["--config=setup.cfg"]
+
+

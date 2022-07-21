@@ -1,8 +1,11 @@
 # code comes from: https://github.com/GPflow/GPflow/issues/1604
+from typing import List
+from typing import Sequence
+from typing import Union
 
-from typing import Sequence, Union, List
 import tensorflow as tf
 import tensorflow_probability as tfp
+
 
 def pack_tensors(tensors: Sequence[Union[tf.Tensor, tf.Variable]]) -> tf.Tensor:
     flats = [tf.reshape(tensor, (-1,)) for tensor in tensors]
@@ -10,7 +13,9 @@ def pack_tensors(tensors: Sequence[Union[tf.Tensor, tf.Variable]]) -> tf.Tensor:
     return tensors_vector
 
 
-def unpack_tensors(to_tensors: Sequence[Union[tf.Tensor, tf.Variable]], from_vector: tf.Tensor) -> List[tf.Tensor]:
+def unpack_tensors(
+    to_tensors: Sequence[Union[tf.Tensor, tf.Variable]], from_vector: tf.Tensor
+) -> List[tf.Tensor]:
     s = 0
     values = []
     for target_tensor in to_tensors:
@@ -24,7 +29,9 @@ def unpack_tensors(to_tensors: Sequence[Union[tf.Tensor, tf.Variable]], from_vec
     return values
 
 
-def assign_tensors(to_tensors: Sequence[tf.Variable], values: Sequence[tf.Tensor]) -> None:
+def assign_tensors(
+    to_tensors: Sequence[tf.Variable], values: Sequence[tf.Tensor]
+) -> None:
     if len(to_tensors) != len(values):
         raise ValueError("to_tensors and values should have same length")
     for target, value in zip(to_tensors, values):
@@ -73,8 +80,7 @@ class LBFGSOptimizer(object):
         self.initial_position = pack_tensors(trainable_variables)
         self.results = None
         func, assign = create_value_and_gradient_function(
-            loss_closure=loss_closure,
-            trainable_variables=trainable_variables
+            loss_closure=loss_closure, trainable_variables=trainable_variables
         )
         self.func = func
         self.assign = assign
@@ -101,6 +107,6 @@ class LBFGSOptimizer(object):
             value_and_gradients_function=self.func,
             initial_position=initial_poisition,
             previous_optimizer_results=self.results,
-            max_iterations=tf.cast(self.epoch + self.steps, dtype=tf.int32)
+            max_iterations=tf.cast(self.epoch + self.steps, dtype=tf.int32),
         )
         self.assign(self.results.position)

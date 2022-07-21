@@ -1,27 +1,40 @@
 import functools
+
 import tensorflow as tf
-from tensorflow.python.ops import control_flow_ops
-from tensorflow.python.ops import math_ops
-from tensorflow.python.ops import state_ops
-from tensorflow.python.ops import array_ops
-from tensorflow.python.framework import ops
-from tensorflow.python.keras import backend_config
-from tensorflow.python.util.tf_export import keras_export
-from tensorflow.python.eager import backprop
-from tensorflow.python.eager import context
-from tensorflow.python.util import nest
-from tensorflow.python.framework import dtypes
-from tensorflow.python.keras.optimizer_v2 import utils as optimizer_utils
 from tensorflow.python.distribute import distribution_strategy_context as distribute_ctx
 from tensorflow.python.distribute import parameter_server_strategy
 from tensorflow.python.distribute import values as ds_values
+from tensorflow.python.eager import context
+from tensorflow.python.framework import ops
+from tensorflow.python.keras import backend_config
+from tensorflow.python.keras.optimizer_v2 import utils as optimizer_utils
 from tensorflow.python.keras.utils import tf_utils
+from tensorflow.python.ops import array_ops
+from tensorflow.python.ops import control_flow_ops
+from tensorflow.python.ops import math_ops
+from tensorflow.python.ops import state_ops
+from tensorflow.python.util import nest
+from tensorflow.python.util.tf_export import keras_export
 
-@keras_export('keras.optimizers.L4Adam')
+# from tensorflow.python.eager import backprop
+# from tensorflow.python.framework import dtypes
+
+
+@keras_export("keras.optimizers.L4Adam")
 class L4Adam(tf.keras.optimizers.Optimizer):
     # _HAS_AGGREGATE_GRAD = True
-    def __init__(self, learning_rate=0.15, tau_m=10., tau_s=1000., tau=1000., gamma_0=0.75,
-                 gamma=0.9, epsilon=1e-7, name="L4Adam", **kwargs):
+    def __init__(
+        self,
+        learning_rate=0.15,
+        tau_m=10.0,
+        tau_s=1000.0,
+        tau=1000.0,
+        gamma_0=0.75,
+        gamma=0.9,
+        epsilon=1e-7,
+        name="L4Adam",
+        **kwargs
+    ):
         super().__init__(name, **kwargs)
         self._set_hyper("learning_rate", kwargs.get("learning_rate", learning_rate))
         self._set_hyper("tau_m", kwargs.get("tau_m", tau_m))
@@ -35,50 +48,52 @@ class L4Adam(tf.keras.optimizers.Optimizer):
 
     def _create_slots(self, var_list):
         for var in var_list:
-            self.add_slot(var, 'g')
+            self.add_slot(var, "g")
         for var in var_list:
-            self.add_slot(var, 'g2')
+            self.add_slot(var, "g2")
 
     def _prepare_local(self, var_device, var_dtype, apply_state):
         super(L4Adam, self)._prepare_local(var_device, var_dtype, apply_state)
 
         local_step = math_ops.cast(self.iterations + 1, var_dtype)
         lr = self._decayed_lr(var_dtype)
-        tau_m = array_ops.identity(self._get_hyper('tau_m', var_dtype))
-        tau_s = array_ops.identity(self._get_hyper('tau_s', var_dtype))
-        tau = array_ops.identity(self._get_hyper('tau', var_dtype))
-        gamma = array_ops.identity(self._get_hyper('gamma', var_dtype))
+        tau_m = array_ops.identity(self._get_hyper("tau_m", var_dtype))
+        tau_s = array_ops.identity(self._get_hyper("tau_s", var_dtype))
+        tau = array_ops.identity(self._get_hyper("tau", var_dtype))
+        gamma = array_ops.identity(self._get_hyper("gamma", var_dtype))
 
         # derived quantity
-        one_over_tau_s = 1./tau_s
-        one_over_tau_m = 1./tau_m
-        normal_factor_m = 1.0 - math_ops.pow(1. - one_over_tau_m, local_step)
-        normal_factor_s = 1.0 - math_ops.pow(1. - one_over_tau_s, local_step)
+        one_over_tau_s = 1.0 / tau_s
+        one_over_tau_m = 1.0 / tau_m
+        normal_factor_m = 1.0 - math_ops.pow(1.0 - one_over_tau_m, local_step)
+        normal_factor_s = 1.0 - math_ops.pow(1.0 - one_over_tau_s, local_step)
 
-        apply_state[(var_device, var_dtype)].update(dict(
-            lr=lr,
-            epsilon=ops.convert_to_tensor(self.epsilon, var_dtype),
-            tau_m=tau_m,
-            tau_s=tau_s,
-            normal_factor_m=normal_factor_m,
-            normal_factor_s=normal_factor_s,
-            one_over_tau_s=one_over_tau_s,
-            one_over_tau_m=one_over_tau_m,
-            gamma=gamma,
-            one_plus_one_over_tau=1. + 1./tau,
-            one_minus_one_over_tau_s=1. - one_over_tau_s,
-            one_minus_one_over_tau_m=1. - one_over_tau_m
-        ))
+        apply_state[(var_device, var_dtype)].update(
+            dict(
+                lr=lr,
+                epsilon=ops.convert_to_tensor(self.epsilon, var_dtype),
+                tau_m=tau_m,
+                tau_s=tau_s,
+                normal_factor_m=normal_factor_m,
+                normal_factor_s=normal_factor_s,
+                one_over_tau_s=one_over_tau_s,
+                one_over_tau_m=one_over_tau_m,
+                gamma=gamma,
+                one_plus_one_over_tau=1.0 + 1.0 / tau,
+                one_minus_one_over_tau_s=1.0 - one_over_tau_s,
+                one_minus_one_over_tau_m=1.0 - one_over_tau_m,
+            )
+        )
 
     def _momentum_add(self, m, x, one_minus_one_over_tau, one_over_tau, factor):
-        return (one_minus_one_over_tau*m + one_over_tau*x)/factor
+        return (one_minus_one_over_tau * m + one_over_tau * x) / factor
 
     def _resource_apply_dense(self, grad, var, apply_state=None, loss=None):
-        """Update the slots and perform one optimization step for one model variable
-        """
+        """Update the slots and perform one optimization step for one model variable"""
         var_device, var_dtype = var.device, var.dtype.base_dtype
-        coefficients = ((apply_state or {}).get((var_device, var_dtype))
-                        or self._fallback_apply_state(var_device, var_dtype))
+        coefficients = (apply_state or {}).get(
+            (var_device, var_dtype)
+        ) or self._fallback_apply_state(var_device, var_dtype)
 
         # t = math_ops.cast(self.iterations + 1, var_dtype)
         # tau_m = self._get_hyper('tau_m', var_dtype)
@@ -88,18 +103,24 @@ class L4Adam(tf.keras.optimizers.Optimizer):
 
         g = self.get_slot(var, "g")
         g2 = self.get_slot(var, "g2")
-        g_new = self._momentum_add(g, grad,
-                                   coefficients['one_minus_one_over_tau_m'],
-                                   coefficients['one_over_tau_m'],
-                                   coefficients['normal_factor_m'])
-        g2_new = self._momentum_add(g2, grad*grad,
-                                    coefficients['one_minus_one_over_tau_s'],
-                                    coefficients['one_over_tau_s'],
-                                    coefficients['normal_factor_s'])
-        nu_new = g_new / (math_ops.sqrt(g2_new) + coefficients['epsilon'])
+        g_new = self._momentum_add(
+            g,
+            grad,
+            coefficients["one_minus_one_over_tau_m"],
+            coefficients["one_over_tau_m"],
+            coefficients["normal_factor_m"],
+        )
+        g2_new = self._momentum_add(
+            g2,
+            grad * grad,
+            coefficients["one_minus_one_over_tau_s"],
+            coefficients["one_over_tau_s"],
+            coefficients["normal_factor_s"],
+        )
+        # nu_new = g_new / (math_ops.sqrt(g2_new) + coefficients["epsilon"])
 
         new_var = None
-        #TODO(shaowu: it seems that implementing L4 can be quite troublesome in tensorflow 2)..
+        # TODO(shaowu: it seems that implementing L4 can be quite troublesome in tensorflow 2)..
         # mostly because of the g^T * nu term, maybe it is easier in pytorch
         # new_var = var - coefficients['lr'] * nu_new * (loss - coefficients["gamma"]*self.l_min)\
         #           /(coefficients["epsilon"] + )
@@ -114,14 +135,17 @@ class L4Adam(tf.keras.optimizers.Optimizer):
 
     def minimize(self, loss, var_list, grad_loss=None, name=None, tape=None):
         grads_and_vars = self._compute_gradients(
-            loss, var_list=var_list, grad_loss=grad_loss, tape=tape)
+            loss, var_list=var_list, grad_loss=grad_loss, tape=tape
+        )
         return self.apply_gradients(grads_and_vars, name=name, loss=loss)
 
-    def apply_gradients(self,
-                        grads_and_vars,
-                        name=None,
-                        experimental_aggregate_gradients=True,
-                        loss=None):
+    def apply_gradients(
+        self,
+        grads_and_vars,
+        name=None,
+        experimental_aggregate_gradients=True,
+        loss=None,
+    ):
         # update l_min
         if self.iterations == 0:
             self.l_min = ops.convert_to_tensor(self.gamma_0) * loss
@@ -145,15 +169,22 @@ class L4Adam(tf.keras.optimizers.Optimizer):
                 raise RuntimeError(
                     "`apply_gradients() cannot be called in cross-replica context. "
                     "Use `tf.distribute.Strategy.run` to enter replica "
-                    "context.")
+                    "context."
+                )
 
             strategy = distribute_ctx.get_strategy()
-            if (not experimental_aggregate_gradients and strategy and isinstance(
+            if (
+                not experimental_aggregate_gradients
+                and strategy
+                and isinstance(
                     strategy.extended,
-                    parameter_server_strategy.ParameterServerStrategyExtended)):
+                    parameter_server_strategy.ParameterServerStrategyExtended,
+                )
+            ):
                 raise NotImplementedError(
                     "`experimental_aggregate_gradients=False is not supported for "
-                    "ParameterServerStrategy and CentralStorageStrategy")
+                    "ParameterServerStrategy and CentralStorageStrategy"
+                )
 
             apply_state = self._prepare(var_list)
             if experimental_aggregate_gradients:
@@ -162,13 +193,18 @@ class L4Adam(tf.keras.optimizers.Optimizer):
             grads_and_vars = self._transform_gradients(grads_and_vars)
 
             return distribute_ctx.get_replica_context().merge_call(
-                functools.partial(self._distributed_apply, apply_state=apply_state, loss=loss),
+                functools.partial(
+                    self._distributed_apply, apply_state=apply_state, loss=loss
+                ),
                 args=(grads_and_vars,),
                 kwargs={
                     "name": name,
-                })
+                },
+            )
 
-    def _distributed_apply(self, distribution, grads_and_vars, name, apply_state, loss=None):
+    def _distributed_apply(
+        self, distribution, grads_and_vars, name, apply_state, loss=None
+    ):
         """`apply_gradients` using a `DistributionStrategy`."""
 
         def apply_grad_to_update_var(var, grad):
@@ -180,11 +216,13 @@ class L4Adam(tf.keras.optimizers.Optimizer):
             if isinstance(grad, ops.IndexedSlices):
                 if var.constraint is not None:
                     raise RuntimeError(
-                        "Cannot use a constraint function on a sparse variable.")
+                        "Cannot use a constraint function on a sparse variable."
+                    )
                 if "apply_state" in self._sparse_apply_args:
                     apply_kwargs["apply_state"] = apply_state
                 return self._resource_apply_sparse_duplicate_indices(
-                    grad.values, var, grad.indices, **apply_kwargs)
+                    grad.values, var, grad.indices, **apply_kwargs
+                )
 
             if "apply_state" in self._dense_apply_args:
                 apply_kwargs["apply_state"] = apply_state
@@ -211,23 +249,33 @@ class L4Adam(tf.keras.optimizers.Optimizer):
                 # Colocate the update with variables to avoid unnecessary communication
                 # delays. See b/136304694.
                 with distribution.extended.colocate_vars_with(var):
-                    with ops.name_scope("update" if eagerly_outside_functions else
-                                        "update_" + var.op.name, skip_on_eager=True):
-                        update_ops.extend(distribution.extended.update(
-                            var, apply_grad_to_update_var, args=(grad,), group=False))
+                    with ops.name_scope(
+                        "update"
+                        if eagerly_outside_functions
+                        else "update_" + var.op.name,
+                        skip_on_eager=True,
+                    ):
+                        update_ops.extend(
+                            distribution.extended.update(
+                                var, apply_grad_to_update_var, args=(grad,), group=False
+                            )
+                        )
 
-            any_symbolic = any(isinstance(i, ops.Operation) or
-                               tf_utils.is_symbolic_tensor(i) for i in update_ops)
+            any_symbolic = any(
+                isinstance(i, ops.Operation) or tf_utils.is_symbolic_tensor(i)
+                for i in update_ops
+            )
             if not context.executing_eagerly() or any_symbolic:
                 # If the current context is graph mode or any of the update ops are
                 # symbolic then the step update should be carried out under a graph
                 # context. (eager updates execute immediately)
-                with ops._get_graph_from_inputs(update_ops).as_default():  # pylint: disable=protected-access
+                with ops._get_graph_from_inputs(
+                    update_ops
+                ).as_default():  # pylint: disable=protected-access
                     with ops.control_dependencies([control_flow_ops.group(update_ops)]):
                         return self._iterations.assign_add(1, read_value=False)
 
             return self._iterations.assign_add(1)
-
 
     def _resource_apply_sparse(self, grad, var, indices, apply_state=None):
         raise NotImplementedError
@@ -242,7 +290,8 @@ class L4Adam(tf.keras.optimizers.Optimizer):
             "epsilon": self._serialize_hyperparameter("epsilon"),
         }
 
-@keras_export('keras.optimizers.AdaBelief')
+
+@keras_export("keras.optimizers.AdaBelief")
 class AdaBeliefOptimizer(tf.keras.optimizers.Optimizer):
     """
     It implements the AdaBeliefOptimizer proposed by
@@ -285,7 +334,8 @@ class AdaBeliefOptimizer(tf.keras.optimizers.Optimizer):
     ```python
     optimizer = AdaBeliefOptimizer(learning_rate=lr_scheduler, weight_decay=wd_scheduler)
     config = tf.keras.optimizers.serialize(optimizer)
-    new_optimizer = tf.keras.optimizers.deserialize(config, custom_objects={"AdaBeliefOptimizer": AdaBeliefOptimizer})
+    new_optimizer = tf.keras.optimizers.deserialize(config,
+    custom_objects={"AdaBeliefOptimizer": AdaBeliefOptimizer})
     ```
             Args:
             learning_rate: A `Tensor` or a floating point value, or a schedule
@@ -321,21 +371,22 @@ class AdaBeliefOptimizer(tf.keras.optimizers.Optimizer):
     """
 
     def __init__(
-            self,
-            learning_rate=0.001,
-            beta_1=0.9,
-            beta_2=0.999,
-            epsilon=1e-14,
-            weight_decay=0.0,
-            rectify=True,
-            amsgrad=False,
-            sma_threshold=5.0,
-            total_steps=0,
-            warmup_proportion=0.1,
-            min_lr=0.0,
-            name="AdaBeliefOptimizer",
-            print_change_log = True,
-            **kwargs):
+        self,
+        learning_rate=0.001,
+        beta_1=0.9,
+        beta_2=0.999,
+        epsilon=1e-14,
+        weight_decay=0.0,
+        rectify=True,
+        amsgrad=False,
+        sma_threshold=5.0,
+        total_steps=0,
+        warmup_proportion=0.1,
+        min_lr=0.0,
+        name="AdaBeliefOptimizer",
+        print_change_log=True,
+        **kwargs
+    ):
         super().__init__(name, **kwargs)
 
         self._set_hyper("learning_rate", kwargs.get("lr", learning_rate))
@@ -398,7 +449,7 @@ class AdaBeliefOptimizer(tf.keras.optimizers.Optimizer):
                 local_step <= warmup_steps,
                 lr_t * (local_step / warmup_steps),
                 lr_t + decay_rate * tf.minimum(local_step - warmup_steps, decay_steps),
-                )
+            )
 
         sma_inf = 2.0 / (1.0 - beta_2_t) - 1.0
         sma_t = sma_inf - 2.0 * local_step * beta_2_power / (1.0 - beta_2_power)
@@ -411,7 +462,7 @@ class AdaBeliefOptimizer(tf.keras.optimizers.Optimizer):
         v_t = v.assign(
             beta_2_t * v + (1.0 - beta_2_t) * tf.math.square(grad - m_t) + epsilon_t,
             use_locking=self._use_locking,
-            )
+        )
 
         if self.amsgrad:
             vhat = self.get_slot(var, "vhat")
@@ -436,7 +487,7 @@ class AdaBeliefOptimizer(tf.keras.optimizers.Optimizer):
                 sma_t >= sma_threshold,
                 r_t * m_corr_t / (v_corr_t + epsilon_t),
                 m_corr_t,
-                )
+            )
         else:
             var_t = m_corr_t / (v_corr_t + epsilon_t)
 
@@ -471,7 +522,7 @@ class AdaBeliefOptimizer(tf.keras.optimizers.Optimizer):
                 local_step <= warmup_steps,
                 lr_t * (local_step / warmup_steps),
                 lr_t + decay_rate * tf.minimum(local_step - warmup_steps, decay_steps),
-                )
+            )
 
         sma_inf = 2.0 / (1.0 - beta_2_t) - 1.0
         sma_t = sma_inf - 2.0 * local_step * beta_2_power / (1.0 - beta_2_power)
@@ -511,7 +562,7 @@ class AdaBeliefOptimizer(tf.keras.optimizers.Optimizer):
                 sma_t >= sma_threshold,
                 r_t * m_corr_t / (v_corr_t + epsilon_t),
                 m_corr_t,
-                )
+            )
         else:
             var_t = m_corr_t / (v_corr_t + epsilon_t)
 
@@ -548,5 +599,3 @@ class AdaBeliefOptimizer(tf.keras.optimizers.Optimizer):
             }
         )
         return config
-
-

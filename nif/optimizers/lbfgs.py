@@ -1,8 +1,8 @@
 # code comes from: https://gist.github.com/piyueh/712ec7d4540489aad2dcfb80f9a54993
-
 import numpy as np
 import tensorflow as tf
 from tensorflow_probability.python.optimizer import lbfgs_minimize
+
 
 def function_factory(model, loss, train_x, train_y, display_epoch):
     """A factory to create a function required by tfp.optimizer.lbfgs_minimize.
@@ -25,13 +25,13 @@ def function_factory(model, loss, train_x, train_y, display_epoch):
     # we'll use tf.dynamic_stitch and tf.dynamic_partition later, so we need to
     # prepare required information first
     count = 0
-    idx = [] # stitch indices
-    part = [] # partition indices
+    idx = []  # stitch indices
+    part = []  # partition indices
 
     for i, shape in enumerate(shapes):
         n = np.product(shape)
-        idx.append(tf.reshape(tf.range(count, count+n, dtype=tf.int32), shape))
-        part.extend([i]*n)
+        idx.append(tf.reshape(tf.range(count, count + n, dtype=tf.int32), shape))
+        part.extend([i] * n)
         count += n
 
     part = tf.constant(part)
@@ -94,6 +94,7 @@ def function_factory(model, loss, train_x, train_y, display_epoch):
 
     return f
 
+
 class TFPLBFGS(object):
     def __init__(self, model, loss_fun, inps, outs, display_epoch=1):
         # demo + keras model -> function for l-bfgs
@@ -104,7 +105,9 @@ class TFPLBFGS(object):
         for _ in range(rounds):
             results = lbfgs_minimize(
                 value_and_gradients_function=self.func,
-                initial_position=tf.dynamic_stitch(self.func.idx, self.model.trainable_variables),
+                initial_position=tf.dynamic_stitch(
+                    self.func.idx, self.model.trainable_variables
+                ),
                 num_correction_pairs=20,
                 tolerance=1e-15,
                 x_tolerance=1e-15,
@@ -119,6 +122,5 @@ class TFPLBFGS(object):
     @property
     def history(self):
         history = list(map(lambda x: x.numpy(), self.func.history))
-        iteration = np.arange(1, len(history)+1)
-        return {'iteration': iteration, 'loss':history}
-
+        iteration = np.arange(1, len(history) + 1)
+        return {"iteration": iteration, "loss": history}

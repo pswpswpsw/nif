@@ -1,4 +1,3 @@
-# if you want single GPU
 import os
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "3"

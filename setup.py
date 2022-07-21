@@ -1,7 +1,8 @@
 import io
 import os
-from setuptools import setup
+
 from setuptools import find_packages
+from setuptools import setup
 
 
 def read(rel_path: str) -> str:

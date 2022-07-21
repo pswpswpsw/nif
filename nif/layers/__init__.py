@@ -1,13 +1,13 @@
-from nif.layers.siren import SIREN
-from nif.layers.siren import SIREN_ResNet
-from nif.layers.siren import HyperLinearForSIREN
-from nif.layers.mlp import MLP_ResNet
-from nif.layers.mlp import MLP_SimpleShortCut, EinsumLayer
+from tensorflow.keras.layers import Dense
 
 from nif.layers.gradient import *
+from nif.layers.mlp import EinsumLayer
+from nif.layers.mlp import MLP_ResNet
+from nif.layers.mlp import MLP_SimpleShortCut
 from nif.layers.regularization import *
-
-from tensorflow.keras.layers import Dense
+from nif.layers.siren import HyperLinearForSIREN
+from nif.layers.siren import SIREN
+from nif.layers.siren import SIREN_ResNet
 
 __all__ = [
     "SIREN",
@@ -20,5 +20,5 @@ __all__ = [
     "JacobianLayer",
     "HessianLayer",
     "ParameterOutputL1ActReg",
-    "EinsumLayer"
+    "EinsumLayer",
 ]

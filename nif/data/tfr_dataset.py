@@ -1,4 +1,5 @@
 import os
+
 import numpy as np
 import tensorflow as tf
 
@@ -20,11 +21,11 @@ class TFRDataset(object):
             data_weight = npz_data[:, -1:]
         else:
             assert N_COL == self.n_feature + self.n_target
-        data_feature = npz_data[:, :self.n_feature]
-        data_target = npz_data[:, self.n_feature:self.n_feature + self.n_target]
+        data_feature = npz_data[:, : self.n_feature]
+        data_target = npz_data[:, self.n_feature: self.n_feature + self.n_target]
 
         total_num_files = int(np.ceil(NUM_TOTAL_PTS / num_pts_per_file))
-        print('total number of TFR files = ', total_num_files)
+        print("total number of TFR files = ", total_num_files)
 
         # shuffle the data before distributing
         np.random.shuffle(npz_data)
@@ -33,8 +34,8 @@ class TFRDataset(object):
         mkdir(tfr_path)
 
         for i in range(total_num_files):
-            print('working in {}-th file... total {}'.format(i + 1, total_num_files))
-            filename = tfr_path + '/{}_{}.tfrecord'.format(prefix, i)
+            print("working in {}-th file... total {}".format(i + 1, total_num_files))
+            filename = tfr_path + "/{}_{}.tfrecord".format(prefix, i)
 
             i0 = i * num_pts_per_file
             i1 = i0 + num_pts_per_file
@@ -44,28 +45,46 @@ class TFRDataset(object):
 
             feature_dict = {}
             for j in range(self.n_feature):
-                feature_dict['input_' + str(j)] = tf.train.Feature(float_list=tf.train.FloatList(value=data_feature_[:, j]))
+                feature_dict["input_" + str(j)] = tf.train.Feature(
+                    float_list=tf.train.FloatList(value=data_feature_[:, j])
+                )
             for j in range(self.n_target):
-                feature_dict['output_' + str(j)] = tf.train.Feature(float_list=tf.train.FloatList(value=data_target_[:, j]))
+                feature_dict["output_" + str(j)] = tf.train.Feature(
+                    float_list=tf.train.FloatList(value=data_target_[:, j])
+                )
 
             if self.area_weight:
                 data_weight_ = data_weight[i0:i1]
-                feature_dict['weight'] = tf.train.Feature(float_list=tf.train.FloatList(value=data_weight_))
+                feature_dict["weight"] = tf.train.Feature(
+                    float_list=tf.train.FloatList(value=data_weight_)
+                )
 
             with tf.io.TFRecordWriter(filename) as writer:
-                example = tf.train.Example(features=tf.train.Features(feature=feature_dict))
+                example = tf.train.Example(
+                    features=tf.train.Features(feature=feature_dict)
+                )
                 writer.write(example.SerializeToString())
 
     def gen_dataset_from_batch_file(self, batch_file, batch_size):
-        features = tf.transpose(tf.squeeze(tf.stack(batch_file[:self.n_feature], 0), 1))
+        features = tf.transpose(
+            tf.squeeze(tf.stack(batch_file[: self.n_feature], 0), 1)
+        )
         if self.area_weight:
-            target = tf.transpose(batch_file[self.n_feature:self.n_feature + self.n_target])
+            target = tf.transpose(
+                batch_file[self.n_feature: self.n_feature + self.n_target]
+            )
             weight = tf.reshape(batch_file[-1], (-1, 1))
-            batch_dataset = tf.data.Dataset.from_tensor_slices((features, target, weight))
+            batch_dataset = tf.data.Dataset.from_tensor_slices(
+                (features, target, weight)
+            )
         else:
             target = tf.transpose(batch_file[-self.n_target:])
             batch_dataset = tf.data.Dataset.from_tensor_slices((features, target))
-        batch_dataset = batch_dataset.shuffle(features.shape[0]).batch(batch_size).prefetch(self.AUTOTUNE)
+        batch_dataset = (
+            batch_dataset.shuffle(features.shape[0])
+                .batch(batch_size)
+                .prefetch(self.AUTOTUNE)
+        )
         return batch_dataset
 
     def get_tfr_meta_dataset(self, tfr_path, epoch, tfr_shuffle_buffer_size=1):
@@ -78,11 +97,17 @@ class TFRDataset(object):
         def prepare_sample(example):
             schema = {}
             for j in range(self.n_feature):
-                schema["input_" + str(j)] = tf.io.FixedLenSequenceFeature([], tf.float32, allow_missing=True)
+                schema["input_" + str(j)] = tf.io.FixedLenSequenceFeature(
+                    [], tf.float32, allow_missing=True
+                )
             for j in range(self.n_target):
-                schema["output_" + str(j)] = tf.io.FixedLenSequenceFeature([], tf.float32, allow_missing=True)
+                schema["output_" + str(j)] = tf.io.FixedLenSequenceFeature(
+                    [], tf.float32, allow_missing=True
+                )
             if self.area_weight:
-                schema["weight"] = tf.io.FixedLenSequenceFeature([], tf.float32, allow_missing=True)
+                schema["weight"] = tf.io.FixedLenSequenceFeature(
+                    [], tf.float32, allow_missing=True
+                )
             data_dict = tf.io.parse_single_example(example, schema)
             return list(data_dict.values())
 
@@ -92,9 +117,12 @@ class TFRDataset(object):
             dataset = dataset.shuffle(buffer_size=tfr_shuffle_buffer_size)
         # dataset = dataset.shuffle(buffer_size=len(filenames))
         dataset = dataset.repeat(epoch)
-        dataset = dataset.batch(1)  # each time only take on tfrecord out. then we will do sub-batching inside.
+        dataset = dataset.batch(
+            1
+        )  # each time only take on tfrecord out. then we will do sub-batching inside.
         dataset = dataset.prefetch(self.AUTOTUNE)
         return dataset
+
 
 def mkdir(directory):
     if not os.path.exists(directory):

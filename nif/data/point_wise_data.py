@@ -3,7 +3,7 @@ import numpy as np
 
 class PointWiseData(object):
     def __init__(self, parameter_data, x_data, u_data, sample_weight=None):
-        if type(sample_weight) != type(None):
+        if sample_weight is None:
             self.data_raw = np.hstack([parameter_data, x_data, u_data, sample_weight])
         else:
             self.data_raw = np.hstack([parameter_data, x_data, u_data])
@@ -19,11 +19,11 @@ class PointWiseData(object):
 
     @property
     def x(self):
-        return self.data[:, self.n_p: self.n_p + self.n_x]
+        return self.data[:, self.n_p : self.n_p + self.n_x]
 
     @property
     def u(self):
-        return self.data[:, self.n_p + self.n_x: self.n_p + self.n_x + self.n_o]
+        return self.data[:, self.n_p + self.n_x : self.n_p + self.n_x + self.n_o]
 
     @staticmethod
     def standard_normalize(raw_data, area_weighted=False):

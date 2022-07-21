@@ -22,7 +22,7 @@ class TFRDataset(object):
         else:
             assert N_COL == self.n_feature + self.n_target
         data_feature = npz_data[:, : self.n_feature]
-        data_target = npz_data[:, self.n_feature: self.n_feature + self.n_target]
+        data_target = npz_data[:, self.n_feature : self.n_feature + self.n_target]
 
         total_num_files = int(np.ceil(NUM_TOTAL_PTS / num_pts_per_file))
         print("total number of TFR files = ", total_num_files)
@@ -71,24 +71,25 @@ class TFRDataset(object):
         )
         if self.area_weight:
             target = tf.transpose(
-                batch_file[self.n_feature: self.n_feature + self.n_target]
+                batch_file[self.n_feature : self.n_feature + self.n_target]
             )
             weight = tf.reshape(batch_file[-1], (-1, 1))
             batch_dataset = tf.data.Dataset.from_tensor_slices(
                 (features, target, weight)
             )
         else:
-            target = tf.transpose(batch_file[-self.n_target:])
+            target = tf.transpose(batch_file[-self.n_target :])
             batch_dataset = tf.data.Dataset.from_tensor_slices((features, target))
         batch_dataset = (
             batch_dataset.shuffle(features.shape[0])
-                .batch(batch_size)
-                .prefetch(self.AUTOTUNE)
+            .batch(batch_size)
+            .prefetch(self.AUTOTUNE)
         )
         return batch_dataset
 
     def get_tfr_meta_dataset(self, tfr_path, epoch, tfr_shuffle_buffer_size=1):
-        # I used an abnormal way to create tfrecord data, I cannot use point wise data line by line for example.
+        # I used an abnormal way to create tfrecord data,
+        # I cannot use point wise data line by line for example.
         # because it will end up with an unacceptable create-file time.
 
         filenames = tf.io.gfile.glob(f"{tfr_path}/*.tfrecord")

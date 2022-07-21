@@ -96,12 +96,12 @@ if enable_sobolov:
     )
 else:
     train_dataset = tf.data.Dataset.from_tensor_slices(
-        (train_data[:, :5], train_data[:, 5: 5 + n_output])
+        (train_data[:, :5], train_data[:, 5 : 5 + n_output])
     )
 train_dataset = (
     train_dataset.shuffle(num_total_data)
-        .batch(batch_size)
-        .prefetch(tf.data.experimental.AUTOTUNE)
+    .batch(batch_size)
+    .prefetch(tf.data.experimental.AUTOTUNE)
 )
 
 # mixed precision?
@@ -129,7 +129,6 @@ if enable_sobolov:
     dy_dx_1d = tf.reshape(dy_dx, [-1, 3 * n_output])
     y_and_dydx_1d = tf.concat([y, dy_dx_1d], -1)
     model = tf.keras.Model([model.inputs[0]], [y_and_dydx_1d])
-
 
     class Sobolov_MSE(tf.keras.losses.Loss):
         def call(self, y_true, y_pred):

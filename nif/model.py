@@ -3,7 +3,14 @@ __all__ = ["NIFMultiScale", "NIF", "NIFMultiScaleLastLayerParameterized"]
 import tensorflow as tf
 from tensorflow.keras import Model, initializers
 from tensorflow.keras import regularizers
-from .layers import *
+from .layers import SIREN
+from .layers import SIREN_ResNet
+from .layers import Dense
+from .layers import HyperLinearForSIREN
+from .layers import MLP_ResNet
+from .layers import MLP_SimpleShortCut
+from .layers import JacRegLatentLayer
+from .layers import EinsumLayer
 
 
 class NIF(object):
@@ -56,8 +63,8 @@ class NIF(object):
         self.pnet_list = self._initialize_pnet(cfg_parameter_net, cfg_shape_net)
 
     def call(self, inputs, training=None, mask=None):
-        input_p = inputs[:, 0: self.pi_dim]
-        input_s = inputs[:, self.pi_dim: self.pi_dim + self.si_dim]
+        input_p = inputs[:, 0 : self.pi_dim]
+        input_s = inputs[:, self.pi_dim : self.pi_dim + self.si_dim]
         self.pnet_output = self._call_parameter_net(input_p, self.pnet_list)[0]
         return self._call_shape_net(
             tf.cast(input_s, self.compute_Dtype),
@@ -73,9 +80,9 @@ class NIF(object):
     def _initialize_pnet(self, cfg_parameter_net, cfg_shape_net):
         # just simple implementation of a shortcut connected parameter net with a similar shapenet
         self.po_dim = (
-                (self.l_sx) * self.n_sx**2
-                + (self.si_dim + self.so_dim + 1 + self.l_sx) * self.n_sx
-                + self.so_dim
+            (self.l_sx) * self.n_sx**2
+            + (self.si_dim + self.so_dim + 1 + self.l_sx) * self.n_sx
+            + self.so_dim
         )
 
         # construct parameter_net
@@ -122,7 +129,7 @@ class NIF(object):
         pnet_layers_list.append(bottleneck_layer)
 
         # 4. last layer
-        ## add regularization
+        # add regularization
         last_layer = Dense(
             self.po_dim,
             kernel_initializer=initializers.TruncatedNormal(stddev=0.1),
@@ -138,7 +145,7 @@ class NIF(object):
 
     @staticmethod
     def _call_shape_net(
-            input_s, pnet_output, si_dim, so_dim, n_sx, l_sx, activation, variable_dtype
+        input_s, pnet_output, si_dim, so_dim, n_sx, l_sx, activation, variable_dtype
     ):
         w_1 = tf.reshape(
             pnet_output[:, : si_dim * n_sx], [-1, si_dim, n_sx], name="w_first_snet"
@@ -147,8 +154,8 @@ class NIF(object):
         for i in range(l_sx):
             w_tmp = tf.reshape(
                 pnet_output[
-                :,
-                si_dim * n_sx + i * n_sx**2: si_dim * n_sx + (i + 1) * n_sx**2,
+                    :,
+                    si_dim * n_sx + i * n_sx**2 : si_dim * n_sx + (i + 1) * n_sx**2,
                 ],
                 [-1, n_sx, n_sx],
                 name="w_hidden_snet_{}".format(i),
@@ -156,11 +163,11 @@ class NIF(object):
             w_hidden_list.append(w_tmp)
         w_l = tf.reshape(
             pnet_output[
-            :,
-            si_dim * n_sx
-            + l_sx * n_sx**2: si_dim * n_sx
-                              + l_sx * n_sx**2
-                              + so_dim * n_sx,
+                :,
+                si_dim * n_sx
+                + l_sx * n_sx**2 : si_dim * n_sx
+                + l_sx * n_sx**2
+                + so_dim * n_sx,
             ],
             [-1, n_sx, so_dim],
             name="w_last_snet",
@@ -169,7 +176,7 @@ class NIF(object):
 
         # distribute bias
         b_1 = tf.reshape(
-            pnet_output[:, n_weights: n_weights + n_sx],
+            pnet_output[:, n_weights : n_weights + n_sx],
             [-1, n_sx],
             name="b_first_snet",
         )
@@ -177,14 +184,14 @@ class NIF(object):
         for i in range(l_sx):
             b_tmp = tf.reshape(
                 pnet_output[
-                :, n_weights + n_sx + i * n_sx: n_weights + n_sx + (i + 1) * n_sx
+                    :, n_weights + n_sx + i * n_sx : n_weights + n_sx + (i + 1) * n_sx
                 ],
                 [-1, n_sx],
                 name="b_hidden_snet_{}".format(i),
             )
             b_hidden_list.append(b_tmp)
         b_l = tf.reshape(
-            pnet_output[:, n_weights + (l_sx + 1) * n_sx:],
+            pnet_output[:, n_weights + (l_sx + 1) * n_sx :],
             [-1, so_dim],
             name="b_last_snet",
         )
@@ -200,13 +207,13 @@ class NIF(object):
             w_tmp = w_hidden_list[i]
             b_tmp = b_hidden_list[i]
             u = (
-                    act_fun(
-                        EinsumLayer("ai,aij->aj", name="hidden_einsum_snet_{}".format(i))(
-                            (u, w_tmp)
-                        )
-                        + b_tmp
+                act_fun(
+                    EinsumLayer("ai,aij->aj", name="hidden_einsum_snet_{}".format(i))(
+                        (u, w_tmp)
                     )
-                    + u
+                    + b_tmp
+                )
+                + u
             )
             # u = act_fun(tf.einsum('ai,aij->aj', u, w_tmp) + b_tmp) + u
         u = EinsumLayer("ai,aij->aj", name="last_einsum_snet")((u, w_l)) + b_l
@@ -216,8 +223,8 @@ class NIF(object):
     @staticmethod
     def _call_parameter_net(input_p, pnet_list):
         latent = input_p
-        for l in pnet_list[:-1]:
-            latent = l(latent)
+        for layer_ in pnet_list[:-1]:
+            latent = layer_(latent)
         output_final = pnet_list[-1](latent)
         return output_final, latent
 
@@ -305,8 +312,8 @@ class NIFMultiScale(NIF):
         )
 
     def call(self, inputs, training=None, mask=None):
-        input_p = inputs[:, 0: self.pi_dim]
-        input_s = inputs[:, self.pi_dim: self.pi_dim + self.si_dim]
+        input_p = inputs[:, 0 : self.pi_dim]
+        input_s = inputs[:, self.pi_dim : self.pi_dim + self.si_dim]
         # get parameter from parameter_net
         self.pnet_output = self._call_parameter_net(input_p, self.pnet_list)[0]
         return self._call_shape_net_mres(
@@ -333,11 +340,11 @@ class NIFMultiScale(NIF):
         if not isinstance(cfg_shape_net, dict):
             raise TypeError("cfg_shape_net must be a dictionary")
         assert (
-                "use_resblock" in cfg_shape_net.keys()
+            "use_resblock" in cfg_shape_net.keys()
         ), "`use_resblock` should be in cfg_shape_net"
         # assert 'nn_type' in cfg_parameter_net.keys(), "`nn_type` should be in cfg_parameter_net"
         assert (
-                type(cfg_shape_net["use_resblock"]) == bool
+            type(cfg_shape_net["use_resblock"]) == bool
         ), "cfg_shape_net['use_resblock'] must be a bool"
 
         pnet_layers_list = []
@@ -345,15 +352,15 @@ class NIFMultiScale(NIF):
             # very first, determine the output dimension of parameter_net
             if cfg_shape_net["use_resblock"]:
                 self.po_dim = (
-                        (2 * self.l_sx) * self.n_sx**2
-                        + (self.si_dim + self.so_dim + 1 + 2 * self.l_sx) * self.n_sx
-                        + self.so_dim
+                    (2 * self.l_sx) * self.n_sx**2
+                    + (self.si_dim + self.so_dim + 1 + 2 * self.l_sx) * self.n_sx
+                    + self.so_dim
                 )
             else:
                 self.po_dim = (
-                        (self.l_sx) * self.n_sx**2
-                        + (self.si_dim + self.so_dim + 1 + self.l_sx) * self.n_sx
-                        + self.so_dim
+                    (self.l_sx) * self.n_sx**2
+                    + (self.si_dim + self.so_dim + 1 + self.l_sx) * self.n_sx
+                    + self.so_dim
                 )
         elif cfg_shape_net["connectivity"] == "last_layer":
             # only parameterize the last layer
@@ -364,8 +371,8 @@ class NIFMultiScale(NIF):
         # first, and hidden layers are only dependent on the type of parameter_net
         # if cfg_parameter_net['nn_type'] == 'siren':
         if cfg_parameter_net["activation"] == "sine":
-            # assert cfg_parameter_net['activation'] == 'sine', "you should specify activation in cfg_parameter_net as " \
-            #                                                   "sine"
+            # assert cfg_parameter_net['activation'] == 'sine',
+            # "you should specify activation in cfg_parameter_net as "sine"
             # 1. first layer
             layer_1 = SIREN(
                 self.pi_dim,
@@ -512,15 +519,15 @@ class NIFMultiScale(NIF):
 
     @staticmethod
     def _call_shape_net_mres(
-            input_s,
-            pnet_output,
-            flag_resblock,
-            omega_0,
-            si_dim,
-            so_dim,
-            n_sx,
-            l_sx,
-            variable_dtype,
+        input_s,
+        pnet_output,
+        flag_resblock,
+        omega_0,
+        si_dim,
+        so_dim,
+        n_sx,
+        l_sx,
+        variable_dtype,
     ):
         """
         distribute `pnet_output` into weight and bias, it depends on the type of shapenet.
@@ -538,20 +545,20 @@ class NIFMultiScale(NIF):
             for i in range(l_sx):
                 w1_tmp = tf.reshape(
                     pnet_output[
-                    :,
-                    si_dim * n_sx
-                    + 2 * i * n_sx**2: si_dim * n_sx
-                                       + (2 * i + 1) * n_sx**2,
+                        :,
+                        si_dim * n_sx
+                        + 2 * i * n_sx**2 : si_dim * n_sx
+                        + (2 * i + 1) * n_sx**2,
                     ],
                     [-1, n_sx, n_sx],
                     name="w1_hidden_snet_{}".format(i),
                 )
                 w2_tmp = tf.reshape(
                     pnet_output[
-                    :,
-                    si_dim * n_sx
-                    + (2 * i + 1) * n_sx**2: si_dim * n_sx
-                                             + (2 * i + 2) * n_sx**2,
+                        :,
+                        si_dim * n_sx
+                        + (2 * i + 1) * n_sx**2 : si_dim * n_sx
+                        + (2 * i + 2) * n_sx**2,
                     ],
                     [-1, n_sx, n_sx],
                     name="w2_hidden_snet_{}".format(i),
@@ -559,11 +566,11 @@ class NIFMultiScale(NIF):
                 w_hidden_list.append([w1_tmp, w2_tmp])
             w_l = tf.reshape(
                 pnet_output[
-                :,
-                si_dim * n_sx
-                + (2 * l_sx) * n_sx**2: si_dim * n_sx
-                                        + (2 * l_sx) * n_sx**2
-                                        + so_dim * n_sx,
+                    :,
+                    si_dim * n_sx
+                    + (2 * l_sx) * n_sx**2 : si_dim * n_sx
+                    + (2 * l_sx) * n_sx**2
+                    + so_dim * n_sx,
                 ],
                 [-1, n_sx, so_dim],
                 name="w_last_snet",
@@ -573,7 +580,7 @@ class NIFMultiScale(NIF):
 
             # distribute bias
             b_1 = tf.reshape(
-                pnet_output[:, n_weights: n_weights + n_sx],
+                pnet_output[:, n_weights : n_weights + n_sx],
                 [-1, n_sx],
                 name="b_first_snet",
             )
@@ -581,31 +588,31 @@ class NIFMultiScale(NIF):
             for i in range(l_sx):
                 b1_tmp = tf.reshape(
                     pnet_output[
-                    :,
-                    n_weights
-                    + n_sx
-                    + 2 * i * n_sx: n_weights
-                                    + n_sx
-                                    + (2 * i + 1) * n_sx,
+                        :,
+                        n_weights
+                        + n_sx
+                        + 2 * i * n_sx : n_weights
+                        + n_sx
+                        + (2 * i + 1) * n_sx,
                     ],
                     [-1, n_sx],
                     name="b1_hidden_snet_{}".format(i),
                 )
                 b2_tmp = tf.reshape(
                     pnet_output[
-                    :,
-                    n_weights
-                    + n_sx
-                    + (2 * i + 1) * n_sx: n_weights
-                                          + n_sx
-                                          + (2 * i + 2) * n_sx,
+                        :,
+                        n_weights
+                        + n_sx
+                        + (2 * i + 1) * n_sx : n_weights
+                        + n_sx
+                        + (2 * i + 2) * n_sx,
                     ],
                     [-1, n_sx],
                     name="b1_hidden_snet_{}".format(i),
                 )
                 b_hidden_list.append([b1_tmp, b2_tmp])
             b_l = tf.reshape(
-                pnet_output[:, n_weights + (2 * l_sx + 1) * n_sx:],
+                pnet_output[:, n_weights + (2 * l_sx + 1) * n_sx :],
                 [-1, so_dim],
                 name="b_last_snet",
             )
@@ -625,18 +632,20 @@ class NIFMultiScale(NIF):
                     )((u, w_hidden_list[i][0]))
                     + b_hidden_list[i][0]
                 )
-                # h = tf.math.sin(omega_0 * tf.einsum('ai,aij->aj', u, w_hidden_list[i][0]) + b_hidden_list[i][0])
+                # h = tf.math.sin(omega_0 * tf.einsum('ai,aij->aj', u, w_hidden_list[i][0])
+                # + b_hidden_list[i][0])
                 u = 0.5 * (
-                        u
-                        + tf.math.sin(
-                    omega_0
-                    * EinsumLayer(
-                        "ai,aij->aj", name="hidden_2_einsum_snet_{}".format(i)
-                    )((h, w_hidden_list[i][1]))
-                    + b_hidden_list[i][1]
+                    u
+                    + tf.math.sin(
+                        omega_0
+                        * EinsumLayer(
+                            "ai,aij->aj", name="hidden_2_einsum_snet_{}".format(i)
+                        )((h, w_hidden_list[i][1]))
+                        + b_hidden_list[i][1]
+                    )
                 )
-                )
-                # u = 0.5 * (u + tf.math.sin(omega_0 * tf.einsum('ai,aij->aj', h, w_hidden_list[i][1]) + b_hidden_list[i][1]))
+                # u = 0.5 * (u + tf.math.sin(omega_0 * tf.einsum('ai,aij->aj', h, w_hidden_list[i][1])
+                # + b_hidden_list[i][1]))
             u = EinsumLayer("ai,aij->aj", name="last_einsum_snet")((u, w_l)) + b_l
             # u = tf.einsum('ai,aij->aj', u, w_l) + b_l
 
@@ -650,10 +659,10 @@ class NIFMultiScale(NIF):
             for i in range(l_sx):
                 w_tmp = tf.reshape(
                     pnet_output[
-                    :,
-                    si_dim * n_sx
-                    + i * n_sx**2: si_dim * n_sx
-                                   + (i + 1) * n_sx**2,
+                        :,
+                        si_dim * n_sx
+                        + i * n_sx**2 : si_dim * n_sx
+                        + (i + 1) * n_sx**2,
                     ],
                     [-1, n_sx, n_sx],
                     name="w_hidden_snet_{}".format(i),
@@ -661,11 +670,11 @@ class NIFMultiScale(NIF):
                 w_hidden_list.append(w_tmp)
             w_l = tf.reshape(
                 pnet_output[
-                :,
-                si_dim * n_sx
-                + l_sx * n_sx**2: si_dim * n_sx
-                                  + l_sx * n_sx**2
-                                  + so_dim * n_sx,
+                    :,
+                    si_dim * n_sx
+                    + l_sx * n_sx**2 : si_dim * n_sx
+                    + l_sx * n_sx**2
+                    + so_dim * n_sx,
                 ],
                 [-1, n_sx, so_dim],
                 name="w_last_snet",
@@ -674,7 +683,7 @@ class NIFMultiScale(NIF):
 
             # distribute bias
             b_1 = tf.reshape(
-                pnet_output[:, n_weights: n_weights + n_sx],
+                pnet_output[:, n_weights : n_weights + n_sx],
                 [-1, n_sx],
                 name="b_first_snet",
             )
@@ -682,15 +691,15 @@ class NIFMultiScale(NIF):
             for i in range(l_sx):
                 b_tmp = tf.reshape(
                     pnet_output[
-                    :,
-                    n_weights + n_sx + i * n_sx: n_weights + n_sx + (i + 1) * n_sx,
+                        :,
+                        n_weights + n_sx + i * n_sx : n_weights + n_sx + (i + 1) * n_sx,
                     ],
                     [-1, n_sx],
                     name="b_hidden_snet_{}".format(i),
                 )
                 b_hidden_list.append(b_tmp)
             b_l = tf.reshape(
-                pnet_output[:, n_weights + (l_sx + 1) * n_sx:],
+                pnet_output[:, n_weights + (l_sx + 1) * n_sx :],
                 [-1, so_dim],
                 name="b_last_snet",
             )
@@ -747,7 +756,7 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
             cfg_shape_net, cfg_parameter_net, mixed_policy
         )
         assert (
-                cfg_shape_net["connectivity"] == "last_layer"
+            cfg_shape_net["connectivity"] == "last_layer"
         ), "you should assign cfg_shape_net['connectivity'] == 'last_layer'"
 
         self.s_l1_reg = cfg_shape_net.get("l1_reg", None)
@@ -766,8 +775,8 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         self.snet_list, self.last_layer_bias = self._initialize_snet(cfg_shape_net)
 
     def call(self, inputs, training=None, mask=None):
-        input_p = inputs[:, 0: self.pi_dim]
-        input_s = inputs[:, self.pi_dim: self.pi_dim + self.si_dim]
+        input_p = inputs[:, 0 : self.pi_dim]
+        input_s = inputs[:, self.pi_dim : self.pi_dim + self.si_dim]
         # get parameter from parameter_net
         self.pnet_output = self._call_parameter_net(input_p, self.pnet_list)[0]
         return self._call_shape_net_mres_only_para_last_layer(
@@ -907,28 +916,28 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
     def _call_shape_net_get_phi_x(self, input_s, snet_layers_list, so_dim, pi_hidden):
         # 1. x -> phi_x
         phi_x = input_s
-        for l in snet_layers_list:
-            phi_x = l(phi_x)
+        for layer_ in snet_layers_list:
+            phi_x = layer_(phi_x)
         # 2. phi_x * a_t + bias
         phi_x_matrix = tf.reshape(phi_x, [-1, so_dim, pi_hidden], name="phi_snet")
         return phi_x_matrix
 
     def _call_shape_net_mres_only_para_last_layer(
-            self,
-            input_s,
-            snet_layers_list,
-            last_layer_bias,
-            pnet_output,
-            so_dim,
-            pi_hidden,
-            variable_dtype,
+        self,
+        input_s,
+        snet_layers_list,
+        last_layer_bias,
+        pnet_output,
+        so_dim,
+        pi_hidden,
+        variable_dtype,
     ):
         phi_x_matrix = self._call_shape_net_get_phi_x(
             input_s, snet_layers_list, so_dim, pi_hidden
         )
         u = (
-                tf.keras.layers.Dot(axes=(2, 1))([phi_x_matrix, pnet_output])
-                + last_layer_bias
+            tf.keras.layers.Dot(axes=(2, 1))([phi_x_matrix, pnet_output])
+            + last_layer_bias
         )
         return tf.cast(
             u, variable_dtype, name="output_cast"

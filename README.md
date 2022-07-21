@@ -231,8 +231,8 @@ If you find NIF is helpful to you, you can cite our [paper](https://arxiv.org/ab
 
 ## Contributors
 
-[Shaowu Pan](http://www.shaowupan.com)
-[Yaser Afshar](https://github.com/yafshar)
+- [Shaowu Pan](http://www.shaowupan.com)
+- [Yaser Afshar](https://github.com/yafshar)
 
 
 ## License

@@ -1,5 +1,5 @@
 # Neural Implicit Flow (NIF): mesh-agnostic dimensionality reduction
-![example workflow](https://github.com/pswpswpsw/nif/actions/workflows/<WORKFLOW_FILE>/badge.svg)
+![example workflow](https://github.com/pswpswpsw/nif/actions/workflows/Tests/badge.svg)
 
 <p align="center">
   <img src="./misc/myimage.gif" alt="animated" />

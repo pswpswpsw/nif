@@ -70,8 +70,8 @@ class HessianLayer(tf.keras.layers.Layer):
 def compute_output_and_augment_grad(model, x, x_index, y_index):
     with tf.GradientTape() as tape:
         tape.watch(x)
-        y, l = model(x)
-        ls = tf.gather(l, y_index, axis=-1)
+        y, layer_ = model(x)
+        ls = tf.gather(layer_, y_index, axis=-1)
     dls_dx = tape.batch_jacobian(ls, x)
     dls_dxs = tf.gather(dls_dx, x_index, axis=-1)
     return y, dls_dxs

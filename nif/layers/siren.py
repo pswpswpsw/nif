@@ -141,7 +141,8 @@ class SIREN(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):
             # elif connectivity_e == 'last_layer':
             #     num_weight_first = 0
             #     num_weight_hidden = 0
-            #     num_weight_last = num_outputs // cfg_shape_net['output_dim']  # po_dim*so_dim / so_dim = po_dim
+            #     num_weight_last = num_outputs // cfg_shape_net['output_dim']
+            # # note that po_dim*so_dim / so_dim = po_dim
             # else:
             #     raise ValueError("`connectivity_e` has an invalid value {}".format(connectivity_e))
 
@@ -173,9 +174,9 @@ class SIREN(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):
         )
 
     def call(self, x, **kwargs):
-        if type(self.kernel_regularizer) != type(None):
+        if self.kernel_regularizer is not None:
             self.add_loss(self.kernel_regularizer(self.w))
-        if type(self.bias_regularizer) != type(None):
+        if self.bias_regularizer is not None:
             self.add_loss(self.bias_regularizer(self.b))
 
         if self.layer_position == "last" or self.layer_position == "bottleneck":
@@ -240,10 +241,10 @@ class SIREN_ResNet(SIREN):
         )
 
     def call(self, x, training=None, mask=None):
-        if type(self.kernel_regularizer) != type(None):
+        if self.kernel_regularizer is not None:
             self.add_loss(self.kernel_regularizer(self.w))
             self.add_loss(self.kernel_regularizer(self.w2))
-        if type(self.bias_regularizer) != type(None):
+        if self.bias_regularizer is not None:
             self.add_loss(self.bias_regularizer(self.b))
             self.add_loss(self.bias_regularizer(self.b2))
 
@@ -324,9 +325,9 @@ class HyperLinearForSIREN(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLa
         )
 
     def call(self, x, **kwargs):
-        if type(self.kernel_regularizer) != type(None):
+        if self.kernel_regularizer is not None:
             self.add_loss(self.kernel_regularizer(self.w))
-        if type(self.bias_regularizer) != type(None):
+        if self.bias_regularizer is not None:
             self.add_loss(self.bias_regularizer(self.b))
         y = tf.matmul(x, tf.cast(self.w, self.compute_Dtype)) + tf.cast(
             self.b, self.compute_Dtype

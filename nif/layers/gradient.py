@@ -22,13 +22,7 @@ class JacRegLatentLayer(JacobianLayer):
     """
 
     def __init__(
-        self,
-        model,
-        y_index,
-        x_index,
-        l1=1e-2,
-        mixed_policy="float32",
-        **kwargs
+        self, model, y_index, x_index, l1=1e-2, mixed_policy="float32", **kwargs
     ):
         super().__init__(model, y_index, x_index, dtype=mixed_policy, **kwargs)
         self.l1 = tf.cast(l1, self.mixed_policy.compute_dtype).numpy()

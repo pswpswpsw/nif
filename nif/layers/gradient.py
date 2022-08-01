@@ -27,10 +27,10 @@ class JacRegLatentLayer(JacobianLayer):
         y_index,
         x_index,
         l1=1e-2,
-        mixed_policy=tf.keras.mixed_precision.Policy("float32"),
+        mixed_policy="float32",
         **kwargs
     ):
-        super().__init__(model, y_index, x_index, mixed_policy=mixed_policy, **kwargs)
+        super().__init__(model, y_index, x_index, dtype=mixed_policy, **kwargs)
         self.l1 = tf.cast(l1, self.mixed_policy.compute_dtype).numpy()
 
     @tf.function

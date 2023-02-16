@@ -24,9 +24,8 @@ repos:
     - id: black
       exclude: ^dev/
 
-- repo: https://gitlab.com/pycqa/flake8
-  rev: 4.0.1
+- repo: https://github.com/PyCQA/flake8
+  rev: 5.0.4
   hooks:
     - id: flake8
-      exclude: ^dev/
       args: ["--config=setup.cfg"]

@@ -223,11 +223,15 @@ Use the [issues](https://github.com/pswpswpsw/nif/issues) tracker to report bugs
 If you find NIF is helpful to you, you can cite our JMLR [paper](https://www.jmlr.org/papers/volume24/22-0365/22-0365.pdf) in the following bibtex format
 
    ```
-@misc{pan2022neural,
-  title={Neural Implicit Flow: a mesh-agnostic dimensionality reduction paradigm of spatio-temporal data},
-  author={Pan, Shaowu and Brunton, Steven L and Kutz, J Nathan},
-  year={2022},
-  publisher={Apr}
+@article{JMLR:v24:22-0365,
+  author  = {Shaowu Pan and Steven L. Brunton and J. Nathan Kutz},
+  title   = {Neural Implicit Flow: a mesh-agnostic dimensionality reduction paradigm of spatio-temporal data},
+  journal = {Journal of Machine Learning Research},
+  year    = {2023},
+  volume  = {24},
+  number  = {41},
+  pages   = {1--60},
+  url     = {http://jmlr.org/papers/v24/22-0365.html}
 }
    ```
 

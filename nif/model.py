@@ -939,6 +939,4 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
             tf.keras.layers.Dot(axes=(2, 1))([phi_x_matrix, pnet_output])
             + last_layer_bias
         )
-        return tf.cast(
-            u, variable_dtype, name="output_cast"
-        )  # , tf.cast(phi_x, variable_dtype)
+        return tf.cast(u, variable_dtype, name="output_cast")

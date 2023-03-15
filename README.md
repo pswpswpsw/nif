@@ -172,7 +172,16 @@
 	    model.fit(...)
 
     ```
+- Save and load models (via Checkpoints only)
+	```python
+	# save the weights
+	model.save_weights("./saved_weights/ckpt-{}/ckpt".format(epoch)")
+	
+	# load the weights
+	model.load_weights("./saved_weights/ckpt-999/ckpt")
+	
 - Network pruning and quantization
+
 
 ## Google Colab Tutorial
 
@@ -213,6 +222,14 @@
   	- learn how to use `nif.layers.JacobianLayer` to perform Sobolov training
   	- learn how to monitor different loss terms using customized Keras metrics
   	- learn that feeding derivative information to the system help resolve the super-resolution issue
+
+## Requirements
+
+- matplotlib
+- numpy
+- tensorflow_probability==0.18.0
+- tensorflow_model_optimization==0.7.3
+
 
 ## Issues, bugs, requests, ideas
 

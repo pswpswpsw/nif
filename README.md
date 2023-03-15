@@ -230,11 +230,12 @@
 
 ## Requirements
 
-- matplotlib
-- numpy
-- tensorflow_probability==0.18.0
-- tensorflow_model_optimization==0.7.3
-
+```python
+matplotlib
+numpy
+tensorflow_probability==0.18.0
+tensorflow_model_optimization==0.7.3
+```
 
 ## Issues, bugs, requests, ideas
 

@@ -154,8 +154,8 @@
 
 - Large-scale training with tfrecord converter
 
-	- all you need is to prepare a BIG npz file that contains all the point-wise data
-	- `.get_tfr_meta_dataset` will read all files under the searched directory that ends with `.tfrecord`
+    - all you need is to prepare a BIG npz file that contains all the point-wise data
+    - `.get_tfr_meta_dataset` will read all files under the searched directory that ends with `.tfrecord`
 
     ```python
     from nif.data.tfr_dataset import TFRDataset
@@ -173,28 +173,36 @@
 
     # start sub-dataset-batching
     for batch_file in meta_dataset:
-	    batch_dataset = fh.gen_dataset_from_batch_file(batch_file, batch_size)
-	    model.fit(...)
-
+        batch_dataset = fh.gen_dataset_from_batch_file(batch_file, batch_size)
+        model.fit(...)
     ```
 - Save and load models (via Checkpoints only)
-	```python
-	# save the weights
-	model.save_weights("./saved_weights/ckpt-{}/ckpt".format(epoch)")
-	
-	# load the weights
-	model.load_weights("./saved_weights/ckpt-999/ckpt")
-	
+    ```python
+    # save the config  
+    model.save_config("config.json")
+  
+    # save the weights
+    model.save_weights("./saved_weights/ckpt-{}/ckpt".format(epoch)")
+    
+    # load the config
+    with open("config.json", "r") as f:
+        config = json.load(f) 	
+    model_ori = nif.NIF(**config)
+    model = model_ori.model()
+  
+    # load the weights
+    model.load_weights("./saved_weights/ckpt-999/ckpt")
+    ```
 - Network pruning and quantization
 
 
 ## Google Colab Tutorial
 
 1. **Hello world! A simple fitting on 1D travelling wave** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/1_simple_1d_wave.ipynb)
-	- learn how to use class `nif.NIF`
-	- model checkpoints/restoration
-	- mixed precision training
-	- L-BFGS fine tuning
+    - learn how to use class `nif.NIF`
+    - model checkpoints/restoration
+    - mixed precision training
+    - L-BFGS fine tuning
 
 2. **Tackling multi-scale data** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/2_multi_scale_NIF.ipynb)
 
@@ -202,31 +210,31 @@
     - demonstrate the effectiveness of learning high frequency data
 
 3. **Learning linear representation** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/3_multi_scale_linear_NIF.ipynb)
-	- learn how to use class `nif.NIFMultiScaleLastLayerParameterized`
-	- demonstrate on a (shortened) flow over a cylinder case from an AMR solver
+    - learn how to use class `nif.NIFMultiScaleLastLayerParameterized`
+    - demonstrate on a (shortened) flow over a cylinder case from an AMR solver
 
 4. **Getting input-output derivatives is super easy** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/4_get_gradients_by_wrapping_model_with_layer.ipynb)
-	- learn how to use `nif.layers.JacobianLayer`, `nif.layers.HessianLayer`
+    - learn how to use `nif.layers.JacobianLayer`, `nif.layers.HessianLayer`
 
 5. **Scaling to hundreds of GB data** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/5_large_scale_training_on_tensorflow_record_data.ipynb)
-	- learn how to use `nif.data.tfr_dataset.TFRDataset` to create `tfrecord` from `npz`
-	- learn how to perform sub-dataset-batch training with `model.fit`
+    - learn how to use `nif.data.tfr_dataset.TFRDataset` to create `tfrecord` from `npz`
+    - learn how to perform sub-dataset-batch training with `model.fit`
 
 6. **Revisit NIF on multi-scale data with regularization** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/6_revisit_multi_scale_NIF_with_L1_L2_regularization.ipynb)
-	- learn how to use L1 or L2 regularization for weights and bias in ParameterNet.
-	- a demonstration for the failure of NIF-Multiscale in terms of increasing spatial interpolation when dealing with
-	  high-frequency signal.
-		- this means you need to be cautious about increasing spatial sampling resolution when dealing with
-		  high-frequency signal.
-	- learn that L2 or L1 regularization does not seem to help resolving the above issue.
+    - learn how to use L1 or L2 regularization for weights and bias in ParameterNet.
+    - a demonstration for the failure of NIF-Multiscale in terms of increasing spatial interpolation when dealing with
+      high-frequency signal.
+        - this means you need to be cautious about increasing spatial sampling resolution when dealing with
+          high-frequency signal.
+    - learn that L2 or L1 regularization does not seem to help resolving the above issue.
 
 7. **NIF Compression** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/7_model_pruning_and_quantization.ipynb)
-	- learn how to use low magnititute pruning and quantization to compress ParameterNet
+    - learn how to use low magnititute pruning and quantization to compress ParameterNet
 
 8. **Revisit NIF on multi-scale data: Sobolov training helps removing spurious signals** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/master/tutorial/8_revisit_multi_scale_NIF_with_sobolov_training.ipynb)
-  	- learn how to use `nif.layers.JacobianLayer` to perform Sobolov training
-  	- learn how to monitor different loss terms using customized Keras metrics
-  	- learn that feeding derivative information to the system help resolve the super-resolution issue
+    - learn how to use `nif.layers.JacobianLayer` to perform Sobolov training
+    - learn how to monitor different loss terms using customized Keras metrics
+    - learn that feeding derivative information to the system help resolve the super-resolution issue
 
 ## Requirements
 

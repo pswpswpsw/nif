@@ -25,16 +25,16 @@ from tensorflow.python.util.tf_export import keras_export
 class L4Adam(tf.keras.optimizers.Optimizer):
     # _HAS_AGGREGATE_GRAD = True
     def __init__(
-            self,
-            learning_rate=0.15,
-            tau_m=10.0,
-            tau_s=1000.0,
-            tau=1000.0,
-            gamma_0=0.75,
-            gamma=0.9,
-            epsilon=1e-7,
-            name="L4Adam",
-            **kwargs
+        self,
+        learning_rate=0.15,
+        tau_m=10.0,
+        tau_s=1000.0,
+        tau=1000.0,
+        gamma_0=0.75,
+        gamma=0.9,
+        epsilon=1e-7,
+        name="L4Adam",
+        **kwargs
     ):
         super().__init__(name, **kwargs)
         self._set_hyper("learning_rate", kwargs.get("learning_rate", learning_rate))
@@ -141,11 +141,11 @@ class L4Adam(tf.keras.optimizers.Optimizer):
         return self.apply_gradients(grads_and_vars, name=name, loss=loss)
 
     def apply_gradients(
-            self,
-            grads_and_vars,
-            name=None,
-            experimental_aggregate_gradients=True,
-            loss=None,
+        self,
+        grads_and_vars,
+        name=None,
+        experimental_aggregate_gradients=True,
+        loss=None,
     ):
         # update l_min
         if self.iterations == 0:
@@ -175,12 +175,12 @@ class L4Adam(tf.keras.optimizers.Optimizer):
 
             strategy = distribute_ctx.get_strategy()
             if (
-                    not experimental_aggregate_gradients
-                    and strategy
-                    and isinstance(
-                strategy.extended,
-                parameter_server_strategy.ParameterServerStrategyExtended,
-            )
+                not experimental_aggregate_gradients
+                and strategy
+                and isinstance(
+                    strategy.extended,
+                    parameter_server_strategy.ParameterServerStrategyExtended,
+                )
             ):
                 raise NotImplementedError(
                     "`experimental_aggregate_gradients=False is not supported for "
@@ -204,7 +204,7 @@ class L4Adam(tf.keras.optimizers.Optimizer):
             )
 
     def _distributed_apply(
-            self, distribution, grads_and_vars, name, apply_state, loss=None
+        self, distribution, grads_and_vars, name, apply_state, loss=None
     ):
         """`apply_gradients` using a `DistributionStrategy`."""
 
@@ -251,10 +251,10 @@ class L4Adam(tf.keras.optimizers.Optimizer):
                 # delays. See b/136304694.
                 with distribution.extended.colocate_vars_with(var):
                     with ops.name_scope(
-                            "update"
-                            if eagerly_outside_functions
-                            else "update_" + var.op.name,
-                            skip_on_eager=True,
+                        "update"
+                        if eagerly_outside_functions
+                        else "update_" + var.op.name,
+                        skip_on_eager=True,
                     ):
                         update_ops.extend(
                             distribution.extended.update(
@@ -271,7 +271,7 @@ class L4Adam(tf.keras.optimizers.Optimizer):
                 # symbolic then the step update should be carried out under a graph
                 # context. (eager updates execute immediately)
                 with ops._get_graph_from_inputs(
-                        update_ops
+                    update_ops
                 ).as_default():  # pylint: disable=protected-access
                     with ops.control_dependencies([control_flow_ops.group(update_ops)]):
                         return self._iterations.assign_add(1, read_value=False)
@@ -372,21 +372,21 @@ class AdaBeliefOptimizer(tf.keras.optimizers.Optimizer):
     """
 
     def __init__(
-            self,
-            learning_rate=0.001,
-            beta_1=0.9,
-            beta_2=0.999,
-            epsilon=1e-14,
-            weight_decay=0.0,
-            rectify=True,
-            amsgrad=False,
-            sma_threshold=5.0,
-            total_steps=0,
-            warmup_proportion=0.1,
-            min_lr=0.0,
-            name="AdaBeliefOptimizer",
-            print_change_log=True,
-            **kwargs
+        self,
+        learning_rate=0.001,
+        beta_1=0.9,
+        beta_2=0.999,
+        epsilon=1e-14,
+        weight_decay=0.0,
+        rectify=True,
+        amsgrad=False,
+        sma_threshold=5.0,
+        total_steps=0,
+        warmup_proportion=0.1,
+        min_lr=0.0,
+        name="AdaBeliefOptimizer",
+        print_change_log=True,
+        **kwargs
     ):
         super().__init__(name, **kwargs)
 
@@ -605,34 +605,30 @@ class AdaBeliefOptimizer(tf.keras.optimizers.Optimizer):
 class Lion(tf.keras.optimizers.legacy.Optimizer):
     r"""Optimizer that implements the Lion algorithm."""
 
-    def __init__(self,
-                 learning_rate=0.0001,
-                 beta_1=0.9,
-                 beta_2=0.99,
-                 wd=0,
-                 name='lion',
-                 **kwargs):
+    def __init__(
+        self, learning_rate=0.0001, beta_1=0.9, beta_2=0.99, wd=0, name="lion", **kwargs
+    ):
         """Construct a new Lion optimizer."""
 
         super(Lion, self).__init__(name, **kwargs)
-        self._set_hyper('learning_rate', kwargs.get('lr', learning_rate))
-        self._set_hyper('beta_1', beta_1)
-        self._set_hyper('beta_2', beta_2)
-        self._set_hyper('wd', wd)
+        self._set_hyper("learning_rate", kwargs.get("lr", learning_rate))
+        self._set_hyper("beta_1", beta_1)
+        self._set_hyper("beta_2", beta_2)
+        self._set_hyper("wd", wd)
 
     def _create_slots(self, var_list):
         # Create slots for the first and second moments.
         # Separate for-loops to respect the ordering of slot variables from v1.
         for var in var_list:
-            self.add_slot(var, 'm')
+            self.add_slot(var, "m")
 
     def _prepare_local(self, var_device, var_dtype, apply_state):
         super(Lion, self)._prepare_local(var_device, var_dtype, apply_state)
 
-        beta_1_t = tf.identity(self._get_hyper('beta_1', var_dtype))
-        beta_2_t = tf.identity(self._get_hyper('beta_2', var_dtype))
-        wd_t = tf.identity(self._get_hyper('wd', var_dtype))
-        lr = apply_state[(var_device, var_dtype)]['lr_t']
+        beta_1_t = tf.identity(self._get_hyper("beta_1", var_dtype))
+        beta_2_t = tf.identity(self._get_hyper("beta_2", var_dtype))
+        wd_t = tf.identity(self._get_hyper("wd", var_dtype))
+        lr = apply_state[(var_device, var_dtype)]["lr_t"]
         apply_state[(var_device, var_dtype)].update(
             dict(
                 lr=lr,
@@ -640,50 +636,62 @@ class Lion(tf.keras.optimizers.legacy.Optimizer):
                 one_minus_beta_1_t=1 - beta_1_t,
                 beta_2_t=beta_2_t,
                 one_minus_beta_2_t=1 - beta_2_t,
-                wd_t=wd_t))
+                wd_t=wd_t,
+            )
+        )
 
     @tf.function(jit_compile=True)
     def _resource_apply_dense(self, grad, var, apply_state=None):
         var_device, var_dtype = var.device, var.dtype.base_dtype
-        coefficients = ((apply_state or {}).get((var_device, var_dtype)) or
-                        self._fallback_apply_state(var_device, var_dtype))
+        coefficients = (apply_state or {}).get(
+            (var_device, var_dtype)
+        ) or self._fallback_apply_state(var_device, var_dtype)
 
-        m = self.get_slot(var, 'm')
+        m = self.get_slot(var, "m")
         var_t = var.assign_sub(
-            coefficients['lr_t'] *
-            (tf.math.sign(m * coefficients['beta_1_t'] +
-                          grad * coefficients['one_minus_beta_1_t']) +
-             var * coefficients['wd_t']))
+            coefficients["lr_t"]
+            * (
+                tf.math.sign(
+                    m * coefficients["beta_1_t"]
+                    + grad * coefficients["one_minus_beta_1_t"]
+                )
+                + var * coefficients["wd_t"]
+            )
+        )
         with tf.control_dependencies([var_t]):
-            m.assign(m * coefficients['beta_2_t'] +
-                     grad * coefficients['one_minus_beta_2_t'])
+            m.assign(
+                m * coefficients["beta_2_t"] + grad * coefficients["one_minus_beta_2_t"]
+            )
 
     @tf.function(jit_compile=True)
     def _resource_apply_sparse(self, grad, var, indices, apply_state=None):
         var_device, var_dtype = var.device, var.dtype.base_dtype
-        coefficients = ((apply_state or {}).get((var_device, var_dtype)) or
-                        self._fallback_apply_state(var_device, var_dtype))
+        coefficients = (apply_state or {}).get(
+            (var_device, var_dtype)
+        ) or self._fallback_apply_state(var_device, var_dtype)
 
-        m = self.get_slot(var, 'm')
-        m_t = m.assign(m * coefficients['beta_1_t'])
-        m_scaled_g_values = grad * coefficients['one_minus_beta_1_t']
+        m = self.get_slot(var, "m")
+        m_t = m.assign(m * coefficients["beta_1_t"])
+        m_scaled_g_values = grad * coefficients["one_minus_beta_1_t"]
         m_t = m_t.scatter_add(tf.IndexedSlices(m_scaled_g_values, indices))
-        var_t = var.assign_sub(coefficients['lr'] *
-                               (tf.math.sign(m_t) + var * coefficients['wd_t']))
+        var_t = var.assign_sub(
+            coefficients["lr"] * (tf.math.sign(m_t) + var * coefficients["wd_t"])
+        )
 
         with tf.control_dependencies([var_t]):
             m_t = m_t.scatter_add(tf.IndexedSlices(-m_scaled_g_values, indices))
-            m_t = m_t.assign(m_t * coefficients['beta_2_t'] /
-                             coefficients['beta_1_t'])
-            m_scaled_g_values = grad * coefficients['one_minus_beta_2_t']
+            m_t = m_t.assign(m_t * coefficients["beta_2_t"] / coefficients["beta_1_t"])
+            m_scaled_g_values = grad * coefficients["one_minus_beta_2_t"]
             m_t.scatter_add(tf.IndexedSlices(m_scaled_g_values, indices))
 
     def get_config(self):
         config = super(Lion, self).get_config()
-        config.update({
-            'learning_rate': self._serialize_hyperparameter('learning_rate'),
-            'beta_1': self._serialize_hyperparameter('beta_1'),
-            'beta_2': self._serialize_hyperparameter('beta_2'),
-            'wd': self._serialize_hyperparameter('wd'),
-        })
+        config.update(
+            {
+                "learning_rate": self._serialize_hyperparameter("learning_rate"),
+                "beta_1": self._serialize_hyperparameter("beta_1"),
+                "beta_2": self._serialize_hyperparameter("beta_2"),
+                "wd": self._serialize_hyperparameter("wd"),
+            }
+        )
         return config

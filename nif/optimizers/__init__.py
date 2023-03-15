@@ -16,5 +16,5 @@ __all__ = [
     "L4Adam",
     "AdaBeliefOptimizer",
     "centralized_gradients_for_optimizer",
-    "Lion"
+    "Lion",
 ]

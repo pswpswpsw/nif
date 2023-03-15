@@ -606,7 +606,7 @@ class Lion(tf.keras.optimizers.legacy.Optimizer):
     r"""Optimizer that implements the Lion algorithm."""
 
     def __init__(
-        self, learning_rate=0.0001, beta_1=0.9, beta_2=0.99, wd=0, name="lion", **kwargs
+        self, learning_rate=1e-4, beta_1=0.9, beta_2=0.99, wd=0, name="lion", **kwargs
     ):
         """Construct a new Lion optimizer."""
 

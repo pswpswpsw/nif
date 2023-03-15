@@ -15,6 +15,11 @@
 
 ## Highlights
 
+<p align="center">
+  <img src="./misc/compare.gif" alt="animated" />
+</p>
+
+
 - Built on top of **Tensorflow 2.x** with **Keras model subclassing**, hassle-free for many up-to-date advanced concepts and features
 
     ```python

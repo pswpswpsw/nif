@@ -814,6 +814,9 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
 
         self.snet_list, self.last_layer_bias = self._initialize_snet(cfg_shape_net)
 
+        # last layer einsum dense
+        self.einsum_layer = tf.keras.layers.EinsumDense("ijk,ik->ij", bias_axes="j")
+
     def call(self, inputs, training=None, mask=None):
         input_p = inputs[:, 0 : self.pi_dim]
         input_s = inputs[:, self.pi_dim : self.pi_dim + self.si_dim]
@@ -977,15 +980,16 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         #     tf.keras.layers.Dot(axes=(2, 1))([phi_x_matrix, pnet_output]),
         #     last_layer_bias
         # ]
-        u = tf.keras.layers.Add()[
-            tf.keras.layers.Dot(axes=(2, 1))([phi_x_matrix, pnet_output]),
-            last_layer_bias
-        ]
 
-        einsum_layer = tf.keras.layers.EinsumDense("ijk,ik->ij",bias_axes="j")
+        # u = tf.keras.layers.Add()[
+        #     tf.keras.layers.Dot(axes=(2, 1))([phi_x_matrix, pnet_output]),
+        #     last_layer_bias
+        # ]
+
+
 
         # Perform matrix multiplication using EinsumDense layer
-        u = einsum_layer([phi_x_matrix, pnet_output])
+        u = self.einsum_layer([phi_x_matrix, pnet_output])
 
         # layer = tf.keras.layers.EinsumDense("ab,bc->ac",
         #                                     output_shape=64,

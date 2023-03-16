@@ -4,15 +4,15 @@ import tensorflow_model_optimization as tfmot
 
 class MLP_ResNet(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):
     def __init__(
-        self,
-        width,
-        activation,
-        kernel_initializer,
-        bias_initializer,
-        kernel_regularizer,
-        bias_regularizer,
-        mixed_policy,
-        **kwargs
+            self,
+            width,
+            activation,
+            kernel_initializer,
+            bias_initializer,
+            kernel_regularizer,
+            bias_regularizer,
+            mixed_policy,
+            **kwargs
     ):
         super(MLP_ResNet, self).__init__(**kwargs)
         self.compute_Dtype = mixed_policy.compute_dtype
@@ -71,15 +71,15 @@ class MLP_ResNet(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):
 
 class MLP_SimpleShortCut(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):
     def __init__(
-        self,
-        width,
-        activation,
-        kernel_initializer,
-        bias_initializer,
-        kernel_regularizer,
-        bias_regularizer,
-        mixed_policy,
-        **kwargs
+            self,
+            width,
+            activation,
+            kernel_initializer,
+            bias_initializer,
+            kernel_regularizer,
+            bias_regularizer,
+            mixed_policy,
+            **kwargs
     ):
         super(MLP_SimpleShortCut, self).__init__(**kwargs)
         # dtype = tf.float16 if mixed_policy == 'mixed_float16' else tf.float32
@@ -144,3 +144,22 @@ class EinsumLayer(tf.keras.layers.Layer):
 
     def get_config(self):
         return {"equation": self.equation}
+
+
+class BiasAddLayer(tf.keras.layers.Layer):
+    def __init__(self, mixed_policy, **kwargs):
+        super().__init__(**kwargs)
+        # self.scale = tf.Variable(1.)
+        self.mixed_policy = mixed_policy
+        # create bias for the last layer
+        # last_layer_init = initializers.TruncatedNormal(stddev=1e-16)
+        last_layer_init = tf.keras.initializers.TruncatedNormal(stddev=0.1,
+                                                                dtype=self.mixed_policy)
+        self.last_layer_bias = tf.Variable(
+            last_layer_init([self.so_dim]),
+            dtype=self.mixed_policy.variable_dtype,
+            name="last_layer_bias_snet",
+        )
+
+    def call(self, inputs):
+        return inputs + self.last_layer_bias

@@ -941,8 +941,8 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         snet_layers_list.append(bottle_last_layer)
 
         # create bias for the last layer
-        last_layer_init = initializers.TruncatedNormal(stddev=1e-16)
-        # initializers.TruncatedNormal(stddev=0.1)
+        # last_layer_init = initializers.TruncatedNormal(stddev=1e-16)
+        last_layer_init = initializers.TruncatedNormal(stddev=0.1)
         last_layer_bias = tf.Variable(
             last_layer_init([self.so_dim]),
             dtype=self.mixed_policy.variable_dtype,

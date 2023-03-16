@@ -4,15 +4,15 @@ import tensorflow_model_optimization as tfmot
 
 class MLP_ResNet(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):
     def __init__(
-            self,
-            width,
-            activation,
-            kernel_initializer,
-            bias_initializer,
-            kernel_regularizer,
-            bias_regularizer,
-            mixed_policy,
-            **kwargs
+        self,
+        width,
+        activation,
+        kernel_initializer,
+        bias_initializer,
+        kernel_regularizer,
+        bias_regularizer,
+        mixed_policy,
+        **kwargs
     ):
         super(MLP_ResNet, self).__init__(**kwargs)
         self.compute_Dtype = mixed_policy.compute_dtype
@@ -71,15 +71,15 @@ class MLP_ResNet(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):
 
 class MLP_SimpleShortCut(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):
     def __init__(
-            self,
-            width,
-            activation,
-            kernel_initializer,
-            bias_initializer,
-            kernel_regularizer,
-            bias_regularizer,
-            mixed_policy,
-            **kwargs
+        self,
+        width,
+        activation,
+        kernel_initializer,
+        bias_initializer,
+        kernel_regularizer,
+        bias_regularizer,
+        mixed_policy,
+        **kwargs
     ):
         super(MLP_SimpleShortCut, self).__init__(**kwargs)
         # dtype = tf.float16 if mixed_policy == 'mixed_float16' else tf.float32
@@ -166,8 +166,10 @@ class BiasAddLayer(tf.keras.layers.Layer):
 
     def get_config(self):
         config = super().get_config()
-        config.update({
-            "output_dim": self.output_dim,
-            "mixed_policy": self.mixed_policy,
-        })
+        config.update(
+            {
+                "output_dim": self.output_dim,
+                "mixed_policy": self.mixed_policy,
+            }
+        )
         return config

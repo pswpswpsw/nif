@@ -929,7 +929,7 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         # 3. bottleneck AND the same time, last layer for spatial basis
         bottle_last_layer = SIREN(
             self.n_sx,
-            self.po_dim * self.so_dim,
+            self.po_dim * self.so_dim, # todo: change this to self.sl_dim * self.so_dim
             "bottleneck",
             cfg_shape_net["omega_0"],
             cfg_shape_net,
@@ -941,13 +941,10 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         snet_layers_list.append(bottle_last_layer)
 
         # create bias for the last layer
-        last_layer_init = initializers.TruncatedNormal(stddev=0.1)
+        last_layer_init = initializers.TruncatedNormal(stddev=1e-16)
+        # initializers.TruncatedNormal(stddev=0.1)
         last_layer_bias = tf.Variable(
-            last_layer_init(
-                [
-                    self.so_dim,
-                ]
-            ),
+            last_layer_init([self.so_dim]),
             dtype=self.mixed_policy.variable_dtype,
             name="last_layer_bias_snet",
         )

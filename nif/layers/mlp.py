@@ -163,6 +163,7 @@ class BiasAddLayer(tf.keras.layers.Layer):
 
     def call(self, inputs):
         return inputs + self.last_layer_bias
+
     def get_config(self):
         config = super().get_config()
         config.update({

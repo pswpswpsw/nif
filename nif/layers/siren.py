@@ -184,8 +184,8 @@ class SIREN(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):
                 self.b, self.compute_Dtype
             )
         else:
-            y = tf.math.sin(
-                self.omega_0 * tf.matmul(x, tf.cast(self.w, self.compute_Dtype))
+            y = tf.math.sin(tf.cast(self.omega_0, self.compute_Dtype) *
+                            tf.matmul(x, tf.cast(self.w, self.compute_Dtype))
                 + tf.cast(self.b, self.compute_Dtype)
             )
         return y

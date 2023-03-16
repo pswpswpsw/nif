@@ -1,7 +1,7 @@
 """The code represents a TensorFlow implementation of the Neural Implicit Flow
 
 NIF is a neural network architecture designed for learning and
-representing implicit functions. The model consists of two sub-networks :
+representing implicit flow. The model consists of two sub-networks :
 a shape network and a parameter network. The shape network takes the input
 data as input and outputs a point on a manifold, while the parameter network
 takes the input data as input and outputs the parameters that determine the
@@ -46,7 +46,35 @@ from .layers import BiasAddLayer
 
 
 class NIF(object):
+    """
+    Neural Implicit Flow class represents a network with two sub-networks to reduce
+    the dimensionality of spatial temporal fields
+
+    Attributes:
+        cfg_shape_net (dict): Configuration dictionary for the shape network.
+        cfg_parameter_net (dict): Configuration dictionary for the parameter network.
+        mixed_policy (str): The data type for mixed precision training (default is 'float32').
+
+    Methods:
+        call(self, inputs, training=None, mask=None): Forward pass for the NIF model.
+        build(self): Builds and returns the NIF model with a Jacobian regularization layer.
+        model(self): Builds and returns the NIF model.
+        model_p_to_w(self): Builds and returns a model that maps input parameters to weights and biases of the shape net.
+        model_p_to_lr(self): Builds and returns a model that maps input parameters to the hidden layer representation.
+        model_lr_to_w(self): Builds and returns a model that maps the hidden layer representation to shape net weights and biases.
+        model_x_to_u_given_w(self): Builds and returns a model that maps input states to output, given shape net weights and biases.
+        save_config(self, filename="config.json"): Saves the NIF configuration to a JSON file.
+    """
+
     def __init__(self, cfg_shape_net, cfg_parameter_net, mixed_policy="float32"):
+        """
+        Initializes the NIF object with the given configurations and mixed precision policy.
+
+        Args:
+            cfg_shape_net (dict): Configuration dictionary for the shape network.
+            cfg_parameter_net (dict): Configuration dictionary for the parameter network.
+            mixed_policy (str, optional): The data type for mixed precision training. Defaults to "float32".
+        """
         super(NIF, self).__init__()
         self.cfg_shape_net = cfg_shape_net
         self.si_dim = cfg_shape_net["input_dim"]
@@ -96,6 +124,17 @@ class NIF(object):
         self.pnet_list = self._initialize_pnet(cfg_parameter_net, cfg_shape_net)
 
     def call(self, inputs, training=None, mask=None):
+        """
+        Performs the forward pass for the NIF model, given input parameters and states.
+
+        Args:
+            inputs (tf.Tensor): A tensor containing input parameters and states.
+            training (bool, optional): Whether the model is in training mode. Defaults to None.
+            mask (tf.Tensor, optional): A tensor representing masked elements. Defaults to None.
+
+        Returns:
+            tf.Tensor: The output tensor after passing through the shape network.
+        """
         input_p = inputs[:, 0 : self.pi_dim]
         input_s = inputs[:, self.pi_dim : self.pi_dim + self.si_dim]
         self.pnet_output = self._call_parameter_net(input_p, self.pnet_list)[0]
@@ -111,7 +150,18 @@ class NIF(object):
         )
 
     def _initialize_pnet(self, cfg_parameter_net, cfg_shape_net):
-        # just simple implementation of a shortcut connected parameter net with a similar shapenet
+        """
+         Initializes the parameter network structure based on the given configuration.
+
+         Args:
+             cfg_parameter_net (dict): Configuration dictionary for the parameter network.
+             cfg_shape_net (dict): Configuration dictionary for the shape network.
+
+         Returns:
+             list: A list of layers that make up the parameter network.
+        """
+        # just simple implementation of a shortcut connected parameter net with
+        # a similar shapenet
         self.po_dim = (
             (self.l_sx) * self.n_sx**2
             + (self.si_dim + self.so_dim + 1 + self.l_sx) * self.n_sx
@@ -180,6 +230,22 @@ class NIF(object):
     def _call_shape_net(
         input_s, pnet_output, si_dim, so_dim, n_sx, l_sx, activation, variable_dtype
     ):
+        """
+        Calls the shape network with the given input and parameter network output.
+
+        Args:
+            input_s (tf.Tensor): Input tensor for the shape network.
+            pnet_output (tf.Tensor): Output tensor of the parameter network.
+            si_dim (int): Input dimension of the shape network.
+            so_dim (int): Output dimension of the shape network.
+            n_sx (int): Number of units in each hidden layer of the shape network.
+            l_sx (int): Number of hidden layers in the shape network.
+            activation (str): Activation function used in the shape network.
+            variable_dtype (str): Data type for the variables in the shape network.
+
+        Returns:
+            tf.Tensor: The output tensor of the shape network.
+        """
         w_1 = tf.reshape(
             pnet_output[:, : si_dim * n_sx], [-1, si_dim, n_sx], name="w_first_snet"
         )
@@ -255,6 +321,17 @@ class NIF(object):
 
     @staticmethod
     def _call_parameter_net(input_p, pnet_list):
+        """
+        Calls the parameter network with the given input and list of layers.
+
+        Args:
+            input_p (tf.Tensor): Input tensor for the parameter network.
+            pnet_list (list): List of layers in the parameter network.
+
+        Returns:
+            tuple: A tuple containing the output tensor of the parameter network
+                   and the hidden layer representation (latent).
+        """
         latent = input_p
         for layer_ in pnet_list[:-1]:
             latent = layer_(latent)
@@ -262,6 +339,13 @@ class NIF(object):
         return output_final, latent
 
     def build(self):
+        """
+        Builds and returns the NIF model with a Jacobian regularization layer
+        if specified in the configuration. Otherwise it is the same as `.model()`
+
+        Returns:
+            tf.keras.Model: The NIF model with or without the Jacobian regularization layer.
+        """
         if isinstance(self.p_jac_reg, (float, int)):
             input_tot = tf.keras.layers.Input(
                 shape=(self.pi_dim + self.si_dim), name="input_tot"
@@ -289,12 +373,26 @@ class NIF(object):
             return self.model()
 
     def model(self):
+        """
+        Builds and returns the NIF model.
+
+        Returns:
+            tf.keras.Model: The NIF model.
+        """
         input_tot = tf.keras.layers.Input(
             shape=(self.pi_dim + self.si_dim), name="input_tot"
         )
         return Model(inputs=[input_tot], outputs=[self.call(input_tot)])
 
     def model_p_to_w(self):
+        """
+        Builds and returns a model that maps input parameters to weights and
+        biases of the shape network.
+
+        Returns:
+            tf.keras.Model: The model mapping input parameters to shape network
+            weights and biases.
+        """
         input_p = tf.keras.layers.Input(shape=(self.pi_dim), name="input_p_to_w")
         return Model(
             inputs=[input_p],
@@ -302,6 +400,14 @@ class NIF(object):
         )
 
     def model_p_to_lr(self):
+        """
+        Builds and returns a model that maps input parameters to the hidden layer
+        representation.
+
+        Returns:
+            tf.keras.Model: The model mapping input parameters to the hidden layer
+            representation.
+        """
         input_p = tf.keras.layers.Input(shape=(self.pi_dim), name="input_p_to_lr")
         # this model: t, mu -> hidden LR
         return Model(
@@ -310,11 +416,27 @@ class NIF(object):
         )
 
     def model_lr_to_w(self):
+        """
+        Builds and returns a model that maps the hidden layer representation to
+        shape network weights and biases.
+
+        Returns:
+            tf.keras.Model: The model mapping the hidden layer representation to
+            shape network weights and biases.
+        """
         input_lr = tf.keras.layers.Input(shape=(self.pi_hidden), name="input_lr_to_w")
         # this model: hidden LR -> weights and biases of shapenet
         return Model(inputs=[input_lr], outputs=[self.pnet_list[-1](input_lr)])
 
     def model_x_to_u_given_w(self):
+        """
+        Builds and returns a model that maps input states to output, given shape
+        network weights and biases.
+
+        Returns:
+            tf.keras.Model: The model mapping input states to output, given shape
+            network weights and biases.
+        """
         input_s = tf.keras.layers.Input(
             shape=(self.si_dim), name="input_x_to_u_given_w"
         )
@@ -338,6 +460,13 @@ class NIF(object):
         )
 
     def save_config(self, filename="config.json"):
+        """
+        Saves the NIF model configuration to a JSON file.
+
+        Args:
+            filename (str, optional): The name of the file to save the
+            configuration. Defaults to "config.json".
+        """
         config = {
             "cfg_shape_net": self.cfg_shape_net,
             "cfg_parameter_net": self.cfg_parameter_net,
@@ -348,12 +477,46 @@ class NIF(object):
 
 
 class NIFMultiScale(NIF):
+    """
+    The NIFMultiScale class is a subclass of the NIF class, extending its functionality
+    to support multiscale computations. The class is designed to work with neural
+    implicit flow in a multiscale context.
+
+    Attributes:
+        cfg_shape_net (dict): Configuration dictionary for the shape network.
+        cfg_parameter_net (dict): Configuration dictionary for the parameter network.
+        mixed_policy (str, optional): The mixed precision policy to be used for
+            TensorFlow computations. Defaults to "float32".
+    """
     def __init__(self, cfg_shape_net, cfg_parameter_net, mixed_policy="float32"):
+        """
+        Initializes an instance of the NIFMultiScale class.
+
+        Args:
+            cfg_shape_net (dict): Configuration dictionary for the shape network.
+            cfg_parameter_net (dict): Configuration dictionary for the parameter network.
+            mixed_policy (str, optional): The mixed precision policy to be used for
+                TensorFlow computations. Defaults to "float32".
+        """
         super(NIFMultiScale, self).__init__(
             cfg_shape_net, cfg_parameter_net, mixed_policy
         )
 
     def call(self, inputs, training=None, mask=None):
+        """
+        Implements the forward pass of the NIFMultiScale model, which takes the
+        input tensors and computes the output using the multiscale architecture.
+
+        Args:
+            inputs (tensor): Input tensor with concatenated parameter and
+                shape information.
+            training (bool, optional): Whether the model is in training mode. Defaults
+                to None, which will use the model's training mode.
+            mask (tensor, optional): Mask tensor for masked input. Defaults to None.
+
+        Returns:
+            tensor: Output tensor computed by the multiscale shape network.
+        """
         input_p = inputs[:, 0 : self.pi_dim]
         input_s = inputs[:, self.pi_dim : self.pi_dim + self.si_dim]
         # get parameter from parameter_net
@@ -372,9 +535,16 @@ class NIFMultiScale(NIF):
 
     def _initialize_pnet(self, cfg_parameter_net, cfg_shape_net):
         """
-        generate the layers for parameter net, given configuration of
-        shape_net you will also need the last layer to be consistent with
-        the total number of shapenet' weights+biases
+        Generate the layers for the parameter net, given the configuration of the
+        shape net. You will also need the last layer to be consistent with the
+        total number of ShapeNet's weights and biases.
+
+        Args:
+            cfg_parameter_net (dict): Configuration dictionary for the parameter net.
+            cfg_shape_net (dict): Configuration dictionary for the shape net.
+
+        Returns:
+            pnet_layers_list (list): List of layers for the parameter net.
         """
 
         if not isinstance(cfg_parameter_net, dict):
@@ -573,11 +743,21 @@ class NIFMultiScale(NIF):
         variable_dtype,
     ):
         """
-        distribute `pnet_output` into weight and bias, it depends on the type of shapenet.
+        Distribute `pnet_output` into weight and bias to construct the shape network.
 
-        For now, we only support shapenet having the following structure,
-            - resnet-block
-            - plain fnn
+        Args:
+            input_s (tf.Tensor): Input tensor for the shape network.
+            pnet_output (tf.Tensor): Output tensor from the parameter network.
+            flag_resblock (bool): Indicates whether to use a ResNet block structure.
+            omega_0 (float): Scaling factor for the sine activation function.
+            si_dim (int): Dimension of the input space for the shape network.
+            so_dim (int): Dimension of the output space for the shape network.
+            n_sx (int): Number of neurons in the shape network's hidden layers.
+            l_sx (int): Number of hidden layers in the shape network.
+            variable_dtype (tf.DType): Data type for the resulting tensor.
+
+        Returns:
+            tf.Tensor: The output tensor of the shape network with the given data type.
         """
         if flag_resblock:
             # distribute weights
@@ -769,6 +949,14 @@ class NIFMultiScale(NIF):
         return tf.cast(u, variable_dtype, name="output_cast_snet")
 
     def model_x_to_u_given_w(self):
+        """
+        Constructs a Keras model for mapping input tensor `x` to output tensor `u`
+        given the weights and biases from the parameter network.
+
+        Returns:
+            tf.keras.Model: A Keras model that takes two inputs, `input_s` and
+                            `input_pnet`, and returns the output tensor `u`.
+        """
         input_s = tf.keras.layers.Input(
             shape=(self.si_dim), name="input_x_to_u_given_w"
         )
@@ -794,7 +982,33 @@ class NIFMultiScale(NIF):
 
 
 class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
+    """
+    NIFMultiScaleLastLayerParameterized is a subclass of NIFMultiScale representing a
+    Neural Information Flow (NIF) model with a multi-scale architecture that parameterizes
+    only the last layer of the shape network. This class is designed to have its shape
+    network and parameter network work in conjunction to map the inputs to the outputs.
+
+    Attributes:
+        cfg_shape_net (dict): Configuration for the shape network.
+        cfg_parameter_net (dict): Configuration for the parameter network.
+        mixed_policy (str): Policy to be used for mixed precision calculations.
+
+    Methods:
+        call(inputs, training=None, mask=None): Implements the forward pass of the model.
+        model_p_to_lr(): Returns a Keras model that maps input parameters to hidden learning rates.
+        model_x_to_phi(): Returns a Keras model that maps input spatial data to the output phi_x.
+        model_lr_to_w(): Raises a ValueError as 'w' is the same as 'lr' in this class.
+        model_x_to_u_given_w(): Returns a Keras model that maps input spatial data to the output 'u' given 'w'.
+    """
     def __init__(self, cfg_shape_net, cfg_parameter_net, mixed_policy="float32"):
+        """
+        Initialize the NIFMultiScaleLastLayerParameterized class.
+
+        Args:
+            cfg_shape_net (dict): Configuration dictionary for the shape network.
+            cfg_parameter_net (dict): Configuration dictionary for the parameter network.
+            mixed_policy (str, optional): Policy for mixed precision training. Defaults to "float32".
+        """
         super(NIFMultiScaleLastLayerParameterized, self).__init__(
             cfg_shape_net, cfg_parameter_net, mixed_policy
         )
@@ -819,6 +1033,17 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         self.last_bias_layer = BiasAddLayer(self.so_dim, mixed_policy=self.mixed_policy)
 
     def call(self, inputs, training=None, mask=None):
+        """
+        Forward pass of the NIFMultiScaleLastLayerParameterized model.
+
+        Args:
+            inputs (tf.Tensor): Input tensor of shape (batch_size, input_dim).
+            training (bool, optional): Whether the model is in training mode. Defaults to None.
+            mask (tf.Tensor, optional): Mask tensor for masked inputs. Defaults to None.
+
+        Returns:
+            tf.Tensor: Output tensor of shape (batch_size, output_dim).
+        """
         input_p = inputs[:, 0 : self.pi_dim]
         input_s = inputs[:, self.pi_dim : self.pi_dim + self.si_dim]
         # get parameter from parameter_net
@@ -834,6 +1059,13 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         )
 
     def model_p_to_lr(self):
+        """
+        Creates a Keras model for mapping input parameters to hidden layer representation.
+
+        Returns:
+            tf.keras.Model: A Keras model that maps input parameters (t, mu) to a hidden
+            layer representation (LR).
+        """
         input_p = tf.keras.layers.Input(shape=(self.pi_dim), name="input_p_to_lr")
         # this model: t, mu -> hidden LR
         return Model(
@@ -842,6 +1074,13 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         )
 
     def model_x_to_phi(self):
+        """
+        Creates a Keras model to compute phi_x from input spatial features.
+
+        Returns:
+            tf.keras.Model: A Keras model that takes input spatial features and computes
+            the phi_x values using the shape network.
+        """
         input_s = tf.keras.layers.Input(shape=(self.si_dim), name="input_x_to_phi")
         return Model(
             inputs=[input_s],
@@ -856,11 +1095,25 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         )
 
     def model_lr_to_w(self):
+        """
+        Raises an error as 'w' and 'lr' are the same in NIFMultiScaleLastLayerParameterized.
+
+        Raises:
+            ValueError: Error stating that 'w' is the same as 'lr' in this class.
+        """
         raise ValueError(
             "In this class: NIFMultiScaleLastLayerParameterization, `w` is the same as `lr`"
         )
 
     def model_x_to_u_given_w(self):
+        """
+        Creates a Keras model that maps input_s and input_pnet to the output of the
+        shape network with the given parameters.
+
+        Returns:
+            Model: A Keras model with input_s and input_pnet as inputs, and the output
+                   of the shape network as the output.
+        """
         input_s = tf.keras.layers.Input(
             shape=(self.si_dim), name="input_x_to_u_given_w"
         )
@@ -883,6 +1136,15 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         )
 
     def _initialize_snet(self, cfg_shape_net):
+        """
+        Initializes the shape network layers based on the configuration.
+
+        Args:
+            cfg_shape_net (dict): Configuration dictionary for the shape network.
+
+        Returns:
+            List[Layer]: A list of initialized Keras layers for the shape network.
+        """
         # create a simple feedfowrard, with resblock or not, that maps self.si_dim to
         # self.so_dim*self.pi_hidden
 
@@ -946,6 +1208,18 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         return snet_layers_list
 
     def _call_shape_net_get_phi_x(self, input_s, snet_layers_list, so_dim, pi_hidden):
+        """
+        Compute the phi_x matrix for the given input and shape network layers.
+
+        Args:
+            input_s (tf.Tensor): Input tensor for the shape network.
+            snet_layers_list (List[Layer]): List of Keras layers for the shape network.
+            so_dim (int): Output spatial dimension.
+            pi_hidden (int): Hidden dimension for the parameter network.
+
+        Returns:
+            tf.Tensor: The computed phi_x matrix.
+        """
         # 1. x -> phi_x
         phi_x = input_s
         for layer_ in snet_layers_list:
@@ -964,22 +1238,23 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         pi_hidden,
         variable_dtype,
     ):
+        """
+        Compute the output tensor u for the given input and network layers.
+
+        Args:
+            input_s (tf.Tensor): Input tensor for the shape network.
+            snet_layers_list (List[Layer]): List of Keras layers for the shape network.
+            pnet_output (tf.Tensor): Output tensor from the parameter network.
+            so_dim (int): Output spatial dimension.
+            pi_hidden (int): Hidden dimension for the parameter network.
+            variable_dtype (tf.DType): Data type for the output tensor.
+
+        Returns:
+            tf.Tensor: The computed output tensor u.
+        """
         phi_x_matrix = self._call_shape_net_get_phi_x(
             input_s, snet_layers_list, so_dim, pi_hidden
         )
-        # u = tf.keras.layers.Add()[
-        #     tf.keras.layers.Dot(axes=(2, 1))([phi_x_matrix, pnet_output]),
-        #     last_layer_bias
-        # ]
-
         u = tf.keras.layers.Dot(axes=(2, 1))([phi_x_matrix, pnet_output])
         u = self.last_bias_layer(u)
-
-        # Perform matrix multiplication using EinsumDense layer
-        # u = self.einsum_layer([phi_x_matrix, pnet_output])
-
-        # layer = tf.keras.layers.EinsumDense("ab,bc->ac",
-        #                                     output_shape=64,
-        #                                     bias_axes="c")
-
         return tf.cast(u, variable_dtype, name="output_cast")

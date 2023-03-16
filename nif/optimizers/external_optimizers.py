@@ -23,7 +23,32 @@ from tensorflow.python.util.tf_export import keras_export
 
 @keras_export("keras.optimizers.L4Adam")
 class L4Adam(tf.keras.optimizers.Optimizer):
-    # _HAS_AGGREGATE_GRAD = True
+    """Implements the L4Adam optimizer.
+
+    This optimizer is an implementation of the L4 optimization algorithm with
+    an adaptive learning rate that is based on the Adam optimizer.
+
+    Attributes:
+        learning_rate: A float, the initial learning rate.
+        tau_m: A float, decay rate for first moment estimates.
+        tau_s: A float, decay rate for second moment estimates.
+        tau: A float, decay rate for the l_min estimate.
+        gamma_0: A float, initial proportion of the loss to be considered as l_min.
+        gamma: A float, parameter to control the proportion of l_min in the update.
+        epsilon: A float, small constant for numerical stability.
+        name: Optional string, the name for the optimizer.
+
+    Methods:
+        _create_slots: Creates slots for the optimizer's state.
+        _prepare_local: Prepares the local hyperparameters and derived quantities.
+        _momentum_add: Computes the momentum addition for a given variable.
+        _resource_apply_dense: Applies the dense gradients to the model variables.
+        minimize: Minimizes the loss function for the given model variables.
+        apply_gradients: Applies the gradients to the model variables.
+        _distributed_apply: Applies the gradients in a distributed setting.
+        _resource_apply_sparse: NotImplemented, raises NotImplementedError.
+        get_config: Returns the config dictionary for the optimizer instance.
+    """
     def __init__(
         self,
         learning_rate=0.15,
@@ -603,7 +628,19 @@ class AdaBeliefOptimizer(tf.keras.optimizers.Optimizer):
 
 
 class Lion(tf.keras.optimizers.legacy.Optimizer):
-    r"""Optimizer that implements the Lion algorithm."""
+    r"""Implements the Lion optimization algorithm.
+
+    The Lion optimizer is a custom optimization algorithm based on first-order
+    stochastic gradient descent methods. It incorporates a weighted decay term
+    and momentum-based updates.
+
+    Attributes:
+        learning_rate (float): The learning rate. Defaults to 1e-4.
+        beta_1 (float): The exponential decay rate for the first moment estimates. Defaults to 0.9.
+        beta_2 (float): The exponential decay rate for the second moment estimates. Defaults to 0.99.
+        wd (float): The weight decay factor. Defaults to 0.
+        name (str): The name of the optimizer. Defaults to "lion".
+    """
 
     def __init__(
         self, learning_rate=1e-4, beta_1=0.9, beta_2=0.99, wd=0, name="lion", **kwargs

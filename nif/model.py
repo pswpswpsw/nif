@@ -816,7 +816,7 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
 
         # last layer einsum dense
         self.einsum_layer = tf.keras.layers.EinsumDense("ijk,ik->ij",
-                                                        output_shape=(None, self.so_dim),
+                                                        output_shape=self.so_dim,
                                                         bias_axes="j")
 
     def call(self, inputs, training=None, mask=None):

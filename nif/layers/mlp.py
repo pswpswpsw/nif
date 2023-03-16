@@ -147,19 +147,26 @@ class EinsumLayer(tf.keras.layers.Layer):
 
 
 class BiasAddLayer(tf.keras.layers.Layer):
-    def __init__(self, mixed_policy, **kwargs):
+    def __init__(self, output_dim, mixed_policy, **kwargs):
         super().__init__(**kwargs)
         # self.scale = tf.Variable(1.)
+        self.output_dim = output_dim
         self.mixed_policy = mixed_policy
         # create bias for the last layer
         # last_layer_init = initializers.TruncatedNormal(stddev=1e-16)
-        last_layer_init = tf.keras.initializers.TruncatedNormal(stddev=0.1,
-                                                                dtype=self.mixed_policy)
+        last_layer_init = tf.keras.initializers.TruncatedNormal(stddev=0.1)
         self.last_layer_bias = tf.Variable(
-            last_layer_init([self.so_dim]),
+            last_layer_init([output_dim]),
             dtype=self.mixed_policy.variable_dtype,
             name="last_layer_bias_snet",
         )
 
     def call(self, inputs):
         return inputs + self.last_layer_bias
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "output_dim": self.output_dim,
+            "mixed_policy": self.mixed_policy,
+        })
+        return config

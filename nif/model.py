@@ -381,12 +381,14 @@ class NIFMultiScale(NIF):
             raise TypeError("cfg_parameter_net must be a dictionary")
         if not isinstance(cfg_shape_net, dict):
             raise TypeError("cfg_shape_net must be a dictionary")
-        assert ("use_resblock" in cfg_shape_net.keys()), \
-            "`use_resblock` should be in cfg_shape_net"
+        assert (
+            "use_resblock" in cfg_shape_net.keys()
+        ), "`use_resblock` should be in cfg_shape_net"
         # assert 'nn_type' in cfg_parameter_net.keys(), "`nn_type` should
         # be in cfg_parameter_net"
-        assert (type(cfg_shape_net["use_resblock"]) == bool), \
-            "cfg_shape_net['use_resblock'] must be a bool"
+        assert (
+            type(cfg_shape_net["use_resblock"]) == bool
+        ), "cfg_shape_net['use_resblock'] must be a bool"
 
         pnet_layers_list = []
         if cfg_shape_net["connectivity"] == "full":
@@ -815,8 +817,7 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
 
         self.snet_list = self._initialize_snet(cfg_shape_net)
 
-        self.last_bias_layer = BiasAddLayer(self.so_dim,
-                                            mixed_policy=self.mixed_policy)
+        self.last_bias_layer = BiasAddLayer(self.so_dim, mixed_policy=self.mixed_policy)
         # last layer einsum dense
         # self.einsum_layer = tf.keras.layers.EinsumDense("ijk,ik->ij",
         #                                                 output_shape=self.so_dim,
@@ -936,7 +937,7 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         # 3. bottleneck AND the same time, last layer for spatial basis
         bottle_last_layer = SIREN(
             self.n_sx,
-            self.po_dim * self.so_dim, # todo: change this to self.sl_dim * self.so_dim
+            self.po_dim * self.so_dim,  # todo: change this to self.sl_dim * self.so_dim
             "bottleneck",
             cfg_shape_net["omega_0"],
             cfg_shape_net,
@@ -947,7 +948,7 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         )
         snet_layers_list.append(bottle_last_layer)
 
-        return snet_layers_list #, last_layer_bias
+        return snet_layers_list  # , last_layer_bias
 
     def _call_shape_net_get_phi_x(self, input_s, snet_layers_list, so_dim, pi_hidden):
         # 1. x -> phi_x
@@ -968,16 +969,15 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         pi_hidden,
         variable_dtype,
     ):
-        phi_x_matrix = self._call_shape_net_get_phi_x(input_s,
-                                                      snet_layers_list,
-                                                      so_dim,
-                                                      pi_hidden)
+        phi_x_matrix = self._call_shape_net_get_phi_x(
+            input_s, snet_layers_list, so_dim, pi_hidden
+        )
         # u = tf.keras.layers.Add()[
         #     tf.keras.layers.Dot(axes=(2, 1))([phi_x_matrix, pnet_output]),
         #     last_layer_bias
         # ]
 
-        u = tf.keras.layers.Dot(axes=(2, 1))([phi_x_matrix, pnet_output]),
+        u = (tf.keras.layers.Dot(axes=(2, 1))([phi_x_matrix, pnet_output]),)
         u = self.last_bias_layer(u)
 
         # Perform matrix multiplication using EinsumDense layer

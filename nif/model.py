@@ -380,13 +380,12 @@ class NIFMultiScale(NIF):
             raise TypeError("cfg_parameter_net must be a dictionary")
         if not isinstance(cfg_shape_net, dict):
             raise TypeError("cfg_shape_net must be a dictionary")
-        assert (
-            "use_resblock" in cfg_shape_net.keys()
-        ), "`use_resblock` should be in cfg_shape_net"
-        # assert 'nn_type' in cfg_parameter_net.keys(), "`nn_type` should be in cfg_parameter_net"
-        assert (
-            type(cfg_shape_net["use_resblock"]) == bool
-        ), "cfg_shape_net['use_resblock'] must be a bool"
+        assert ("use_resblock" in cfg_shape_net.keys()), \
+            "`use_resblock` should be in cfg_shape_net"
+        # assert 'nn_type' in cfg_parameter_net.keys(), "`nn_type` should
+        # be in cfg_parameter_net"
+        assert (type(cfg_shape_net["use_resblock"]) == bool), \
+            "cfg_shape_net['use_resblock'] must be a bool"
 
         pnet_layers_list = []
         if cfg_shape_net["connectivity"] == "full":
@@ -970,11 +969,13 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         pi_hidden,
         variable_dtype,
     ):
-        phi_x_matrix = self._call_shape_net_get_phi_x(
-            input_s, snet_layers_list, so_dim, pi_hidden
+        phi_x_matrix = self._call_shape_net_get_phi_x(input_s,
+                                                      snet_layers_list,
+                                                      so_dim,
+                                                      pi_hidden)
+        u = tf.keras.layers.add(
+            tf.keras.layers.Dot(axes=(2, 1))([phi_x_matrix, pnet_output]),
+            last_layer_bias
         )
-        u = (
-            tf.keras.layers.Dot(axes=(2, 1))([phi_x_matrix, pnet_output])
-            + last_layer_bias
-        )
+
         return tf.cast(u, variable_dtype, name="output_cast")

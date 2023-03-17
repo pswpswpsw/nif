@@ -1,47 +1,143 @@
-
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
-    <title>nif.model &#8212; NIF  documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
-    
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nif.model &mdash; NIF  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="nif.layers" href="api_nif_layers.html" /> 
-  </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="api_nif_layers.html" title="nif.layers"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">NIF  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">nif.model</a></li> 
-      </ul>
-    </div>  
+</head>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2f5470" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NIF
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Neural Implicit Flow (NIF): mesh-agnostic dimensionality reduction</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#highlights">Highlights</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#google-colab-tutorial">Google Colab Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#issues-bugs-requests-ideas">Issues, bugs, requests, ideas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#how-to-cite">How to cite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#contributors">Contributors</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#license">License</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="api_nif_data.html">nif.data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_nif_demo.html">nif.demo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_nif_optimizers.html">nif.optimizers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_nif_layers.html">nif.layers</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">nif.model</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#nif.model.NIFMultiScale"><code class="docutils literal notranslate"><span class="pre">NIFMultiScale</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.model.NIF"><code class="docutils literal notranslate"><span class="pre">NIF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.model.NIFMultiScaleLastLayerParameterized"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_nif_data.html">nif.data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_nif_demo.html">nif.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_nif_optimizers.html">nif.optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_nif_layers.html">nif.layers</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">nif.model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#nif.model.NIFMultiScale"><code class="docutils literal notranslate"><span class="pre">NIFMultiScale</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.model.NIFMultiScale.call"><code class="docutils literal notranslate"><span class="pre">NIFMultiScale.call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.model.NIFMultiScale.model_x_to_u_given_w"><code class="docutils literal notranslate"><span class="pre">NIFMultiScale.model_x_to_u_given_w()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.model.NIF"><code class="docutils literal notranslate"><span class="pre">NIF</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.model.NIF.call"><code class="docutils literal notranslate"><span class="pre">NIF.call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.model.NIF.build"><code class="docutils literal notranslate"><span class="pre">NIF.build()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.model.NIF.model"><code class="docutils literal notranslate"><span class="pre">NIF.model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.model.NIF.model_p_to_w"><code class="docutils literal notranslate"><span class="pre">NIF.model_p_to_w()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.model.NIF.model_p_to_lr"><code class="docutils literal notranslate"><span class="pre">NIF.model_p_to_lr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.model.NIF.model_lr_to_w"><code class="docutils literal notranslate"><span class="pre">NIF.model_lr_to_w()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.model.NIF.model_x_to_u_given_w"><code class="docutils literal notranslate"><span class="pre">NIF.model_x_to_u_given_w()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.model.NIF.save_config"><code class="docutils literal notranslate"><span class="pre">NIF.save_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">NIF.call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">NIF.build()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">NIF.model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">NIF.model_p_to_w()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">NIF.model_p_to_lr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">NIF.model_lr_to_w()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">NIF.model_x_to_u_given_w()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">NIF.save_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.model.NIFMultiScaleLastLayerParameterized"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.model.NIFMultiScaleLastLayerParameterized.call"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized.call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.model.NIFMultiScaleLastLayerParameterized.model_p_to_lr"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized.model_p_to_lr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.model.NIFMultiScaleLastLayerParameterized.model_x_to_phi"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized.model_x_to_phi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.model.NIFMultiScaleLastLayerParameterized.model_lr_to_w"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized.model_lr_to_w()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.model.NIFMultiScaleLastLayerParameterized.model_x_to_u_given_w"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized.model_x_to_u_given_w()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized.call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized.model_p_to_lr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized.model_x_to_phi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id11"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized.model_lr_to_w()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id12"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized.model_x_to_u_given_w()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2f5470" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NIF</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">nif.model</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api_nif_model.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
   <section id="module-nif.model">
-<span id="nif-model"></span><h1>nif.model<a class="headerlink" href="#module-nif.model" title="Permalink to this heading">¶</a></h1>
+<span id="nif-model"></span><h1>nif.model<a class="headerlink" href="#module-nif.model" title="Permalink to this heading"></a></h1>
 <p>The code represents a TensorFlow implementation of the Neural Implicit Flow</p>
 <p>NIF is a neural network architecture designed for learning and
 representing implicit flow. The model consists of two sub-networks :
@@ -67,7 +163,7 @@ modules, including tf.keras, tf.keras.layers, tf.keras.regularizers, tf.initiali
 and tf.cast.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="nif.model.NIFMultiScale">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.model.</span></span><span class="sig-name descname"><span class="pre">NIFMultiScale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg_shape_net</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg_parameter_net</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mixed_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'float32'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIFMultiScale" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.model.</span></span><span class="sig-name descname"><span class="pre">NIFMultiScale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg_shape_net</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg_parameter_net</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mixed_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'float32'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIFMultiScale" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nif.model.NIF" title="nif.model.NIF"><code class="xref py py-class docutils literal notranslate"><span class="pre">NIF</span></code></a></p>
 <p>The NIFMultiScale class is a subclass of the NIF class, extending its functionality
 to support multiscale computations. The class is designed to work with neural
@@ -84,7 +180,7 @@ TensorFlow computations. Defaults to “float32”.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.model.NIFMultiScale.call">
-<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIFMultiScale.call" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIFMultiScale.call" title="Permalink to this definition"></a></dt>
 <dd><p>Implements the forward pass of the NIFMultiScale model, which takes the
 input tensors and computes the output using the multiscale architecture.</p>
 <dl class="field-list simple">
@@ -105,7 +201,7 @@ to None, which will use the model’s training mode.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.model.NIFMultiScale.model_x_to_u_given_w">
-<span class="sig-name descname"><span class="pre">model_x_to_u_given_w</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIFMultiScale.model_x_to_u_given_w" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">model_x_to_u_given_w</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIFMultiScale.model_x_to_u_given_w" title="Permalink to this definition"></a></dt>
 <dd><p>Constructs a Keras model for mapping input tensor <cite>x</cite> to output tensor <cite>u</cite>
 given the weights and biases from the parameter network.</p>
 <dl class="field-list simple">
@@ -124,7 +220,7 @@ given the weights and biases from the parameter network.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nif.model.NIF">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.model.</span></span><span class="sig-name descname"><span class="pre">NIF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg_shape_net</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg_parameter_net</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mixed_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'float32'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIF" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.model.</span></span><span class="sig-name descname"><span class="pre">NIF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg_shape_net</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg_parameter_net</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mixed_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'float32'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIF" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Neural Implicit Flow class represents a network with two sub-networks to reduce
 the dimensionality of spatial temporal fields</p>
@@ -139,59 +235,59 @@ the dimensionality of spatial temporal fields</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.model.NIF.call">
-<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIF.call" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIF.call" title="Permalink to this definition"></a></dt>
 <dd><p>Forward pass for the NIF model.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.model.NIF.build">
-<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIF.build" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIF.build" title="Permalink to this definition"></a></dt>
 <dd><p>Builds and returns the NIF model with a Jacobian regularization layer.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.model.NIF.model">
-<span class="sig-name descname"><span class="pre">model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIF.model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIF.model" title="Permalink to this definition"></a></dt>
 <dd><p>Builds and returns the NIF model.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.model.NIF.model_p_to_w">
-<span class="sig-name descname"><span class="pre">model_p_to_w</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIF.model_p_to_w" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">model_p_to_w</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIF.model_p_to_w" title="Permalink to this definition"></a></dt>
 <dd><p>Builds and returns a model that maps input parameters to weights and
 biases of the shape net.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.model.NIF.model_p_to_lr">
-<span class="sig-name descname"><span class="pre">model_p_to_lr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIF.model_p_to_lr" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">model_p_to_lr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIF.model_p_to_lr" title="Permalink to this definition"></a></dt>
 <dd><p>Builds and returns a model that maps input parameters to the hidden
 layer representation.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.model.NIF.model_lr_to_w">
-<span class="sig-name descname"><span class="pre">model_lr_to_w</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIF.model_lr_to_w" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">model_lr_to_w</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIF.model_lr_to_w" title="Permalink to this definition"></a></dt>
 <dd><p>Builds and returns a model that maps the hidden layer representation
 to shape net weights and biases.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.model.NIF.model_x_to_u_given_w">
-<span class="sig-name descname"><span class="pre">model_x_to_u_given_w</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIF.model_x_to_u_given_w" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">model_x_to_u_given_w</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIF.model_x_to_u_given_w" title="Permalink to this definition"></a></dt>
 <dd><p>Builds and returns a model that maps input states to output,
 given shape net weights and biases.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.model.NIF.save_config">
-<span class="sig-name descname"><span class="pre">save_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'config.json'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIF.save_config" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">save_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'config.json'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIF.save_config" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the NIF configuration to a JSON file.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition"></a></dt>
 <dd><p>Performs the forward pass for the NIF model, given input parameters and states.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -209,7 +305,7 @@ given shape net weights and biases.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id1" title="Permalink to this definition"></a></dt>
 <dd><p>Builds and returns the NIF model with a Jacobian regularization layer
 if specified in the configuration. Otherwise it is the same as <cite>.model()</cite></p>
 <dl class="field-list simple">
@@ -221,7 +317,7 @@ if specified in the configuration. Otherwise it is the same as <cite>.model()</c
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id2" title="Permalink to this definition"></a></dt>
 <dd><p>Builds and returns the NIF model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -232,7 +328,7 @@ if specified in the configuration. Otherwise it is the same as <cite>.model()</c
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id3">
-<span class="sig-name descname"><span class="pre">model_p_to_w</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">model_p_to_w</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id3" title="Permalink to this definition"></a></dt>
 <dd><p>Builds and returns a model that maps input parameters to weights and
 biases of the shape network.</p>
 <dl class="field-list simple">
@@ -245,7 +341,7 @@ weights and biases.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id4">
-<span class="sig-name descname"><span class="pre">model_p_to_lr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">model_p_to_lr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id4" title="Permalink to this definition"></a></dt>
 <dd><p>Builds and returns a model that maps input parameters to the hidden layer
 representation.</p>
 <dl class="field-list simple">
@@ -258,7 +354,7 @@ representation.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id5">
-<span class="sig-name descname"><span class="pre">model_lr_to_w</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">model_lr_to_w</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id5" title="Permalink to this definition"></a></dt>
 <dd><p>Builds and returns a model that maps the hidden layer representation to
 shape network weights and biases.</p>
 <dl class="field-list simple">
@@ -271,7 +367,7 @@ shape network weights and biases.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id6">
-<span class="sig-name descname"><span class="pre">model_x_to_u_given_w</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">model_x_to_u_given_w</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id6" title="Permalink to this definition"></a></dt>
 <dd><p>Builds and returns a model that maps input states to output, given shape
 network weights and biases.</p>
 <dl class="field-list simple">
@@ -284,7 +380,7 @@ network weights and biases.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id7">
-<span class="sig-name descname"><span class="pre">save_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'config.json'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">save_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'config.json'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id7" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the NIF model configuration to a JSON file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -300,7 +396,7 @@ network weights and biases.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nif.model.NIFMultiScaleLastLayerParameterized">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.model.</span></span><span class="sig-name descname"><span class="pre">NIFMultiScaleLastLayerParameterized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg_shape_net</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg_parameter_net</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mixed_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'float32'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIFMultiScaleLastLayerParameterized" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.model.</span></span><span class="sig-name descname"><span class="pre">NIFMultiScaleLastLayerParameterized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg_shape_net</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg_parameter_net</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mixed_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'float32'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIFMultiScaleLastLayerParameterized" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nif.model.NIFMultiScale" title="nif.model.NIFMultiScale"><code class="xref py py-class docutils literal notranslate"><span class="pre">NIFMultiScale</span></code></a></p>
 <p>NIFMultiScaleLastLayerParameterized is a subclass of NIFMultiScale representing a
 Neural Information Flow (NIF) model with a multi-scale architecture that parameterizes
@@ -317,31 +413,31 @@ network and parameter network work in conjunction to map the inputs to the outpu
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.model.NIFMultiScaleLastLayerParameterized.call">
-<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIFMultiScaleLastLayerParameterized.call" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIFMultiScaleLastLayerParameterized.call" title="Permalink to this definition"></a></dt>
 <dd><p>Implements the forward pass of the model.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.model.NIFMultiScaleLastLayerParameterized.model_p_to_lr">
-<span class="sig-name descname"><span class="pre">model_p_to_lr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIFMultiScaleLastLayerParameterized.model_p_to_lr" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">model_p_to_lr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIFMultiScaleLastLayerParameterized.model_p_to_lr" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a Keras model that maps input parameters to hidden learning rates.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.model.NIFMultiScaleLastLayerParameterized.model_x_to_phi">
-<span class="sig-name descname"><span class="pre">model_x_to_phi</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIFMultiScaleLastLayerParameterized.model_x_to_phi" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">model_x_to_phi</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIFMultiScaleLastLayerParameterized.model_x_to_phi" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a Keras model that maps input spatial data to the output phi_x.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.model.NIFMultiScaleLastLayerParameterized.model_lr_to_w">
-<span class="sig-name descname"><span class="pre">model_lr_to_w</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIFMultiScaleLastLayerParameterized.model_lr_to_w" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">model_lr_to_w</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIFMultiScaleLastLayerParameterized.model_lr_to_w" title="Permalink to this definition"></a></dt>
 <dd><p>Raises a ValueError as ‘w’ is the same as ‘lr’ in this class.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.model.NIFMultiScaleLastLayerParameterized.model_x_to_u_given_w">
-<span class="sig-name descname"><span class="pre">model_x_to_u_given_w</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIFMultiScaleLastLayerParameterized.model_x_to_u_given_w" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">model_x_to_u_given_w</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.model.NIFMultiScaleLastLayerParameterized.model_x_to_u_given_w" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a Keras model that maps input spatial data to the
 :wq:wq
 :wq
@@ -350,7 +446,7 @@ output ‘u’ given ‘w’.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id8">
-<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id8" title="Permalink to this definition"></a></dt>
 <dd><p>Forward pass of the NIFMultiScaleLastLayerParameterized model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -368,7 +464,7 @@ output ‘u’ given ‘w’.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id9">
-<span class="sig-name descname"><span class="pre">model_p_to_lr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">model_p_to_lr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id9" title="Permalink to this definition"></a></dt>
 <dd><p>Creates a Keras model for mapping input parameters to hidden layer representation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -380,7 +476,7 @@ layer representation (LR).</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id10">
-<span class="sig-name descname"><span class="pre">model_x_to_phi</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">model_x_to_phi</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id10" title="Permalink to this definition"></a></dt>
 <dd><p>Creates a Keras model to compute phi_x from input spatial features.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -392,7 +488,7 @@ the phi_x values using the shape network.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id11">
-<span class="sig-name descname"><span class="pre">model_lr_to_w</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id11" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">model_lr_to_w</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id11" title="Permalink to this definition"></a></dt>
 <dd><p>Raises an error as ‘w’ and ‘lr’ are the same in NIFMultiScaleLastLayerParameterized.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
@@ -403,7 +499,7 @@ the phi_x values using the shape network.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id12">
-<span class="sig-name descname"><span class="pre">model_x_to_u_given_w</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id12" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">model_x_to_u_given_w</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id12" title="Permalink to this definition"></a></dt>
 <dd><p>Creates a Keras model that maps input_s and input_pnet to the output of the
 shape network with the given parameters.</p>
 <dl class="field-list simple">
@@ -423,98 +519,33 @@ shape network with the given parameters.</p>
 </section>
 
 
-            <div class="clearer"></div>
+           </div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <div>
-    <h3><a href="index.html">Table of Contents</a></h3>
-    <ul>
-<li><a class="reference internal" href="#">nif.model</a><ul>
-<li><a class="reference internal" href="#nif.model.NIFMultiScale"><code class="docutils literal notranslate"><span class="pre">NIFMultiScale</span></code></a><ul>
-<li><a class="reference internal" href="#nif.model.NIFMultiScale.call"><code class="docutils literal notranslate"><span class="pre">NIFMultiScale.call()</span></code></a></li>
-<li><a class="reference internal" href="#nif.model.NIFMultiScale.model_x_to_u_given_w"><code class="docutils literal notranslate"><span class="pre">NIFMultiScale.model_x_to_u_given_w()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#nif.model.NIF"><code class="docutils literal notranslate"><span class="pre">NIF</span></code></a><ul>
-<li><a class="reference internal" href="#nif.model.NIF.call"><code class="docutils literal notranslate"><span class="pre">NIF.call()</span></code></a></li>
-<li><a class="reference internal" href="#nif.model.NIF.build"><code class="docutils literal notranslate"><span class="pre">NIF.build()</span></code></a></li>
-<li><a class="reference internal" href="#nif.model.NIF.model"><code class="docutils literal notranslate"><span class="pre">NIF.model()</span></code></a></li>
-<li><a class="reference internal" href="#nif.model.NIF.model_p_to_w"><code class="docutils literal notranslate"><span class="pre">NIF.model_p_to_w()</span></code></a></li>
-<li><a class="reference internal" href="#nif.model.NIF.model_p_to_lr"><code class="docutils literal notranslate"><span class="pre">NIF.model_p_to_lr()</span></code></a></li>
-<li><a class="reference internal" href="#nif.model.NIF.model_lr_to_w"><code class="docutils literal notranslate"><span class="pre">NIF.model_lr_to_w()</span></code></a></li>
-<li><a class="reference internal" href="#nif.model.NIF.model_x_to_u_given_w"><code class="docutils literal notranslate"><span class="pre">NIF.model_x_to_u_given_w()</span></code></a></li>
-<li><a class="reference internal" href="#nif.model.NIF.save_config"><code class="docutils literal notranslate"><span class="pre">NIF.save_config()</span></code></a></li>
-<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">NIF.call()</span></code></a></li>
-<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">NIF.build()</span></code></a></li>
-<li><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">NIF.model()</span></code></a></li>
-<li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">NIF.model_p_to_w()</span></code></a></li>
-<li><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">NIF.model_p_to_lr()</span></code></a></li>
-<li><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">NIF.model_lr_to_w()</span></code></a></li>
-<li><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">NIF.model_x_to_u_given_w()</span></code></a></li>
-<li><a class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">NIF.save_config()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#nif.model.NIFMultiScaleLastLayerParameterized"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized</span></code></a><ul>
-<li><a class="reference internal" href="#nif.model.NIFMultiScaleLastLayerParameterized.call"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized.call()</span></code></a></li>
-<li><a class="reference internal" href="#nif.model.NIFMultiScaleLastLayerParameterized.model_p_to_lr"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized.model_p_to_lr()</span></code></a></li>
-<li><a class="reference internal" href="#nif.model.NIFMultiScaleLastLayerParameterized.model_x_to_phi"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized.model_x_to_phi()</span></code></a></li>
-<li><a class="reference internal" href="#nif.model.NIFMultiScaleLastLayerParameterized.model_lr_to_w"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized.model_lr_to_w()</span></code></a></li>
-<li><a class="reference internal" href="#nif.model.NIFMultiScaleLastLayerParameterized.model_x_to_u_given_w"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized.model_x_to_u_given_w()</span></code></a></li>
-<li><a class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized.call()</span></code></a></li>
-<li><a class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized.model_p_to_lr()</span></code></a></li>
-<li><a class="reference internal" href="#id10"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized.model_x_to_phi()</span></code></a></li>
-<li><a class="reference internal" href="#id11"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized.model_lr_to_w()</span></code></a></li>
-<li><a class="reference internal" href="#id12"><code class="docutils literal notranslate"><span class="pre">NIFMultiScaleLastLayerParameterized.model_x_to_u_given_w()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="api_nif_layers.html" class="btn btn-neutral float-left" title="nif.layers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
 
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
   </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/api_nif_model.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="api_nif_layers.html" title="nif.layers"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">NIF  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">nif.model</a></li> 
-      </ul>
-    </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright .
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
-    </div>
-  </body>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
 </html>

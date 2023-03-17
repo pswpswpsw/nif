@@ -1,54 +1,190 @@
-
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
-    <title>nif.layers &#8212; NIF  documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
-    
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nif.layers &mdash; NIF  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="nif.model" href="api_nif_model.html" />
     <link rel="prev" title="nif.optimizers" href="api_nif_optimizers.html" /> 
-  </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="api_nif_model.html" title="nif.model"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="api_nif_optimizers.html" title="nif.optimizers"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">NIF  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">nif.layers</a></li> 
-      </ul>
-    </div>  
+</head>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2f5470" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NIF
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Neural Implicit Flow (NIF): mesh-agnostic dimensionality reduction</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#highlights">Highlights</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#google-colab-tutorial">Google Colab Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#issues-bugs-requests-ideas">Issues, bugs, requests, ideas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#how-to-cite">How to cite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#contributors">Contributors</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#license">License</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="api_nif_data.html">nif.data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_nif_demo.html">nif.demo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_nif_optimizers.html">nif.optimizers</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">nif.layers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#nif.layers.SIREN"><code class="docutils literal notranslate"><span class="pre">SIREN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.layers.SIREN_ResNet"><code class="docutils literal notranslate"><span class="pre">SIREN_ResNet</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.layers.Dense"><code class="docutils literal notranslate"><span class="pre">Dense</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.layers.HyperLinearForSIREN"><code class="docutils literal notranslate"><span class="pre">HyperLinearForSIREN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.layers.MLP_ResNet"><code class="docutils literal notranslate"><span class="pre">MLP_ResNet</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.layers.MLP_SimpleShortCut"><code class="docutils literal notranslate"><span class="pre">MLP_SimpleShortCut</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.layers.JacRegLatentLayer"><code class="docutils literal notranslate"><span class="pre">JacRegLatentLayer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.layers.JacobianLayer"><code class="docutils literal notranslate"><span class="pre">JacobianLayer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.layers.HessianLayer"><code class="docutils literal notranslate"><span class="pre">HessianLayer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.layers.ParameterOutputL1ActReg"><code class="docutils literal notranslate"><span class="pre">ParameterOutputL1ActReg</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.layers.EinsumLayer"><code class="docutils literal notranslate"><span class="pre">EinsumLayer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.layers.BiasAddLayer"><code class="docutils literal notranslate"><span class="pre">BiasAddLayer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api_nif_model.html">nif.model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_nif_data.html">nif.data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_nif_demo.html">nif.demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_nif_optimizers.html">nif.optimizers</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">nif.layers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#nif.layers.SIREN"><code class="docutils literal notranslate"><span class="pre">SIREN</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.SIREN.call"><code class="docutils literal notranslate"><span class="pre">SIREN.call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.SIREN.get_config"><code class="docutils literal notranslate"><span class="pre">SIREN.get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.SIREN.get_prunable_weights"><code class="docutils literal notranslate"><span class="pre">SIREN.get_prunable_weights()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">SIREN.call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">SIREN.get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">SIREN.get_prunable_weights()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.layers.SIREN_ResNet"><code class="docutils literal notranslate"><span class="pre">SIREN_ResNet</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.SIREN_ResNet.call"><code class="docutils literal notranslate"><span class="pre">SIREN_ResNet.call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.SIREN_ResNet.get_prunable_weights"><code class="docutils literal notranslate"><span class="pre">SIREN_ResNet.get_prunable_weights()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">SIREN_ResNet.call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">SIREN_ResNet.get_prunable_weights()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.layers.Dense"><code class="docutils literal notranslate"><span class="pre">Dense</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.Dense.build"><code class="docutils literal notranslate"><span class="pre">Dense.build()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.Dense.call"><code class="docutils literal notranslate"><span class="pre">Dense.call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.Dense.compute_output_shape"><code class="docutils literal notranslate"><span class="pre">Dense.compute_output_shape()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.Dense.get_config"><code class="docutils literal notranslate"><span class="pre">Dense.get_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.layers.HyperLinearForSIREN"><code class="docutils literal notranslate"><span class="pre">HyperLinearForSIREN</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.HyperLinearForSIREN.call"><code class="docutils literal notranslate"><span class="pre">HyperLinearForSIREN.call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.HyperLinearForSIREN.get_config"><code class="docutils literal notranslate"><span class="pre">HyperLinearForSIREN.get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.HyperLinearForSIREN.get_prunable_weights"><code class="docutils literal notranslate"><span class="pre">HyperLinearForSIREN.get_prunable_weights()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">HyperLinearForSIREN.call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">HyperLinearForSIREN.get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">HyperLinearForSIREN.get_prunable_weights()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.layers.MLP_ResNet"><code class="docutils literal notranslate"><span class="pre">MLP_ResNet</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.MLP_ResNet.call"><code class="docutils literal notranslate"><span class="pre">MLP_ResNet.call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.MLP_ResNet.get_config"><code class="docutils literal notranslate"><span class="pre">MLP_ResNet.get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.MLP_ResNet.get_prunable_weights"><code class="docutils literal notranslate"><span class="pre">MLP_ResNet.get_prunable_weights()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.layers.MLP_SimpleShortCut"><code class="docutils literal notranslate"><span class="pre">MLP_SimpleShortCut</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.MLP_SimpleShortCut.call"><code class="docutils literal notranslate"><span class="pre">MLP_SimpleShortCut.call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.MLP_SimpleShortCut.get_config"><code class="docutils literal notranslate"><span class="pre">MLP_SimpleShortCut.get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.MLP_SimpleShortCut.get_prunable_weights"><code class="docutils literal notranslate"><span class="pre">MLP_SimpleShortCut.get_prunable_weights()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.layers.JacRegLatentLayer"><code class="docutils literal notranslate"><span class="pre">JacRegLatentLayer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.JacRegLatentLayer.call"><code class="docutils literal notranslate"><span class="pre">JacRegLatentLayer.call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.JacRegLatentLayer.get_config"><code class="docutils literal notranslate"><span class="pre">JacRegLatentLayer.get_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.layers.JacobianLayer"><code class="docutils literal notranslate"><span class="pre">JacobianLayer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.JacobianLayer.call"><code class="docutils literal notranslate"><span class="pre">JacobianLayer.call()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.layers.HessianLayer"><code class="docutils literal notranslate"><span class="pre">HessianLayer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.HessianLayer.call"><code class="docutils literal notranslate"><span class="pre">HessianLayer.call()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.layers.ParameterOutputL1ActReg"><code class="docutils literal notranslate"><span class="pre">ParameterOutputL1ActReg</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.ParameterOutputL1ActReg.call"><code class="docutils literal notranslate"><span class="pre">ParameterOutputL1ActReg.call()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.layers.EinsumLayer"><code class="docutils literal notranslate"><span class="pre">EinsumLayer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.EinsumLayer.call"><code class="docutils literal notranslate"><span class="pre">EinsumLayer.call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.EinsumLayer.get_config"><code class="docutils literal notranslate"><span class="pre">EinsumLayer.get_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.layers.BiasAddLayer"><code class="docutils literal notranslate"><span class="pre">BiasAddLayer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.BiasAddLayer.call"><code class="docutils literal notranslate"><span class="pre">BiasAddLayer.call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.layers.BiasAddLayer.get_config"><code class="docutils literal notranslate"><span class="pre">BiasAddLayer.get_config()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_nif_model.html">nif.model</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2f5470" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NIF</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">nif.layers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api_nif_layers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
   <section id="module-nif.layers">
-<span id="nif-layers"></span><h1>nif.layers<a class="headerlink" href="#module-nif.layers" title="Permalink to this heading">¶</a></h1>
+<span id="nif-layers"></span><h1>nif.layers<a class="headerlink" href="#module-nif.layers" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="nif.layers.SIREN">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">SIREN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.SIREN" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">SIREN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.SIREN" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">PrunableLayer</span></code></p>
 <p>A class representing the SIREN layer.</p>
 <dl class="field-list simple">
@@ -83,25 +219,25 @@ weights and biases.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.SIREN.call">
-<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.SIREN.call" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.SIREN.call" title="Permalink to this definition"></a></dt>
 <dd><p>Defines the computation performed at every call.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.SIREN.get_config">
-<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.SIREN.get_config" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.SIREN.get_config" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the config of the layer.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.SIREN.get_prunable_weights">
-<span class="sig-name descname"><span class="pre">get_prunable_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.SIREN.get_prunable_weights" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_prunable_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.SIREN.get_prunable_weights" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the prunable weights of the layer.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the output of the layer given an input tensor x.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -115,7 +251,7 @@ weights and biases.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id1" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the configuration of the layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -126,7 +262,7 @@ weights and biases.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">get_prunable_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_prunable_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id2" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the list of prunable weights of the layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -139,7 +275,7 @@ weights and biases.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nif.layers.SIREN_ResNet">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">SIREN_ResNet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.SIREN_ResNet" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">SIREN_ResNet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.SIREN_ResNet" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nif.layers.SIREN" title="nif.layers.siren.SIREN"><code class="xref py py-class docutils literal notranslate"><span class="pre">SIREN</span></code></a></p>
 <p>A subclass of the SIREN class implementing a residual block.</p>
 <dl class="field-list simple">
@@ -166,19 +302,19 @@ precision computation. Defaults to “float32”.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.SIREN_ResNet.call">
-<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.SIREN_ResNet.call" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.SIREN_ResNet.call" title="Permalink to this definition"></a></dt>
 <dd><p>Performs a forward pass through the layer.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.SIREN_ResNet.get_prunable_weights">
-<span class="sig-name descname"><span class="pre">get_prunable_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.SIREN_ResNet.get_prunable_weights" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_prunable_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.SIREN_ResNet.get_prunable_weights" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a list of prunable weight variables.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id3">
-<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id3" title="Permalink to this definition"></a></dt>
 <dd><p>Performs a forward pass through the layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -196,7 +332,7 @@ precision computation. Defaults to “float32”.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id4">
-<span class="sig-name descname"><span class="pre">get_prunable_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_prunable_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id4" title="Permalink to this definition"></a></dt>
 <dd><dl class="simple">
 <dt>Returns the list of prunable weights in the layer, i.e., the weights that can be</dt><dd><p>pruned during training.</p>
 </dd>
@@ -212,7 +348,7 @@ precision computation. Defaults to “float32”.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nif.layers.Dense">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">Dense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.Dense" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">Dense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.Dense" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></p>
 <p>Just your regular densely-connected NN layer.</p>
 <p><cite>Dense</cite> implements the operation:
@@ -282,7 +418,7 @@ the output would have shape <cite>(batch_size, units)</cite>.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.Dense.build">
-<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.Dense.build" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.Dense.build" title="Permalink to this definition"></a></dt>
 <dd><p>Creates the variables of the layer (optional, for subclass implementers).</p>
 <p>This is a method that implementers of subclasses of <cite>Layer</cite> or <cite>Model</cite>
 can override if they need a state-creation step in-between
@@ -301,7 +437,7 @@ the first execution of <cite>call()</cite>.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.Dense.call">
-<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.Dense.call" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.Dense.call" title="Permalink to this definition"></a></dt>
 <dd><p>This is where the layer’s logic lives.</p>
 <p>The <cite>call()</cite> method may not create state (except in its first
 invocation, wrapping the creation of variables or other resources in
@@ -362,7 +498,7 @@ from a Keras layer with masking support).</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.Dense.compute_output_shape">
-<span class="sig-name descname"><span class="pre">compute_output_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.Dense.compute_output_shape" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">compute_output_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.Dense.compute_output_shape" title="Permalink to this definition"></a></dt>
 <dd><p>Computes the output shape of the layer.</p>
 <p>This method will cause the layer’s state to be built, if that has not
 happened before. This requires that the layer will later be used with
@@ -382,7 +518,7 @@ instead of an integer.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.Dense.get_config">
-<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.Dense.get_config" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.Dense.get_config" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the config of the layer.</p>
 <p>A layer config is a Python dictionary (serializable)
 containing the configuration of a layer.
@@ -405,7 +541,7 @@ returned dict if they want to modify it.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nif.layers.HyperLinearForSIREN">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">HyperLinearForSIREN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.HyperLinearForSIREN" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">HyperLinearForSIREN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.HyperLinearForSIREN" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">PrunableLayer</span></code></p>
 <p>Implements a hypernetwork that generates weights and biases for the SIREN layer.</p>
 <dl class="field-list simple">
@@ -434,25 +570,25 @@ returned dict if they want to modify it.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.HyperLinearForSIREN.call">
-<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.HyperLinearForSIREN.call" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.HyperLinearForSIREN.call" title="Permalink to this definition"></a></dt>
 <dd><p>Computes the output of the layer for the input <cite>x</cite>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.HyperLinearForSIREN.get_config">
-<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.HyperLinearForSIREN.get_config" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.HyperLinearForSIREN.get_config" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the configuration dictionary of the layer.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.HyperLinearForSIREN.get_prunable_weights">
-<span class="sig-name descname"><span class="pre">get_prunable_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.HyperLinearForSIREN.get_prunable_weights" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_prunable_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.HyperLinearForSIREN.get_prunable_weights" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the prunable weights of the layer.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id5">
-<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id5" title="Permalink to this definition"></a></dt>
 <dd><p>This is where the layer’s logic lives.</p>
 <p>The <cite>call()</cite> method may not create state (except in its first
 invocation, wrapping the creation of variables or other resources in
@@ -513,7 +649,7 @@ from a Keras layer with masking support).</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id6">
-<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id6" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the config of the layer.</p>
 <p>A layer config is a Python dictionary (serializable)
 containing the configuration of a layer.
@@ -534,7 +670,7 @@ returned dict if they want to modify it.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id7">
-<span class="sig-name descname"><span class="pre">get_prunable_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_prunable_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id7" title="Permalink to this definition"></a></dt>
 <dd><p>Returns list of prunable weight tensors.</p>
 <p>All the weight tensors which the layer wants to be pruned during
 training must be returned by this method.</p>
@@ -548,7 +684,7 @@ training must be returned by this method.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nif.layers.MLP_ResNet">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">MLP_ResNet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.MLP_ResNet" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">MLP_ResNet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.MLP_ResNet" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">PrunableLayer</span></code></p>
 <p>A fully connected neural network with residual connections.</p>
 <dl class="field-list simple">
@@ -576,7 +712,7 @@ training must be returned by this method.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.MLP_ResNet.call">
-<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.MLP_ResNet.call" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.MLP_ResNet.call" title="Permalink to this definition"></a></dt>
 <dd><p>Forward pass of the neural network with residual connections.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -590,7 +726,7 @@ training must be returned by this method.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.MLP_ResNet.get_config">
-<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.MLP_ResNet.get_config" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.MLP_ResNet.get_config" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the configuration of the layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -601,7 +737,7 @@ training must be returned by this method.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.MLP_ResNet.get_prunable_weights">
-<span class="sig-name descname"><span class="pre">get_prunable_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.MLP_ResNet.get_prunable_weights" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_prunable_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.MLP_ResNet.get_prunable_weights" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the list of prunable weights of the layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -614,7 +750,7 @@ training must be returned by this method.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nif.layers.MLP_SimpleShortCut">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">MLP_SimpleShortCut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.MLP_SimpleShortCut" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">MLP_SimpleShortCut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.MLP_SimpleShortCut" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">PrunableLayer</span></code></p>
 <p>A fully connected layer with a skip connection that adds the input tensor to the output tensor.
 Inherits from tf.keras.layers.Layer and tfmot.sparsity.keras.PrunableLayer.</p>
@@ -634,7 +770,7 @@ Inherits from tf.keras.layers.Layer and tfmot.sparsity.keras.PrunableLayer.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.MLP_SimpleShortCut.call">
-<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.MLP_SimpleShortCut.call" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.MLP_SimpleShortCut.call" title="Permalink to this definition"></a></dt>
 <dd><p>Applies the fully connected layer with a skip connection to the input tensor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -651,7 +787,7 @@ Inherits from tf.keras.layers.Layer and tfmot.sparsity.keras.PrunableLayer.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.MLP_SimpleShortCut.get_config">
-<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.MLP_SimpleShortCut.get_config" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.MLP_SimpleShortCut.get_config" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the configuration of the layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -662,7 +798,7 @@ Inherits from tf.keras.layers.Layer and tfmot.sparsity.keras.PrunableLayer.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.MLP_SimpleShortCut.get_prunable_weights">
-<span class="sig-name descname"><span class="pre">get_prunable_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.MLP_SimpleShortCut.get_prunable_weights" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_prunable_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.MLP_SimpleShortCut.get_prunable_weights" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the weights of the layer that can be pruned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -675,7 +811,7 @@ Inherits from tf.keras.layers.Layer and tfmot.sparsity.keras.PrunableLayer.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nif.layers.JacRegLatentLayer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">JacRegLatentLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.JacRegLatentLayer" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">JacRegLatentLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.JacRegLatentLayer" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nif.layers.JacobianLayer" title="nif.layers.gradient.JacobianLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">JacobianLayer</span></code></a></p>
 <p>A custom Keras layer that applies Jacobian regularization to a TensorFlow model’s output.</p>
 <p>This layer computes the Jacobian matrix of the output with respect to the input, and
@@ -702,7 +838,7 @@ Jacobian with respect to.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.JacRegLatentLayer.call">
-<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.JacRegLatentLayer.call" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.JacRegLatentLayer.call" title="Permalink to this definition"></a></dt>
 <dd><p>Computes the output of the model and the Jacobian regularization loss.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -719,7 +855,7 @@ Jacobian with respect to.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.JacRegLatentLayer.get_config">
-<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.JacRegLatentLayer.get_config" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.JacRegLatentLayer.get_config" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the configuration of the layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -732,7 +868,7 @@ Jacobian with respect to.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nif.layers.JacobianLayer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">JacobianLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.JacobianLayer" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">JacobianLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.JacobianLayer" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></p>
 <p>A custom Keras layer that computes the Jacobian matrix of a TensorFlow model.</p>
 <dl class="field-list simple">
@@ -751,7 +887,7 @@ with respect to.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.JacobianLayer.call">
-<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.JacobianLayer.call" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.JacobianLayer.call" title="Permalink to this definition"></a></dt>
 <dd><p>Computes the output of the model and the Jacobian matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -770,7 +906,7 @@ with respect to.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nif.layers.HessianLayer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">HessianLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.HessianLayer" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">HessianLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.HessianLayer" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></p>
 <p>A custom Keras layer that computes the Hessian matrix of a TensorFlow model’s output.</p>
 <p>This layer computes the Hessian matrix of the output with respect to the input, and
@@ -790,7 +926,7 @@ the Hessian with respect to.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.HessianLayer.call">
-<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.HessianLayer.call" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.HessianLayer.call" title="Permalink to this definition"></a></dt>
 <dd><p>Computes the output of the model, the Jacobian matrix, and the Hessian matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -815,7 +951,7 @@ Hessian matrix.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nif.layers.ParameterOutputL1ActReg">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">ParameterOutputL1ActReg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.ParameterOutputL1ActReg" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">ParameterOutputL1ActReg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.ParameterOutputL1ActReg" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></p>
 <p>Custom Keras layer for parameter output L1 activation regularization.</p>
 <dl class="field-list simple">
@@ -828,7 +964,7 @@ Hessian matrix.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.ParameterOutputL1ActReg.call">
-<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.ParameterOutputL1ActReg.call" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.ParameterOutputL1ActReg.call" title="Permalink to this definition"></a></dt>
 <dd><p>Computes the output of the layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -844,7 +980,7 @@ Hessian matrix.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nif.layers.EinsumLayer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">EinsumLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.EinsumLayer" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">EinsumLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.EinsumLayer" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></p>
 <p>A custom layer that wraps a single tf.einsum operation.</p>
 <p>Usage:
@@ -859,7 +995,7 @@ x = EinsumLayer(“bmhwf,bmoh-&gt;bmowf”)((x1, x2))</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.EinsumLayer.call">
-<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.EinsumLayer.call" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.EinsumLayer.call" title="Permalink to this definition"></a></dt>
 <dd><p>Performs the tf.einsum operation on the inputs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -873,7 +1009,7 @@ x = EinsumLayer(“bmhwf,bmoh-&gt;bmowf”)((x1, x2))</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.EinsumLayer.get_config">
-<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.EinsumLayer.get_config" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.EinsumLayer.get_config" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the configuration of the layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -886,7 +1022,7 @@ x = EinsumLayer(“bmhwf,bmoh-&gt;bmowf”)((x1, x2))</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nif.layers.BiasAddLayer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">BiasAddLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.BiasAddLayer" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.layers.</span></span><span class="sig-name descname"><span class="pre">BiasAddLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.BiasAddLayer" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></p>
 <p>A custom layer that adds a bias vector to the inputs.</p>
 <dl class="field-list simple">
@@ -900,7 +1036,7 @@ x = EinsumLayer(“bmhwf,bmoh-&gt;bmowf”)((x1, x2))</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.BiasAddLayer.call">
-<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.BiasAddLayer.call" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.BiasAddLayer.call" title="Permalink to this definition"></a></dt>
 <dd><p>Adds the bias vector to the input tensor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -914,7 +1050,7 @@ x = EinsumLayer(“bmhwf,bmoh-&gt;bmowf”)((x1, x2))</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.layers.BiasAddLayer.get_config">
-<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.BiasAddLayer.get_config" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.layers.BiasAddLayer.get_config" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the configuration of the layer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -928,135 +1064,34 @@ x = EinsumLayer(“bmhwf,bmoh-&gt;bmowf”)((x1, x2))</p>
 </section>
 
 
-            <div class="clearer"></div>
+           </div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <div>
-    <h3><a href="index.html">Table of Contents</a></h3>
-    <ul>
-<li><a class="reference internal" href="#">nif.layers</a><ul>
-<li><a class="reference internal" href="#nif.layers.SIREN"><code class="docutils literal notranslate"><span class="pre">SIREN</span></code></a><ul>
-<li><a class="reference internal" href="#nif.layers.SIREN.call"><code class="docutils literal notranslate"><span class="pre">SIREN.call()</span></code></a></li>
-<li><a class="reference internal" href="#nif.layers.SIREN.get_config"><code class="docutils literal notranslate"><span class="pre">SIREN.get_config()</span></code></a></li>
-<li><a class="reference internal" href="#nif.layers.SIREN.get_prunable_weights"><code class="docutils literal notranslate"><span class="pre">SIREN.get_prunable_weights()</span></code></a></li>
-<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">SIREN.call()</span></code></a></li>
-<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">SIREN.get_config()</span></code></a></li>
-<li><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">SIREN.get_prunable_weights()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#nif.layers.SIREN_ResNet"><code class="docutils literal notranslate"><span class="pre">SIREN_ResNet</span></code></a><ul>
-<li><a class="reference internal" href="#nif.layers.SIREN_ResNet.call"><code class="docutils literal notranslate"><span class="pre">SIREN_ResNet.call()</span></code></a></li>
-<li><a class="reference internal" href="#nif.layers.SIREN_ResNet.get_prunable_weights"><code class="docutils literal notranslate"><span class="pre">SIREN_ResNet.get_prunable_weights()</span></code></a></li>
-<li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">SIREN_ResNet.call()</span></code></a></li>
-<li><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">SIREN_ResNet.get_prunable_weights()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#nif.layers.Dense"><code class="docutils literal notranslate"><span class="pre">Dense</span></code></a><ul>
-<li><a class="reference internal" href="#nif.layers.Dense.build"><code class="docutils literal notranslate"><span class="pre">Dense.build()</span></code></a></li>
-<li><a class="reference internal" href="#nif.layers.Dense.call"><code class="docutils literal notranslate"><span class="pre">Dense.call()</span></code></a></li>
-<li><a class="reference internal" href="#nif.layers.Dense.compute_output_shape"><code class="docutils literal notranslate"><span class="pre">Dense.compute_output_shape()</span></code></a></li>
-<li><a class="reference internal" href="#nif.layers.Dense.get_config"><code class="docutils literal notranslate"><span class="pre">Dense.get_config()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#nif.layers.HyperLinearForSIREN"><code class="docutils literal notranslate"><span class="pre">HyperLinearForSIREN</span></code></a><ul>
-<li><a class="reference internal" href="#nif.layers.HyperLinearForSIREN.call"><code class="docutils literal notranslate"><span class="pre">HyperLinearForSIREN.call()</span></code></a></li>
-<li><a class="reference internal" href="#nif.layers.HyperLinearForSIREN.get_config"><code class="docutils literal notranslate"><span class="pre">HyperLinearForSIREN.get_config()</span></code></a></li>
-<li><a class="reference internal" href="#nif.layers.HyperLinearForSIREN.get_prunable_weights"><code class="docutils literal notranslate"><span class="pre">HyperLinearForSIREN.get_prunable_weights()</span></code></a></li>
-<li><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">HyperLinearForSIREN.call()</span></code></a></li>
-<li><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">HyperLinearForSIREN.get_config()</span></code></a></li>
-<li><a class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">HyperLinearForSIREN.get_prunable_weights()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#nif.layers.MLP_ResNet"><code class="docutils literal notranslate"><span class="pre">MLP_ResNet</span></code></a><ul>
-<li><a class="reference internal" href="#nif.layers.MLP_ResNet.call"><code class="docutils literal notranslate"><span class="pre">MLP_ResNet.call()</span></code></a></li>
-<li><a class="reference internal" href="#nif.layers.MLP_ResNet.get_config"><code class="docutils literal notranslate"><span class="pre">MLP_ResNet.get_config()</span></code></a></li>
-<li><a class="reference internal" href="#nif.layers.MLP_ResNet.get_prunable_weights"><code class="docutils literal notranslate"><span class="pre">MLP_ResNet.get_prunable_weights()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#nif.layers.MLP_SimpleShortCut"><code class="docutils literal notranslate"><span class="pre">MLP_SimpleShortCut</span></code></a><ul>
-<li><a class="reference internal" href="#nif.layers.MLP_SimpleShortCut.call"><code class="docutils literal notranslate"><span class="pre">MLP_SimpleShortCut.call()</span></code></a></li>
-<li><a class="reference internal" href="#nif.layers.MLP_SimpleShortCut.get_config"><code class="docutils literal notranslate"><span class="pre">MLP_SimpleShortCut.get_config()</span></code></a></li>
-<li><a class="reference internal" href="#nif.layers.MLP_SimpleShortCut.get_prunable_weights"><code class="docutils literal notranslate"><span class="pre">MLP_SimpleShortCut.get_prunable_weights()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#nif.layers.JacRegLatentLayer"><code class="docutils literal notranslate"><span class="pre">JacRegLatentLayer</span></code></a><ul>
-<li><a class="reference internal" href="#nif.layers.JacRegLatentLayer.call"><code class="docutils literal notranslate"><span class="pre">JacRegLatentLayer.call()</span></code></a></li>
-<li><a class="reference internal" href="#nif.layers.JacRegLatentLayer.get_config"><code class="docutils literal notranslate"><span class="pre">JacRegLatentLayer.get_config()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#nif.layers.JacobianLayer"><code class="docutils literal notranslate"><span class="pre">JacobianLayer</span></code></a><ul>
-<li><a class="reference internal" href="#nif.layers.JacobianLayer.call"><code class="docutils literal notranslate"><span class="pre">JacobianLayer.call()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#nif.layers.HessianLayer"><code class="docutils literal notranslate"><span class="pre">HessianLayer</span></code></a><ul>
-<li><a class="reference internal" href="#nif.layers.HessianLayer.call"><code class="docutils literal notranslate"><span class="pre">HessianLayer.call()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#nif.layers.ParameterOutputL1ActReg"><code class="docutils literal notranslate"><span class="pre">ParameterOutputL1ActReg</span></code></a><ul>
-<li><a class="reference internal" href="#nif.layers.ParameterOutputL1ActReg.call"><code class="docutils literal notranslate"><span class="pre">ParameterOutputL1ActReg.call()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#nif.layers.EinsumLayer"><code class="docutils literal notranslate"><span class="pre">EinsumLayer</span></code></a><ul>
-<li><a class="reference internal" href="#nif.layers.EinsumLayer.call"><code class="docutils literal notranslate"><span class="pre">EinsumLayer.call()</span></code></a></li>
-<li><a class="reference internal" href="#nif.layers.EinsumLayer.get_config"><code class="docutils literal notranslate"><span class="pre">EinsumLayer.get_config()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#nif.layers.BiasAddLayer"><code class="docutils literal notranslate"><span class="pre">BiasAddLayer</span></code></a><ul>
-<li><a class="reference internal" href="#nif.layers.BiasAddLayer.call"><code class="docutils literal notranslate"><span class="pre">BiasAddLayer.call()</span></code></a></li>
-<li><a class="reference internal" href="#nif.layers.BiasAddLayer.get_config"><code class="docutils literal notranslate"><span class="pre">BiasAddLayer.get_config()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="api_nif_optimizers.html" class="btn btn-neutral float-left" title="nif.optimizers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api_nif_model.html" class="btn btn-neutral float-right" title="nif.model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
   </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/api_nif_layers.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="api_nif_model.html" title="nif.model"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="api_nif_optimizers.html" title="nif.optimizers"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">NIF  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">nif.layers</a></li> 
-      </ul>
-    </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright .
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
-    </div>
-  </body>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
 </html>

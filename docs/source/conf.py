@@ -4,25 +4,12 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-
-project = "NIF"
-copyright = "2023, Shaowu Pan"
-author = "Shaowu Pan"
-release = "1.0.3"
-
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
-
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath("../nif"))
-
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon"]
-
-templates_path = ["_templates"]
-exclude_patterns = []
-
+sys.path.insert(0, os.path.abspath("../.."))
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -30,14 +17,63 @@ exclude_patterns = []
 html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
 
-
 master_doc = "index"
 
-from sphinx.builders.html import StandaloneHTMLBuilder
+import sphinx_rtd_theme
 
-StandaloneHTMLBuilder.supported_image_types = [
-    "image/svg+xml",
-    "image/gif",
-    "image/png",
-    "image/jpeg",
-]
+# Add the project directory to the system path
+sys.path.insert(0, os.path.abspath(".."))
+
+# Project information
+project = "NIF"
+author = "Shaowu Pan, Steven Brunton, J. Nathan Kutz"
+
+# Extensions
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon", "sphinx.ext.coverage"]
+
+# Templates
+templates_path = ["_templates"]
+
+# Static files
+
+# Theme settings
+html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+html_theme_options = {
+    "style_nav_header_background": "#2f5470",
+}
+
+# Output file base name for HTML help builder
+htmlhelp_basename = "NIF"
+
+# Document formatting
+napoleon_use_ivar = True
+napoleon_use_rtype = False
+napoleon_use_param = False
+napoleon_use_keyword = False
+
+# Exclude modules
+exclude_patterns = []
+
+# Syntax highlighting
+highlight_language = "python"
+
+# Configure LaTeX output
+latex_elements = {
+    "papersize": "letterpaper",
+    "pointsize": "12pt",
+    "preamble": "",
+    "figure_align": "htbp",
+}
+
+# Document hierarchy
+autodoc_member_order = "bysource"
+
+# Exclude members
+exclude_members = []
+
+# Source suffix
+source_suffix = [".rst", ".md"]
+
+
+html_context = {"module": "nif.model", "module": "nif.layers"}
+html_sidebars = {"**": ["localtoc.html", "sourcelink.html", "searchbox.html"]}

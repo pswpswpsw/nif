@@ -6,9 +6,19 @@
 
 .. include:: ../README.rst
 
+
 .. toctree::
    :maxdepth: 1
-   :caption: User Guide
+   :caption: Contents
+
+   index
+   api_nif_data
+   api_nif_demo
+   api_nif_optimizers
+   api_nif_layers
+   api_nif_model
+
+
 
 
 Indices and tables

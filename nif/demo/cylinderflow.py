@@ -6,6 +6,22 @@ from nif.data.point_wise_data import PointWiseData
 
 
 class CylinderFlow(PointWiseData):
+    """
+    A class representing the cylinder flow dataset.
+
+    Inherits from the PointWiseData class.
+
+    Attributes:
+    - data (numpy.ndarray): A numpy array containing the normalized data.
+    - mean (numpy.ndarray): A numpy array containing the mean values used for normalization.
+    - std (numpy.ndarray): A numpy array containing the standard deviation values used for normalization.
+    - sample_weight (numpy.ndarray): A numpy array containing the weights assigned to each data sample.
+    - n_p (int): The number of parameters in the data.
+    - n_x (int): The number of inputs (features) in the data.
+    - n_o (int): The number of outputs (targets) in the data.
+
+    """
+
     def __init__(self):
         path = os.path.abspath(__file__)
         dir_path = os.path.dirname(path)

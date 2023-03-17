@@ -5,6 +5,14 @@ import tensorflow as tf
 
 
 class TFRDataset(object):
+    """A class to handle creating and loading Tensorflow record datasets.
+
+    Args:
+        n_feature (int): The number of features.
+        n_target (int): The number of targets.
+        area_weight (bool, optional): Whether or not to use area weights. Defaults to False.
+    """
+
     def __init__(self, n_feature, n_target, area_weight=False):
         self.AUTOTUNE = tf.data.experimental.AUTOTUNE
         self.n_feature = n_feature
@@ -12,6 +20,15 @@ class TFRDataset(object):
         self.area_weight = area_weight
 
     def create_from_npz(self, num_pts_per_file, npz_path, npz_key, tfr_path, prefix):
+        """Create Tensorflow record files from a numpy file.
+
+        Args:
+            num_pts_per_file (int): The number of points to put into each Tensorflow record file.
+            npz_path (str): The path to the numpy file.
+            npz_key (str): The key of the numpy array to use.
+            tfr_path (str): The path to the output directory for the Tensorflow record files.
+            prefix (str): The prefix to add to each Tensorflow record file name.
+        """
         num_pts_per_file = int(num_pts_per_file)
         npz_data = np.load(npz_path)[npz_key]
         NUM_TOTAL_PTS, N_COL = npz_data.shape
@@ -66,6 +83,16 @@ class TFRDataset(object):
                 writer.write(example.SerializeToString())
 
     def gen_dataset_from_batch_file(self, batch_file, batch_size):
+        """Generate a TensorFlow Dataset from a batch file.
+
+        Args:
+            batch_file (np.ndarray): A NumPy array containing the batch data.
+            batch_size (int): The batch size.
+
+        Returns:
+            tf.data.Dataset: A TensorFlow Dataset object.
+
+        """
         features = tf.transpose(
             tf.squeeze(tf.stack(batch_file[: self.n_feature], 0), 1)
         )
@@ -88,6 +115,17 @@ class TFRDataset(object):
         return batch_dataset
 
     def get_tfr_meta_dataset(self, tfr_path, epoch, tfr_shuffle_buffer_size=1):
+        """Get a meta TensorFlow Dataset object from a folder of TFRecord files.
+
+        Args:
+            tfr_path (str): The path to the folder containing the TFRecord files.
+            epoch (int): The number of epochs to iterate through.
+            tfr_shuffle_buffer_size (int): The shuffle buffer size.
+
+        Returns:
+            tf.data.Dataset: A TensorFlow Dataset object.
+
+        """
         # I used an abnormal way to create tfrecord data,
         # I cannot use point wise data line by line for example.
         # because it will end up with an unacceptable create-file time.
@@ -126,5 +164,11 @@ class TFRDataset(object):
 
 
 def mkdir(directory):
+    """Create a directory if it does not exist.
+
+    Args:
+        directory (str): The directory path.
+
+    """
     if not os.path.exists(directory):
         os.makedirs(directory)

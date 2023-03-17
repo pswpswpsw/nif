@@ -119,30 +119,78 @@
 <dt class="sig sig-object py" id="nif.data.PointWiseData">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.data.</span></span><span class="sig-name descname"><span class="pre">PointWiseData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.data.PointWiseData" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents point-wise data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_raw</strong> (<em>numpy.ndarray</em>) – Raw data.</p></li>
+<li><p><strong>data</strong> (<em>numpy.ndarray</em>) – Normalized data.</p></li>
+<li><p><strong>sample_weight</strong> (<em>numpy.ndarray</em>) – Sample weights.</p></li>
+<li><p><strong>n_p</strong> (<em>int</em>) – Number of parameter features.</p></li>
+<li><p><strong>n_x</strong> (<em>int</em>) – Number of state features.</p></li>
+<li><p><strong>n_o</strong> (<em>int</em>) – Number of output features.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="nif.data.PointWiseData.parameter">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parameter</span></span><a class="headerlink" href="#nif.data.PointWiseData.parameter" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns the parameter data.</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="nif.data.PointWiseData.x">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#nif.data.PointWiseData.x" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns the state data.</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="nif.data.PointWiseData.u">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u</span></span><a class="headerlink" href="#nif.data.PointWiseData.u" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns the output data.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.data.PointWiseData.standard_normalize">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">standard_normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_weighted</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.data.PointWiseData.standard_normalize" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Performs standard normalization on raw data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raw_data</strong> (<em>numpy.ndarray</em>) – Raw data.</p></li>
+<li><p><strong>area_weighted</strong> (<em>bool</em>) – Whether to perform area weighting. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>numpy.ndarray</em> – Normalized data.
+numpy.ndarray: Mean of raw data.
+numpy.ndarray: Standard deviation of raw data.
+numpy.ndarray: Normalized sample weights.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.data.PointWiseData.minmax_normalize">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">minmax_normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_weighted</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.data.PointWiseData.minmax_normalize" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Performs min-max normalization on raw data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raw_data</strong> (<em>numpy.ndarray</em>) – Raw data.</p></li>
+<li><p><strong>n_para</strong> (<em>int</em>) – Number of parameter features.</p></li>
+<li><p><strong>n_x</strong> (<em>int</em>) – Number of state features.</p></li>
+<li><p><strong>n_target</strong> (<em>int</em>) – Number of output features.</p></li>
+<li><p><strong>area_weighted</strong> (<em>bool</em>) – Whether to perform area weighting. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>numpy.ndarray</em> – Normalized data.
+numpy.ndarray: Mean of raw data.
+numpy.ndarray: Standard deviation of raw data.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -150,20 +198,67 @@
 <dt class="sig sig-object py" id="nif.data.TFRDataset">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.data.</span></span><span class="sig-name descname"><span class="pre">TFRDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.data.TFRDataset" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to handle creating and loading Tensorflow record datasets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_feature</strong> (<em>int</em>) – The number of features.</p></li>
+<li><p><strong>n_target</strong> (<em>int</em>) – The number of targets.</p></li>
+<li><p><strong>area_weight</strong> (<em>bool, optional</em>) – Whether or not to use area weights. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.data.TFRDataset.create_from_npz">
 <span class="sig-name descname"><span class="pre">create_from_npz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_pts_per_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">npz_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">npz_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tfr_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.data.TFRDataset.create_from_npz" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Create Tensorflow record files from a numpy file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_pts_per_file</strong> (<em>int</em>) – The number of points to put into each Tensorflow record file.</p></li>
+<li><p><strong>npz_path</strong> (<em>str</em>) – The path to the numpy file.</p></li>
+<li><p><strong>npz_key</strong> (<em>str</em>) – The key of the numpy array to use.</p></li>
+<li><p><strong>tfr_path</strong> (<em>str</em>) – The path to the output directory for the Tensorflow record files.</p></li>
+<li><p><strong>prefix</strong> (<em>str</em>) – The prefix to add to each Tensorflow record file name.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.data.TFRDataset.gen_dataset_from_batch_file">
 <span class="sig-name descname"><span class="pre">gen_dataset_from_batch_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.data.TFRDataset.gen_dataset_from_batch_file" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Generate a TensorFlow Dataset from a batch file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>batch_file</strong> (<em>np.ndarray</em>) – A NumPy array containing the batch data.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em>) – The batch size.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>tf.data.Dataset</em> – A TensorFlow Dataset object.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nif.data.TFRDataset.get_tfr_meta_dataset">
 <span class="sig-name descname"><span class="pre">get_tfr_meta_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tfr_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tfr_shuffle_buffer_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.data.TFRDataset.get_tfr_meta_dataset" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get a meta TensorFlow Dataset object from a folder of TFRecord files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tfr_path</strong> (<em>str</em>) – The path to the folder containing the TFRecord files.</p></li>
+<li><p><strong>epoch</strong> (<em>int</em>) – The number of epochs to iterate through.</p></li>
+<li><p><strong>tfr_shuffle_buffer_size</strong> (<em>int</em>) – The shuffle buffer size.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>tf.data.Dataset</em> – A TensorFlow Dataset object.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

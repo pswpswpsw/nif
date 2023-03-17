@@ -1,0 +1,2 @@
+sphinx-build -E -a docs/source docs
+

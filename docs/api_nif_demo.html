@@ -70,7 +70,12 @@
 <li class="toctree-l1"><a class="reference internal" href="api_nif_data.html">nif.data</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">nif.demo</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#nif.demo.TravelingWave"><code class="docutils literal notranslate"><span class="pre">TravelingWave</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#nif.demo.TravelingWaveHighFreq"><code class="docutils literal notranslate"><span class="pre">TravelingWaveHighFreq</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.demo.TravelingWaveHighFreq"><code class="docutils literal notranslate"><span class="pre">TravelingWaveHighFreq</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.demo.TravelingWaveHighFreq.__init__"><code class="docutils literal notranslate"><span class="pre">TravelingWaveHighFreq.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.demo.TravelingWaveHighFreq.standard_normalize"><code class="docutils literal notranslate"><span class="pre">TravelingWaveHighFreq.standard_normalize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.demo.TravelingWaveHighFreq.minmax_normalize"><code class="docutils literal notranslate"><span class="pre">TravelingWaveHighFreq.minmax_normalize()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#nif.demo.CylinderFlow"><code class="docutils literal notranslate"><span class="pre">CylinderFlow</span></code></a></li>
 </ul>
 </li>
@@ -109,18 +114,67 @@
 <dt class="sig sig-object py" id="nif.demo.TravelingWave">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.demo.</span></span><span class="sig-name descname"><span class="pre">TravelingWave</span></span><a class="headerlink" href="#nif.demo.TravelingWave" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="api_nif_data.html#nif.data.PointWiseData" title="nif.data.point_wise_data.PointWiseData"><code class="xref py py-class docutils literal notranslate"><span class="pre">PointWiseData</span></code></a></p>
+<p>A class for loading and processing the traveling wave dataset.</p>
+<p>Inherits from the PointWiseData class, which is a base class for point-wise data processing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mean</strong> (<em>ndarray</em>) – Mean values of the normalized data.</p></li>
+<li><p><strong>std</strong> (<em>ndarray</em>) – Standard deviation values of the normalized data.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nif.demo.TravelingWaveHighFreq">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.demo.</span></span><span class="sig-name descname"><span class="pre">TravelingWaveHighFreq</span></span><a class="headerlink" href="#nif.demo.TravelingWaveHighFreq" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="api_nif_data.html#nif.data.PointWiseData" title="nif.data.point_wise_data.PointWiseData"><code class="xref py py-class docutils literal notranslate"><span class="pre">PointWiseData</span></code></a></p>
+<p>A class for loading and normalizing the traveling wave high frequency dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_p</strong> (<em>int</em>) – The number of parameters.</p></li>
+<li><p><strong>n_x</strong> (<em>int</em>) – The number of input features.</p></li>
+<li><p><strong>n_o</strong> (<em>int</em>) – The number of output targets.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="nif.demo.TravelingWaveHighFreq.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.demo.TravelingWaveHighFreq.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes the class and loads the dataset.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nif.demo.TravelingWaveHighFreq.standard_normalize">
+<span class="sig-name descname"><span class="pre">standard_normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_weighted</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.demo.TravelingWaveHighFreq.standard_normalize" title="Permalink to this definition"></a></dt>
+<dd><p>Normalizes the given data
+using standard normalization.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nif.demo.TravelingWaveHighFreq.minmax_normalize">
+<span class="sig-name descname"><span class="pre">minmax_normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_weighted</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.demo.TravelingWaveHighFreq.minmax_normalize" title="Permalink to this definition"></a></dt>
+<dd><p>Normalizes the given data using min-max normalization.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nif.demo.CylinderFlow">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.demo.</span></span><span class="sig-name descname"><span class="pre">CylinderFlow</span></span><a class="headerlink" href="#nif.demo.CylinderFlow" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="api_nif_data.html#nif.data.PointWiseData" title="nif.data.point_wise_data.PointWiseData"><code class="xref py py-class docutils literal notranslate"><span class="pre">PointWiseData</span></code></a></p>
+<p>A class representing the cylinder flow dataset.</p>
+<p>Inherits from the PointWiseData class.</p>
+<p>Attributes:
+- data (numpy.ndarray): A numpy array containing the normalized data.
+- mean (numpy.ndarray): A numpy array containing the mean values used for normalization.
+- std (numpy.ndarray): A numpy array containing the standard deviation values used for normalization.
+- sample_weight (numpy.ndarray): A numpy array containing the weights assigned to each data sample.
+- n_p (int): The number of parameters in the data.
+- n_x (int): The number of inputs (features) in the data.
+- n_o (int): The number of outputs (targets) in the data.</p>
 </dd></dl>
 
 </section>

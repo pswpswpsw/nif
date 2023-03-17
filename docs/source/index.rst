@@ -7,6 +7,9 @@
 .. include:: ../README.rst
 
 
+API Reference
+-------------
+
 .. toctree::
    :maxdepth: 1
    :caption: Contents
@@ -19,10 +22,8 @@
    api_nif_model
 
 
-
-
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`

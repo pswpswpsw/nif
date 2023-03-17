@@ -1,33 +1,33 @@
 # Settings for pre-commit
-exclude: dev/, docs/
+exclude: ^(dev|docs)/
 fail_fast: false
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.3.0
   hooks:
     - id: check-added-large-files
-      exclude: dev/, docs/source/_static/
+      exclude: ^(dev|docs/source/_static)/
       args: ["--maxkb=9000"]
     - id: check-merge-conflict
-      exclude: dev/, docs/
+      exclude: ^(dev|docs)/
     - id: end-of-file-fixer
-      exclude: tutorial/, docs/
+      exclude: ^(tutorial|docs)/
 
 - repo: https://github.com/asottile/reorder_python_imports
   rev: v3.8.2
   hooks:
     - id: reorder-python-imports
-      exclude: dev/, docs/
+      exclude: ^(dev|docs)/
 
 - repo: https://github.com/psf/black
   rev: 22.6.0
   hooks:
     - id: black
-      exclude: dev/, docs/
+      exclude: ^(dev|docs)/
 
 - repo: https://github.com/PyCQA/flake8
   rev: 5.0.4
   hooks:
     - id: flake8
       args: ["--config=setup.cfg"]
-      exclude: docs/
+      exclude: ^docs/

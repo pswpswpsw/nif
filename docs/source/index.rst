@@ -12,7 +12,6 @@ API Reference
 
 .. toctree::
    :maxdepth: 1
-   :caption: Contents
 
    index
    api_nif_data

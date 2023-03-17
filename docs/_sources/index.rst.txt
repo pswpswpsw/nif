@@ -12,7 +12,6 @@ API Reference
 
 .. toctree::
    :maxdepth: 1
-   :caption: Contents
 
    index
    api_nif_data
@@ -23,7 +22,7 @@ API Reference
 
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`

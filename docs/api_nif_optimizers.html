@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nif.optimizers &mdash; NIF  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="nif.layers" href="api_nif_layers.html" />
+    <link rel="prev" title="nif.demo" href="api_nif_demo.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2f5470" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NIF
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Neural Implicit Flow (NIF): mesh-agnostic dimensionality reduction</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#highlights">Highlights</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#google-colab-tutorial">Google Colab Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#issues-bugs-requests-ideas">Issues, bugs, requests, ideas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#how-to-cite">How to cite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#contributors">Contributors</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#license">License</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="api_nif_data.html">nif.data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_nif_demo.html">nif.demo</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">nif.optimizers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#nif.optimizers.function_factory"><code class="docutils literal notranslate"><span class="pre">function_factory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.optimizers.lbfgs_minimize"><code class="docutils literal notranslate"><span class="pre">lbfgs_minimize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.optimizers.LBFGSOptimizer"><code class="docutils literal notranslate"><span class="pre">LBFGSOptimizer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.optimizers.TFPLBFGS"><code class="docutils literal notranslate"><span class="pre">TFPLBFGS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.optimizers.L4Adam"><code class="docutils literal notranslate"><span class="pre">L4Adam</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.optimizers.AdaBeliefOptimizer"><code class="docutils literal notranslate"><span class="pre">AdaBeliefOptimizer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.optimizers.centralized_gradients_for_optimizer"><code class="docutils literal notranslate"><span class="pre">centralized_gradients_for_optimizer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.optimizers.Lion"><code class="docutils literal notranslate"><span class="pre">Lion</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api_nif_layers.html">nif.layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_nif_model.html">nif.model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_nif_data.html">nif.data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_nif_demo.html">nif.demo</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">nif.optimizers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#nif.optimizers.function_factory"><code class="docutils literal notranslate"><span class="pre">function_factory()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.optimizers.lbfgs_minimize"><code class="docutils literal notranslate"><span class="pre">lbfgs_minimize()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.optimizers.LBFGSOptimizer"><code class="docutils literal notranslate"><span class="pre">LBFGSOptimizer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.optimizers.LBFGSOptimizer.epoch"><code class="docutils literal notranslate"><span class="pre">LBFGSOptimizer.epoch</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.optimizers.LBFGSOptimizer.loss"><code class="docutils literal notranslate"><span class="pre">LBFGSOptimizer.loss</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.optimizers.LBFGSOptimizer.minimize"><code class="docutils literal notranslate"><span class="pre">LBFGSOptimizer.minimize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.optimizers.TFPLBFGS"><code class="docutils literal notranslate"><span class="pre">TFPLBFGS</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.optimizers.TFPLBFGS.minimize"><code class="docutils literal notranslate"><span class="pre">TFPLBFGS.minimize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.optimizers.TFPLBFGS.history"><code class="docutils literal notranslate"><span class="pre">TFPLBFGS.history</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.optimizers.L4Adam"><code class="docutils literal notranslate"><span class="pre">L4Adam</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.optimizers.L4Adam._create_slots"><code class="docutils literal notranslate"><span class="pre">L4Adam._create_slots()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.optimizers.L4Adam._prepare_local"><code class="docutils literal notranslate"><span class="pre">L4Adam._prepare_local()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.optimizers.L4Adam._momentum_add"><code class="docutils literal notranslate"><span class="pre">L4Adam._momentum_add()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.optimizers.L4Adam._resource_apply_dense"><code class="docutils literal notranslate"><span class="pre">L4Adam._resource_apply_dense()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.optimizers.L4Adam.minimize"><code class="docutils literal notranslate"><span class="pre">L4Adam.minimize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.optimizers.L4Adam.apply_gradients"><code class="docutils literal notranslate"><span class="pre">L4Adam.apply_gradients()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.optimizers.L4Adam._distributed_apply"><code class="docutils literal notranslate"><span class="pre">L4Adam._distributed_apply()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.optimizers.L4Adam._resource_apply_sparse"><code class="docutils literal notranslate"><span class="pre">L4Adam._resource_apply_sparse()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.optimizers.L4Adam.get_config"><code class="docutils literal notranslate"><span class="pre">L4Adam.get_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">L4Adam.minimize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">L4Adam.apply_gradients()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id18"><code class="docutils literal notranslate"><span class="pre">L4Adam.get_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.optimizers.AdaBeliefOptimizer"><code class="docutils literal notranslate"><span class="pre">AdaBeliefOptimizer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.optimizers.AdaBeliefOptimizer.set_weights"><code class="docutils literal notranslate"><span class="pre">AdaBeliefOptimizer.set_weights()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nif.optimizers.AdaBeliefOptimizer.get_config"><code class="docutils literal notranslate"><span class="pre">AdaBeliefOptimizer.get_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.optimizers.centralized_gradients_for_optimizer"><code class="docutils literal notranslate"><span class="pre">centralized_gradients_for_optimizer()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.optimizers.Lion"><code class="docutils literal notranslate"><span class="pre">Lion</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nif.optimizers.Lion.get_config"><code class="docutils literal notranslate"><span class="pre">Lion.get_config()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_nif_layers.html">nif.layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_nif_model.html">nif.model</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2f5470" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NIF</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">nif.optimizers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api_nif_optimizers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-nif.optimizers">
+<span id="nif-optimizers"></span><h1>nif.optimizers<a class="headerlink" href="#module-nif.optimizers" title="Permalink to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="nif.optimizers.function_factory">
+<span class="sig-prename descclassname"><span class="pre">nif.optimizers.</span></span><span class="sig-name descname"><span class="pre">function_factory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_epoch</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.function_factory" title="Permalink to this definition">¶</a></dt>
+<dd><p>A factory to create a function required by tfp.optimizer.lbfgs_minimize.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model [in]</strong> – an instance of <cite>tf.keras.Model</cite> or its subclasses.</p></li>
+<li><p><strong>loss [in]</strong> – a function with signature loss_value = loss(pred_y, true_y).</p></li>
+<li><p><strong>train_x [in]</strong> – the input part of training demo.</p></li>
+<li><p><strong>train_y [in]</strong> – the output part of training demo.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>A function that has a signature of</em> –     loss_value, gradients = f(model_parameters).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nif.optimizers.lbfgs_minimize">
+<span class="sig-prename descclassname"><span class="pre">nif.optimizers.</span></span><span class="sig-name descname"><span class="pre">lbfgs_minimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value_and_gradients_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">previous_optimizer_results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_correction_pairs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_relative_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_inverse_hessian_estimate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopping_condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_line_search_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_absolute_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.lbfgs_minimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies the L-BFGS algorithm to minimize a differentiable function.</p>
+<p>Performs unconstrained minimization of a differentiable function using the
+L-BFGS scheme. See [Nocedal and Wright(2006)][1] for details of the algorithm.</p>
+<p>### Usage:</p>
+<p>The following example demonstrates the L-BFGS optimizer attempting to find the
+minimum for a simple high-dimensional quadratic objective function.</p>
+<dl>
+<dt><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>python</dt><dd><p># A high-dimensional quadratic bowl.
+ndims = 60
+minimum = np.ones([ndims], dtype=’float64’)
+scales = np.arange(ndims, dtype=’float64’) + 1.0</p>
+<p># The objective function and the gradient.
+def quadratic_loss_and_gradient(x):</p>
+<blockquote>
+<div><dl>
+<dt>return tfp.math.value_and_gradient(</dt><dd><dl class="simple">
+<dt>lambda x: tf.reduce_sum(</dt><dd><p>scales * tf.math.squared_difference(x, minimum), axis=-1),</p>
+</dd>
+</dl>
+<ol class="loweralpha simple" start="24">
+<li></li>
+</ol>
+</dd>
+</dl>
+</div></blockquote>
+<p>start = np.arange(ndims, 0, -1, dtype=’float64’)
+optim_results = tfp.optimizer.lbfgs_minimize(</p>
+<blockquote>
+<div><p>quadratic_loss_and_gradient,
+initial_position=start,
+num_correction_pairs=10,
+tolerance=1e-8)</p>
+</div></blockquote>
+<p># Check that the search converged
+assert(optim_results.converged)
+# Check that the argmin is close to the actual value.
+np.testing.assert_allclose(optim_results.position, minimum)</p>
+</dd>
+</dl>
+<p><a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
+<p>### References:</p>
+<dl class="simple">
+<dt>[1] Jorge Nocedal, Stephen Wright. Numerical Optimization. Springer Series</dt><dd><p>in Operations Research. pp 176-180. 2006</p>
+</dd>
+</dl>
+<p><a class="reference external" href="http://pages.mtu.edu/~struther/Courses/OLD/Sp2013/5630/Jorge_Nocedal_Numerical_optimization_267490.pdf">http://pages.mtu.edu/~struther/Courses/OLD/Sp2013/5630/Jorge_Nocedal_Numerical_optimization_267490.pdf</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value_and_gradients_function</strong> – A Python callable that accepts a point as a
+real <cite>Tensor</cite> and returns a tuple of <cite>Tensor`s of real dtype containing
+the value of the function and its gradient at that point. The function
+to be minimized. The input is of shape `[…, n]</cite>, where <cite>n</cite> is the size
+of the domain of input points, and all others are batching dimensions.
+The first component of the return value is a real <cite>Tensor</cite> of matching
+shape <cite>[…]</cite>. The second component (the gradient) is also of shape
+<cite>[…, n]</cite> like the input value to the function.</p></li>
+<li><p><strong>initial_position</strong> – Real <cite>Tensor</cite> of shape <cite>[…, n]</cite>. The starting point, or
+points when using batching dimensions, of the search procedure. At these
+points the function value and the gradient norm should be finite.
+Exactly one of <cite>initial_position</cite> and <cite>previous_optimizer_results</cite> can be
+non-None.</p></li>
+<li><p><strong>previous_optimizer_results</strong> – An <cite>LBfgsOptimizerResults</cite> namedtuple to
+intialize the optimizer state from, instead of an <cite>initial_position</cite>.
+This can be passed in from a previous return value to resume optimization
+with a different <cite>stopping_condition</cite>. Exactly one of <cite>initial_position</cite>
+and <cite>previous_optimizer_results</cite> can be non-None.</p></li>
+<li><p><strong>num_correction_pairs</strong> – Positive integer. Specifies the maximum number of
+(position_delta, gradient_delta) correction pairs to keep as implicit
+approximation of the Hessian matrix.</p></li>
+<li><p><strong>tolerance</strong> – Scalar <cite>Tensor</cite> of real dtype. Specifies the gradient tolerance
+for the procedure. If the supremum norm of the gradient vector is below
+this number, the algorithm is stopped.</p></li>
+<li><p><strong>x_tolerance</strong> – Scalar <cite>Tensor</cite> of real dtype. If the absolute change in the
+position between one iteration and the next is smaller than this number,
+the algorithm is stopped.</p></li>
+<li><p><strong>f_relative_tolerance</strong> – Scalar <cite>Tensor</cite> of real dtype. If the relative change
+in the objective value between one iteration and the next is smaller
+than this value, the algorithm is stopped.</p></li>
+<li><p><strong>initial_inverse_hessian_estimate</strong> – None. Option currently not supported.</p></li>
+<li><p><strong>max_iterations</strong> – Scalar positive int32 <cite>Tensor</cite>. The maximum number of
+iterations for L-BFGS updates.</p></li>
+<li><p><strong>parallel_iterations</strong> – Positive integer. The number of iterations allowed to
+run in parallel.</p></li>
+<li><p><strong>stopping_condition</strong> – (Optional) A Python function that takes as input two
+Boolean tensors of shape <cite>[…]</cite>, and returns a Boolean scalar tensor.
+The input tensors are <cite>converged</cite> and <cite>failed</cite>, indicating the current
+status of each respective batch member; the return value states whether
+the algorithm should stop. The default is tfp.optimizer.converged_all
+which only stops when all batch members have either converged or failed.
+An alternative is tfp.optimizer.converged_any which stops as soon as one
+batch member has converged, or when all have failed.</p></li>
+<li><p><strong>max_line_search_iterations</strong> – Python int. The maximum number of iterations
+for the <cite>hager_zhang</cite> line search algorithm.</p></li>
+<li><p><strong>f_absolute_tolerance</strong> – Scalar <cite>Tensor</cite> of real dtype. If the absolute change
+in the objective value between one iteration and the next is smaller
+than this value, the algorithm is stopped.</p></li>
+<li><p><strong>name</strong> – (Optional) Python str. The name prefixed to the ops created by this
+function. If not supplied, the default name ‘minimize’ is used.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p><em>optimizer_results</em> –</p>
+<dl class="simple">
+<dt>A namedtuple containing the following items:</dt><dd><dl class="simple">
+<dt>converged: Scalar boolean tensor indicating whether the minimum was</dt><dd><p>found within tolerance.</p>
+</dd>
+<dt>failed:  Scalar boolean tensor indicating whether a line search</dt><dd><p>step failed to find a suitable step size satisfying Wolfe
+conditions. In the absence of any constraints on the
+number of objective evaluations permitted, this value will
+be the complement of <cite>converged</cite>. However, if there is
+a constraint and the search stopped due to available
+evaluations being exhausted, both <cite>failed</cite> and <cite>converged</cite>
+will be simultaneously False.</p>
+</dd>
+<dt>num_objective_evaluations: The total number of objective</dt><dd><p>evaluations performed.</p>
+</dd>
+<dt>position: A tensor containing the last argument value found</dt><dd><p>during the search. If the search converged, then
+this value is the argmin of the objective function.</p>
+</dd>
+<dt>objective_value: A tensor containing the value of the objective</dt><dd><p>function at the <cite>position</cite>. If the search converged, then this is
+the (local) minimum of the objective function.</p>
+</dd>
+<dt>objective_gradient: A tensor containing the gradient of the objective</dt><dd><p>function at the <cite>position</cite>. If the search converged the
+max-norm of this tensor should be below the tolerance.</p>
+</dd>
+<dt>position_deltas: A tensor encoding information about the latest</dt><dd><p>changes in <cite>position</cite> during the algorithm execution.</p>
+</dd>
+<dt>gradient_deltas: A tensor encoding information about the latest</dt><dd><p>changes in <cite>objective_gradient</cite> during the algorithm execution.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nif.optimizers.LBFGSOptimizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.optimizers.</span></span><span class="sig-name descname"><span class="pre">LBFGSOptimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loss_closure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trainable_variables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.LBFGSOptimizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="nif.optimizers.LBFGSOptimizer.epoch">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">epoch</span></span><a class="headerlink" href="#nif.optimizers.LBFGSOptimizer.epoch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nif.optimizers.LBFGSOptimizer.loss">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">loss</span></span><a class="headerlink" href="#nif.optimizers.LBFGSOptimizer.loss" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nif.optimizers.LBFGSOptimizer.minimize">
+<span class="sig-name descname"><span class="pre">minimize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.LBFGSOptimizer.minimize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nif.optimizers.TFPLBFGS">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.optimizers.</span></span><span class="sig-name descname"><span class="pre">TFPLBFGS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fun</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_epoch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.TFPLBFGS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nif.optimizers.TFPLBFGS.minimize">
+<span class="sig-name descname"><span class="pre">minimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.TFPLBFGS.minimize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nif.optimizers.TFPLBFGS.history">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">history</span></span><a class="headerlink" href="#nif.optimizers.TFPLBFGS.history" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nif.optimizers.L4Adam">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.optimizers.</span></span><span class="sig-name descname"><span class="pre">L4Adam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma_0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-07</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'L4Adam'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.L4Adam" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizerV2</span></code></p>
+<p>Implements the L4Adam optimizer.</p>
+<p>This optimizer is an implementation of the L4 optimization algorithm with
+an adaptive learning rate that is based on the Adam optimizer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>learning_rate</strong> – A float, the initial learning rate.</p></li>
+<li><p><strong>tau_m</strong> – A float, decay rate for first moment estimates.</p></li>
+<li><p><strong>tau_s</strong> – A float, decay rate for second moment estimates.</p></li>
+<li><p><strong>tau</strong> – A float, decay rate for the l_min estimate.</p></li>
+<li><p><strong>gamma_0</strong> – A float, initial proportion of the loss to be considered as l_min.</p></li>
+<li><p><strong>gamma</strong> – A float, parameter to control the proportion of l_min in the update.</p></li>
+<li><p><strong>epsilon</strong> – A float, small constant for numerical stability.</p></li>
+<li><p><strong>name</strong> – Optional string, the name for the optimizer.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="nif.optimizers.L4Adam._create_slots">
+<span class="sig-name descname"><span class="pre">_create_slots</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.L4Adam._create_slots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates slots for the optimizer’s state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nif.optimizers.L4Adam._prepare_local">
+<span class="sig-name descname"><span class="pre">_prepare_local</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.L4Adam._prepare_local" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepares the local hyperparameters and derived quantities.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nif.optimizers.L4Adam._momentum_add">
+<span class="sig-name descname"><span class="pre">_momentum_add</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.L4Adam._momentum_add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the momentum addition for a given variable.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nif.optimizers.L4Adam._resource_apply_dense">
+<span class="sig-name descname"><span class="pre">_resource_apply_dense</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.L4Adam._resource_apply_dense" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies the dense gradients to the model variables.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nif.optimizers.L4Adam.minimize">
+<span class="sig-name descname"><span class="pre">minimize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.L4Adam.minimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimizes the loss function for the given model variables.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nif.optimizers.L4Adam.apply_gradients">
+<span class="sig-name descname"><span class="pre">apply_gradients</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.L4Adam.apply_gradients" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies the gradients to the model variables.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nif.optimizers.L4Adam._distributed_apply">
+<span class="sig-name descname"><span class="pre">_distributed_apply</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.L4Adam._distributed_apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies the gradients in a distributed setting.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nif.optimizers.L4Adam._resource_apply_sparse">
+<span class="sig-name descname"><span class="pre">_resource_apply_sparse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.L4Adam._resource_apply_sparse" title="Permalink to this definition">¶</a></dt>
+<dd><p>NotImplemented, raises NotImplementedError.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nif.optimizers.L4Adam.get_config">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.L4Adam.get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the config dictionary for the optimizer instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">minimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimize <cite>loss</cite> by updating <cite>var_list</cite>.</p>
+<p>This method simply computes gradient using <cite>tf.GradientTape</cite> and calls
+<cite>apply_gradients()</cite>. If you want to process the gradient before applying
+then call <cite>tf.GradientTape</cite> and <cite>apply_gradients()</cite> explicitly instead
+of using this function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loss</strong> – <cite>Tensor</cite> or callable. If a callable, <cite>loss</cite> should take no
+arguments and return the value to minimize. If a <cite>Tensor</cite>, the
+<cite>tape</cite> argument must be passed.</p></li>
+<li><p><strong>var_list</strong> – list or tuple of <cite>Variable</cite> objects to update to minimize
+<cite>loss</cite>, or a callable returning the list or tuple of <cite>Variable</cite>
+objects.  Use callable when the variable list would otherwise be
+incomplete before <cite>minimize</cite> since the variables are created at the
+first time <cite>loss</cite> is called.</p></li>
+<li><p><strong>grad_loss</strong> – (Optional). A <cite>Tensor</cite> holding the gradient computed for
+<cite>loss</cite>.</p></li>
+<li><p><strong>name</strong> – (Optional) str. Name for the returned operation.</p></li>
+<li><p><strong>tape</strong> – (Optional) <cite>tf.GradientTape</cite>. If <cite>loss</cite> is provided as a
+<cite>Tensor</cite>, the tape that computed the <cite>loss</cite> must be provided.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An <cite>Operation</cite> that updates the variables in <cite>var_list</cite>. The
+<cite>iterations</cite> will be automatically increased by 1.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If some of the variables are not <cite>Variable</cite> objects.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">apply_gradients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grads_and_vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experimental_aggregate_gradients</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply gradients to variables.</p>
+<p>This is the second part of <cite>minimize()</cite>. It returns an <cite>Operation</cite> that
+applies gradients.</p>
+<p>The method sums gradients from all replicas in the presence of
+<cite>tf.distribute.Strategy</cite> by default. You can aggregate gradients
+yourself by passing <cite>experimental_aggregate_gradients=False</cite>.</p>
+<p>Example:</p>
+<p><a href="#id10"><span class="problematic" id="id11">``</span></a><a href="#id12"><span class="problematic" id="id13">`</span></a>python
+grads = tape.gradient(loss, vars)
+grads = tf.distribute.get_replica_context().all_reduce(‘sum’, grads)
+# Processing aggregated gradients.
+optimizer.apply_gradients(zip(grads, vars),</p>
+<blockquote>
+<div><p>experimental_aggregate_gradients=False)</p>
+</div></blockquote>
+<p><a href="#id14"><span class="problematic" id="id15">``</span></a><a href="#id16"><span class="problematic" id="id17">`</span></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grads_and_vars</strong> – List of (gradient, variable) pairs.</p></li>
+<li><p><strong>name</strong> – Optional name for the returned operation. Default to the name
+passed to the <cite>Optimizer</cite> constructor.</p></li>
+<li><p><strong>experimental_aggregate_gradients</strong> – Whether to sum gradients from
+different replicas in the presence of <cite>tf.distribute.Strategy</cite>. If
+False, it’s user responsibility to aggregate the gradients. Default
+to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An <cite>Operation</cite> that applies the specified gradients. The <cite>iterations</cite>
+will be automatically increased by 1.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> – If <cite>grads_and_vars</cite> is malformed.</p></li>
+<li><p><strong>ValueError</strong> – If none of the variables have gradients.</p></li>
+<li><p><strong>RuntimeError</strong> – If called in a cross-replica context.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id18">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id18" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the config of the optimizer.</p>
+<p>An optimizer config is a Python dictionary (serializable)
+containing the configuration of an optimizer.
+The same optimizer can be reinstantiated later
+(without any saved state) from this configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Python dictionary.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nif.optimizers.AdaBeliefOptimizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.optimizers.</span></span><span class="sig-name descname"><span class="pre">AdaBeliefOptimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.999</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-14</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_decay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rectify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amsgrad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sma_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warmup_proportion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'AdaBeliefOptimizer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_change_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.AdaBeliefOptimizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizerV2</span></code></p>
+<p>It implements the AdaBeliefOptimizer proposed by
+Juntang Zhuang et al. in [AdaBelief Optimizer: Adapting stepsizes by the belief
+in observed gradients](<a class="reference external" href="https://arxiv.org/abs/2010.07468">https://arxiv.org/abs/2010.07468</a>).
+Contributor(s):</p>
+<blockquote>
+<div><p>Jerry Yu [cryu854] &lt;<a class="reference external" href="mailto:cryu854&#37;&#52;&#48;gmail&#46;com">cryu854<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p>
+</div></blockquote>
+<p>Example of usage:
+<code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">from</span> <span class="pre">adabelief_tf</span> <span class="pre">import</span> <span class="pre">AdaBeliefOptimizer</span>
+<span class="pre">opt</span> <span class="pre">=</span> <span class="pre">AdaBeliefOptimizer(lr=1e-3)</span>
+<span class="pre">`</span></code>
+Note: <cite>amsgrad</cite> is not described in the original paper. Use it with</p>
+<blockquote>
+<div><p>caution.</p>
+</div></blockquote>
+<p>AdaBeliefOptimizer is not a placement of the heuristic warmup, the settings should be
+kept if warmup has already been employed and tuned in the baseline method.
+You can enable warmup by setting <cite>total_steps</cite> and <cite>warmup_proportion</cite>:
+<a href="#id19"><span class="problematic" id="id20">``</span></a><a href="#id21"><span class="problematic" id="id22">`</span></a>python
+opt = AdaBeliefOptimizer(</p>
+<blockquote>
+<div><p>lr=1e-3,
+total_steps=10000,
+warmup_proportion=0.1,
+min_lr=1e-5,</p>
+</div></blockquote>
+<section id="id23">
+<h2>)<a class="headerlink" href="#id23" title="Permalink to this heading">¶</a></h2>
+<p>In the above example, the learning rate will increase linearly
+from 0 to <cite>lr</cite> in 1000 steps, then decrease linearly from <cite>lr</cite> to <cite>min_lr</cite>
+in 9000 steps.
+Lookahead, proposed by Michael R. Zhang et.al in the paper
+[Lookahead Optimizer: k steps forward, 1 step back]
+(<a class="reference external" href="https://arxiv.org/abs/1907.08610v1">https://arxiv.org/abs/1907.08610v1</a>), can be integrated with AdaBeliefOptimizer,
+which is announced by Less Wright and the new combined optimizer can also
+be called “Ranger”. The mechanism can be enabled by using the lookahead
+wrapper. For example:
+<code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">adabelief</span> <span class="pre">=</span> <span class="pre">AdaBeliefOptimizer()</span>
+<span class="pre">ranger</span> <span class="pre">=</span> <span class="pre">tfa.optimizers.Lookahead(adabelief,</span> <span class="pre">sync_period=6,</span> <span class="pre">slow_step_size=0.5)</span>
+<span class="pre">`</span></code>
+Example of serialization:
+<code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">optimizer</span> <span class="pre">=</span> <span class="pre">AdaBeliefOptimizer(learning_rate=lr_scheduler,</span> <span class="pre">weight_decay=wd_scheduler)</span>
+<span class="pre">config</span> <span class="pre">=</span> <span class="pre">tf.keras.optimizers.serialize(optimizer)</span>
+<span class="pre">new_optimizer</span> <span class="pre">=</span> <span class="pre">tf.keras.optimizers.deserialize(config,</span>
+<span class="pre">custom_objects={&quot;AdaBeliefOptimizer&quot;:</span> <span class="pre">AdaBeliefOptimizer})</span>
+<span class="pre">`</span></code></p>
+<blockquote>
+<div><p>Args:
+learning_rate: A <cite>Tensor</cite> or a floating point value, or a schedule</p>
+<blockquote>
+<div><p>that is a <cite>tf.keras.optimizers.schedules.LearningRateSchedule</cite>.
+The learning rate.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>beta_1: A float value or a constant float tensor.</dt><dd><p>The exponential decay rate for the 1st moment estimates.</p>
+</dd>
+<dt>beta_2: A float value or a constant float tensor.</dt><dd><p>The exponential decay rate for the 2nd moment estimates.</p>
+</dd>
+</dl>
+<p>epsilon: A small constant for numerical stability.
+weight_decay: A <cite>Tensor</cite> or a floating point value, or a schedule</p>
+<blockquote>
+<div><p>that is a <cite>tf.keras.optimizers.schedules.LearningRateSchedule</cite>.
+Weight decay for each parameter.</p>
+</div></blockquote>
+<p>rectify: boolean. Whether to enable rectification as in RectifiedAdam
+amsgrad: boolean. Whether to apply AMSGrad variant of this</p>
+<blockquote>
+<div><p>algorithm from the paper “On the Convergence of Adam and
+beyond”.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>sma_threshold. A float value.</dt><dd><p>The threshold for simple mean average.</p>
+</dd>
+<dt>total_steps: An integer. Total number of training steps.</dt><dd><p>Enable warmup by setting a positive value.</p>
+</dd>
+<dt>warmup_proportion: A floating point value.</dt><dd><p>The proportion of increasing steps.</p>
+</dd>
+</dl>
+<p>min_lr: A floating point value. Minimum learning rate after warmup.
+name: Optional name for the operations created when applying</p>
+<blockquote>
+<div><p>gradients. Defaults to “AdaBeliefOptimizer”.</p>
+</div></blockquote>
+<dl class="simple">
+<dt><a href="#id24"><span class="problematic" id="id25">**</span></a>kwargs: keyword arguments. Allowed to be {<cite>clipnorm</cite>,</dt><dd><p><cite>clipvalue</cite>, <cite>lr</cite>, <cite>decay</cite>}. <cite>clipnorm</cite> is clip gradients
+by norm; <cite>clipvalue</cite> is clip gradients by value, <cite>decay</cite> is
+included for backward compatibility to allow time inverse
+decay of learning rate. <cite>lr</cite> is included for backward
+compatibility, recommended to use <cite>learning_rate</cite> instead.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="nif.optimizers.AdaBeliefOptimizer.set_weights">
+<span class="sig-name descname"><span class="pre">set_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weights</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.AdaBeliefOptimizer.set_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the weights of the optimizer.</p>
+<p>The weights of an optimizer are its state (ie, variables).
+This function takes the weight values associated with this
+optimizer as a list of Numpy arrays. The first value is always the
+iterations count of the optimizer, followed by the optimizer’s state
+variables in the order they are created. The passed values are used to
+set the new state of the optimizer.</p>
+<p>For example, the RMSprop optimizer for this simple model takes a list of
+three values– the iteration count, followed by the root-mean-square
+value of the kernel and bias of the single Dense layer:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">opt</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">RMSprop</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Sequential</span><span class="p">([</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>  <span class="c1"># Training.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">10</span><span class="p">])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">opt</span><span class="o">.</span><span class="n">set_weights</span><span class="p">(</span><span class="n">new_weights</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">opt</span><span class="o">.</span><span class="n">iterations</span>
+<span class="go">&lt;tf.Variable &#39;RMSprop/iter:0&#39; shape=() dtype=int64, numpy=10&gt;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>weights</strong> – weight values as a list of numpy arrays.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nif.optimizers.AdaBeliefOptimizer.get_config">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.AdaBeliefOptimizer.get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the config of the optimizer.</p>
+<p>An optimizer config is a Python dictionary (serializable)
+containing the configuration of an optimizer.
+The same optimizer can be reinstantiated later
+(without any saved state) from this configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Python dictionary.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nif.optimizers.centralized_gradients_for_optimizer">
+<span class="sig-prename descclassname"><span class="pre">nif.optimizers.</span></span><span class="sig-name descname"><span class="pre">centralized_gradients_for_optimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimizer</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.centralized_gradients_for_optimizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a centralized gradients functions for a specified optimizer.
+# Arguments:</p>
+<blockquote>
+<div><p>optimizer: a <cite>tf.keras.optimizers.Optimizer object</cite>. The optimizer you are using.</p>
+</div></blockquote>
+<p># Usage:
+<code class="docutils literal notranslate"><span class="pre">`py</span>
+<span class="pre">&gt;&gt;&gt;</span> <span class="pre">opt</span> <span class="pre">=</span> <span class="pre">tf.keras.optimizers.Adam(learning_rate=0.1)</span>
+<span class="pre">&gt;&gt;&gt;</span> <span class="pre">opt.get_gradients</span> <span class="pre">=</span> <span class="pre">gctf.centralized_gradients_for_optimizer(opt)</span>
+<span class="pre">&gt;&gt;&gt;</span> <span class="pre">model.compile(optimizer</span> <span class="pre">=</span> <span class="pre">opt,</span> <span class="pre">...)</span>
+<span class="pre">`</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nif.optimizers.Lion">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.optimizers.</span></span><span class="sig-name descname"><span class="pre">Lion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.99</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lion'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.Lion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Optimizer</span></code></p>
+<p>Implements the Lion optimization algorithm.</p>
+<p>The Lion optimizer is a custom optimization algorithm based on first-order
+stochastic gradient descent methods. It incorporates a weighted decay term
+and momentum-based updates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>learning_rate</strong> (<em>float</em>) – The learning rate. Defaults to 1e-4.</p></li>
+<li><p><strong>beta_1</strong> (<em>float</em>) – The exponential decay rate for the first moment estimates. Defaults to 0.9.</p></li>
+<li><p><strong>beta_2</strong> (<em>float</em>) – The exponential decay rate for the second moment estimates. Defaults to 0.99.</p></li>
+<li><p><strong>wd</strong> (<em>float</em>) – The weight decay factor. Defaults to 0.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The name of the optimizer. Defaults to “lion”.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="nif.optimizers.Lion.get_config">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nif.optimizers.Lion.get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the config of the optimizer.</p>
+<p>An optimizer config is a Python dictionary (serializable)
+containing the configuration of an optimizer.
+The same optimizer can be reinstantiated later
+(without any saved state) from this configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Python dictionary.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="api_nif_demo.html" class="btn btn-neutral float-left" title="nif.demo" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api_nif_layers.html" class="btn btn-neutral float-right" title="nif.layers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

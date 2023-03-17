@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nif.demo &mdash; NIF  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="nif.optimizers" href="api_nif_optimizers.html" />
+    <link rel="prev" title="nif.data" href="api_nif_data.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2f5470" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NIF
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Neural Implicit Flow (NIF): mesh-agnostic dimensionality reduction</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#highlights">Highlights</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#google-colab-tutorial">Google Colab Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#issues-bugs-requests-ideas">Issues, bugs, requests, ideas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#how-to-cite">How to cite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#contributors">Contributors</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#license">License</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="api_nif_data.html">nif.data</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">nif.demo</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#nif.demo.TravelingWave"><code class="docutils literal notranslate"><span class="pre">TravelingWave</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.demo.TravelingWaveHighFreq"><code class="docutils literal notranslate"><span class="pre">TravelingWaveHighFreq</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nif.demo.CylinderFlow"><code class="docutils literal notranslate"><span class="pre">CylinderFlow</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api_nif_optimizers.html">nif.optimizers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_nif_layers.html">nif.layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_nif_model.html">nif.model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_nif_data.html">nif.data</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">nif.demo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#nif.demo.TravelingWave"><code class="docutils literal notranslate"><span class="pre">TravelingWave</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.demo.TravelingWaveHighFreq"><code class="docutils literal notranslate"><span class="pre">TravelingWaveHighFreq</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nif.demo.CylinderFlow"><code class="docutils literal notranslate"><span class="pre">CylinderFlow</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_nif_optimizers.html">nif.optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_nif_layers.html">nif.layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_nif_model.html">nif.model</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2f5470" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NIF</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">nif.demo</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api_nif_demo.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-nif.demo">
+<span id="nif-demo"></span><h1>nif.demo<a class="headerlink" href="#module-nif.demo" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="nif.demo.TravelingWave">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.demo.</span></span><span class="sig-name descname"><span class="pre">TravelingWave</span></span><a class="headerlink" href="#nif.demo.TravelingWave" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="api_nif_data.html#nif.data.PointWiseData" title="nif.data.point_wise_data.PointWiseData"><code class="xref py py-class docutils literal notranslate"><span class="pre">PointWiseData</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nif.demo.TravelingWaveHighFreq">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.demo.</span></span><span class="sig-name descname"><span class="pre">TravelingWaveHighFreq</span></span><a class="headerlink" href="#nif.demo.TravelingWaveHighFreq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="api_nif_data.html#nif.data.PointWiseData" title="nif.data.point_wise_data.PointWiseData"><code class="xref py py-class docutils literal notranslate"><span class="pre">PointWiseData</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nif.demo.CylinderFlow">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nif.demo.</span></span><span class="sig-name descname"><span class="pre">CylinderFlow</span></span><a class="headerlink" href="#nif.demo.CylinderFlow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="api_nif_data.html#nif.data.PointWiseData" title="nif.data.point_wise_data.PointWiseData"><code class="xref py py-class docutils literal notranslate"><span class="pre">PointWiseData</span></code></a></p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="api_nif_data.html" class="btn btn-neutral float-left" title="nif.data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api_nif_optimizers.html" class="btn btn-neutral float-right" title="nif.optimizers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -9,7 +9,7 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath(".."))
+sys.path.insert(0, os.path.abspath("../.."))
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -22,7 +22,7 @@ master_doc = "index"
 import sphinx_rtd_theme
 
 # Add the project directory to the system path
-sys.path.insert(0, os.path.abspath(""))
+sys.path.insert(0, os.path.abspath(".."))
 
 # Project information
 project = "NIF"

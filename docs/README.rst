@@ -6,7 +6,7 @@ Neural Implicit Flow (NIF): mesh-agnostic dimensionality reduction
 .. raw:: html
 
    <p align="center">
-     <img src="./_static/myimage.png" alt="animated" />
+     <img src="./source/_static/myimage.png" alt="animated" />
    </p>
 
 -  NIF is a mesh-agnostic dimensionality reduction paradigm for
@@ -30,7 +30,7 @@ Highlights
 .. raw:: html
 
    <p align="center">
-     <img src="./_static/compare.png" alt="animated" />
+     <img src="./source/_static/compare.png" alt="animated" />
    </p>
 
 -  Built on top of **Tensorflow 2.x** with **Keras model subclassing**,

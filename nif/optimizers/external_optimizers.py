@@ -49,6 +49,7 @@ class L4Adam(tf.keras.optimizers.Optimizer):
         _resource_apply_sparse: NotImplemented, raises NotImplementedError.
         get_config: Returns the config dictionary for the optimizer instance.
     """
+
     def __init__(
         self,
         learning_rate=0.15,

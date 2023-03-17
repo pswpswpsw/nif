@@ -71,9 +71,7 @@ class MLP_ResNet(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):
         """
         h1 = self.L1(x)
         h2 = self.L2(h1)
-        y = self.act(
-            x + tf.cast(h2, self.compute_Dtype)
-        )
+        y = self.act(x + tf.cast(h2, self.compute_Dtype))
         return tf.cast(
             y,
             self.variable_Dtype,
@@ -192,7 +190,6 @@ class MLP_SimpleShortCut(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLay
         return self.L1.weights
 
 
-
 class EinsumLayer(tf.keras.layers.Layer):
     """
     A custom layer that wraps a single tf.einsum operation.
@@ -229,6 +226,7 @@ class EinsumLayer(tf.keras.layers.Layer):
             dict: A dictionary containing the configuration of the layer.
         """
         return {"equation": self.equation}
+
 
 class BiasAddLayer(tf.keras.layers.Layer):
     """

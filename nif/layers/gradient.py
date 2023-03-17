@@ -7,20 +7,25 @@ class JacobianLayer(tf.keras.layers.Layer):
 
     Args:
         model (tf.keras.Model): The TensorFlow model for which to compute the Jacobian.
-        y_index (int or List[int]): The index or indices of the output variable(s) to compute the Jacobian with respect to.
-        x_index (int or List[int]): The index or indices of the input variable(s) to compute the Jacobian with respect to.
+        y_index (int or List[int]): The index or indices of the output variable(s) to compute the Jacobian
+                                    with respect to.
+        x_index (int or List[int]): The index or indices of the input variable(s) to compute the Jacobian
+                                    with respect to.
 
     Returns:
         Tuple[tf.Tensor, tf.Tensor]: A tuple containing the output of the model and the Jacobian matrix.
     """
+
     def __init__(self, model, y_index, x_index, **kwargs):
         """
         Initializes a new instance of the JacobianLayer class.
 
         Args:
             model (tf.keras.Model): The TensorFlow model for which to compute the Jacobian.
-            y_index (int or List[int]): The index or indices of the output variable(s) to compute the Jacobian with respect to.
-            x_index (int or List[int]): The index or indices of the input variable(s) to compute the Jacobian with respect to.
+            y_index (int or List[int]): The index or indices of the output variable(s) to compute the
+                                        Jacobian with respect to.
+            x_index (int or List[int]): The index or indices of the input variable(s) to compute the
+                                        Jacobian with respect to.
             **kwargs: Additional keyword arguments to pass to the base class constructor.
         """
         super().__init__(**kwargs)
@@ -59,8 +64,10 @@ class JacRegLatentLayer(JacobianLayer):
 
     Args:
         model (tf.keras.Model): The TensorFlow model for which to compute the Jacobian.
-        y_index (int or List[int]): The index or indices of the output variable(s) to compute the Jacobian with respect to.
-        x_index (int or List[int]): The index or indices of the input variable(s) to compute the Jacobian with respect to.
+        y_index (int or List[int]): The index or indices of the output variable(s) to compute the
+                                    Jacobian with respect to.
+        x_index (int or List[int]): The index or indices of the input variable(s) to compute the
+                                    Jacobian with respect to.
         l1 (float): The weight of the Jacobian regularization term in the loss function.
         mixed_policy (str): The floating-point precision to use for computing the Jacobian.
         **kwargs: Additional keyword arguments to pass to the base class constructor.
@@ -74,8 +81,10 @@ class JacRegLatentLayer(JacobianLayer):
 
         Args:
             model (tf.keras.Model): The TensorFlow model for which to compute the Jacobian.
-            y_index (int or List[int]): The index or indices of the output variable(s) to compute the Jacobian with respect to.
-            x_index (int or List[int]): The index or indices of the input variable(s) to compute the Jacobian with respect to.
+            y_index (int or List[int]): The index or indices of the output variable(s) to compute the
+                                        Jacobian with respect to.
+            x_index (int or List[int]): The index or indices of the input variable(s) to compute the
+                                        Jacobian with respect to.
             l1 (float): The weight of the Jacobian regularization term in the loss function.
             mixed_policy (str): The floating-point precision to use for computing the Jacobian.
             **kwargs: Additional keyword arguments to pass to the base class constructor.
@@ -129,17 +138,22 @@ class HessianLayer(tf.keras.layers.Layer):
 
     Args:
         model (tf.keras.Model): The TensorFlow model for which to compute the Hessian.
-        y_index (int or List[int]): The index or indices of the output variable(s) to compute the Hessian with respect to.
-        x_index (int or List[int]): The index or indices of the input variable(s) to compute the Hessian with respect to.
+        y_index (int or List[int]): The index or indices of the output variable(s) to compute
+                                    the Hessian with respect to.
+        x_index (int or List[int]): The index or indices of the input variable(s) to compute
+                                    the Hessian with respect to.
     """
+
     def __init__(self, model, y_index, x_index):
         """
         Initializes a new instance of the HessianLayer class.
 
         Args:
             model (tf.keras.Model): The TensorFlow model for which to compute the Hessian.
-            y_index (int or List[int]): The index or indices of the output variable(s) to compute the Hessian with respect to.
-            x_index (int or List[int]): The index or indices of the input variable(s) to compute the Hessian with respect to.
+            y_index (int or List[int]): The index or indices of the output variable(s) to
+                                        compute the Hessian with respect to.
+            x_index (int or List[int]): The index or indices of the input variable(s) to
+                                        compute the Hessian with respect to.
         """
         super().__init__()
         self.model = model
@@ -156,7 +170,9 @@ class HessianLayer(tf.keras.layers.Layer):
             **kwargs: Additional keyword arguments to pass to the underlying TensorFlow function.
 
         Returns:
-            Tuple[tf.Tensor, tf.Tensor, tf.Tensor]: A tuple containing the output of the model, the Jacobian matrix, and the Hessian matrix.
+            Tuple[tf.Tensor, tf.Tensor, tf.Tensor]: A tuple containing the output of the model,
+                                                    the Jacobian matrix, and the
+                                                    Hessian matrix.
         """
         y, dys_dxs, dys2_dxs2 = compute_output_and_grad_and_hessian(
             self.model, x, self.x_index, self.y_index
@@ -171,8 +187,10 @@ def compute_output_and_augment_grad(model, x, x_index, y_index):
     Args:
         model (tf.keras.Model): The TensorFlow model for which to compute the Jacobian.
         x (tf.Tensor): The input tensor(s) to the model.
-        x_index (int or List[int]): The index or indices of the input variable(s) to compute the Jacobian with respect to.
-        y_index (int or List[int]): The index or indices of the output variable(s) to compute the Jacobian with respect to.
+        x_index (int or List[int]): The index or indices of the input variable(s)
+                                    to compute the Jacobian with respect to.
+        y_index (int or List[int]): The index or indices of the output variable(s)
+                                    to compute the Jacobian with respect to.
 
     Returns:
         Tuple[tf.Tensor, tf.Tensor]: A tuple containing the output of the model and the Jacobian matrix.
@@ -193,8 +211,10 @@ def compute_output_and_grad(model, x, x_index, y_index):
     Args:
         model (tf.keras.Model): The TensorFlow model for which to compute the Jacobian.
         x (tf.Tensor): The input tensor(s) to the model.
-        x_index (int or List[int]): The index or indices of the input variable(s) to compute the Jacobian with respect to.
-        y_index (int or List[int]): The index or indices of the output variable(s) to compute the Jacobian with respect to.
+        x_index (int or List[int]): The index or indices of the input variable(s) to
+                                    compute the Jacobian with respect to.
+        y_index (int or List[int]): The index or indices of the output variable(s) to
+                                    compute the Jacobian with respect to.
 
     Returns:
         Tuple[tf.Tensor, tf.Tensor]: A tuple containing the output of the model and the Jacobian matrix.
@@ -218,11 +238,15 @@ def compute_output_and_grad_and_hessian(model, x, x_index, y_index):
     Args:
         model (tf.keras.Model): The TensorFlow model for which to compute the Jacobian and Hessian.
         x (tf.Tensor): The input tensor(s) to the model.
-        x_index (int or List[int]): The index or indices of the input variable(s) to compute the Jacobian and Hessian with respect to.
-        y_index (int or List[int]): The index or indices of the output variable(s) to compute the Jacobian and Hessian with respect to.
+        x_index (int or List[int]): The index or indices of the input variable(s) to
+                                    compute the Jacobian and Hessian with respect to.
+        y_index (int or List[int]): The index or indices of the output variable(s) to
+                                    compute the Jacobian and Hessian with respect to.
 
     Returns:
-        Tuple[tf.Tensor, tf.Tensor, tf.Tensor]: A tuple containing the output of the model, the Jacobian matrix, and the Hessian matrix.
+        Tuple[tf.Tensor, tf.Tensor, tf.Tensor]: A tuple containing the output of the model,
+                                                the Jacobian matrix, and the Hessian
+                                                matrix.
     """
     with tf.GradientTape() as g:
         g.watch(x)

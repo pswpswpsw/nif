@@ -59,10 +59,14 @@ class NIF(object):
         call(self, inputs, training=None, mask=None): Forward pass for the NIF model.
         build(self): Builds and returns the NIF model with a Jacobian regularization layer.
         model(self): Builds and returns the NIF model.
-        model_p_to_w(self): Builds and returns a model that maps input parameters to weights and biases of the shape net.
-        model_p_to_lr(self): Builds and returns a model that maps input parameters to the hidden layer representation.
-        model_lr_to_w(self): Builds and returns a model that maps the hidden layer representation to shape net weights and biases.
-        model_x_to_u_given_w(self): Builds and returns a model that maps input states to output, given shape net weights and biases.
+        model_p_to_w(self): Builds and returns a model that maps input parameters to weights and
+            biases of the shape net.
+        model_p_to_lr(self): Builds and returns a model that maps input parameters to the hidden
+            layer representation.
+        model_lr_to_w(self): Builds and returns a model that maps the hidden layer representation
+            to shape net weights and biases.
+        model_x_to_u_given_w(self): Builds and returns a model that maps input states to output,
+            given shape net weights and biases.
         save_config(self, filename="config.json"): Saves the NIF configuration to a JSON file.
     """
 
@@ -151,14 +155,14 @@ class NIF(object):
 
     def _initialize_pnet(self, cfg_parameter_net, cfg_shape_net):
         """
-         Initializes the parameter network structure based on the given configuration.
+        Initializes the parameter network structure based on the given configuration.
 
-         Args:
-             cfg_parameter_net (dict): Configuration dictionary for the parameter network.
-             cfg_shape_net (dict): Configuration dictionary for the shape network.
+        Args:
+            cfg_parameter_net (dict): Configuration dictionary for the parameter network.
+            cfg_shape_net (dict): Configuration dictionary for the shape network.
 
-         Returns:
-             list: A list of layers that make up the parameter network.
+        Returns:
+            list: A list of layers that make up the parameter network.
         """
         # just simple implementation of a shortcut connected parameter net with
         # a similar shapenet
@@ -488,6 +492,7 @@ class NIFMultiScale(NIF):
         mixed_policy (str, optional): The mixed precision policy to be used for
             TensorFlow computations. Defaults to "float32".
     """
+
     def __init__(self, cfg_shape_net, cfg_parameter_net, mixed_policy="float32"):
         """
         Initializes an instance of the NIFMultiScale class.
@@ -998,8 +1003,12 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         model_p_to_lr(): Returns a Keras model that maps input parameters to hidden learning rates.
         model_x_to_phi(): Returns a Keras model that maps input spatial data to the output phi_x.
         model_lr_to_w(): Raises a ValueError as 'w' is the same as 'lr' in this class.
-        model_x_to_u_given_w(): Returns a Keras model that maps input spatial data to the output 'u' given 'w'.
+        model_x_to_u_given_w(): Returns a Keras model that maps input spatial data to the
+            :wq:wq
+            :wq
+            output 'u' given 'w'.
     """
+
     def __init__(self, cfg_shape_net, cfg_parameter_net, mixed_policy="float32"):
         """
         Initialize the NIFMultiScaleLastLayerParameterized class.

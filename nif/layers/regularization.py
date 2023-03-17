@@ -30,4 +30,3 @@ class ParameterOutputL1ActReg(tf.keras.layers.Layer):
         po_reg_loss = self.l1 * tf.norm(po, ord=1)
         self.add_loss(po_reg_loss)
         return y
-

@@ -71,7 +71,8 @@ def compute_number_of_weightbias_by_its_position_for_shapenet(cfg_shape_net):
         cfg_shape_net (dict): A dictionary containing the configuration parameters for the shape network.
 
     Returns:
-        Tuple: A tuple containing the number of weights for the first layer, the number of weights for the hidden layers,
+        Tuple: A tuple containing the number of weights for the first layer, the number of
+               weights for the hidden layers,
         and the number of weights for the output layer.
     """
     si_dim = cfg_shape_net["input_dim"]
@@ -103,15 +104,18 @@ class SIREN(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):
     Args:
         num_inputs (int): The number of input units.
         num_outputs (int): The number of output units.
-        layer_position (str): The position of the SIREN layer in the network architecture. Possible values are
-            'first', 'hidden', 'last' and 'bottleneck'.
-        omega_0 (float): The cutoff frequency for the initial frequency. Should be set to 1.0 for most cases.
-        cfg_shape_net (dict): A dictionary containing the configuration parameters for the network if the layer
-            position is 'last'.
-        kernel_regularizer (tf.keras.regularizers.Regularizer): Regularizer function applied to the kernel
-            weights matrix.
-        bias_regularizer (tf.keras.regularizers.Regularizer): Regularizer function applied to the bias vector.
-        mixed_policy (tf.keras.mixed_precision.Policy): A mixed precision policy used for the weights and biases.
+        layer_position (str): The position of the SIREN layer in the network architecture.
+            Possible values are 'first', 'hidden', 'last' and 'bottleneck'.
+        omega_0 (float): The cutoff frequency for the initial frequency. Should be set to 1.0
+            for most cases.
+        cfg_shape_net (dict): A dictionary containing the configuration parameters for the network
+            if the layer position is 'last'.
+        kernel_regularizer (tf.keras.regularizers.Regularizer): Regularizer function applied to
+            the kernel weights matrix.
+        bias_regularizer (tf.keras.regularizers.Regularizer): Regularizer function applied to the
+            bias vector.
+        mixed_policy (tf.keras.mixed_precision.Policy): A mixed precision policy used for the
+            weights and biases.
         **kwargs: Additional arguments.
 
     Attributes:
@@ -126,6 +130,7 @@ class SIREN(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):
         get_config(): Returns the config of the layer.
         get_prunable_weights(): Returns the prunable weights of the layer.
     """
+
     def __init__(
         self,
         num_inputs,
@@ -144,11 +149,14 @@ class SIREN(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLayer):
         Args:
             num_inputs (int): The number of input dimensions.
             num_outputs (int): The number of output dimensions.
-            layer_position (str): The position of the layer in the neural network, which can be one of the following: 'first', 'hidden', 'bottleneck', or 'last'.
+            layer_position (str): The position of the layer in the neural network, which can be one of
+                the following: 'first', 'hidden', 'bottleneck', or 'last'.
             omega_0 (float): The frequency parameter for SIREN activation function.
             cfg_shape_net (Optional[dict]): Configuration dictionary for shapenet.
-            kernel_regularizer (Optional[tf.keras.regularizers.Regularizer]): Regularizer function applied to the kernel weights.
-            bias_regularizer (Optional[tf.keras.regularizers.Regularizer]): Regularizer function applied to the bias weights.
+            kernel_regularizer (Optional[tf.keras.regularizers.Regularizer]): Regularizer function applied
+                to the kernel weights.
+            bias_regularizer (Optional[tf.keras.regularizers.Regularizer]): Regularizer function applied
+                to the bias weights.
             mixed_policy (tf.keras.mixed_precision.Policy): Policy for mixed precision training.
             **kwargs: Additional keyword arguments.
 
@@ -323,6 +331,7 @@ class SIREN_ResNet(SIREN):
             Returns a list of prunable weight variables.
 
     """
+
     def __init__(
         self,
         num_inputs,
@@ -402,7 +411,8 @@ class SIREN_ResNet(SIREN):
 
     def get_prunable_weights(self):
         """
-        Returns the list of prunable weights in the layer, i.e., the weights that can be pruned during training.
+        Returns the list of prunable weights in the layer, i.e., the weights that can be
+            pruned during training.
 
         Returns:
             List of `tf.Variable` objects representing the prunable weights in the layer.
@@ -438,6 +448,7 @@ class HyperLinearForSIREN(tf.keras.layers.Layer, tfmot.sparsity.keras.PrunableLa
         get_prunable_weights(self): Returns the prunable weights of the layer.
 
     """
+
     def __init__(
         self,
         num_inputs,

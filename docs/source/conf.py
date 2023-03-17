@@ -30,8 +30,8 @@ project = "NIF"
 author = "Shaowu Pan, Steven Brunton, J. Nathan Kutz"
 
 # Extensions
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon", "sphinx.ext.coverage"]
-
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon", 
+              "sphinx.ext.coverage"， "sphinx_rtd_theme"]
 # Templates
 templates_path = ["_templates"]
 

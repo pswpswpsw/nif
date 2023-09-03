@@ -241,7 +241,6 @@
 ```python
 matplotlib
 numpy
-tensorflow-gpu
 tensorflow_probability==0.18.0
 tensorflow_model_optimization==0.7.3
 ```

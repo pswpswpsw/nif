@@ -1,4 +1,5 @@
-matplotlib
-numpy
+matplotlib==3.10.0
+numpy==1.26.4
+tensorflow==2.11.1
 tensorflow_probability==0.18.0
 tensorflow_model_optimization==0.7.3

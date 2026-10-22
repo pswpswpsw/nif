@@ -731,7 +731,7 @@ write_metrics({"baseline_epochs":epochs(nepoch),"pruning_epochs":run_pruning_epo
 
 src8=nb.read(original(8),as_version=4)
 emit(8,{
-4:src8.cells[4].source,
+4:src8.cells[4].source+SURFACE_LAYOUT,
 6:src8.cells[6].source,
 8:SIREN+'''nepoch,lr,batch_size=50000,1e-4,512
 ''',

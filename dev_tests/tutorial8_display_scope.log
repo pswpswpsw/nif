@@ -1,0 +1,6 @@
+221 protected hashes checked: 219 byte-identical.
+Only authorized notebook change: tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb
+Concurrent coordinator changes observed and left untouched: ['docs/PYTORCH_VALIDATION.md']
+One source-only notebook cell changed (index 5); metadata/outputs/IDs unchanged.
+Only generator replacement (8,4) changed, by appending the existing SURFACE_LAYOUT verbatim.
+All other notebooks, all data/checkpoints, package sources, and frozen fingerprints remain byte-identical.

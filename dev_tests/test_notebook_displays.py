@@ -173,7 +173,7 @@ def test_regularization_fields_share_color_mapping_and_readable_layout(source, f
 
 
 @pytest.mark.parametrize('source', ['notebook', 'generator'])
-@pytest.mark.parametrize('number', [1, 2, 6])
+@pytest.mark.parametrize('number', [1, 2, 6, 8])
 def test_initial_surface_labels_survive_ordinary_inline_tight_crop(source, number, figures):
     scope = {'np': np, 'plt': plt}
     exec(selected_cell(source, number, 'ax.plot_surface'), scope)

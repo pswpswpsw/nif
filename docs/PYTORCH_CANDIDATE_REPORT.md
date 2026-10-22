@@ -50,7 +50,7 @@ fixes. Tests exercise independent numerical formulas, finite differences,
 initialization statistics, gradients and parameter updates, shared parameters,
 serialization and dtype, finite training, physical scaling, L-BFGS convergence,
 and TFRecord external-reader/writer interoperability and corruption checks.
-Final unit tests: **199 passed, 1 skipped (CUDA unavailable)**. Prior notebook
+Final unit tests: **201 passed, 1 skipped (CUDA unavailable)**. Prior notebook
 execution hashes remain in `dev_tests/validation_summary.json`; current
 display-only source hashes are recorded in the follow-up below.
 
@@ -270,3 +270,45 @@ Final display source SHA256:
 - `tutorial/1_simple_1d_wave_pytorch.ipynb`: `b9eb9b0e3985ac8302664e80b09990880d02ef445230428485b1d08b060350c6`
 - `tutorial/2_multi_scale_NIF_pytorch.ipynb`: `f5f6a35c9527413622ef693af3f5f056f87b0bf7cc3da9a2a98102b133a8addf`
 - `tutorial/6_revisit_multi_scale_NIF_with_L1_L2_regularization_pytorch.ipynb`: `b2e66815e2824752ea013dde3e2cc23e3793ebb16597f3bff124e0390b010a36`
+
+
+## Tutorial 8 initial-surface display follow-up
+
+Applied the existing `SURFACE_LAYOUT` verbatim to tutorial 8's initial analytic
+physical-wave surface. Implementation scope is one expression in
+`dev_tests/generate_native_notebooks.py` and only the source of cell 5 in
+`tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb`.
+The shared layout definition itself is unchanged. Notebook metadata, outputs,
+IDs, other cells, and every other notebook remain unchanged. The public display
+regression was extended by adding tutorial 8 to its existing parameterization;
+all previous checks and frozen fingerprints are retained.
+
+Actual RED: **2 failed, 10 deselected**, executing tutorial 8's notebook and
+generator surface cells with ordinary tight-crop rendering, recorded in
+`dev_tests/tutorial8_display_red.log`. GREEN: **12 display tests passed** in
+`dev_tests/tutorial8_display_green.log`. The complete public suite reports
+**201 passed, 1 CUDA skip**, recorded in `dev_tests/tutorial8_display_final.log`
+and `dev_tests/artifacts/tutorial8_display_final.junit.xml`. Existing
+Matplotlib/pyparsing, multiprocessing, and sparse warnings remain.
+
+Rendered and visually inspected the corrected ordinary inline tight-crop PNG
+at `dev_tests/artifacts/display/tutorial8_surface_inline.png`; x/t/u labels
+are fully visible and separated from tick annotations. Also exported the
+uncropped canvas to `tutorial8_surface_canvas.png`. A before/after execution
+check verified identical analytic arrays/scalars and unchanged NumPy/Torch RNG.
+Neither 50,000-epoch fit was rerun, and no checkpoint was written.
+
+The preservation audit (`dev_tests/tutorial8_display_scope.log`) checked 221
+protected file hashes. All other notebooks (including the 16 archived sources
+and prior display fixes), package sources, data, checkpoints, and frozen
+fingerprints are byte-identical. One concurrent coordinator edit to
+`docs/PYTORCH_VALIDATION.md` was observed and left untouched; this follow-up did
+not edit that file or README. No scientific setting, optimizer, objective,
+sampling, or training code changed. Independent acceptance and the retained
+complete training runs remain with coordinator/B; no independent pass is claimed.
+
+Final source SHA256 for this follow-up:
+
+- `dev_tests/generate_native_notebooks.py`: `51b2c6518c19d04d4d5a78b642312d4dc8a365b8850a892fa4ce7205429ce00d`
+- `tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb`: `225b728e829ec8bd34426bccf8ad1dfcccbe15592b4a44d58003aca8c1493cac`
+- `dev_tests/test_notebook_displays.py`: `ed8263cf880696325dfcd2d24574ea1084aaeff2b028649e45b771d791c4d019`

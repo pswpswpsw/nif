@@ -1,0 +1,160 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+__ test_initial_surface_labels_survive_ordinary_inline_tight_crop[8-notebook] __
+
+source = 'notebook', number = 8, figures = None
+
+    @pytest.mark.parametrize('source', ['notebook', 'generator'])
+    @pytest.mark.parametrize('number', [1, 2, 6, 8])
+    def test_initial_surface_labels_survive_ordinary_inline_tight_crop(source, number, figures):
+        scope = {'np': np, 'plt': plt}
+        exec(selected_cell(source, number, 'ax.plot_surface'), scope)
+        ax = scope['ax']
+        renderer, crop = tight_render(ax.figure)
+        for axis, expected in zip((ax.xaxis, ax.yaxis, ax.zaxis), ('x', 't', 'u')):
+            assert expected in axis.label.get_text()
+            bounds = axis.label.get_window_extent(renderer)
+            assert_inside(bounds, ax.figure.bbox)
+>           assert_inside(bounds, crop)
+
+dev_tests/test_notebook_displays.py:186: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+inner = Bbox([[172.81475863897435, 11.251322267864111], [196.58038363897435, 45.25132226786411]])
+outer = Bbox([[41.0, 19.014186812764365], [369.0, 362.0]])
+
+    def assert_inside(inner, outer):
+>       assert (inner.x0 >= outer.x0 and inner.y0 >= outer.y0
+                and inner.x1 <= outer.x1 and inner.y1 <= outer.y1), (
+                    f'Visible label bounds {inner.bounds} exceed exported bounds {outer.bounds}')
+E       AssertionError: Visible label bounds (np.float64(172.81475863897435), np.float64(11.251322267864111), np.float64(23.765625), np.float64(34.0)) exceed exported bounds (np.float64(41.0), np.float64(19.014186812764365), np.float64(328.0), np.float64(342.98581318723564))
+E       assert (np.float64(172.81475863897435) >= np.float64(41.0) and np.float64(11.251322267864111) >= np.float64(19.014186812764365))
+E        +  where np.float64(172.81475863897435) = Bbox([[172.81475863897435, 11.251322267864111], [196.58038363897435, 45.25132226786411]]).x0
+E        +  and   np.float64(41.0) = Bbox([[41.0, 19.014186812764365], [369.0, 362.0]]).x0
+E        +  and   np.float64(11.251322267864111) = Bbox([[172.81475863897435, 11.251322267864111], [196.58038363897435, 45.25132226786411]]).y0
+E        +  and   np.float64(19.014186812764365) = Bbox([[41.0, 19.014186812764365], [369.0, 362.0]]).y0
+
+dev_tests/test_notebook_displays.py:79: AssertionError
+_ test_initial_surface_labels_survive_ordinary_inline_tight_crop[8-generator] __
+
+source = 'generator', number = 8, figures = None
+
+    @pytest.mark.parametrize('source', ['notebook', 'generator'])
+    @pytest.mark.parametrize('number', [1, 2, 6, 8])
+    def test_initial_surface_labels_survive_ordinary_inline_tight_crop(source, number, figures):
+        scope = {'np': np, 'plt': plt}
+        exec(selected_cell(source, number, 'ax.plot_surface'), scope)
+        ax = scope['ax']
+        renderer, crop = tight_render(ax.figure)
+        for axis, expected in zip((ax.xaxis, ax.yaxis, ax.zaxis), ('x', 't', 'u')):
+            assert expected in axis.label.get_text()
+            bounds = axis.label.get_window_extent(renderer)
+            assert_inside(bounds, ax.figure.bbox)
+>           assert_inside(bounds, crop)
+
+dev_tests/test_notebook_displays.py:186: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+inner = Bbox([[172.81475863897435, 11.251322267864111], [196.58038363897435, 45.25132226786411]])
+outer = Bbox([[41.0, 19.014186812764365], [369.0, 362.0]])
+
+    def assert_inside(inner, outer):
+>       assert (inner.x0 >= outer.x0 and inner.y0 >= outer.y0
+                and inner.x1 <= outer.x1 and inner.y1 <= outer.y1), (
+                    f'Visible label bounds {inner.bounds} exceed exported bounds {outer.bounds}')
+E       AssertionError: Visible label bounds (np.float64(172.81475863897435), np.float64(11.251322267864111), np.float64(23.765625), np.float64(34.0)) exceed exported bounds (np.float64(41.0), np.float64(19.014186812764365), np.float64(328.0), np.float64(342.98581318723564))
+E       assert (np.float64(172.81475863897435) >= np.float64(41.0) and np.float64(11.251322267864111) >= np.float64(19.014186812764365))
+E        +  where np.float64(172.81475863897435) = Bbox([[172.81475863897435, 11.251322267864111], [196.58038363897435, 45.25132226786411]]).x0
+E        +  and   np.float64(41.0) = Bbox([[41.0, 19.014186812764365], [369.0, 362.0]]).x0
+E        +  and   np.float64(11.251322267864111) = Bbox([[172.81475863897435, 11.251322267864111], [196.58038363897435, 45.25132226786411]]).y0
+E        +  and   np.float64(19.014186812764365) = Bbox([[41.0, 19.014186812764365], [369.0, 362.0]]).y0
+
+dev_tests/test_notebook_displays.py:79: AssertionError
+=============================== warnings summary ===============================
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:64
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:64: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    prop = Group((name + Suppress("=") + comma_separated(value)) | oneOf(_CONSTANTS))
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:85: 6 warnings
+dev_tests/test_notebook_displays.py: 25 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:85: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+    parse = parser.parseString(pattern)
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:89: 6 warnings
+dev_tests/test_notebook_displays.py: 25 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:89: PyparsingDeprecationWarning: 'resetCache' deprecated - use 'reset_cache'
+    parser.resetCache()
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:45
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:45: PyparsingDeprecationWarning: 'enablePackrat' deprecated - use 'enable_packrat'
+    ParserElement.enablePackrat()
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[8-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2010: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.space          = oneOf(self._space_widths)("space")
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[8-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2012: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.style_literal  = oneOf(
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[8-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2020: PyparsingDeprecationWarning: 'leaveWhitespace' deprecated - use 'leave_whitespace'
+    )("sym").leaveWhitespace()
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[8-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2024: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.start_group    = Optional(r"\math" + oneOf(self._fontnames)("font")) + "{"
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[8-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2027: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.delim          = oneOf(self._delims)
+
+dev_tests/test_notebook_displays.py: 47 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:1984: PyparsingDeprecationWarning: 'setName' deprecated - use 'set_name'
+    val.setName(key)
+
+dev_tests/test_notebook_displays.py: 44 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:1987: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    val.setParseAction(getattr(self, key))
+
+dev_tests/test_notebook_displays.py: 16 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:1748: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    return Empty().setParseAction(raise_error)
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[8-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2088: PyparsingDeprecationWarning: 'endQuoteChar' argument is deprecated, use 'end_quote_char'
+    p.text = cmd(r"\text", QuotedString('{', '\\', endQuoteChar="}"))
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[8-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2097: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    + OneOrMore(oneOf(["_", "^"]) - p.placeable)("subsuper")
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[8-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2146: PyparsingDeprecationWarning: 'unquoteResults' argument is deprecated, use 'unquote_results'
+    p.math_string   = QuotedString('$', '\\', unquoteResults=False)
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[8-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2147: PyparsingDeprecationWarning: 'leaveWhitespace' deprecated - use 'leave_whitespace'
+    p.non_math      = Regex(r"(?:(?:\\[$])|[^$])*").leaveWhitespace()
+
+dev_tests/test_notebook_displays.py: 12 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2170: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+    result = self._expression.parseString(s)
+
+dev_tests/test_notebook_displays.py: 12 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2197: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+    return self._math_expression.parseString(toks[0][1:-1], parseAll=True)
+
+dev_tests/test_notebook_displays.py: 12 warnings
+  /usr/local/lib/python3.13/site-packages/pyparsing/util.py:466: PyparsingDeprecationWarning: 'parseAll' argument is deprecated, use 'parse_all'
+    return fn(self, *args, **kwargs)
+
+dev_tests/test_notebook_displays.py: 12 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2178: PyparsingDeprecationWarning: 'resetCache' deprecated - use 'reset_cache'
+    ParserElement.resetCache()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[8-notebook]
+FAILED dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[8-generator]
+2 failed, 10 deselected, 228 warnings in 2.23s

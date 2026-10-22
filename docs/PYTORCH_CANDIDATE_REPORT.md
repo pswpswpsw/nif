@@ -50,8 +50,9 @@ fixes. Tests exercise independent numerical formulas, finite differences,
 initialization statistics, gradients and parameter updates, shared parameters,
 serialization and dtype, finite training, physical scaling, L-BFGS convergence,
 and TFRecord external-reader/writer interoperability and corruption checks.
-Final unit tests: **189 passed, 1 skipped (CUDA unavailable)**. Notebook hashes are recorded in
-`dev_tests/validation_summary.json`.
+Final unit tests: **199 passed, 1 skipped (CUDA unavailable)**. Prior notebook
+execution hashes remain in `dev_tests/validation_summary.json`; current
+display-only source hashes are recorded in the follow-up below.
 
 All eight native notebooks passed sequential execution in separate clean
 ipykernel sessions with `NIF_SMOKE=1`. Tutorials 4 and 5 also passed with smoke
@@ -210,3 +211,62 @@ work; this report claims only the actual Linux CPU checks above.
 
 Updated `nif/optimizers/external_optimizers.py` SHA256:
 `e63840e3cd096a077dc4afcc47496a855afba9e9811146db3154d984c2145e2e`.
+
+
+## Display-only notebook follow-up
+
+Changed source files are `dev_tests/generate_native_notebooks.py`, native
+notebooks 1, 2, and 6, and the new public regression module
+`dev_tests/test_notebook_displays.py`. Only five notebook code cells changed;
+all notebook IDs, outputs, metadata, narrative, and other cells are preserved.
+This report and development logs/artifacts document the checks.
+
+Tutorial 1 now evaluates separate plotting inputs at every unique training
+time under `torch.no_grad()`. The original 32-row `p`, `latent`, `w`, and
+coordinate comparison demonstrations remain intact. Tutorial 6 computes common
+contour levels from the three comparable fields, uses one labeled colorbar,
+and reserves space for titles with constrained layout. The initial 3D surfaces
+in tutorials 1, 2, and 6 reserve label space using display zoom and label padding;
+all x/t/u labels survive ordinary tight-crop export and avoid tick annotations.
+
+Before implementation edits, the executed plotting regressions recorded
+**10 failed** (five defects tested through notebook cells and generator output)
+in `dev_tests/display_red.log`. Visual inspection then identified axis-label/tick
+crowding; a stronger rendered overlap check recorded **6 failed, 4 deselected**
+in `dev_tests/display_label_spacing_red.log` before the final padding adjustment.
+Final focused regressions: **10 passed** in `dev_tests/display_green.log`.
+Final default native suite: **199 passed, 1 CUDA skip** in
+`dev_tests/display_final.log`, with JUnit results in
+`dev_tests/artifacts/display_final.junit.xml`. Rendering adds Matplotlib/pyparsing
+deprecation warnings; existing multiprocessing/sparse warnings remain.
+
+These checks execute the actual plotting code, inspect rendered PNG geometry,
+and compare plot values, shared color mappings, and annotation bounds. They
+also verify the latent diagnostic preserves model state/mode, Torch/NumPy RNG,
+input data, and downstream shared-subnet equality. The 220-file preservation
+audit found only the three authorized native notebook changes: all 16 archived
+TensorFlow notebooks, all data and checkpoint files, the `nif` package, README,
+and the coordinator validation document remain byte-identical. Generator
+outputs differ in exactly the five intended plotting cells. Tutorial 6's
+scientific function body outside the plotting statements is AST-identical.
+
+Representative figures were rendered without training into
+`dev_tests/artifacts/display/`. Visually inspected all three corrected initial
+surfaces with ordinary inline tight cropping, the full-domain latent diagnostic
+from an existing tutorial 1 smoke checkpoint, the tutorial 6 nearly constant
+prediction comparison, and a comparison from the existing tutorial 6 L2=0.01
+smoke checkpoint. Uncropped surface PNGs were also produced. The predictions
+and checkpoint files were not modified. These are display checks, not new
+convergence results. No full workload, notebook-wide training, CUDA, hosted
+Colab, or Windows execution is claimed; independent acceptance remains with
+coordinator/B. Prior scientific-run summaries are retained as historical
+records. The separate display artifact summary is
+`dev_tests/artifacts/display_validation_summary.json`.
+
+Final display source SHA256:
+
+- `dev_tests/generate_native_notebooks.py`: `8a8f79e37ddea5738012ae8d3305e70572c1e57200953b384bc8a8373bab7068`
+- `dev_tests/test_notebook_displays.py`: `7fc28acda7c795e68a29774c78612d85cb6cce239e970693efe2b33e37b20621`
+- `tutorial/1_simple_1d_wave_pytorch.ipynb`: `b9eb9b0e3985ac8302664e80b09990880d02ef445230428485b1d08b060350c6`
+- `tutorial/2_multi_scale_NIF_pytorch.ipynb`: `f5f6a35c9527413622ef693af3f5f056f87b0bf7cc3da9a2a98102b133a8addf`
+- `tutorial/6_revisit_multi_scale_NIF_with_L1_L2_regularization_pytorch.ipynb`: `b2e66815e2824752ea013dde3e2cc23e3793ebb16597f3bff124e0390b010a36`

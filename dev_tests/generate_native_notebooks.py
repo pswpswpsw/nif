@@ -176,6 +176,11 @@ SCHEDULE_MS = '''def scheduler(epoch, lr):
     if epoch < 4000: return 5e-5
     return 1e-5
 '''
+SURFACE_LAYOUT = '''
+# Keep all three axis labels inside the ordinary inline tight crop.
+ax.set_box_aspect(None, zoom=0.75)
+ax.xaxis.labelpad = ax.yaxis.labelpad = ax.zaxis.labelpad = 12
+'''
 
 def original(number):
     return next(p for p in (ROOT/'tutorial').glob(str(number)+'_*.ipynb') if not p.stem.endswith(('_colab','_pytorch')))
@@ -217,7 +222,7 @@ def emit(number, replacements, notes="", omitted_markdown=()):
 src1=nb.read(original(1),as_version=4)
 # Narrative about compilation/distribution is replaced by the explicit native loop notes.
 emit(1,{
-3:src1.cells[3].source,
+3:src1.cells[3].source+SURFACE_LAYOUT,
 7:SWISH,
 9:'''enable_multi_gpu = False
 enable_mixed_precision = False
@@ -254,7 +259,11 @@ wave_figure(train_data[:, -1], predict(model_opt, train_data[:, :2]).ravel(), "t
 print(model_p_to_lr)
 p = tensor(train_data[:32, :1])
 latent = model_p_to_lr(p)
-fig, ax=plt.subplots(); ax.plot(p.detach().cpu(),latent.detach().cpu(),"o"); ax.set(xlabel="normalized t",ylabel="latent")
+# Plot every training time separately from the 32-row shared-subnet example.
+plot_p = tensor(np.unique(train_data[:, 0]).reshape(-1, 1))
+with torch.no_grad():
+    plot_latent = model_p_to_lr(plot_p)
+fig, ax=plt.subplots(); ax.plot(plot_p.cpu(),plot_latent.cpu(),"o"); ax.set(xlabel="normalized t",ylabel="latent")
 fig.savefig(OUT / "latent.png"); plt.show(); plt.close(fig)
 ''',
 29:'''torch.save(model_p_to_lr.state_dict(), OUT / "parameter_to_latent.pt")
@@ -317,7 +326,7 @@ write_metrics({"adabelief_epochs": epochs(nepoch), "lbfgs_rounds": rounds, "lbfg
 
 src2=nb.read(original(2),as_version=4)
 emit(2,{
-3:src2.cells[3].source,
+3:src2.cells[3].source+SURFACE_LAYOUT,
 5:SWISH+WAVE_DATA+'''nepoch, batch_size, lr = 5000, 512, 1e-3
 def scheduler_swish(epoch, lr):
     if epoch < 1000: return lr
@@ -522,11 +531,15 @@ REG_TRAIN='''def run_regularization(kind=None, coefficient=0.0):
     model=save_and_check(model,optimizer,name,train_data[:64,:2])
     train_pred=predict(model,train_data[:,:2]).ravel()
     test_pred=predict(model,test_data).reshape(test_tt.shape)
-    fig,axs=plt.subplots(1,3,figsize=(15,3))
+    fig,axs=plt.subplots(1,3,figsize=(15,3.5),layout="constrained")
+    # A common normalized-u scale makes nearly constant predictions look constant.
+    levels=np.linspace(min(train_data[:,2].min(),train_pred.min(),test_pred.min()),
+                       max(train_data[:,2].max(),train_pred.max(),test_pred.max()),51)
     for ax,values,title in zip(axs[:2],(train_data[:,2],train_pred),("true","pred")):
-        im=ax.contourf(tt,xx,values.reshape(10,200),levels=50,cmap="seismic");fig.colorbar(im,ax=ax);ax.set_title(title)
-    im=axs[2].contourf(test_tt,test_xx,test_pred,levels=50,cmap="seismic");fig.colorbar(im,ax=axs[2]);axs[2].set_title("super-resolution")
-    fig.suptitle(name);fig.tight_layout();fig.savefig(OUT/(name+"_superresolution.png"));plt.show();plt.close(fig)
+        im=ax.contourf(tt,xx,values.reshape(10,200),levels=levels,cmap="seismic");ax.set_title(title)
+    im=axs[2].contourf(test_tt,test_xx,test_pred,levels=levels,cmap="seismic");axs[2].set_title("super-resolution")
+    fig.colorbar(im,ax=axs,label="normalized u")
+    fig.suptitle(name);fig.savefig(OUT/(name+"_superresolution.png"));plt.show();plt.close(fig)
     physical_prediction=test_pred*tw.std[2]+tw.mean[2]
     result={"kind":kind,"coefficient":coefficient,"epochs":epochs(nepoch),
             "training_mse":float(np.mean((train_pred-train_data[:,2])**2)),
@@ -536,7 +549,7 @@ REG_TRAIN='''def run_regularization(kind=None, coefficient=0.0):
     return model
 '''
 emit(6,{
-4:src6.cells[4].source,
+4:src6.cells[4].source+SURFACE_LAYOUT,
 5:'''# prepare testing data: finer normalized coordinates; ALWAYS [parameter, coordinate] = [t,x].
 resolution=41 if SMOKE else 371
 test_x=np.linspace(-1,1,resolution)

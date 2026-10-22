@@ -1,0 +1,570 @@
+FFFFFFFFFF                                                               [100%]
+=================================== FAILURES ===================================
+_ test_latent_plot_covers_training_times_and_preserves_subnet_demonstration[notebook] _
+
+source = 'notebook', figures = None
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-24/test_latent_plot_covers_traini0')
+
+    @pytest.mark.parametrize('source', ['notebook', 'generator'])
+    def test_latent_plot_covers_training_times_and_preserves_subnet_demonstration(source, figures, tmp_path):
+        tw = TravelingWave()
+        data = tw.data.copy()
+        with torch.random.fork_rng():
+            torch.manual_seed(271)
+            model = nif.NIF(
+                dict(connectivity='full', input_dim=1, output_dim=1, units=30, nlayers=2, activation='swish'),
+                dict(input_dim=1, latent_dim=1, units=30, nlayers=2, activation='swish'))
+        scope = {'torch': torch, 'np': np, 'plt': plt, 'OUT': tmp_path,
+                 'train_data': data, 'model_ori': model, 'model_opt': model,
+                 'tensor': lambda x: torch.as_tensor(x, dtype=torch.float32)}
+        state = copy.deepcopy(model.state_dict())
+        modes = [m.training for m in model.modules()]
+        rng = torch.get_rng_state().clone()
+        numpy_rng = np.random.get_state()
+        exec(selected_cell(source, 1, 'model_p_to_lr ='), scope)
+        fig = plt.gcf()
+        line = fig.axes[0].lines[0]
+        plotted_times = np.asarray(line.get_xdata()).ravel()
+>       np.testing.assert_array_equal(np.unique(plotted_times), np.unique(data[:, 0]).astype(np.float32))
+
+dev_tests/test_notebook_displays.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.13/site-packages/numpy/_utils/__init__.py:85: in wrapper
+    return fun(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (<built-in function eq>, array([-1.5666989], dtype=float32), array([-1.5666989 , -1.2185436 , -0.87038827, -0.52223295, -0.17407766,
+        0.17407766,  0.52223295,  0.87038827,  1.2185436 ,  1.5666989 ],
+      dtype=float32))
+kwds = {'err_msg': '', 'verbose': True, 'header': 'Arrays are not equal', 'strict': False}
+
+    @wraps(func)
+    def inner(*args, **kwds):
+        with self._recreate_cm():
+>           return func(*args, **kwds)
+                   ^^^^^^^^^^^^^^^^^^^
+E           AssertionError: 
+E           Arrays are not equal
+E           
+E           (shapes (1,), (10,) mismatch)
+E            ACTUAL: array([-1.566699], dtype=float32)
+E            DESIRED: array([-1.566699, -1.218544, -0.870388, -0.522233, -0.174078,  0.174078,
+E                   0.522233,  0.870388,  1.218544,  1.566699], dtype=float32)
+
+/usr/local/lib/python3.13/contextlib.py:85: AssertionError
+----------------------------- Captured stdout call -----------------------------
+_ParameterView(
+  (0): _Dense(
+    (linear): Linear(in_features=1, out_features=30, bias=True)
+  )
+  (1): MLP_SimpleShortCut(
+    (L1): DenseLayer()
+  )
+  (2): MLP_SimpleShortCut(
+    (L1): DenseLayer()
+  )
+  (3): _Dense(
+    (linear): Linear(in_features=30, out_features=1, bias=True)
+  )
+)
+_ test_latent_plot_covers_training_times_and_preserves_subnet_demonstration[generator] _
+
+source = 'generator', figures = None
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-24/test_latent_plot_covers_traini1')
+
+    @pytest.mark.parametrize('source', ['notebook', 'generator'])
+    def test_latent_plot_covers_training_times_and_preserves_subnet_demonstration(source, figures, tmp_path):
+        tw = TravelingWave()
+        data = tw.data.copy()
+        with torch.random.fork_rng():
+            torch.manual_seed(271)
+            model = nif.NIF(
+                dict(connectivity='full', input_dim=1, output_dim=1, units=30, nlayers=2, activation='swish'),
+                dict(input_dim=1, latent_dim=1, units=30, nlayers=2, activation='swish'))
+        scope = {'torch': torch, 'np': np, 'plt': plt, 'OUT': tmp_path,
+                 'train_data': data, 'model_ori': model, 'model_opt': model,
+                 'tensor': lambda x: torch.as_tensor(x, dtype=torch.float32)}
+        state = copy.deepcopy(model.state_dict())
+        modes = [m.training for m in model.modules()]
+        rng = torch.get_rng_state().clone()
+        numpy_rng = np.random.get_state()
+        exec(selected_cell(source, 1, 'model_p_to_lr ='), scope)
+        fig = plt.gcf()
+        line = fig.axes[0].lines[0]
+        plotted_times = np.asarray(line.get_xdata()).ravel()
+>       np.testing.assert_array_equal(np.unique(plotted_times), np.unique(data[:, 0]).astype(np.float32))
+
+dev_tests/test_notebook_displays.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.13/site-packages/numpy/_utils/__init__.py:85: in wrapper
+    return fun(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (<built-in function eq>, array([-1.5666989], dtype=float32), array([-1.5666989 , -1.2185436 , -0.87038827, -0.52223295, -0.17407766,
+        0.17407766,  0.52223295,  0.87038827,  1.2185436 ,  1.5666989 ],
+      dtype=float32))
+kwds = {'err_msg': '', 'verbose': True, 'header': 'Arrays are not equal', 'strict': False}
+
+    @wraps(func)
+    def inner(*args, **kwds):
+        with self._recreate_cm():
+>           return func(*args, **kwds)
+                   ^^^^^^^^^^^^^^^^^^^
+E           AssertionError: 
+E           Arrays are not equal
+E           
+E           (shapes (1,), (10,) mismatch)
+E            ACTUAL: array([-1.566699], dtype=float32)
+E            DESIRED: array([-1.566699, -1.218544, -0.870388, -0.522233, -0.174078,  0.174078,
+E                   0.522233,  0.870388,  1.218544,  1.566699], dtype=float32)
+
+/usr/local/lib/python3.13/contextlib.py:85: AssertionError
+----------------------------- Captured stdout call -----------------------------
+_ParameterView(
+  (0): _Dense(
+    (linear): Linear(in_features=1, out_features=30, bias=True)
+  )
+  (1): MLP_SimpleShortCut(
+    (L1): DenseLayer()
+  )
+  (2): MLP_SimpleShortCut(
+    (L1): DenseLayer()
+  )
+  (3): _Dense(
+    (linear): Linear(in_features=30, out_features=1, bias=True)
+  )
+)
+_ test_regularization_fields_share_color_mapping_and_readable_layout[notebook] _
+
+source = 'notebook', figures = None
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-24/test_regularization_fields_sha0')
+
+    @pytest.mark.parametrize('source', ['notebook', 'generator'])
+    def test_regularization_fields_share_color_mapping_and_readable_layout(source, figures, tmp_path):
+        code = selected_cell(source, 6, 'def run_regularization')
+        function = next(n for n in ast.parse(code).body if isinstance(n, ast.FunctionDef)
+                        and n.name == 'run_regularization')
+        # Execute the actual plotting block only: deliberately do not call training,
+        # construct an optimizer, or replace the scientific predictions in a notebook.
+        start = next(i for i, node in enumerate(function.body) if isinstance(node, ast.Assign)
+                     and any(isinstance(t, ast.Tuple) and any(isinstance(v, ast.Name) and v.id == 'fig'
+                             for v in t.elts) for t in node.targets))
+        stop = next(i for i, node in enumerate(function.body) if isinstance(node, ast.Assign)
+                    and any(isinstance(t, ast.Name) and t.id == 'physical_prediction' for t in node.targets))
+        plotting = ast.Module(body=function.body[start:stop], type_ignores=[])
+        tw = TravelingWaveHighFreq()
+        data = tw.data.copy()
+        xx, tt = np.meshgrid(np.linspace(0, 1, 200, endpoint=False), np.linspace(0, 100, 10, endpoint=False))
+        test_xx, test_tt = np.meshgrid(np.linspace(-1, 1, 41), np.linspace(-1, 1, 41))
+        train_pred = .02 + np.linspace(-1e-10, 1e-10, len(data))
+        test_pred = .02 + 1e-10 * np.sin(test_xx) * np.cos(test_tt)
+        originals = [v.copy() for v in (data, train_pred, test_pred)]
+        scope = dict(np=np, plt=plt, OUT=tmp_path, train_data=data, train_pred=train_pred,
+                     test_pred=test_pred, tt=tt, xx=xx, test_tt=test_tt, test_xx=test_xx, name='l2_0.01')
+        exec(compile(plotting, '<notebook contour display>', 'exec'), scope)
+        fig, axes = scope['fig'], scope['axs']
+        contours = [next(c for c in ax.collections if isinstance(c, QuadContourSet)) for ax in axes]
+        for contour in contours[1:]:
+>           np.testing.assert_array_equal(contour.levels, contours[0].levels)
+
+dev_tests/test_notebook_displays.py:149: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.13/site-packages/numpy/_utils/__init__.py:85: in wrapper
+    return fun(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (<built-in function eq>, array([0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02,
+       0.02, 0.02, 0...       0.44,  0.48,  0.52,  0.56,  0.6 ,  0.64,  0.68,  0.72,  0.76,
+        0.8 ,  0.84,  0.88,  0.92,  0.96,  1.  ]))
+kwds = {'err_msg': '', 'verbose': True, 'header': 'Arrays are not equal', 'strict': False}
+
+    @wraps(func)
+    def inner(*args, **kwds):
+        with self._recreate_cm():
+>           return func(*args, **kwds)
+                   ^^^^^^^^^^^^^^^^^^^
+E           AssertionError: 
+E           Arrays are not equal
+E           
+E           Mismatched elements: 51 / 51 (100%)
+E           Max absolute difference among violations: 1.02
+E           Max relative difference among violations: 1.5
+E            ACTUAL: array([0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02,
+E                  0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02,
+E                  0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02,...
+E            DESIRED: array([-1.  , -0.96, -0.92, -0.88, -0.84, -0.8 , -0.76, -0.72, -0.68,
+E                  -0.64, -0.6 , -0.56, -0.52, -0.48, -0.44, -0.4 , -0.36, -0.32,
+E                  -0.28, -0.24, -0.2 , -0.16, -0.12, -0.08, -0.04,  0.  ,  0.04,...
+
+/usr/local/lib/python3.13/contextlib.py:85: AssertionError
+_ test_regularization_fields_share_color_mapping_and_readable_layout[generator] _
+
+source = 'generator', figures = None
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-24/test_regularization_fields_sha1')
+
+    @pytest.mark.parametrize('source', ['notebook', 'generator'])
+    def test_regularization_fields_share_color_mapping_and_readable_layout(source, figures, tmp_path):
+        code = selected_cell(source, 6, 'def run_regularization')
+        function = next(n for n in ast.parse(code).body if isinstance(n, ast.FunctionDef)
+                        and n.name == 'run_regularization')
+        # Execute the actual plotting block only: deliberately do not call training,
+        # construct an optimizer, or replace the scientific predictions in a notebook.
+        start = next(i for i, node in enumerate(function.body) if isinstance(node, ast.Assign)
+                     and any(isinstance(t, ast.Tuple) and any(isinstance(v, ast.Name) and v.id == 'fig'
+                             for v in t.elts) for t in node.targets))
+        stop = next(i for i, node in enumerate(function.body) if isinstance(node, ast.Assign)
+                    and any(isinstance(t, ast.Name) and t.id == 'physical_prediction' for t in node.targets))
+        plotting = ast.Module(body=function.body[start:stop], type_ignores=[])
+        tw = TravelingWaveHighFreq()
+        data = tw.data.copy()
+        xx, tt = np.meshgrid(np.linspace(0, 1, 200, endpoint=False), np.linspace(0, 100, 10, endpoint=False))
+        test_xx, test_tt = np.meshgrid(np.linspace(-1, 1, 41), np.linspace(-1, 1, 41))
+        train_pred = .02 + np.linspace(-1e-10, 1e-10, len(data))
+        test_pred = .02 + 1e-10 * np.sin(test_xx) * np.cos(test_tt)
+        originals = [v.copy() for v in (data, train_pred, test_pred)]
+        scope = dict(np=np, plt=plt, OUT=tmp_path, train_data=data, train_pred=train_pred,
+                     test_pred=test_pred, tt=tt, xx=xx, test_tt=test_tt, test_xx=test_xx, name='l2_0.01')
+        exec(compile(plotting, '<notebook contour display>', 'exec'), scope)
+        fig, axes = scope['fig'], scope['axs']
+        contours = [next(c for c in ax.collections if isinstance(c, QuadContourSet)) for ax in axes]
+        for contour in contours[1:]:
+>           np.testing.assert_array_equal(contour.levels, contours[0].levels)
+
+dev_tests/test_notebook_displays.py:149: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.13/site-packages/numpy/_utils/__init__.py:85: in wrapper
+    return fun(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (<built-in function eq>, array([0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02,
+       0.02, 0.02, 0...       0.44,  0.48,  0.52,  0.56,  0.6 ,  0.64,  0.68,  0.72,  0.76,
+        0.8 ,  0.84,  0.88,  0.92,  0.96,  1.  ]))
+kwds = {'err_msg': '', 'verbose': True, 'header': 'Arrays are not equal', 'strict': False}
+
+    @wraps(func)
+    def inner(*args, **kwds):
+        with self._recreate_cm():
+>           return func(*args, **kwds)
+                   ^^^^^^^^^^^^^^^^^^^
+E           AssertionError: 
+E           Arrays are not equal
+E           
+E           Mismatched elements: 51 / 51 (100%)
+E           Max absolute difference among violations: 1.02
+E           Max relative difference among violations: 1.5
+E            ACTUAL: array([0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02,
+E                  0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02,
+E                  0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02,...
+E            DESIRED: array([-1.  , -0.96, -0.92, -0.88, -0.84, -0.8 , -0.76, -0.72, -0.68,
+E                  -0.64, -0.6 , -0.56, -0.52, -0.48, -0.44, -0.4 , -0.36, -0.32,
+E                  -0.28, -0.24, -0.2 , -0.16, -0.12, -0.08, -0.04,  0.  ,  0.04,...
+
+/usr/local/lib/python3.13/contextlib.py:85: AssertionError
+__ test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook] __
+
+source = 'notebook', number = 1, figures = None
+
+    @pytest.mark.parametrize('source', ['notebook', 'generator'])
+    @pytest.mark.parametrize('number', [1, 2, 6])
+    def test_initial_surface_labels_survive_ordinary_inline_tight_crop(source, number, figures):
+        scope = {'np': np, 'plt': plt}
+        exec(selected_cell(source, number, 'ax.plot_surface'), scope)
+        ax = scope['ax']
+        renderer, crop = tight_render(ax.figure)
+        for axis, expected in zip((ax.xaxis, ax.yaxis, ax.zaxis), ('x', 't', 'u')):
+            assert expected in axis.label.get_text()
+            bounds = axis.label.get_window_extent(renderer)
+>           assert_inside(bounds, ax.figure.bbox)
+
+dev_tests/test_notebook_displays.py:185: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+inner = Bbox([[165.20465049303277, -10.42116918535018], [188.97027549303277, 23.57883081464982]])
+outer = <matplotlib.transforms.TransformedBbox object at 0x7cf072f87050>
+
+    def assert_inside(inner, outer):
+>       assert (inner.x0 >= outer.x0 and inner.y0 >= outer.y0
+                and inner.x1 <= outer.x1 and inner.y1 <= outer.y1), (
+                    f'Visible label bounds {inner.bounds} exceed exported bounds {outer.bounds}')
+E       AssertionError: Visible label bounds (np.float64(165.20465049303277), np.float64(-10.42116918535018), np.float64(23.765625), np.float64(34.0)) exceed exported bounds (np.float64(0.0), np.float64(0.0), np.float64(400.0), np.float64(400.0))
+E       assert (np.float64(165.20465049303277) >= np.float64(0.0) and np.float64(-10.42116918535018) >= np.float64(0.0))
+E        +  where np.float64(165.20465049303277) = Bbox([[165.20465049303277, -10.42116918535018], [188.97027549303277, 23.57883081464982]]).x0
+E        +  and   np.float64(0.0) = <matplotlib.transforms.TransformedBbox object at 0x7cf072f87050>.x0
+E        +  and   np.float64(-10.42116918535018) = Bbox([[165.20465049303277, -10.42116918535018], [188.97027549303277, 23.57883081464982]]).y0
+E        +  and   np.float64(0.0) = <matplotlib.transforms.TransformedBbox object at 0x7cf072f87050>.y0
+
+dev_tests/test_notebook_displays.py:79: AssertionError
+_ test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-generator] __
+
+source = 'generator', number = 1, figures = None
+
+    @pytest.mark.parametrize('source', ['notebook', 'generator'])
+    @pytest.mark.parametrize('number', [1, 2, 6])
+    def test_initial_surface_labels_survive_ordinary_inline_tight_crop(source, number, figures):
+        scope = {'np': np, 'plt': plt}
+        exec(selected_cell(source, number, 'ax.plot_surface'), scope)
+        ax = scope['ax']
+        renderer, crop = tight_render(ax.figure)
+        for axis, expected in zip((ax.xaxis, ax.yaxis, ax.zaxis), ('x', 't', 'u')):
+            assert expected in axis.label.get_text()
+            bounds = axis.label.get_window_extent(renderer)
+>           assert_inside(bounds, ax.figure.bbox)
+
+dev_tests/test_notebook_displays.py:185: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+inner = Bbox([[165.20465049303277, -10.42116918535018], [188.97027549303277, 23.57883081464982]])
+outer = <matplotlib.transforms.TransformedBbox object at 0x7cf072d04750>
+
+    def assert_inside(inner, outer):
+>       assert (inner.x0 >= outer.x0 and inner.y0 >= outer.y0
+                and inner.x1 <= outer.x1 and inner.y1 <= outer.y1), (
+                    f'Visible label bounds {inner.bounds} exceed exported bounds {outer.bounds}')
+E       AssertionError: Visible label bounds (np.float64(165.20465049303277), np.float64(-10.42116918535018), np.float64(23.765625), np.float64(34.0)) exceed exported bounds (np.float64(0.0), np.float64(0.0), np.float64(400.0), np.float64(400.0))
+E       assert (np.float64(165.20465049303277) >= np.float64(0.0) and np.float64(-10.42116918535018) >= np.float64(0.0))
+E        +  where np.float64(165.20465049303277) = Bbox([[165.20465049303277, -10.42116918535018], [188.97027549303277, 23.57883081464982]]).x0
+E        +  and   np.float64(0.0) = <matplotlib.transforms.TransformedBbox object at 0x7cf072d04750>.x0
+E        +  and   np.float64(-10.42116918535018) = Bbox([[165.20465049303277, -10.42116918535018], [188.97027549303277, 23.57883081464982]]).y0
+E        +  and   np.float64(0.0) = <matplotlib.transforms.TransformedBbox object at 0x7cf072d04750>.y0
+
+dev_tests/test_notebook_displays.py:79: AssertionError
+__ test_initial_surface_labels_survive_ordinary_inline_tight_crop[2-notebook] __
+
+source = 'notebook', number = 2, figures = None
+
+    @pytest.mark.parametrize('source', ['notebook', 'generator'])
+    @pytest.mark.parametrize('number', [1, 2, 6])
+    def test_initial_surface_labels_survive_ordinary_inline_tight_crop(source, number, figures):
+        scope = {'np': np, 'plt': plt}
+        exec(selected_cell(source, number, 'ax.plot_surface'), scope)
+        ax = scope['ax']
+        renderer, crop = tight_render(ax.figure)
+        for axis, expected in zip((ax.xaxis, ax.yaxis, ax.zaxis), ('x', 't', 'u')):
+            assert expected in axis.label.get_text()
+            bounds = axis.label.get_window_extent(renderer)
+            assert_inside(bounds, ax.figure.bbox)
+>           assert_inside(bounds, crop)
+
+dev_tests/test_notebook_displays.py:186: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+inner = Bbox([[172.81475863897435, 11.251322267864111], [196.58038363897435, 45.25132226786411]])
+outer = Bbox([[41.0, 19.014186812764365], [369.0, 362.0]])
+
+    def assert_inside(inner, outer):
+>       assert (inner.x0 >= outer.x0 and inner.y0 >= outer.y0
+                and inner.x1 <= outer.x1 and inner.y1 <= outer.y1), (
+                    f'Visible label bounds {inner.bounds} exceed exported bounds {outer.bounds}')
+E       AssertionError: Visible label bounds (np.float64(172.81475863897435), np.float64(11.251322267864111), np.float64(23.765625), np.float64(34.0)) exceed exported bounds (np.float64(41.0), np.float64(19.014186812764365), np.float64(328.0), np.float64(342.98581318723564))
+E       assert (np.float64(172.81475863897435) >= np.float64(41.0) and np.float64(11.251322267864111) >= np.float64(19.014186812764365))
+E        +  where np.float64(172.81475863897435) = Bbox([[172.81475863897435, 11.251322267864111], [196.58038363897435, 45.25132226786411]]).x0
+E        +  and   np.float64(41.0) = Bbox([[41.0, 19.014186812764365], [369.0, 362.0]]).x0
+E        +  and   np.float64(11.251322267864111) = Bbox([[172.81475863897435, 11.251322267864111], [196.58038363897435, 45.25132226786411]]).y0
+E        +  and   np.float64(19.014186812764365) = Bbox([[41.0, 19.014186812764365], [369.0, 362.0]]).y0
+
+dev_tests/test_notebook_displays.py:79: AssertionError
+_ test_initial_surface_labels_survive_ordinary_inline_tight_crop[2-generator] __
+
+source = 'generator', number = 2, figures = None
+
+    @pytest.mark.parametrize('source', ['notebook', 'generator'])
+    @pytest.mark.parametrize('number', [1, 2, 6])
+    def test_initial_surface_labels_survive_ordinary_inline_tight_crop(source, number, figures):
+        scope = {'np': np, 'plt': plt}
+        exec(selected_cell(source, number, 'ax.plot_surface'), scope)
+        ax = scope['ax']
+        renderer, crop = tight_render(ax.figure)
+        for axis, expected in zip((ax.xaxis, ax.yaxis, ax.zaxis), ('x', 't', 'u')):
+            assert expected in axis.label.get_text()
+            bounds = axis.label.get_window_extent(renderer)
+            assert_inside(bounds, ax.figure.bbox)
+>           assert_inside(bounds, crop)
+
+dev_tests/test_notebook_displays.py:186: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+inner = Bbox([[172.81475863897435, 11.251322267864111], [196.58038363897435, 45.25132226786411]])
+outer = Bbox([[41.0, 19.014186812764365], [369.0, 362.0]])
+
+    def assert_inside(inner, outer):
+>       assert (inner.x0 >= outer.x0 and inner.y0 >= outer.y0
+                and inner.x1 <= outer.x1 and inner.y1 <= outer.y1), (
+                    f'Visible label bounds {inner.bounds} exceed exported bounds {outer.bounds}')
+E       AssertionError: Visible label bounds (np.float64(172.81475863897435), np.float64(11.251322267864111), np.float64(23.765625), np.float64(34.0)) exceed exported bounds (np.float64(41.0), np.float64(19.014186812764365), np.float64(328.0), np.float64(342.98581318723564))
+E       assert (np.float64(172.81475863897435) >= np.float64(41.0) and np.float64(11.251322267864111) >= np.float64(19.014186812764365))
+E        +  where np.float64(172.81475863897435) = Bbox([[172.81475863897435, 11.251322267864111], [196.58038363897435, 45.25132226786411]]).x0
+E        +  and   np.float64(41.0) = Bbox([[41.0, 19.014186812764365], [369.0, 362.0]]).x0
+E        +  and   np.float64(11.251322267864111) = Bbox([[172.81475863897435, 11.251322267864111], [196.58038363897435, 45.25132226786411]]).y0
+E        +  and   np.float64(19.014186812764365) = Bbox([[41.0, 19.014186812764365], [369.0, 362.0]]).y0
+
+dev_tests/test_notebook_displays.py:79: AssertionError
+__ test_initial_surface_labels_survive_ordinary_inline_tight_crop[6-notebook] __
+
+source = 'notebook', number = 6, figures = None
+
+    @pytest.mark.parametrize('source', ['notebook', 'generator'])
+    @pytest.mark.parametrize('number', [1, 2, 6])
+    def test_initial_surface_labels_survive_ordinary_inline_tight_crop(source, number, figures):
+        scope = {'np': np, 'plt': plt}
+        exec(selected_cell(source, number, 'ax.plot_surface'), scope)
+        ax = scope['ax']
+        renderer, crop = tight_render(ax.figure)
+        for axis, expected in zip((ax.xaxis, ax.yaxis, ax.zaxis), ('x', 't', 'u')):
+            assert expected in axis.label.get_text()
+            bounds = axis.label.get_window_extent(renderer)
+            assert_inside(bounds, ax.figure.bbox)
+>           assert_inside(bounds, crop)
+
+dev_tests/test_notebook_displays.py:186: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+inner = Bbox([[172.81475863897435, 11.251322267864111], [196.58038363897435, 45.25132226786411]])
+outer = Bbox([[41.0, 19.014186812764365], [369.0, 362.0]])
+
+    def assert_inside(inner, outer):
+>       assert (inner.x0 >= outer.x0 and inner.y0 >= outer.y0
+                and inner.x1 <= outer.x1 and inner.y1 <= outer.y1), (
+                    f'Visible label bounds {inner.bounds} exceed exported bounds {outer.bounds}')
+E       AssertionError: Visible label bounds (np.float64(172.81475863897435), np.float64(11.251322267864111), np.float64(23.765625), np.float64(34.0)) exceed exported bounds (np.float64(41.0), np.float64(19.014186812764365), np.float64(328.0), np.float64(342.98581318723564))
+E       assert (np.float64(172.81475863897435) >= np.float64(41.0) and np.float64(11.251322267864111) >= np.float64(19.014186812764365))
+E        +  where np.float64(172.81475863897435) = Bbox([[172.81475863897435, 11.251322267864111], [196.58038363897435, 45.25132226786411]]).x0
+E        +  and   np.float64(41.0) = Bbox([[41.0, 19.014186812764365], [369.0, 362.0]]).x0
+E        +  and   np.float64(11.251322267864111) = Bbox([[172.81475863897435, 11.251322267864111], [196.58038363897435, 45.25132226786411]]).y0
+E        +  and   np.float64(19.014186812764365) = Bbox([[41.0, 19.014186812764365], [369.0, 362.0]]).y0
+
+dev_tests/test_notebook_displays.py:79: AssertionError
+_ test_initial_surface_labels_survive_ordinary_inline_tight_crop[6-generator] __
+
+source = 'generator', number = 6, figures = None
+
+    @pytest.mark.parametrize('source', ['notebook', 'generator'])
+    @pytest.mark.parametrize('number', [1, 2, 6])
+    def test_initial_surface_labels_survive_ordinary_inline_tight_crop(source, number, figures):
+        scope = {'np': np, 'plt': plt}
+        exec(selected_cell(source, number, 'ax.plot_surface'), scope)
+        ax = scope['ax']
+        renderer, crop = tight_render(ax.figure)
+        for axis, expected in zip((ax.xaxis, ax.yaxis, ax.zaxis), ('x', 't', 'u')):
+            assert expected in axis.label.get_text()
+            bounds = axis.label.get_window_extent(renderer)
+            assert_inside(bounds, ax.figure.bbox)
+>           assert_inside(bounds, crop)
+
+dev_tests/test_notebook_displays.py:186: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+inner = Bbox([[172.81475863897435, 11.251322267864111], [196.58038363897435, 45.25132226786411]])
+outer = Bbox([[41.0, 19.014186812764365], [369.0, 362.0]])
+
+    def assert_inside(inner, outer):
+>       assert (inner.x0 >= outer.x0 and inner.y0 >= outer.y0
+                and inner.x1 <= outer.x1 and inner.y1 <= outer.y1), (
+                    f'Visible label bounds {inner.bounds} exceed exported bounds {outer.bounds}')
+E       AssertionError: Visible label bounds (np.float64(172.81475863897435), np.float64(11.251322267864111), np.float64(23.765625), np.float64(34.0)) exceed exported bounds (np.float64(41.0), np.float64(19.014186812764365), np.float64(328.0), np.float64(342.98581318723564))
+E       assert (np.float64(172.81475863897435) >= np.float64(41.0) and np.float64(11.251322267864111) >= np.float64(19.014186812764365))
+E        +  where np.float64(172.81475863897435) = Bbox([[172.81475863897435, 11.251322267864111], [196.58038363897435, 45.25132226786411]]).x0
+E        +  and   np.float64(41.0) = Bbox([[41.0, 19.014186812764365], [369.0, 362.0]]).x0
+E        +  and   np.float64(11.251322267864111) = Bbox([[172.81475863897435, 11.251322267864111], [196.58038363897435, 45.25132226786411]]).y0
+E        +  and   np.float64(19.014186812764365) = Bbox([[41.0, 19.014186812764365], [369.0, 362.0]]).y0
+
+dev_tests/test_notebook_displays.py:79: AssertionError
+=============================== warnings summary ===============================
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:64
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:64: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    prop = Group((name + Suppress("=") + comma_separated(value)) | oneOf(_CONSTANTS))
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:85: 6 warnings
+dev_tests/test_notebook_displays.py: 25 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:85: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+    parse = parser.parseString(pattern)
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:89: 6 warnings
+dev_tests/test_notebook_displays.py: 25 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:89: PyparsingDeprecationWarning: 'resetCache' deprecated - use 'reset_cache'
+    parser.resetCache()
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:45
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:45: PyparsingDeprecationWarning: 'enablePackrat' deprecated - use 'enable_packrat'
+    ParserElement.enablePackrat()
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2010: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.space          = oneOf(self._space_widths)("space")
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2012: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.style_literal  = oneOf(
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2020: PyparsingDeprecationWarning: 'leaveWhitespace' deprecated - use 'leave_whitespace'
+    )("sym").leaveWhitespace()
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2024: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.start_group    = Optional(r"\math" + oneOf(self._fontnames)("font")) + "{"
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2027: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.delim          = oneOf(self._delims)
+
+dev_tests/test_notebook_displays.py: 47 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:1984: PyparsingDeprecationWarning: 'setName' deprecated - use 'set_name'
+    val.setName(key)
+
+dev_tests/test_notebook_displays.py: 44 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:1987: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    val.setParseAction(getattr(self, key))
+
+dev_tests/test_notebook_displays.py: 16 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:1748: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    return Empty().setParseAction(raise_error)
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2088: PyparsingDeprecationWarning: 'endQuoteChar' argument is deprecated, use 'end_quote_char'
+    p.text = cmd(r"\text", QuotedString('{', '\\', endQuoteChar="}"))
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2097: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    + OneOrMore(oneOf(["_", "^"]) - p.placeable)("subsuper")
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2146: PyparsingDeprecationWarning: 'unquoteResults' argument is deprecated, use 'unquote_results'
+    p.math_string   = QuotedString('$', '\\', unquoteResults=False)
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2147: PyparsingDeprecationWarning: 'leaveWhitespace' deprecated - use 'leave_whitespace'
+    p.non_math      = Regex(r"(?:(?:\\[$])|[^$])*").leaveWhitespace()
+
+dev_tests/test_notebook_displays.py: 36 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2170: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+    result = self._expression.parseString(s)
+
+dev_tests/test_notebook_displays.py: 36 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2197: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+    return self._math_expression.parseString(toks[0][1:-1], parseAll=True)
+
+dev_tests/test_notebook_displays.py: 36 warnings
+  /usr/local/lib/python3.13/site-packages/pyparsing/util.py:466: PyparsingDeprecationWarning: 'parseAll' argument is deprecated, use 'parse_all'
+    return fn(self, *args, **kwargs)
+
+dev_tests/test_notebook_displays.py: 36 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2178: PyparsingDeprecationWarning: 'resetCache' deprecated - use 'reset_cache'
+    ParserElement.resetCache()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED dev_tests/test_notebook_displays.py::test_latent_plot_covers_training_times_and_preserves_subnet_demonstration[notebook]
+FAILED dev_tests/test_notebook_displays.py::test_latent_plot_covers_training_times_and_preserves_subnet_demonstration[generator]
+FAILED dev_tests/test_notebook_displays.py::test_regularization_fields_share_color_mapping_and_readable_layout[notebook]
+FAILED dev_tests/test_notebook_displays.py::test_regularization_fields_share_color_mapping_and_readable_layout[generator]
+FAILED dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+FAILED dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-generator]
+FAILED dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[2-notebook]
+FAILED dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[2-generator]
+FAILED dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[6-notebook]
+FAILED dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[6-generator]
+10 failed, 324 warnings in 4.82s

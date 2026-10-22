@@ -1,0 +1,514 @@
+{
+  "scope": "Agent A self-owned development validation; not blind acceptance",
+  "baseline": "f8f9d31f4aa331b6e7dbc48758302c801441bcce",
+  "branch": "pytorch",
+  "environment": {
+    "python": "3.13.17",
+    "torch": "2.14.1+cpu",
+    "numpy": "2.1.3",
+    "cuda_available": false
+  },
+  "unit_tests": {
+    "command": "python -m pytest -q --junitxml=dev_tests/artifacts/epsilon_final.junit.xml",
+    "passed": 189,
+    "skipped": 1,
+    "failed": 0,
+    "errors": 0,
+    "skip_reason": "CUDA unavailable",
+    "warnings": [
+      "Python 3.13 multiprocessing fork deprecation",
+      "PyTorch sparse invariant-check default warning"
+    ],
+    "log": "dev_tests/epsilon_final.log",
+    "junit": "dev_tests/artifacts/epsilon_final.junit.xml"
+  },
+  "notebooks": {
+    "smoke": [
+      {
+        "notebook": "1_simple_1d_wave_pytorch.ipynb",
+        "status": "passed",
+        "seconds": 6.740472859999954,
+        "source_sha256": "6c91a553e168bdf54a289cc89759398a5d4ee576f628d7d33dcd16cd8c593cc0"
+      },
+      {
+        "notebook": "2_multi_scale_NIF_pytorch.ipynb",
+        "status": "passed",
+        "seconds": 4.061027055000068,
+        "source_sha256": "501094f0d5b6bf783c2dc40806074be04917b6e9484453b1842980387ad983f5"
+      },
+      {
+        "notebook": "3_multi_scale_linear_NIF_pytorch.ipynb",
+        "status": "passed",
+        "seconds": 4.127350277999994,
+        "source_sha256": "ab7533c64635dce6faf3b8c931b191b1a7fdb3a34427c46702a9ace69b5a23bc"
+      },
+      {
+        "notebook": "4_get_gradients_by_wrapping_model_with_layer_pytorch.ipynb",
+        "status": "passed",
+        "seconds": 3.086176812000076,
+        "source_sha256": "ff0b3823da206304d80cd1ab200de051428b2d323c3566fca069d529aefc5c39"
+      },
+      {
+        "notebook": "5_large_scale_training_on_tensorflow_record_data_pytorch.ipynb",
+        "status": "passed",
+        "seconds": 3.7271527069999593,
+        "source_sha256": "506b0f1fe50e4e012827ef45e9ff9eb04ddddd80ee837d9f5ce2fe80837a8b84"
+      },
+      {
+        "notebook": "6_revisit_multi_scale_NIF_with_L1_L2_regularization_pytorch.ipynb",
+        "status": "passed",
+        "seconds": 7.542056903000002,
+        "source_sha256": "db11879d1e53317b091c094f606dc3b88e895958b5ce30b29e2b4849f814416d"
+      },
+      {
+        "notebook": "7_model_pruning_and_quantization_pytorch.ipynb",
+        "status": "passed",
+        "seconds": 4.306066959999953,
+        "source_sha256": "895b26bcd2d05999db572ea1c7398ed7ad4353f5c03a144c61ccc3a4369b9dc0"
+      },
+      {
+        "notebook": "8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb",
+        "status": "passed",
+        "seconds": 4.966470922000099,
+        "source_sha256": "3528bc9aea5eadbdeb7d4538db78fc1765359001946da1f52c5f42347f1ca452"
+      }
+    ],
+    "full": [
+      {
+        "notebook": "4_get_gradients_by_wrapping_model_with_layer_pytorch.ipynb",
+        "status": "passed",
+        "seconds": 3.404112952999867,
+        "source_sha256": "ff0b3823da206304d80cd1ab200de051428b2d323c3566fca069d529aefc5c39"
+      },
+      {
+        "notebook": "5_large_scale_training_on_tensorflow_record_data_pytorch.ipynb",
+        "status": "passed",
+        "seconds": 16.38952415299991,
+        "source_sha256": "506b0f1fe50e4e012827ef45e9ff9eb04ddddd80ee837d9f5ce2fe80837a8b84"
+      }
+    ]
+  },
+  "metrics": {
+    "smoke": {
+      "tutorial1": {
+        "mode": "smoke",
+        "adabelief_epochs": 2,
+        "lbfgs_rounds": 1,
+        "lbfgs_max_iter": 2,
+        "final_mse": 0.9995584487915039
+      },
+      "tutorial2": {
+        "mode": "smoke",
+        "epochs_per_fit": 2,
+        "fits": 2,
+        "swish_mse": 0.029168417677283287,
+        "siren_mse": 0.07366015017032623
+      },
+      "tutorial3": {
+        "mode": "smoke",
+        "epochs": 2,
+        "training_rows": 4096,
+        "all_rows": 191775,
+        "weighted_mse": 0.07029974378402569,
+        "physical_u_mse": 1.6022370675970545,
+        "physical_v_mse": 2.4832144024361735
+      },
+      "tutorial4": {
+        "mode": "smoke",
+        "jacobian_max_error": 5.960464477539063e-08,
+        "hessian_max_error": 5.960464477539063e-08,
+        "derivative_loss": 0.17354655265808105
+      },
+      "tutorial5": {
+        "mode": "smoke",
+        "generated_rows": 10000,
+        "shards": 10,
+        "passes": 2,
+        "rows_seen": 20000,
+        "shard_visits": 20,
+        "mse": 0.4228431729197502
+      },
+      "tutorial6": {
+        "mode": "smoke",
+        "fits": 9,
+        "epochs_per_fit": 2,
+        "resolution": 41,
+        "results": [
+          {
+            "kind": null,
+            "coefficient": 0.0,
+            "epochs": 2,
+            "training_mse": 0.07915588468313217,
+            "physical_superresolution_mse": 0.06329205211570489,
+            "regularization_loss": 0.0
+          },
+          {
+            "kind": "l2",
+            "coefficient": 1e-05,
+            "epochs": 2,
+            "training_mse": 0.06553430110216141,
+            "physical_superresolution_mse": 0.04915711797263974,
+            "regularization_loss": 0.0002756452595349401
+          },
+          {
+            "kind": "l2",
+            "coefficient": 0.0001,
+            "epochs": 2,
+            "training_mse": 0.07103892415761948,
+            "physical_superresolution_mse": 0.06399295390095551,
+            "regularization_loss": 0.0025610323064029217
+          },
+          {
+            "kind": "l2",
+            "coefficient": 0.001,
+            "epochs": 2,
+            "training_mse": 0.05472872778773308,
+            "physical_superresolution_mse": 0.039846859693636515,
+            "regularization_loss": 0.024986349046230316
+          },
+          {
+            "kind": "l2",
+            "coefficient": 0.01,
+            "epochs": 2,
+            "training_mse": 0.0721677839756012,
+            "physical_superresolution_mse": 0.06379035968403243,
+            "regularization_loss": 0.26517295837402344
+          },
+          {
+            "kind": "l1",
+            "coefficient": 1e-05,
+            "epochs": 2,
+            "training_mse": 0.07510997354984283,
+            "physical_superresolution_mse": 0.05888881601210902,
+            "regularization_loss": 0.002014231402426958
+          },
+          {
+            "kind": "l1",
+            "coefficient": 0.0001,
+            "epochs": 2,
+            "training_mse": 0.08805151283740997,
+            "physical_superresolution_mse": 0.07332866454632808,
+            "regularization_loss": 0.019786959514021873
+          },
+          {
+            "kind": "l1",
+            "coefficient": 0.001,
+            "epochs": 2,
+            "training_mse": 0.060159310698509216,
+            "physical_superresolution_mse": 0.04531868981488933,
+            "regularization_loss": 0.1848178505897522
+          },
+          {
+            "kind": "l1",
+            "coefficient": 0.01,
+            "epochs": 2,
+            "training_mse": 0.07419240474700928,
+            "physical_superresolution_mse": 0.054249648668912236,
+            "regularization_loss": 1.8146127462387085
+          }
+        ]
+      },
+      "tutorial7": {
+        "mode": "smoke",
+        "baseline_epochs": 2,
+        "pruning_epochs": 2,
+        "sparsity": 0.9000512557662738,
+        "zero_weights": 1756,
+        "total_weights": 1951,
+        "quantized_linear_count": 3,
+        "relative_mse_prune": 1.7524583339691162,
+        "relative_mse_prune_quant": 1.752673864364624,
+        "quantization_mse_vs_pruned": 2.864521491119376e-07,
+        "gzip_bytes": {
+          "original.pt": 70555,
+          "stripped.pt": 64065,
+          "compressed.torchscript.pt": 32542,
+          "quantized_and_pruned.torchscript.pt": 35460
+        }
+      },
+      "tutorial8": {
+        "mode": "smoke",
+        "epochs_per_fit": 2,
+        "fits": 2,
+        "spatial_loss_coefficient": 0.001,
+        "baseline_physical_component_mse": [
+          0.047341727666050604,
+          0.11485731393615842,
+          3371.3637817185686
+        ],
+        "sobolev_physical_component_mse": [
+          0.04235481244126799,
+          0.114857265206944,
+          3274.640000615569
+        ],
+        "baseline_physical_superresolution_mse": 0.04778069764372114,
+        "sobolev_physical_superresolution_mse": 0.04236804947445547
+      }
+    },
+    "full": {
+      "tutorial4": {
+        "mode": "full",
+        "jacobian_max_error": 5.960464477539063e-08,
+        "hessian_max_error": 5.960464477539063e-08,
+        "derivative_loss": 0.17354655265808105
+      },
+      "tutorial5": {
+        "mode": "full",
+        "generated_rows": 1000000,
+        "shards": 100,
+        "passes": 2,
+        "rows_seen": 2000000,
+        "shard_visits": 200,
+        "mse": 0.08975640421384573
+      }
+    }
+  },
+  "packaging": {
+    "editable_install": "passed",
+    "wheel_build": "passed",
+    "bundled_demo_datasets": 3,
+    "tensorflow_family_runtime_dependencies": []
+  },
+  "not_executed": [
+    "Full training tutorials 1,2,3,6,7,8",
+    "CUDA integration",
+    "Hosted clean Colab installation",
+    "Agent B frozen acceptance suite"
+  ],
+  "implementation_sha256": {
+    "nif/__about__.py": "da997374411bdb814b8c4d88d97c8105c2443d858771c34be1282d2c2ffa7ab8",
+    "nif/__init__.py": "f3ca8b722364eeb636b00855d90446ef7c4e51fb7c119ab043da0424a16be60b",
+    "nif/data/__init__.py": "dca18fbd911726b35105d92eaad7092bcd254f6d7ce1a77240bc09e7204b2a08",
+    "nif/data/point_wise_data.py": "1a3f2ae571fd8d723449e1ca6a6ae79dbb7431558e0fc84237963a9213f901d5",
+    "nif/data/tfr_dataset.py": "c6f19c447ac774a27f84276a6768de590baaddb88001f6973c7c73baca63dee0",
+    "nif/demo/__init__.py": "74b7f6f8b5537f986a82b9d98428ac7f110ceeabcad8f1a42a52807079d03f00",
+    "nif/demo/_test.py": "c19e8a456faffeb0fde44e3a18fcdb0f26fa04dfd3721406cd7525401eff44c4",
+    "nif/demo/cylinderflow.py": "7ab0f5402cfd706abbf0515416f68219a1083ee1493933583e1470ee71730b9d",
+    "nif/demo/traveling_wave.py": "264658c74976fc2636b3fe32c5f22795dd5b94106d6e3ca51e4b04a6e0260d37",
+    "nif/demo/traveling_wave_high_freq.py": "8acf2e9e315ac856d746ea5c4d6a11afb7e70d167e1747f48c14fe53a5390a4a",
+    "nif/layers/__init__.py": "d866caf6a8240f4c4442b55dcd34eabf33a1745fd12d79d7845ac27d04541bca",
+    "nif/layers/_common.py": "a52dc9c15e95dbbb311b83f9443dce6c32593dc6f8ad4885b9023380ee36e812",
+    "nif/layers/gradient.py": "ae4bedeeb8e76c1f3443b5558b3634fac60ab78ffd68040a9465d59f1c5f23ba",
+    "nif/layers/mlp.py": "7a689765155cc201aec6333f1f1da71d4c5f93b5c790061ee642db4e0e2e32e5",
+    "nif/layers/regularization.py": "1e6f19a0c3df504795d16245d053ec809d095689c28d36dd155ec50764327037",
+    "nif/layers/siren.py": "df7da28f8ff4a58a8f8c7e32308dad7f9569c1c3eb5c5d126652f47f6a8d9af7",
+    "nif/model.py": "a310128998a160f273eb04a121598033812d6342e302645be53d0444962a1761",
+    "nif/optimizers/__init__.py": "6f14e2614a9fd2da1eced6fe73b28b06a28be7f22269a578ff91389db75f5e4a",
+    "nif/optimizers/external_optimizers.py": "e63840e3cd096a077dc4afcc47496a855afba9e9811146db3154d984c2145e2e",
+    "nif/optimizers/gtcf.py": "8698637fb975ff7df70a38a0503fa231f037855beeaf68efa0cb5b7ca37ac1b4",
+    "nif/optimizers/lbfgs.py": "26636c2f9ed24f88b54f333e7ddc88388d5ad5e5d2cb823f74a5f573da5197ab",
+    "nif/optimizers/lbfgs_V2.py": "ab8707b26f61034507cdf4adbcaeb1c07c53a9c5d553332885aee3a041e1fc8e"
+  },
+  "tutorial1_lbfgs_followup": {
+    "finding": "Public baseline optimizer fidelity: gradient tolerance and history size differed",
+    "red": {
+      "command": "python -m pytest dev_tests/test_tutorial1_lbfgs.py -q",
+      "failed": 4,
+      "log": "dev_tests/tutorial1_lbfgs_red.log"
+    },
+    "targeted_tests": {
+      "command": "python -m pytest dev_tests/test_tutorial1_lbfgs.py dev_tests/test_native_notebooks.py dev_tests/test_optimizers_data.py -q",
+      "passed": 27
+    },
+    "public_controls": {
+      "tolerance": 1e-15,
+      "x_tolerance": 1e-15,
+      "f_relative_tolerance": 1e-15,
+      "num_correction_pairs": 20,
+      "max_line_search_iterations": 100,
+      "full_rounds": 200,
+      "full_max_iter": 1000
+    },
+    "native_mapping": {
+      "tolerance_grad": 1e-15,
+      "tolerance_change": 1e-15,
+      "history_size": 20,
+      "max_eval": "max_iter * 100",
+      "line_search_fn": "strong_wolfe"
+    },
+    "convention_difference": "PyTorch uses a round-level evaluation budget and absolute tolerance_change (including directional-derivative stopping); these are not TFP per-line-search limits or independent relative-objective tolerances. This matches the existing native TFPLBFGS helper mapping.",
+    "smoke": {
+      "notebook": "1_simple_1d_wave_pytorch.ipynb",
+      "status": "passed",
+      "seconds": 6.740472859999954,
+      "source_sha256": "6c91a553e168bdf54a289cc89759398a5d4ee576f628d7d33dcd16cd8c593cc0"
+    },
+    "changed_source_sha256": {
+      "tutorial/1_simple_1d_wave_pytorch.ipynb": "6c91a553e168bdf54a289cc89759398a5d4ee576f628d7d33dcd16cd8c593cc0",
+      "dev_tests/generate_native_notebooks.py": "f64c2f5d67677ddb4ff4386849c97fe1067e31b03f9f71138f4b62144d673da3",
+      "dev_tests/test_tutorial1_lbfgs.py": "c8f1830bfea1731ba6cb6f6fb9a768825140f03b635a92a92c014c265385db0a"
+    },
+    "full_tutorial1_execution": "not rerun; smoke is separate from full scientific workload",
+    "prior_full_unit_suite": "At the Tutorial 1 follow-up, the prior full unit suite was 69 passed/1 skipped; that result is retained in historical_unit_runs. The current top-level unit_tests records the later complete rerun."
+  },
+  "historical_unit_runs": [
+    {
+      "command": "python -m pytest dev_tests -q",
+      "passed": 69,
+      "skipped": 1,
+      "skip_reason": "CUDA unavailable",
+      "warnings": [
+        "Python 3.13 multiprocessing fork deprecation",
+        "PyTorch sparse invariant-check default warning"
+      ]
+    },
+    {
+      "command": "python -m pytest dev_tests -q --junitxml=dev_tests/artifacts/public_api_final.junit.xml",
+      "passed": 146,
+      "skipped": 1,
+      "failed": 0,
+      "errors": 0,
+      "skip_reason": "CUDA unavailable",
+      "warnings": [
+        "Python 3.13 multiprocessing fork deprecation",
+        "PyTorch sparse invariant-check default warning"
+      ],
+      "log": "dev_tests/public_api_final.log",
+      "junit": "dev_tests/artifacts/public_api_final.junit.xml"
+    },
+    {
+      "command": "python -m pytest -q --junitxml=dev_tests/artifacts/portability_final.junit.xml",
+      "passed": 161,
+      "skipped": 1,
+      "failed": 0,
+      "errors": 0,
+      "skip_reason": "CUDA unavailable",
+      "warnings": [
+        "Python 3.13 multiprocessing fork deprecation",
+        "PyTorch sparse invariant-check default warning"
+      ],
+      "log": "dev_tests/portability_final.log",
+      "junit": "dev_tests/artifacts/portability_final.junit.xml"
+    }
+  ],
+  "public_api_followup": {
+    "findings": [
+      "L4 loss-only closure must centralize after its automatic backward",
+      "Support all standard initializer names and accepted rank-one bias fan conventions"
+    ],
+    "primary_reference": "https://github.com/keras-team/keras/blob/v2.11.0/keras/initializers/initializers_v2.py",
+    "initial_red": {
+      "failed": 24,
+      "passed": 46,
+      "log": "dev_tests/public_api_red.log"
+    },
+    "low_precision_red": {
+      "failed": 2,
+      "deselected": 71,
+      "log": "dev_tests/public_api_low_precision_red.log"
+    },
+    "targeted": {
+      "command": "python -m pytest dev_tests/test_public_api_regressions.py -q",
+      "passed": 73
+    },
+    "unchanged_paths": {
+      "initializer_values_and_rng_cases": 26,
+      "model_and_layer_cases": 5,
+      "result": "bit-for-bit equal to self-owned pre-fix fingerprints",
+      "evidence": "dev_tests/public_api_pre_fix_fingerprints.json"
+    },
+    "source_sha256": {
+      "nif/optimizers/gtcf.py": "8698637fb975ff7df70a38a0503fa231f037855beeaf68efa0cb5b7ca37ac1b4",
+      "nif/layers/_common.py": "a52dc9c15e95dbbb311b83f9443dce6c32593dc6f8ad4885b9023380ee36e812"
+    },
+    "development_evidence_sha256": {
+      "dev_tests/test_public_api_regressions.py": "0767057775176eaf8eedccc8b4494966bdb00156786658b20bc730554aaa2987",
+      "dev_tests/public_api_pre_fix_fingerprints.json": "91f2bff6b6d7b63c25bf7e20a3dcbcc30d4559ad38161294b1ce56979db5ea85",
+      "dev_tests/public_api_red.log": "c53adea4e5a9ac7514cf765ab5f67065aa7c0d674affab8079422758936a62ab",
+      "dev_tests/public_api_low_precision_red.log": "066a1519bcb6e98987b45d49746745cf6efc6b35915b6be44aa62f74bf7f2665",
+      "dev_tests/public_api_final.log": "b3e099bc67b6f8b8ea1264f8b7a30f57dbfed8ddad81d82906caa7d9e9c1b56b"
+    },
+    "notebooks": "Sources unchanged; retained prior execution records and checked every recorded source hash. No notebook or long-training rerun in this follow-up.",
+    "independent_acceptance": "Not run by Agent A; coordinator/B own frozen evaluation and ongoing full runs."
+  },
+  "portability_followup": {
+    "scope": "Only development-test/tooling portability; no model, optimizer, generator, or notebook edits.",
+    "red": {
+      "command": "python -m pytest dev_tests/test_test_portability.py -q",
+      "failed": 2,
+      "log": "dev_tests/portability_red.log",
+      "findings": [
+        "Generator UTF-8 source raises UnicodeDecodeError under a simulated GBK default",
+        "Linux exact fingerprint comparison does not skip a simulated Windows platform with the same torch version"
+      ]
+    },
+    "targeted": {
+      "command": "python -m pytest dev_tests/test_test_portability.py dev_tests/test_tutorial1_lbfgs.py dev_tests/test_public_api_regressions.py -q",
+      "passed": 92,
+      "log": "dev_tests/portability_targeted.log"
+    },
+    "new_portability_cases": 15,
+    "environment_guard": "Only the exact-hash test is scoped to original Linux x86_64 capture platform/architecture, byte order, pointer width, Python/NumPy metadata, Torch version/git revision and SHA256 of Torch build configuration. Every field mismatch and incomplete metadata skips clearly. Portable initialization/distribution/math checks remain unconditional.",
+    "capture_metadata": "dev_tests/public_api_pre_fix_environment.json",
+    "expected_fingerprints": "Original file preserved byte-for-byte; no expected tensor, RNG, or trajectory hashes regenerated.",
+    "protected_sources": {
+      "unchanged_file_count": 53,
+      "scope": "All nif Python modules, tutorial files, generator, fingerprint fixture, README.md, setup.cfg, tests/README.md and docs/PYTORCH_API.md",
+      "all_recorded_implementation_and_notebook_hashes_match": true
+    },
+    "source_and_evidence_sha256": {
+      "dev_tests/test_tutorial1_lbfgs.py": "e0d70b7d6acdfa79ceec5f06fcc13ae835871b2973b66d8d65a0cccc4933043a",
+      "dev_tests/test_public_api_regressions.py": "e560d4b6121280fe25a70595bcfa56a1177dd8784b417bbf3a54ea75e7d37993",
+      "dev_tests/test_models.py": "70613b870857959769c1e93dc77b8b9de6fb616a6a67461e5f04874b2bca5a7c",
+      "dev_tests/test_model_review.py": "e376e503eea71fc0bcd66def2389012eff04d2ad0f3cb3307041efe73d202758",
+      "dev_tests/run_native_notebooks.py": "c41a328aa27e205e723cecb252a89a01f7404f2bbc6d02688d26da8460600c1a",
+      "dev_tests/test_test_portability.py": "719f86d974718a7405c2b1faca77b9fdc339c67ec24b6037a4bb11c9ff574bc6",
+      "dev_tests/public_api_pre_fix_environment.json": "a3ddbdb5f316df7928ccd4602f8b455f7f1d3f8bd1c42c65af1675a797f9a777",
+      "dev_tests/public_api_pre_fix_fingerprints.json": "91f2bff6b6d7b63c25bf7e20a3dcbcc30d4559ad38161294b1ce56979db5ea85",
+      "dev_tests/portability_red.log": "912640fa93599f0ebfded411a30a474eb831201de51cb9012636f5a25822be56",
+      "dev_tests/portability_targeted.log": "32f0ec45ae1244862508891568aa23c4a90e701c8847c3fb57771dbb0aa45795",
+      "dev_tests/portability_final.log": "4157c38e70248e57ec720e60a063c30a94e0760a5813cda6cae710084ca1e5b2"
+    },
+    "execution_limits": "Linux default suite and simulated nonmatching builds/GBK were run. Native Windows was not rerun by Agent A. Prior notebook execution records retained; notebooks were not rerun for this test-only follow-up."
+  },
+  "epsilon_constructor_followup": {
+    "finding": "Public baseline epsilon or backend_config.epsilon() semantics require explicit None/zero to resolve to 1e-7 in AdaBeliefOptimizer and L4Adam.",
+    "resolution": "An omitted-alias sentinel preserves omitted defaults (AdaBelief 1e-14, L4Adam 1e-7). Explicit eps takes precedence over epsilon; either spelling resolves explicit None/zero to 1e-7 before validation. Positive values and rejection of negative values are retained.",
+    "red": {
+      "command": "python -m pytest dev_tests/test_optimizer_epsilon.py -q",
+      "failed": 18,
+      "passed": 10,
+      "log": "dev_tests/epsilon_red.log"
+    },
+    "targeted": {
+      "command": "python -m pytest dev_tests/test_optimizer_epsilon.py dev_tests/test_optimizers_data.py dev_tests/test_public_api_regressions.py -q",
+      "passed": 120,
+      "log": "dev_tests/epsilon_targeted.log"
+    },
+    "new_regression_cases": 28,
+    "coverage": [
+      "Canonical and native alias None/zero fallback",
+      "Ten zero-gradient steps remain finite and leave parameters exactly unchanged",
+      "Twelve-step exact fallback equivalence and serialized optimizer resume",
+      "Alias precedence including None/zero",
+      "Preserved omitted positive defaults",
+      "Negative epsilon remains rejected"
+    ],
+    "unchanged_default_positive_paths": {
+      "paths": 10,
+      "updates_per_path": 12,
+      "result": "Before/after parameters and complete optimizer states bitwise identical in this Linux build",
+      "before": "dev_tests/artifacts/epsilon_positive_before.json",
+      "after": "dev_tests/artifacts/epsilon_positive_after.json",
+      "both_sha256": "69a9b23cd6379a2aaf1e4729841a9c6429fdcf59de66db53113651f13057f340",
+      "log": "dev_tests/epsilon_positive_paths.log"
+    },
+    "prior_source_sha256": "1ba5f85852a3cae643e3025fe331783e2518a35bb7f6827121d33c3ec9851208",
+    "source_and_evidence_sha256": {
+      "nif/optimizers/external_optimizers.py": "e63840e3cd096a077dc4afcc47496a855afba9e9811146db3154d984c2145e2e",
+      "dev_tests/test_optimizer_epsilon.py": "289c060bad77ff8e124c203e1bc9a85c0b8e8ec4bcdb662bff322aa2e7b45d23",
+      "dev_tests/epsilon_red.log": "f48ef8b6ac1adf3eba9eaa17cbca928096ecda7896de44c4f8f6ddfecf5c1ee8",
+      "dev_tests/epsilon_targeted.log": "3d20ce7c6edc039aa4da104dd62244fefe36c9b4e4e347b98d60d82a0b46a46b",
+      "dev_tests/epsilon_final.log": "f4304bde14c0f3354c8bf0b3a35a2f87c622fe7fb79c61bf3c2b1f77827e62cb",
+      "dev_tests/epsilon_positive_paths.log": "b1247848b2bb03f56f6624ee2004ee2a3fd3d71288d45b1792bd2ac35473feee"
+    },
+    "scope_check": {
+      "protected_files": 65,
+      "unchanged": 64,
+      "only_changed_implementation": "nif/optimizers/external_optimizers.py",
+      "all_notebook_and_other_recorded_implementation_hashes_match": true,
+      "existing_frozen_fingerprints": "Unchanged; exact initializer/default-training test passed on original Linux capture build"
+    },
+    "execution_limits": "No notebook/settings changes or notebook rerun. This correction was tested on Linux CPU; independent Windows/CUDA and frozen acceptance evaluation remain with coordinator/B."
+  }
+}

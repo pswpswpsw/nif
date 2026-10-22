@@ -1,126 +1,71 @@
-# code comes from: https://gist.github.com/piyueh/712ec7d4540489aad2dcfb80f9a54993
+"""Native implementation of the original NIF L-BFGS training convenience API."""
 import numpy as np
-import tensorflow as tf
-from tensorflow_probability.python.optimizer import lbfgs_minimize
+import torch
+
+from nif.optimizers.lbfgs_V2 import assign_tensors, pack_tensors, unpack_tensors, lbfgs_minimize
 
 
-def function_factory(model, loss, train_x, train_y, display_epoch):
-    """A factory to create a function required by tfp.optimizer.lbfgs_minimize.
+def function_factory(model, loss, train_x, train_y, display_epoch=1):
+    """Pack a module into a callable returning scalar loss and flat gradients.
 
-    Args:
-        model [in]: an instance of `tf.keras.Model` or its subclasses.
-        loss [in]: a function with signature loss_value = loss(pred_y, true_y).
-        train_x [in]: the input part of training demo.
-        train_y [in]: the output part of training demo.
-
-    Returns:
-        A function that has a signature of:
-            loss_value, gradients = f(model_parameters).
+    ``loss(prediction, target)`` retains the baseline argument order. Inputs
+    are converted to the module's device/dtype. ``idx``, ``part``, ``shapes``,
+    ``iter``, ``history`` and ``assign_new_model_parameters`` remain available.
     """
+    parameters = [p for p in model.parameters() if p.requires_grad]
+    if not parameters:
+        raise ValueError('Model has no trainable parameters')
+    reference = parameters[0]
+    train_x = torch.as_tensor(train_x, device=reference.device, dtype=reference.dtype)
+    train_y = torch.as_tensor(train_y, device=reference.device, dtype=reference.dtype)
+    idx = []; parts = []; count = 0
+    for i, p in enumerate(parameters):
+        idx.append(torch.arange(count, count+p.numel(), device=p.device).reshape(p.shape))
+        parts.extend([i]*p.numel()); count += p.numel()
 
-    # obtain the shapes of all trainable parameters in the model
-    shapes = tf.shape_n(model.trainable_variables)
-    n_tensors = len(shapes)
+    def assign(params_1d):
+        assign_tensors(parameters, unpack_tensors(parameters, params_1d))
 
-    # we'll use tf.dynamic_stitch and tf.dynamic_partition later, so we need to
-    # prepare required information first
-    count = 0
-    idx = []  # stitch indices
-    part = []  # partition indices
-
-    for i, shape in enumerate(shapes):
-        n = np.product(shape)
-        idx.append(tf.reshape(tf.range(count, count + n, dtype=tf.int32), shape))
-        part.extend([i] * n)
-        count += n
-
-    part = tf.constant(part)
-
-    @tf.function
-    def assign_new_model_parameters(params_1d):
-        """A function updating the model's parameters with a 1D tf.Tensor.
-
-        Args:
-            params_1d [in]: a 1D tf.Tensor representing the model's trainable parameters.
-        """
-
-        params = tf.dynamic_partition(params_1d, part, n_tensors)
-        for i, (shape, param) in enumerate(zip(shapes, params)):
-            model.trainable_variables[i].assign(tf.reshape(param, shape))
-
-    # now create a function that will be returned by this factory
-    @tf.function
     def f(params_1d):
-        """A function that can be used by tfp.optimizer.lbfgs_minimize.
+        assign(params_1d)
+        with torch.enable_grad():
+            value = loss(model(train_x), train_y)
+            gradients = torch.autograd.grad(value, parameters, allow_unused=True)
+        gradients = [torch.zeros_like(p) if g is None else g for p, g in zip(parameters, gradients)]
+        f.iter += 1
+        f.history.append(float(value.detach()))
+        if display_epoch and f.iter % display_epoch == 0:
+            print(f'Epoch: {f.iter} loss: {f.history[-1]:.8g}')
+        return value.detach(), pack_tensors(gradients).detach()
 
-        This function is created by function_factory.
-
-        Args:
-           params_1d [in]: a 1D tf.Tensor.
-
-        Returns:
-            A scalar loss and the gradients w.r.t. the `params_1d`.
-        """
-
-        # use GradientTape so that we can calculate the gradient of loss w.r.t. parameters
-        with tf.GradientTape() as tape:
-            # update the parameters in the model
-            assign_new_model_parameters(params_1d)
-            # calculate the loss
-            loss_value = loss(model(train_x, training=True), train_y)
-
-        # calculate gradients and convert to 1D tf.Tensor
-        grads = tape.gradient(loss_value, model.trainable_variables)
-        grads = tf.dynamic_stitch(idx, grads)
-
-        # print out iteration & loss
-        f.iter.assign_add(1)
-
-        if f.iter % display_epoch == 0:
-            tf.print("Epoch:", f.iter, "loss:", loss_value)
-
-        # store loss value so we can retrieve later
-        tf.py_function(f.history.append, inp=[loss_value], Tout=[])
-
-        return loss_value, grads
-
-    # store these information as members so we can use them outside the scope
-    f.iter = tf.Variable(0)
+    f.iter = 0
     f.idx = idx
-    f.part = part
-    f.shapes = shapes
-    f.assign_new_model_parameters = assign_new_model_parameters
+    f.part = torch.tensor(parts, dtype=torch.int64, device=reference.device)
+    f.shapes = [p.shape for p in parameters]
+    f.assign_new_model_parameters = assign
     f.history = []
-
     return f
 
 
-class TFPLBFGS(object):
+class TFPLBFGS:
+    """Historical name; all optimization now executes through torch.optim.LBFGS."""
     def __init__(self, model, loss_fun, inps, outs, display_epoch=1):
-        # demo + keras model -> function for l-bfgs
         self.func = function_factory(model, loss_fun, inps, outs, display_epoch)
         self.model = model
+        self.results = None
 
     def minimize(self, rounds=50, max_iter=50):
-        for _ in range(rounds):
-            results = lbfgs_minimize(
-                value_and_gradients_function=self.func,
-                initial_position=tf.dynamic_stitch(
-                    self.func.idx, self.model.trainable_variables
-                ),
-                num_correction_pairs=20,
-                tolerance=1e-15,
-                x_tolerance=1e-15,
-                f_relative_tolerance=1e-15,
-                parallel_iterations=1,
-                max_iterations=max_iter,
-                max_line_search_iterations=100,
-            )
-            self.func.assign_new_model_parameters(results.position)
-        # print("loss = %8.5f" % results.objective_value)
+        if int(rounds) <= 0 or int(max_iter) <= 0:
+            raise ValueError('rounds and max_iter must be positive')
+        for _ in range(int(rounds)):
+            self.results = lbfgs_minimize(
+                self.func, initial_position=pack_tensors(p for p in self.model.parameters() if p.requires_grad),
+                num_correction_pairs=20, tolerance=1e-15, x_tolerance=1e-15,
+                f_relative_tolerance=1e-15, max_iterations=int(max_iter),
+                max_line_search_iterations=100)
+            self.func.assign_new_model_parameters(self.results.position)
+        return self.results
 
     @property
     def history(self):
-        history = list(map(lambda x: x.numpy(), self.func.history))
-        iteration = np.arange(1, len(history) + 1)
-        return {"iteration": iteration, "loss": history}
+        return {'iteration': np.arange(1, len(self.func.history)+1), 'loss': list(self.func.history)}

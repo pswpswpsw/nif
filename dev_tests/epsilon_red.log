@@ -1,0 +1,561 @@
+FFF.FFFFFFF.FFFFFFFF........                                             [100%]
+=================================== FAILURES ===================================
+_ test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite[None-epsilon-AdaBeliefOptimizer] _
+
+cls = <class 'nif.optimizers.external_optimizers.AdaBeliefOptimizer'>
+keyword = 'epsilon', value = None
+
+    @pytest.mark.parametrize('cls', OPTIMIZERS)
+    @pytest.mark.parametrize('keyword', ['epsilon', 'eps'])
+    @pytest.mark.parametrize('value', [None, 0.])
+    def test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite(cls, keyword, value):
+>       p, optimizer = make_optimizer(cls, {keyword: value})
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_optimizer_epsilon.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_optimizer_epsilon.py:15: in make_optimizer
+    return p, cls([p], **options)
+              ^^^^^^^^^^^^^^^^^^^
+nif/optimizers/external_optimizers.py:140: in __init__
+    _validate(lr, betas, epsilon, weight_decay)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+lr = 0.001, betas = (0.9, 0.999), epsilon = None, weight_decay = 0.0
+
+    def _validate(lr, betas, epsilon=0, weight_decay=0):
+        if not callable(lr) and lr < 0:
+            raise ValueError('learning rate must be nonnegative')
+        if not all(0 <= beta < 1 for beta in betas):
+            raise ValueError('betas must lie in [0, 1)')
+>       if epsilon < 0 or (not callable(weight_decay) and weight_decay < 0):
+           ^^^^^^^^^^^
+E       TypeError: '<' not supported between instances of 'NoneType' and 'int'
+
+nif/optimizers/external_optimizers.py:33: TypeError
+_ test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite[None-epsilon-L4Adam] _
+
+cls = <class 'nif.optimizers.external_optimizers.L4Adam'>, keyword = 'epsilon'
+value = None
+
+    @pytest.mark.parametrize('cls', OPTIMIZERS)
+    @pytest.mark.parametrize('keyword', ['epsilon', 'eps'])
+    @pytest.mark.parametrize('value', [None, 0.])
+    def test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite(cls, keyword, value):
+>       p, optimizer = make_optimizer(cls, {keyword: value})
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_optimizer_epsilon.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_optimizer_epsilon.py:15: in make_optimizer
+    return p, cls([p], **options)
+              ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'L4Adam' object has no attribute 'param_groups'") raised in repr()] L4Adam object at 0x7bbbec777620>
+params = [Parameter containing:
+tensor([ 1., -2.,  3.], dtype=torch.float64, requires_grad=True)]
+learning_rate = 0.15, tau_m = 10.0, tau_s = 1000.0, tau = 1000.0, gamma_0 = 0.75
+gamma = 0.9, epsilon = None, name = 'L4Adam', lr = 0.15, eps = None, kwargs = {}
+
+    def __init__(self, params, learning_rate=.15, tau_m=10., tau_s=1000.,
+                 tau=1000., gamma_0=.75, gamma=.9, epsilon=1e-7,
+                 name='L4Adam', lr=None, eps=None, **kwargs):
+        lr = learning_rate if lr is None else lr
+        epsilon = epsilon if eps is None else eps
+>       if tau_m < 1 or tau_s < 1 or tau <= 0 or epsilon <= 0:
+                                                 ^^^^^^^^^^^^
+E       TypeError: '<=' not supported between instances of 'NoneType' and 'int'
+
+nif/optimizers/external_optimizers.py:283: TypeError
+_ test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite[None-eps-AdaBeliefOptimizer] _
+
+cls = <class 'nif.optimizers.external_optimizers.AdaBeliefOptimizer'>
+keyword = 'eps', value = None
+
+    @pytest.mark.parametrize('cls', OPTIMIZERS)
+    @pytest.mark.parametrize('keyword', ['epsilon', 'eps'])
+    @pytest.mark.parametrize('value', [None, 0.])
+    def test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite(cls, keyword, value):
+        p, optimizer = make_optimizer(cls, {keyword: value})
+        initial = p.detach().clone()
+        # AdaBelief's default rectification reaches its variance denominator after
+        # the first few steps, exposing zero/zero rather than just constructor state.
+        for _ in range(10):
+            advance(p, optimizer, [0., 0., 0.])
+            assert torch.isfinite(p).all()
+            torch.testing.assert_close(p, initial, rtol=0, atol=0)
+>       assert optimizer.defaults['eps'] == 1e-7
+E       assert 1e-14 == 1e-07
+
+dev_tests/test_optimizer_epsilon.py:53: AssertionError
+_ test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite[0.0-epsilon-AdaBeliefOptimizer] _
+
+cls = <class 'nif.optimizers.external_optimizers.AdaBeliefOptimizer'>
+keyword = 'epsilon', value = 0.0
+
+    @pytest.mark.parametrize('cls', OPTIMIZERS)
+    @pytest.mark.parametrize('keyword', ['epsilon', 'eps'])
+    @pytest.mark.parametrize('value', [None, 0.])
+    def test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite(cls, keyword, value):
+        p, optimizer = make_optimizer(cls, {keyword: value})
+        initial = p.detach().clone()
+        # AdaBelief's default rectification reaches its variance denominator after
+        # the first few steps, exposing zero/zero rather than just constructor state.
+        for _ in range(10):
+            advance(p, optimizer, [0., 0., 0.])
+>           assert torch.isfinite(p).all()
+E           assert tensor(False)
+E            +  where tensor(False) = <built-in method all of Tensor object at 0x7bbbca4401e0>()
+E            +    where <built-in method all of Tensor object at 0x7bbbca4401e0> = tensor([False, False, False]).all
+E            +      where tensor([False, False, False]) = <built-in method isfinite of type object at 0x7bbbebd801a0>(Parameter containing:\ntensor([nan, nan, nan], dtype=torch.float64, requires_grad=True))
+E            +        where <built-in method isfinite of type object at 0x7bbbebd801a0> = torch.isfinite
+
+dev_tests/test_optimizer_epsilon.py:51: AssertionError
+_ test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite[0.0-epsilon-L4Adam] _
+
+cls = <class 'nif.optimizers.external_optimizers.L4Adam'>, keyword = 'epsilon'
+value = 0.0
+
+    @pytest.mark.parametrize('cls', OPTIMIZERS)
+    @pytest.mark.parametrize('keyword', ['epsilon', 'eps'])
+    @pytest.mark.parametrize('value', [None, 0.])
+    def test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite(cls, keyword, value):
+>       p, optimizer = make_optimizer(cls, {keyword: value})
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_optimizer_epsilon.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_optimizer_epsilon.py:15: in make_optimizer
+    return p, cls([p], **options)
+              ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'L4Adam' object has no attribute 'param_groups'") raised in repr()] L4Adam object at 0x7bbbca522490>
+params = [Parameter containing:
+tensor([ 1., -2.,  3.], dtype=torch.float64, requires_grad=True)]
+learning_rate = 0.15, tau_m = 10.0, tau_s = 1000.0, tau = 1000.0, gamma_0 = 0.75
+gamma = 0.9, epsilon = 0.0, name = 'L4Adam', lr = 0.15, eps = None, kwargs = {}
+
+    def __init__(self, params, learning_rate=.15, tau_m=10., tau_s=1000.,
+                 tau=1000., gamma_0=.75, gamma=.9, epsilon=1e-7,
+                 name='L4Adam', lr=None, eps=None, **kwargs):
+        lr = learning_rate if lr is None else lr
+        epsilon = epsilon if eps is None else eps
+        if tau_m < 1 or tau_s < 1 or tau <= 0 or epsilon <= 0:
+>           raise ValueError('tau_m/tau_s must be >=1, tau and epsilon must be positive')
+E           ValueError: tau_m/tau_s must be >=1, tau and epsilon must be positive
+
+nif/optimizers/external_optimizers.py:284: ValueError
+_ test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite[0.0-eps-AdaBeliefOptimizer] _
+
+cls = <class 'nif.optimizers.external_optimizers.AdaBeliefOptimizer'>
+keyword = 'eps', value = 0.0
+
+    @pytest.mark.parametrize('cls', OPTIMIZERS)
+    @pytest.mark.parametrize('keyword', ['epsilon', 'eps'])
+    @pytest.mark.parametrize('value', [None, 0.])
+    def test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite(cls, keyword, value):
+        p, optimizer = make_optimizer(cls, {keyword: value})
+        initial = p.detach().clone()
+        # AdaBelief's default rectification reaches its variance denominator after
+        # the first few steps, exposing zero/zero rather than just constructor state.
+        for _ in range(10):
+            advance(p, optimizer, [0., 0., 0.])
+>           assert torch.isfinite(p).all()
+E           assert tensor(False)
+E            +  where tensor(False) = <built-in method all of Tensor object at 0x7bbbca441e50>()
+E            +    where <built-in method all of Tensor object at 0x7bbbca441e50> = tensor([False, False, False]).all
+E            +      where tensor([False, False, False]) = <built-in method isfinite of type object at 0x7bbbebd801a0>(Parameter containing:\ntensor([nan, nan, nan], dtype=torch.float64, requires_grad=True))
+E            +        where <built-in method isfinite of type object at 0x7bbbebd801a0> = torch.isfinite
+
+dev_tests/test_optimizer_epsilon.py:51: AssertionError
+_ test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite[0.0-eps-L4Adam] _
+
+cls = <class 'nif.optimizers.external_optimizers.L4Adam'>, keyword = 'eps'
+value = 0.0
+
+    @pytest.mark.parametrize('cls', OPTIMIZERS)
+    @pytest.mark.parametrize('keyword', ['epsilon', 'eps'])
+    @pytest.mark.parametrize('value', [None, 0.])
+    def test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite(cls, keyword, value):
+>       p, optimizer = make_optimizer(cls, {keyword: value})
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_optimizer_epsilon.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_optimizer_epsilon.py:15: in make_optimizer
+    return p, cls([p], **options)
+              ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'L4Adam' object has no attribute 'param_groups'") raised in repr()] L4Adam object at 0x7bbbca418c30>
+params = [Parameter containing:
+tensor([ 1., -2.,  3.], dtype=torch.float64, requires_grad=True)]
+learning_rate = 0.15, tau_m = 10.0, tau_s = 1000.0, tau = 1000.0, gamma_0 = 0.75
+gamma = 0.9, epsilon = 0.0, name = 'L4Adam', lr = 0.15, eps = 0.0, kwargs = {}
+
+    def __init__(self, params, learning_rate=.15, tau_m=10., tau_s=1000.,
+                 tau=1000., gamma_0=.75, gamma=.9, epsilon=1e-7,
+                 name='L4Adam', lr=None, eps=None, **kwargs):
+        lr = learning_rate if lr is None else lr
+        epsilon = epsilon if eps is None else eps
+        if tau_m < 1 or tau_s < 1 or tau <= 0 or epsilon <= 0:
+>           raise ValueError('tau_m/tau_s must be >=1, tau and epsilon must be positive')
+E           ValueError: tau_m/tau_s must be >=1, tau and epsilon must be positive
+
+nif/optimizers/external_optimizers.py:284: ValueError
+_ test_epsilon_fallback_matches_explicit_backend_default_and_resume[None-epsilon-AdaBeliefOptimizer] _
+
+cls = <class 'nif.optimizers.external_optimizers.AdaBeliefOptimizer'>
+keyword = 'epsilon', value = None
+
+    @pytest.mark.parametrize('cls', OPTIMIZERS)
+    @pytest.mark.parametrize('keyword', ['epsilon', 'eps'])
+    @pytest.mark.parametrize('value', [None, 0.])
+    def test_epsilon_fallback_matches_explicit_backend_default_and_resume(cls, keyword, value):
+>       p, optimizer = make_optimizer(cls, {keyword: value})
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_optimizer_epsilon.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_optimizer_epsilon.py:15: in make_optimizer
+    return p, cls([p], **options)
+              ^^^^^^^^^^^^^^^^^^^
+nif/optimizers/external_optimizers.py:140: in __init__
+    _validate(lr, betas, epsilon, weight_decay)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+lr = 0.001, betas = (0.9, 0.999), epsilon = None, weight_decay = 0.0
+
+    def _validate(lr, betas, epsilon=0, weight_decay=0):
+        if not callable(lr) and lr < 0:
+            raise ValueError('learning rate must be nonnegative')
+        if not all(0 <= beta < 1 for beta in betas):
+            raise ValueError('betas must lie in [0, 1)')
+>       if epsilon < 0 or (not callable(weight_decay) and weight_decay < 0):
+           ^^^^^^^^^^^
+E       TypeError: '<' not supported between instances of 'NoneType' and 'int'
+
+nif/optimizers/external_optimizers.py:33: TypeError
+_ test_epsilon_fallback_matches_explicit_backend_default_and_resume[None-epsilon-L4Adam] _
+
+cls = <class 'nif.optimizers.external_optimizers.L4Adam'>, keyword = 'epsilon'
+value = None
+
+    @pytest.mark.parametrize('cls', OPTIMIZERS)
+    @pytest.mark.parametrize('keyword', ['epsilon', 'eps'])
+    @pytest.mark.parametrize('value', [None, 0.])
+    def test_epsilon_fallback_matches_explicit_backend_default_and_resume(cls, keyword, value):
+>       p, optimizer = make_optimizer(cls, {keyword: value})
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_optimizer_epsilon.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_optimizer_epsilon.py:15: in make_optimizer
+    return p, cls([p], **options)
+              ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'L4Adam' object has no attribute 'param_groups'") raised in repr()] L4Adam object at 0x7bbbca418fc0>
+params = [Parameter containing:
+tensor([ 1., -2.,  3.], dtype=torch.float64, requires_grad=True)]
+learning_rate = 0.15, tau_m = 10.0, tau_s = 1000.0, tau = 1000.0, gamma_0 = 0.75
+gamma = 0.9, epsilon = None, name = 'L4Adam', lr = 0.15, eps = None, kwargs = {}
+
+    def __init__(self, params, learning_rate=.15, tau_m=10., tau_s=1000.,
+                 tau=1000., gamma_0=.75, gamma=.9, epsilon=1e-7,
+                 name='L4Adam', lr=None, eps=None, **kwargs):
+        lr = learning_rate if lr is None else lr
+        epsilon = epsilon if eps is None else eps
+>       if tau_m < 1 or tau_s < 1 or tau <= 0 or epsilon <= 0:
+                                                 ^^^^^^^^^^^^
+E       TypeError: '<=' not supported between instances of 'NoneType' and 'int'
+
+nif/optimizers/external_optimizers.py:283: TypeError
+_ test_epsilon_fallback_matches_explicit_backend_default_and_resume[None-eps-AdaBeliefOptimizer] _
+
+cls = <class 'nif.optimizers.external_optimizers.AdaBeliefOptimizer'>
+keyword = 'eps', value = None
+
+    @pytest.mark.parametrize('cls', OPTIMIZERS)
+    @pytest.mark.parametrize('keyword', ['epsilon', 'eps'])
+    @pytest.mark.parametrize('value', [None, 0.])
+    def test_epsilon_fallback_matches_explicit_backend_default_and_resume(cls, keyword, value):
+        p, optimizer = make_optimizer(cls, {keyword: value})
+        q, reference = make_optimizer(cls, {'epsilon': 1e-7})
+        for step in range(12):
+            grad = [.1 * (step + 1), -.3, 0.]
+            advance(p, optimizer, grad, loss=3. - step * .1)
+            advance(q, reference, grad, loss=3. - step * .1)
+            torch.testing.assert_close(p, q, rtol=0, atol=0)
+>           assert_state_equal(optimizer.state_dict(), reference.state_dict())
+
+dev_tests/test_optimizer_epsilon.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_optimizer_epsilon.py:32: in assert_state_equal
+    assert_state_equal(actual[key], expected[key])
+dev_tests/test_optimizer_epsilon.py:32: in assert_state_equal
+    assert_state_equal(actual[key], expected[key])
+dev_tests/test_optimizer_epsilon.py:32: in assert_state_equal
+    assert_state_equal(actual[key], expected[key])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+actual = tensor([8.1000e-06, 7.2900e-05, 1.0000e-14], dtype=torch.float64)
+expected = tensor([8.2000e-06, 7.3000e-05, 1.0000e-07], dtype=torch.float64)
+
+    def assert_state_equal(actual, expected):
+        if isinstance(actual, torch.Tensor):
+>           torch.testing.assert_close(actual, expected, rtol=0, atol=0)
+E           AssertionError: Tensor-likes are not equal!
+E           
+E           Mismatched elements: 3 / 3 (100.0%)
+E           Greatest absolute difference: 9.999999000000091e-08 at index (0,)
+E           Greatest relative difference: 0.9999999 at index (2,)
+
+dev_tests/test_optimizer_epsilon.py:28: AssertionError
+_ test_epsilon_fallback_matches_explicit_backend_default_and_resume[0.0-epsilon-AdaBeliefOptimizer] _
+
+cls = <class 'nif.optimizers.external_optimizers.AdaBeliefOptimizer'>
+keyword = 'epsilon', value = 0.0
+
+    @pytest.mark.parametrize('cls', OPTIMIZERS)
+    @pytest.mark.parametrize('keyword', ['epsilon', 'eps'])
+    @pytest.mark.parametrize('value', [None, 0.])
+    def test_epsilon_fallback_matches_explicit_backend_default_and_resume(cls, keyword, value):
+        p, optimizer = make_optimizer(cls, {keyword: value})
+        q, reference = make_optimizer(cls, {'epsilon': 1e-7})
+        for step in range(12):
+            grad = [.1 * (step + 1), -.3, 0.]
+            advance(p, optimizer, grad, loss=3. - step * .1)
+            advance(q, reference, grad, loss=3. - step * .1)
+            torch.testing.assert_close(p, q, rtol=0, atol=0)
+>           assert_state_equal(optimizer.state_dict(), reference.state_dict())
+
+dev_tests/test_optimizer_epsilon.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_optimizer_epsilon.py:32: in assert_state_equal
+    assert_state_equal(actual[key], expected[key])
+dev_tests/test_optimizer_epsilon.py:32: in assert_state_equal
+    assert_state_equal(actual[key], expected[key])
+dev_tests/test_optimizer_epsilon.py:32: in assert_state_equal
+    assert_state_equal(actual[key], expected[key])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+actual = tensor([8.1000e-06, 7.2900e-05, 0.0000e+00], dtype=torch.float64)
+expected = tensor([8.2000e-06, 7.3000e-05, 1.0000e-07], dtype=torch.float64)
+
+    def assert_state_equal(actual, expected):
+        if isinstance(actual, torch.Tensor):
+>           torch.testing.assert_close(actual, expected, rtol=0, atol=0)
+E           AssertionError: Tensor-likes are not equal!
+E           
+E           Mismatched elements: 3 / 3 (100.0%)
+E           Greatest absolute difference: 1.0000000000000243e-07 at index (1,)
+E           Greatest relative difference: 1.0 at index (2,)
+
+dev_tests/test_optimizer_epsilon.py:28: AssertionError
+_ test_epsilon_fallback_matches_explicit_backend_default_and_resume[0.0-epsilon-L4Adam] _
+
+cls = <class 'nif.optimizers.external_optimizers.L4Adam'>, keyword = 'epsilon'
+value = 0.0
+
+    @pytest.mark.parametrize('cls', OPTIMIZERS)
+    @pytest.mark.parametrize('keyword', ['epsilon', 'eps'])
+    @pytest.mark.parametrize('value', [None, 0.])
+    def test_epsilon_fallback_matches_explicit_backend_default_and_resume(cls, keyword, value):
+>       p, optimizer = make_optimizer(cls, {keyword: value})
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_optimizer_epsilon.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_optimizer_epsilon.py:15: in make_optimizer
+    return p, cls([p], **options)
+              ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'L4Adam' object has no attribute 'param_groups'") raised in repr()] L4Adam object at 0x7bbbca40f650>
+params = [Parameter containing:
+tensor([ 1., -2.,  3.], dtype=torch.float64, requires_grad=True)]
+learning_rate = 0.15, tau_m = 10.0, tau_s = 1000.0, tau = 1000.0, gamma_0 = 0.75
+gamma = 0.9, epsilon = 0.0, name = 'L4Adam', lr = 0.15, eps = None, kwargs = {}
+
+    def __init__(self, params, learning_rate=.15, tau_m=10., tau_s=1000.,
+                 tau=1000., gamma_0=.75, gamma=.9, epsilon=1e-7,
+                 name='L4Adam', lr=None, eps=None, **kwargs):
+        lr = learning_rate if lr is None else lr
+        epsilon = epsilon if eps is None else eps
+        if tau_m < 1 or tau_s < 1 or tau <= 0 or epsilon <= 0:
+>           raise ValueError('tau_m/tau_s must be >=1, tau and epsilon must be positive')
+E           ValueError: tau_m/tau_s must be >=1, tau and epsilon must be positive
+
+nif/optimizers/external_optimizers.py:284: ValueError
+_ test_epsilon_fallback_matches_explicit_backend_default_and_resume[0.0-eps-AdaBeliefOptimizer] _
+
+cls = <class 'nif.optimizers.external_optimizers.AdaBeliefOptimizer'>
+keyword = 'eps', value = 0.0
+
+    @pytest.mark.parametrize('cls', OPTIMIZERS)
+    @pytest.mark.parametrize('keyword', ['epsilon', 'eps'])
+    @pytest.mark.parametrize('value', [None, 0.])
+    def test_epsilon_fallback_matches_explicit_backend_default_and_resume(cls, keyword, value):
+        p, optimizer = make_optimizer(cls, {keyword: value})
+        q, reference = make_optimizer(cls, {'epsilon': 1e-7})
+        for step in range(12):
+            grad = [.1 * (step + 1), -.3, 0.]
+            advance(p, optimizer, grad, loss=3. - step * .1)
+            advance(q, reference, grad, loss=3. - step * .1)
+            torch.testing.assert_close(p, q, rtol=0, atol=0)
+>           assert_state_equal(optimizer.state_dict(), reference.state_dict())
+
+dev_tests/test_optimizer_epsilon.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_optimizer_epsilon.py:32: in assert_state_equal
+    assert_state_equal(actual[key], expected[key])
+dev_tests/test_optimizer_epsilon.py:32: in assert_state_equal
+    assert_state_equal(actual[key], expected[key])
+dev_tests/test_optimizer_epsilon.py:32: in assert_state_equal
+    assert_state_equal(actual[key], expected[key])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+actual = tensor([8.1000e-06, 7.2900e-05, 0.0000e+00], dtype=torch.float64)
+expected = tensor([8.2000e-06, 7.3000e-05, 1.0000e-07], dtype=torch.float64)
+
+    def assert_state_equal(actual, expected):
+        if isinstance(actual, torch.Tensor):
+>           torch.testing.assert_close(actual, expected, rtol=0, atol=0)
+E           AssertionError: Tensor-likes are not equal!
+E           
+E           Mismatched elements: 3 / 3 (100.0%)
+E           Greatest absolute difference: 1.0000000000000243e-07 at index (1,)
+E           Greatest relative difference: 1.0 at index (2,)
+
+dev_tests/test_optimizer_epsilon.py:28: AssertionError
+_ test_epsilon_fallback_matches_explicit_backend_default_and_resume[0.0-eps-L4Adam] _
+
+cls = <class 'nif.optimizers.external_optimizers.L4Adam'>, keyword = 'eps'
+value = 0.0
+
+    @pytest.mark.parametrize('cls', OPTIMIZERS)
+    @pytest.mark.parametrize('keyword', ['epsilon', 'eps'])
+    @pytest.mark.parametrize('value', [None, 0.])
+    def test_epsilon_fallback_matches_explicit_backend_default_and_resume(cls, keyword, value):
+>       p, optimizer = make_optimizer(cls, {keyword: value})
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_optimizer_epsilon.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_optimizer_epsilon.py:15: in make_optimizer
+    return p, cls([p], **options)
+              ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'L4Adam' object has no attribute 'param_groups'") raised in repr()] L4Adam object at 0x7bbbca40e850>
+params = [Parameter containing:
+tensor([ 1., -2.,  3.], dtype=torch.float64, requires_grad=True)]
+learning_rate = 0.15, tau_m = 10.0, tau_s = 1000.0, tau = 1000.0, gamma_0 = 0.75
+gamma = 0.9, epsilon = 0.0, name = 'L4Adam', lr = 0.15, eps = 0.0, kwargs = {}
+
+    def __init__(self, params, learning_rate=.15, tau_m=10., tau_s=1000.,
+                 tau=1000., gamma_0=.75, gamma=.9, epsilon=1e-7,
+                 name='L4Adam', lr=None, eps=None, **kwargs):
+        lr = learning_rate if lr is None else lr
+        epsilon = epsilon if eps is None else eps
+        if tau_m < 1 or tau_s < 1 or tau <= 0 or epsilon <= 0:
+>           raise ValueError('tau_m/tau_s must be >=1, tau and epsilon must be positive')
+E           ValueError: tau_m/tau_s must be >=1, tau and epsilon must be positive
+
+nif/optimizers/external_optimizers.py:284: ValueError
+_ test_explicit_native_eps_alias_overrides_canonical_epsilon[None-1e-07-AdaBeliefOptimizer] _
+
+cls = <class 'nif.optimizers.external_optimizers.AdaBeliefOptimizer'>
+value = None, expected = 1e-07
+
+    @pytest.mark.parametrize('cls', OPTIMIZERS)
+    @pytest.mark.parametrize('value,expected', [(None, 1e-7), (0., 1e-7), (2e-5, 2e-5)])
+    def test_explicit_native_eps_alias_overrides_canonical_epsilon(cls, value, expected):
+        _, optimizer = make_optimizer(cls, {'epsilon': 3e-6, 'eps': value})
+>       assert optimizer.defaults['eps'] == expected
+E       assert 3e-06 == 1e-07
+
+dev_tests/test_optimizer_epsilon.py:81: AssertionError
+_ test_explicit_native_eps_alias_overrides_canonical_epsilon[None-1e-07-L4Adam] _
+
+cls = <class 'nif.optimizers.external_optimizers.L4Adam'>, value = None
+expected = 1e-07
+
+    @pytest.mark.parametrize('cls', OPTIMIZERS)
+    @pytest.mark.parametrize('value,expected', [(None, 1e-7), (0., 1e-7), (2e-5, 2e-5)])
+    def test_explicit_native_eps_alias_overrides_canonical_epsilon(cls, value, expected):
+        _, optimizer = make_optimizer(cls, {'epsilon': 3e-6, 'eps': value})
+>       assert optimizer.defaults['eps'] == expected
+E       assert 3e-06 == 1e-07
+
+dev_tests/test_optimizer_epsilon.py:81: AssertionError
+_ test_explicit_native_eps_alias_overrides_canonical_epsilon[0.0-1e-07-AdaBeliefOptimizer] _
+
+cls = <class 'nif.optimizers.external_optimizers.AdaBeliefOptimizer'>
+value = 0.0, expected = 1e-07
+
+    @pytest.mark.parametrize('cls', OPTIMIZERS)
+    @pytest.mark.parametrize('value,expected', [(None, 1e-7), (0., 1e-7), (2e-5, 2e-5)])
+    def test_explicit_native_eps_alias_overrides_canonical_epsilon(cls, value, expected):
+        _, optimizer = make_optimizer(cls, {'epsilon': 3e-6, 'eps': value})
+>       assert optimizer.defaults['eps'] == expected
+E       assert 0.0 == 1e-07
+
+dev_tests/test_optimizer_epsilon.py:81: AssertionError
+_ test_explicit_native_eps_alias_overrides_canonical_epsilon[0.0-1e-07-L4Adam] _
+
+cls = <class 'nif.optimizers.external_optimizers.L4Adam'>, value = 0.0
+expected = 1e-07
+
+    @pytest.mark.parametrize('cls', OPTIMIZERS)
+    @pytest.mark.parametrize('value,expected', [(None, 1e-7), (0., 1e-7), (2e-5, 2e-5)])
+    def test_explicit_native_eps_alias_overrides_canonical_epsilon(cls, value, expected):
+>       _, optimizer = make_optimizer(cls, {'epsilon': 3e-6, 'eps': value})
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_optimizer_epsilon.py:80: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_optimizer_epsilon.py:15: in make_optimizer
+    return p, cls([p], **options)
+              ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'L4Adam' object has no attribute 'param_groups'") raised in repr()] L4Adam object at 0x7bbbca45c410>
+params = [Parameter containing:
+tensor([ 1., -2.,  3.], dtype=torch.float64, requires_grad=True)]
+learning_rate = 0.15, tau_m = 10.0, tau_s = 1000.0, tau = 1000.0, gamma_0 = 0.75
+gamma = 0.9, epsilon = 0.0, name = 'L4Adam', lr = 0.15, eps = 0.0, kwargs = {}
+
+    def __init__(self, params, learning_rate=.15, tau_m=10., tau_s=1000.,
+                 tau=1000., gamma_0=.75, gamma=.9, epsilon=1e-7,
+                 name='L4Adam', lr=None, eps=None, **kwargs):
+        lr = learning_rate if lr is None else lr
+        epsilon = epsilon if eps is None else eps
+        if tau_m < 1 or tau_s < 1 or tau <= 0 or epsilon <= 0:
+>           raise ValueError('tau_m/tau_s must be >=1, tau and epsilon must be positive')
+E           ValueError: tau_m/tau_s must be >=1, tau and epsilon must be positive
+
+nif/optimizers/external_optimizers.py:284: ValueError
+=========================== short test summary info ============================
+FAILED dev_tests/test_optimizer_epsilon.py::test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite[None-epsilon-AdaBeliefOptimizer]
+FAILED dev_tests/test_optimizer_epsilon.py::test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite[None-epsilon-L4Adam]
+FAILED dev_tests/test_optimizer_epsilon.py::test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite[None-eps-AdaBeliefOptimizer]
+FAILED dev_tests/test_optimizer_epsilon.py::test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite[0.0-epsilon-AdaBeliefOptimizer]
+FAILED dev_tests/test_optimizer_epsilon.py::test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite[0.0-epsilon-L4Adam]
+FAILED dev_tests/test_optimizer_epsilon.py::test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite[0.0-eps-AdaBeliefOptimizer]
+FAILED dev_tests/test_optimizer_epsilon.py::test_none_and_zero_epsilon_keep_zero_gradient_parameters_finite[0.0-eps-L4Adam]
+FAILED dev_tests/test_optimizer_epsilon.py::test_epsilon_fallback_matches_explicit_backend_default_and_resume[None-epsilon-AdaBeliefOptimizer]
+FAILED dev_tests/test_optimizer_epsilon.py::test_epsilon_fallback_matches_explicit_backend_default_and_resume[None-epsilon-L4Adam]
+FAILED dev_tests/test_optimizer_epsilon.py::test_epsilon_fallback_matches_explicit_backend_default_and_resume[None-eps-AdaBeliefOptimizer]
+FAILED dev_tests/test_optimizer_epsilon.py::test_epsilon_fallback_matches_explicit_backend_default_and_resume[0.0-epsilon-AdaBeliefOptimizer]
+FAILED dev_tests/test_optimizer_epsilon.py::test_epsilon_fallback_matches_explicit_backend_default_and_resume[0.0-epsilon-L4Adam]
+FAILED dev_tests/test_optimizer_epsilon.py::test_epsilon_fallback_matches_explicit_backend_default_and_resume[0.0-eps-AdaBeliefOptimizer]
+FAILED dev_tests/test_optimizer_epsilon.py::test_epsilon_fallback_matches_explicit_backend_default_and_resume[0.0-eps-L4Adam]
+FAILED dev_tests/test_optimizer_epsilon.py::test_explicit_native_eps_alias_overrides_canonical_epsilon[None-1e-07-AdaBeliefOptimizer]
+FAILED dev_tests/test_optimizer_epsilon.py::test_explicit_native_eps_alias_overrides_canonical_epsilon[None-1e-07-L4Adam]
+FAILED dev_tests/test_optimizer_epsilon.py::test_explicit_native_eps_alias_overrides_canonical_epsilon[0.0-1e-07-AdaBeliefOptimizer]
+FAILED dev_tests/test_optimizer_epsilon.py::test_explicit_native_eps_alias_overrides_canonical_epsilon[0.0-1e-07-L4Adam]
+18 failed, 10 passed in 3.37s

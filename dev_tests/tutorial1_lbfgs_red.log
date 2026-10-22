@@ -1,0 +1,112 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+________ test_tutorial1_preserves_public_lbfgs_controls[False-notebook] ________
+
+source = 'notebook', smoke = False
+
+    @pytest.mark.parametrize('source', ['notebook', 'generator'])
+    @pytest.mark.parametrize('smoke', [False, True])
+    def test_tutorial1_preserves_public_lbfgs_controls(source, smoke):
+        setup, training = solver_cells(source)
+        model = torch.nn.Linear(2, 1, bias=False, dtype=torch.float64)
+        with torch.no_grad():
+            model.weight.copy_(torch.tensor([[2., -3.]], dtype=torch.float64))
+        scope = {'torch': torch, 'SMOKE': smoke, 'new_model': model}
+        exec(setup, scope)
+        assert (scope['rounds'], scope['max_iter']) == ((1, 2) if smoke else (200, 1000))
+        tree = ast.parse(training)
+        assignment = next(node for node in ast.walk(tree) if isinstance(node, ast.Assign)
+                          and any(isinstance(target, ast.Name) and target.id == 'fine_tuner'
+                                  for target in node.targets))
+        exec(compile(ast.Module(body=[assignment], type_ignores=[]), source, 'exec'), scope)
+        optimizer = scope['fine_tuner']
+        options = optimizer.param_groups[0]
+>       assert options['tolerance_grad'] == 1e-15, 'Public TFPLBFGS tolerance must be retained'
+E       AssertionError: Public TFPLBFGS tolerance must be retained
+E       assert 1e-08 == 1e-15
+
+dev_tests/test_tutorial1_lbfgs.py:49: AssertionError
+_______ test_tutorial1_preserves_public_lbfgs_controls[False-generator] ________
+
+source = 'generator', smoke = False
+
+    @pytest.mark.parametrize('source', ['notebook', 'generator'])
+    @pytest.mark.parametrize('smoke', [False, True])
+    def test_tutorial1_preserves_public_lbfgs_controls(source, smoke):
+        setup, training = solver_cells(source)
+        model = torch.nn.Linear(2, 1, bias=False, dtype=torch.float64)
+        with torch.no_grad():
+            model.weight.copy_(torch.tensor([[2., -3.]], dtype=torch.float64))
+        scope = {'torch': torch, 'SMOKE': smoke, 'new_model': model}
+        exec(setup, scope)
+        assert (scope['rounds'], scope['max_iter']) == ((1, 2) if smoke else (200, 1000))
+        tree = ast.parse(training)
+        assignment = next(node for node in ast.walk(tree) if isinstance(node, ast.Assign)
+                          and any(isinstance(target, ast.Name) and target.id == 'fine_tuner'
+                                  for target in node.targets))
+        exec(compile(ast.Module(body=[assignment], type_ignores=[]), source, 'exec'), scope)
+        optimizer = scope['fine_tuner']
+        options = optimizer.param_groups[0]
+>       assert options['tolerance_grad'] == 1e-15, 'Public TFPLBFGS tolerance must be retained'
+E       AssertionError: Public TFPLBFGS tolerance must be retained
+E       assert 1e-08 == 1e-15
+
+dev_tests/test_tutorial1_lbfgs.py:49: AssertionError
+________ test_tutorial1_preserves_public_lbfgs_controls[True-notebook] _________
+
+source = 'notebook', smoke = True
+
+    @pytest.mark.parametrize('source', ['notebook', 'generator'])
+    @pytest.mark.parametrize('smoke', [False, True])
+    def test_tutorial1_preserves_public_lbfgs_controls(source, smoke):
+        setup, training = solver_cells(source)
+        model = torch.nn.Linear(2, 1, bias=False, dtype=torch.float64)
+        with torch.no_grad():
+            model.weight.copy_(torch.tensor([[2., -3.]], dtype=torch.float64))
+        scope = {'torch': torch, 'SMOKE': smoke, 'new_model': model}
+        exec(setup, scope)
+        assert (scope['rounds'], scope['max_iter']) == ((1, 2) if smoke else (200, 1000))
+        tree = ast.parse(training)
+        assignment = next(node for node in ast.walk(tree) if isinstance(node, ast.Assign)
+                          and any(isinstance(target, ast.Name) and target.id == 'fine_tuner'
+                                  for target in node.targets))
+        exec(compile(ast.Module(body=[assignment], type_ignores=[]), source, 'exec'), scope)
+        optimizer = scope['fine_tuner']
+        options = optimizer.param_groups[0]
+>       assert options['tolerance_grad'] == 1e-15, 'Public TFPLBFGS tolerance must be retained'
+E       AssertionError: Public TFPLBFGS tolerance must be retained
+E       assert 1e-08 == 1e-15
+
+dev_tests/test_tutorial1_lbfgs.py:49: AssertionError
+________ test_tutorial1_preserves_public_lbfgs_controls[True-generator] ________
+
+source = 'generator', smoke = True
+
+    @pytest.mark.parametrize('source', ['notebook', 'generator'])
+    @pytest.mark.parametrize('smoke', [False, True])
+    def test_tutorial1_preserves_public_lbfgs_controls(source, smoke):
+        setup, training = solver_cells(source)
+        model = torch.nn.Linear(2, 1, bias=False, dtype=torch.float64)
+        with torch.no_grad():
+            model.weight.copy_(torch.tensor([[2., -3.]], dtype=torch.float64))
+        scope = {'torch': torch, 'SMOKE': smoke, 'new_model': model}
+        exec(setup, scope)
+        assert (scope['rounds'], scope['max_iter']) == ((1, 2) if smoke else (200, 1000))
+        tree = ast.parse(training)
+        assignment = next(node for node in ast.walk(tree) if isinstance(node, ast.Assign)
+                          and any(isinstance(target, ast.Name) and target.id == 'fine_tuner'
+                                  for target in node.targets))
+        exec(compile(ast.Module(body=[assignment], type_ignores=[]), source, 'exec'), scope)
+        optimizer = scope['fine_tuner']
+        options = optimizer.param_groups[0]
+>       assert options['tolerance_grad'] == 1e-15, 'Public TFPLBFGS tolerance must be retained'
+E       AssertionError: Public TFPLBFGS tolerance must be retained
+E       assert 1e-08 == 1e-15
+
+dev_tests/test_tutorial1_lbfgs.py:49: AssertionError
+=========================== short test summary info ============================
+FAILED dev_tests/test_tutorial1_lbfgs.py::test_tutorial1_preserves_public_lbfgs_controls[False-notebook]
+FAILED dev_tests/test_tutorial1_lbfgs.py::test_tutorial1_preserves_public_lbfgs_controls[False-generator]
+FAILED dev_tests/test_tutorial1_lbfgs.py::test_tutorial1_preserves_public_lbfgs_controls[True-notebook]
+FAILED dev_tests/test_tutorial1_lbfgs.py::test_tutorial1_preserves_public_lbfgs_controls[True-generator]
+4 failed in 2.80s

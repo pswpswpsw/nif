@@ -6,3 +6,8 @@ dev/
 _build/
 docs/build
 /.codex/
+*.egg-info/
+build/
+dist/
+pytorch_outputs/
+dev_tests/artifacts/

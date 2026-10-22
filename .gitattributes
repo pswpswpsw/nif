@@ -2,3 +2,13 @@
 /tests/* text eol=lf
 /tutorial/*.ipynb text eol=lf
 /tutorial/colab_support/* text eol=lf
+
+# Keep native source and recorded hashes portable between Windows and Linux.
+/nif/**/*.py text eol=lf
+/dev_tests/*.py text eol=lf
+/dev_tests/*.json text eol=lf
+/dev_tests/*.md text eol=lf
+
+# Captured console output and the verbatim archive retain their whitespace.
+/dev_tests/*.log text eol=lf -whitespace
+/docs/README_TENSORFLOW_LEGACY.md -whitespace

@@ -1,0 +1,14 @@
+........................................................................ [ 60%]
+................................................                         [100%]
+=============================== warnings summary ===============================
+dev_tests/test_optimizers_data.py::test_tfrecord_external_reader_and_multiworker_epochs
+dev_tests/test_optimizers_data.py::test_tfrecord_external_reader_and_multiworker_epochs
+  /usr/local/lib/python3.13/multiprocessing/popen_fork.py:73: DeprecationWarning: This process (pid=3778) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    self.pid = os.fork()
+
+dev_tests/test_optimizers_data.py::test_sparse_adabelief_observed_rows_and_lion_momentum
+  /workspace/dev_tests/test_optimizers_data.py:231: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/Context.cpp:848.)
+    p.grad=torch.sparse_coo_tensor(torch.tensor([[1]]),torch.tensor([[2.,-3.]],dtype=p.dtype),p.shape)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+120 passed, 3 warnings in 4.13s

@@ -1,0 +1,4 @@
+/.gitattributes text eol=lf
+/tests/* text eol=lf
+/tutorial/*.ipynb text eol=lf
+/tutorial/colab_support/* text eol=lf

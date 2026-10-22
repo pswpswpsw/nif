@@ -198,29 +198,31 @@
 
 ## Google Colab Tutorial
 
-1. **Hello world! A simple fitting on 1D travelling wave** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/1_simple_1d_wave.ipynb)
+The links below open compatibility copies tested on current Colab. Run each notebook from its first cell to install its pinned dependencies. The original notebooks are preserved in `tutorial/`; see the [runtime guides](tutorial/colab_support/README.md) and [validation results](tutorial/colab_support/VALIDATION.md).
+
+1. **Hello world! A simple fitting on 1D travelling wave** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/1_simple_1d_wave_colab.ipynb)
     - learn how to use class `nif.NIF`
     - model checkpoints/restoration
     - mixed precision training
     - L-BFGS fine tuning
 
-2. **Tackling multi-scale data** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/2_multi_scale_NIF.ipynb)
+2. **Tackling multi-scale data** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/2_multi_scale_NIF_colab.ipynb)
 
     - learn how to use class `nif.NIFMultiScale`
     - demonstrate the effectiveness of learning high frequency data
 
-3. **Learning linear representation** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/3_multi_scale_linear_NIF.ipynb)
+3. **Learning linear representation** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/3_multi_scale_linear_NIF_colab.ipynb)
     - learn how to use class `nif.NIFMultiScaleLastLayerParameterized`
     - demonstrate on a (shortened) flow over a cylinder case from an AMR solver
 
-4. **Getting input-output derivatives is super easy** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/4_get_gradients_by_wrapping_model_with_layer.ipynb)
+4. **Getting input-output derivatives is super easy** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/4_get_gradients_by_wrapping_model_with_layer_colab.ipynb)
     - learn how to use `nif.layers.JacobianLayer`, `nif.layers.HessianLayer`
 
-5. **Scaling to hundreds of GB data** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/5_large_scale_training_on_tensorflow_record_data.ipynb)
+5. **Scaling to hundreds of GB data** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/5_large_scale_training_on_tensorflow_record_data_colab.ipynb)
     - learn how to use `nif.data.tfr_dataset.TFRDataset` to create `tfrecord` from `npz`
     - learn how to perform sub-dataset-batch training with `model.fit`
 
-6. **Revisit NIF on multi-scale data with regularization** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/6_revisit_multi_scale_NIF_with_L1_L2_regularization.ipynb)
+6. **Revisit NIF on multi-scale data with regularization** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/6_revisit_multi_scale_NIF_with_L1_L2_regularization_colab.ipynb)
     - learn how to use L1 or L2 regularization for weights and bias in ParameterNet.
     - a demonstration for the failure of NIF-Multiscale in terms of increasing spatial interpolation when dealing with
       high-frequency signal.
@@ -228,10 +230,10 @@
           high-frequency signal.
     - learn that L2 or L1 regularization does not seem to help resolving the above issue.
 
-7. **NIF Compression** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/7_model_pruning_and_quantization.ipynb)
+7. **NIF Compression** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/7_model_pruning_and_quantization_colab.ipynb)
     - learn how to use low magnititute pruning and quantization to compress ParameterNet
 
-8. **Revisit NIF on multi-scale data: Sobolov training helps removing spurious signals** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/8_revisit_multi_scale_NIF_with_sobolov_training.ipynb)
+8. **Revisit NIF on multi-scale data: Sobolov training helps removing spurious signals** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_colab.ipynb)
     - learn how to use `nif.layers.JacobianLayer` to perform Sobolov training
     - learn how to monitor different loss terms using customized Keras metrics
     - learn that feeding derivative information to the system help resolve the super-resolution issue

@@ -1,0 +1,148 @@
+{
+  "validated_date": "2026-10-21",
+  "nif_source_commit": "ad9113df14590189b12068b6b3fa7c8c8d9187d4",
+  "full_colab_nonempty_code_cells": {
+    "tutorial1": 27,
+    "tutorials2_to8": 112,
+    "total": 139
+  },
+  "original_notebooks_markdown_comments_and_training_settings_preserved": true,
+  "full_run_bootstrap_2_to8_sha256": "c3f73140a34c182172701498e01791dfb7c257603f692930b5128b09db1a3a1d",
+  "published_bootstraps_sha256": {
+    "bootstrap_tutorial1.py": "27b2f6a69a3fd57e99bda9e4709ff7302cd91c76e078b40d2b4d8324752d3085",
+    "bootstrap_tutorials.py": "ab7f786544fe6cf61d252de1ef81cea5c3b4579f287ae35736411cd0567f6714"
+  },
+  "publication_source_equivalence": "ASTs match after normalizing the order of independent standard-library imports in the bootstrap. All non-bootstrap source cells are byte-identical to the pre-publication copies. Full training was not repeated for this formatting change. Inherited output and execution metadata was removed from copies. LF line endings keep hashes stable across platforms.",
+  "regression_tests": {
+    "before_publication": 25,
+    "after_publication": 29,
+    "isolated_processes": 11,
+    "clean_checkout_without_local_artifacts": true,
+    "all_passed": true
+  },
+  "cloud_model_artifact_hashes_verified": 172,
+  "pins": [
+    "# Matched to the live Colab Python 3.13 CPU runtime.",
+    "# NIF additionally needs TFMOT, whose declared absl-py requirement is <2.",
+    "tensorflow==2.21.0",
+    "tf-keras==2.21.0",
+    "keras==3.13.2",
+    "numpy==2.1.3",
+    "scipy==1.16.3",
+    "tensorflow-probability==0.25.0",
+    "tensorflow-model-optimization==0.8.1",
+    "tensorboard==2.21.0",
+    "matplotlib==3.10.0",
+    "absl-py==1.4.0"
+  ],
+  "tutorials": [
+    {
+      "tutorial": 1,
+      "path": "tutorial/1_simple_1d_wave_colab.ipynb",
+      "published_sha256": "c881bb8f63c08745bc7f23f0c12c297ae69382104e07c6e01e6297eb1edaf796",
+      "pre_publication_sha256": "4e2770f16510f4a40a81aeac0c80ce3facb08db1db384517da72256424dc497a",
+      "original_sha256": "a5db302f7dad7ca3125fde82f5df2d46e800f62b97f972781d7bbff68db3d177",
+      "nonempty_code_cells": 27,
+      "full_workload_colab_passed": true,
+      "runtime": "Colab CPU",
+      "validation_mode": "direct Run all",
+      "publication_changes": "Removed inherited execution/output metadata; bootstrap formatting and independent standard-library import order only. All other cell sources unchanged.",
+      "source_note": "Original comment restoration preceded publication; executable AST matched the earlier completed full run."
+    },
+    {
+      "tutorial": 2,
+      "path": "tutorial/2_multi_scale_NIF_colab.ipynb",
+      "published_sha256": "5835b026c4b689b297c7b32347958f0401752840e53140ca9a287a23d3e9a3ea",
+      "pre_publication_sha256": "630784afcedb5eca76a0feeaf15be5aabf0439c921f4f7ac9e24c8f0cba4cd11",
+      "original_sha256": "8b494df9dcc93a1c1b4c718d04b6eb7d9b5c70ad7febff8fc6b5c888c3f6c7a0",
+      "nonempty_code_cells": 9,
+      "full_workload_colab_passed": true,
+      "runtime": "Colab T4",
+      "validation_mode": "fresh child Jupyter kernel on Colab",
+      "publication_changes": "Removed inherited execution/output metadata; bootstrap formatting and independent standard-library import order only. All other cell sources unchanged.",
+      "hosted_seconds": 370.41
+    },
+    {
+      "tutorial": 3,
+      "path": "tutorial/3_multi_scale_linear_NIF_colab.ipynb",
+      "published_sha256": "3fa2bacbc8c31d6727a2a376967741180a6320d84b1f3d06b6d5e3bd69b5730b",
+      "pre_publication_sha256": "5763d70a096444482b170b590c47183676616db8d13a3a130e7971a0eca40072",
+      "original_sha256": "cb99f190d080ff8c6e3941c6dee3bd3a6a34d102a1ab97fb1a7ef430bb9df775",
+      "nonempty_code_cells": 14,
+      "full_workload_colab_passed": true,
+      "runtime": "Colab T4",
+      "validation_mode": "fresh child Jupyter kernel on Colab",
+      "publication_changes": "Removed inherited execution/output metadata; bootstrap formatting and independent standard-library import order only. All other cell sources unchanged.",
+      "hosted_seconds": 1337.56
+    },
+    {
+      "tutorial": 4,
+      "path": "tutorial/4_get_gradients_by_wrapping_model_with_layer_colab.ipynb",
+      "published_sha256": "4d5d6f3c597d01becc376eb74f6379fd299e0fcf89c39613fe68da68f6bea809",
+      "pre_publication_sha256": "a92062c3f7ec8f63de0fb747d1899d43b45c281774e6c5583c34ff614fde6bbb",
+      "original_sha256": "1e985958b00c8200a67db5558086b8d98f29060ae420e1084de00c0b3531719b",
+      "nonempty_code_cells": 10,
+      "full_workload_colab_passed": true,
+      "runtime": "Colab T4",
+      "validation_mode": "fresh child Jupyter kernel on Colab",
+      "publication_changes": "Removed inherited execution/output metadata; bootstrap formatting and independent standard-library import order only. All other cell sources unchanged.",
+      "hosted_seconds": 10.02
+    },
+    {
+      "tutorial": 5,
+      "path": "tutorial/5_large_scale_training_on_tensorflow_record_data_colab.ipynb",
+      "published_sha256": "676a169ea626e9336edfd17f07ce528602bb17b14647a9e2a36ec40bb96023de",
+      "pre_publication_sha256": "b81a560e7a5540210bbd1a73c80b74380b117f4adc4cb38e21233186ab4906f4",
+      "original_sha256": "33dd2102c786f6c8c6be165949afd3814c6b1b2b7e88b264abcdd7f4bac712d4",
+      "nonempty_code_cells": 9,
+      "full_workload_colab_passed": true,
+      "runtime": "Colab T4",
+      "validation_mode": "fresh child Jupyter kernel on Colab",
+      "publication_changes": "Removed inherited execution/output metadata; bootstrap formatting and independent standard-library import order only. All other cell sources unchanged.",
+      "hosted_seconds": 56.97
+    },
+    {
+      "tutorial": 6,
+      "path": "tutorial/6_revisit_multi_scale_NIF_with_L1_L2_regularization_colab.ipynb",
+      "published_sha256": "b2c9e703f675a427e6931b0a5470923391e9a30f1229e00ccbccb399769f0595",
+      "pre_publication_sha256": "d29fdb2892339362451698095031666ce31d807084ec781dd554c134a204b671",
+      "original_sha256": "b9e1c18dbf23b937e2ce35dac2c410e121d3fac8884119cb61e8b500b93f5c5d",
+      "nonempty_code_cells": 21,
+      "full_workload_colab_passed": true,
+      "runtime": "Colab T4",
+      "validation_mode": "fresh child Jupyter kernel on Colab",
+      "publication_changes": "Removed inherited execution/output metadata; bootstrap formatting and independent standard-library import order only. All other cell sources unchanged.",
+      "hosted_seconds": 1194.3
+    },
+    {
+      "tutorial": 7,
+      "path": "tutorial/7_model_pruning_and_quantization_colab.ipynb",
+      "published_sha256": "23b29a02c51162962e757b9b33a785376fa344b3b51da04bbe30864f6e54bec9",
+      "pre_publication_sha256": "db0b7f2df77aedfd04f2bf232fdd3a3b18f5f8b4e3625aa02349af5782cad347",
+      "original_sha256": "c73b21bc412def17bf0d03b1378f4269b2f610f66a6ac281e4f06e59aef2a81b",
+      "nonempty_code_cells": 28,
+      "full_workload_colab_passed": true,
+      "runtime": "Colab T4",
+      "validation_mode": "fresh child Jupyter kernel on Colab",
+      "publication_changes": "Removed inherited execution/output metadata; bootstrap formatting and independent standard-library import order only. All other cell sources unchanged.",
+      "hosted_seconds": 2237.2
+    },
+    {
+      "tutorial": 8,
+      "path": "tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_colab.ipynb",
+      "published_sha256": "1645cd0d533c5e363a6d8d789c8bddf0976e4ce2251b121bddefb72aef8f34cc",
+      "pre_publication_sha256": "bbb6d0834ffe81ce716f032a577fc7c9b7973acd85f45a56b6fac5f2878fea92",
+      "original_sha256": "ccd39b195f30858a9a950f6382d0e959017d8fde07231a60ec8513ce13e5b44a",
+      "nonempty_code_cells": 21,
+      "full_workload_colab_passed": true,
+      "runtime": "Colab T4",
+      "validation_mode": "direct Run all",
+      "publication_changes": "Removed inherited execution/output metadata; bootstrap formatting and independent standard-library import order only. All other cell sources unchanged."
+    }
+  ],
+  "known_limits": [
+    "Chrome rich-output JavaScript loading warning remains; saved plots and numerical outputs passed separate inspection.",
+    "Tutorial 8 callback vis_multiscale.png has overlapping axes; final notebook derivative and superresolution plots are readable."
+  ],
+  "raw_evidence": "Executed notebooks, models, screenshots and logs are retained locally by the maintainer under ignored .codex/validation and are not shipped in the repository."
+}

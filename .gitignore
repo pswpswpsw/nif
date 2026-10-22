@@ -5,3 +5,4 @@ __pycache__/
 dev/
 _build/
 docs/build
+/.codex/

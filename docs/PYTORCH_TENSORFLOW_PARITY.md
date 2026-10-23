@@ -194,8 +194,8 @@ public float32/float64 regression changes from two failures to two passes;
 the separately frozen independent regression changes from 37 failures among
 40 cases to 40 passes. Candidate 016 also passes the original 2,304 nominal
 float32 and 4,608 aligned-hyperparameter numerical checks. This establishes
-the local correction only. Affected complete training runs still require
-revalidation; the candidate 014 failures below remain preserved.
+the local correction only. Its seed-42 full revalidation is reported below;
+the candidate 014 failures remain preserved.
 
 The failed candidate and thresholds remain preserved. TensorFlow seed 42's
 exact-configuration repeat has completed all 600 epochs: all 6,722 numerical
@@ -348,6 +348,22 @@ matched Jacobian axis remains below its observed TF seed-pair maximum.
 These shared-model comparisons are descriptive, with only three seeds;
 they establish neither statistical equivalence nor a cause of divergence.
 All twelve original full-training field/Jacobian failures remain unchanged.
+
+### Candidate 016: complete tutorial 3 revalidation still fails
+
+After the staged AdaBelief update correction, native seed 42 completes the
+original 600 epochs, 112,800 updates and 115,065,000 row visits. The actual
+row-ID sequence matches the frozen order, and all 1,824 prefix checks pass.
+All three original MSE gates pass: weighted normalized MSE is
+0.00144493683520945, against TensorFlow's 0.00149056202153376; physical
+component MSEs are 0.0330707510 and 0.0744900344.
+
+The four original paired-field/derivative gates still fail. Paired u/v field
+NRMSE is 0.10424254 / 0.08071300, above 0.05; input-Jacobian relative RMS is
+0.24229314 / 0.16823285, above 0.10. Independent saved-array calculations
+reproduce these field and Jacobian distances. Thus the local optimizer
+regression passes, but this complete training result does not pass the
+original acceptance criteria. Further revalidation remains required.
 
 Tutorial 5's full paired initializations and tutorial 4's derivative-only
 result are recorded below. The remaining full paired-training acceptance is

@@ -196,6 +196,9 @@ the separately frozen independent regression changes from 37 failures among
 float32 and 4,608 aligned-hyperparameter numerical checks. This establishes
 the local correction only. Its seed-42 full revalidation is reported below;
 the candidate 014 failures remain preserved.
+Candidate 016's frozen scientific snapshot has manifest
+`ef3a4f1a1b997c2a016f43a83f36e01fe66277244f611bfbe7c5f05a784ec8eb`;
+its public test records and Markdown successors are recorded separately.
 
 The failed candidate and thresholds remain preserved. TensorFlow seed 42's
 exact-configuration repeat has completed all 600 epochs: all 6,722 numerical
@@ -365,9 +368,33 @@ reproduce these field and Jacobian distances. Thus the local optimizer
 regression passes, but this complete training result does not pass the
 original acceptance criteria. Further revalidation remains required.
 
-Tutorial 5's full paired initializations and tutorial 4's derivative-only
-result are recorded below. The remaining full paired-training acceptance is
-pending.
+### Tutorial 1: first complete AdaBelief pair
+
+Native candidate 016 and TensorFlow seed 42 complete the original 5,000 epochs,
+20,000 updates and ten million row visits each. All ten actual initial tensors
+match in dtype, shape and C-order storage bytes. Actual consumed row IDs and
+effective float32 learning rates match; raw nominal learning-rate numbers are
+recorded separately. All 992 original prefix checks and all nine original
+quality gates pass across the three grids.
+
+| Grid | TensorFlow physical MSE | PyTorch physical MSE | Paired field RMS / truth std |
+|---|---:|---:|---:|
+| Training, 2,000 points | 2.75163092e-9 | 3.02419512e-9 | 0.00246331 |
+| Original-time refined, 8,000 points | 2.75196248e-9 | 3.02490714e-9 | 0.00246952 |
+| Dense space/time, 36,000 points | 7.58283352e-8 | 3.66338164e-8 | 0.03100185 |
+
+Each grid passes the original physical-MSE, normalized-MSE and paired-field
+criteria. Jacobians remain unsupervised diagnostics. Independent saved-array
+calculations reproduce the metrics and verify all 20,000 actual batch and
+effective-learning-rate records. Original Ada-stage postprocessing, checkpoint
+reload and continuation checks pass; the actual native figures are inspected.
+
+The TensorFlow Ada stage also repeats exactly at its saved observations:
+2,856 array pairs agree in dtype, shape and storage bytes, and the batch/LR
+record files agree. This does not assert state identity after every update.
+Own-framework L-BFGS refinement, the combined full-tutorial repeat and the
+remaining initializations are still required; this is not whole-tutorial
+acceptance.
 
 ### Tutorial 4 derivative deliverables
 
@@ -527,7 +554,7 @@ Neither completes the remaining paired initializations or full acceptance.
 
 | Tutorial | Current finite evidence | Still required |
 |---|---|---|
-| 1 | Corrected nominal-default 32-update comparison passes 1,312 checks; full TensorFlow seed-42 AdaBelief fit completes 5,000 epochs and actual postprocessing; candidate 016 full revalidation remains pending | Native full AdaBelief fit, each framework's own L-BFGS refinement, final common metrics and figures |
+| 1 | First full candidate-016 AdaBelief pair passes all 992 prefix and nine quality checks; actual postprocessing and checkpoint checks pass; TensorFlow Ada-stage repeat agrees at 2,856 saved arrays | Each framework's own L-BFGS refinement, combined full-tutorial repeat and remaining initializations |
 | 2 | First full pair completed: Swish passes, NIFMultiScale fails two original paired-field criteria; complete TF repeat agrees exactly at its recorded observations; all six disk-continuation cases pass; final-weight diagnostics retain nine SIREN pointwise failures | Remaining initializations and final acceptance |
 | 6 | All nine regularization cases' actual raw/used gradients pass; fresh disk restoration and two updates pass 1,782 strict storage-byte checks | Four small post-momentum discrepancies remain recorded, plus three inherited pre-momentum differences; full nine-case fits and final aggregate/gallery cells remain pending |
 | 7 | Actual TF/native baseline short comparisons and native OFF/ON 8,004-step boundary controls pass, including four actual two-update fresh-disk routes; prior TF-only 8,000-step controls also pass | Own-baseline/full-pruning fits, remaining initializations and real export/quantization quality remain pending |

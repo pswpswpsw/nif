@@ -352,7 +352,8 @@ execution requested and TF32 disabled. The recorded runtimes are TensorFlow
 All three component-MSE gates and all 352 full-run prefix comparisons also
 pass. Jacobian relative RMS is descriptive under the original tutorial 5
 protocol; no new Jacobian acceptance threshold is introduced. This source
-tutorial trains a three-output linear model on random inputs and targets.
+tutorial trains a single fully connected layer with tanh activation on random
+inputs and targets.
 The close paired results verify the stream-training comparison; they do not
 establish predictive accuracy on a physical problem.
 
@@ -380,9 +381,9 @@ full workloads or the remaining paired initializations.
 | Tutorial | Current finite evidence | Still required |
 |---|---|---|
 | 1 | Corrected nominal-default 32-update comparison passes 1,312 checks; the full-entry two-epoch coupling passes 248 checks and actual postprocessing cells | Full AdaBelief fit, each framework's own L-BFGS refinement, final common metrics and figures |
-| 2 | Both network variants pass 3,328 short-trace checks; fresh disk restoration followed by two actual updates passes 400 strict storage-byte checks | Same-GPU checks, both full fits and remaining initializations |
+| 2 | Both variants pass 3,328 same-GPU short-trace checks, 4,378 strict observer-control checks and 80 initial-tensor checks; earlier CPU fresh disk restoration plus two actual updates passes 400 strict storage-byte checks | Both original 5,000-epoch fits, remaining initializations and TensorFlow repeat; full execution is underway |
 | 6 | All nine regularization cases' actual raw/used gradients pass; fresh disk restoration and two updates pass 1,782 strict storage-byte checks | Four small post-momentum discrepancies remain recorded, plus three inherited pre-momentum differences; full nine-case fits and final aggregate/gallery cells remain pending |
-| 7 | Full-architecture baseline and native pruning boundary controls exist | TF pruning observer neutrality currently fails and blocks full release; pruned disk continuation, own-baseline/full-pruning fits and real export/quantization quality remain pending |
+| 7 | Full-architecture baseline and native pruning boundary controls exist; TF-only three-row GPU OFF/ON controls pass at one and 32 updates | The earlier CPU observer failure remains recorded; actual 512/464-row GPU controls and natural 8,000-update boundaries, pruned disk continuation, own-baseline/full-pruning fits and real export/quantization quality remain pending |
 | 8 | Both 32-update fits pass 3,584 numerical checks; disk continuation and observer controls pass; actual Colab postprocessing order reproduces all six prior common-metric arrays byte-for-byte | Same-GPU checks, both full fits, remaining initializations and final figures |
 
 The tutorial 7 observer failure is under investigation and is not an

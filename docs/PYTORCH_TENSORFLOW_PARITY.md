@@ -113,7 +113,8 @@ regressions and native fixes, with independent short-trajectory validation:
 The native Adam tutorials now use `ReferenceAdam` with the reference epsilon
 convention. Tutorial 7 uses a native assignment-based pruning controller with
 the original step schedule. Complete learning and quantized-quality acceptance
-for those tutorials remains pending.
+remains pending for tutorials 2, 6, 7 and 8; tutorial 5's completed local
+matched-training evidence is reported below.
 
 Tutorial 1 has a separate reference-behavior issue: its current Colab bootstrap
 does not activate the modern private gradient hook. Assigning the old public
@@ -419,7 +420,7 @@ Six supplemental float64 optimizer representation conflicts remain recorded
 separately and are not represented as derivative failures or as optimizer
 parity passes.
 
-### Tutorial 5: three complete controlled pairs
+### Tutorial 5: three complete controlled pairs and reference repeat
 
 The first paired initialization, seed 42, passes the original full-workload
 criteria. Each framework consumes the same 100 TFRecord shards, containing
@@ -479,10 +480,23 @@ distinct from the final checkpoint MSE.
 The native evaluator's filename-resolution metadata cache was changed after
 the untouched TensorFlow run. Independent controls establish the old/new
 native observer's exact state, loss, input and counter agreement; the two full
-runs are not represented as using an identical evaluator hash. Preprovisioned
-environments were used, so this is not a fresh installer or hosted-Colab
-execution claim. The exact TensorFlow seed-42 repeat remains pending;
-these three pairs do not complete tutorial 5 acceptance.
+runs are not represented as using an identical evaluator hash.
+
+The TensorFlow seed-42 repeat now passes the original repeat checks. All
+126,408 declared buffer pairs across 15,801 saved state observations match in
+dtype, shape and C-order storage bytes. Another 492 arrays in 36 NPZ files
+also match under those checks. Loss, counter and actual-consumption logs
+agree in their selected parsed fields; this does not assert log-file or
+TensorFlow checkpoint-container byte identity. The original eight end cells,
+checkpoint reload, full-million-row reload evaluation and 4,096-row holdout
+also pass. The TensorFlow source produces no PNGs in these lanes; the native
+figures were inspected as described above. Clone-continuation equality retains
+its numerical-only scope.
+
+The three complete pairs, reference repeat and end-cell checks complete the
+declared local matched-training protocol for tutorial 5. Preprovisioned WSL
+GPU environments were used, so this is not a fresh installer or hosted-Colab
+execution claim.
 
 ### Tutorial 2: first complete pair fails the original field criterion
 

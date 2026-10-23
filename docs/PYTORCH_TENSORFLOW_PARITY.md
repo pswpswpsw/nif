@@ -355,7 +355,7 @@ Six supplemental float64 optimizer representation conflicts remain recorded
 separately and are not represented as derivative failures or as optimizer
 parity passes.
 
-### Tutorial 5: first complete controlled pair
+### Tutorial 5: two complete controlled pairs
 
 The first paired initialization, seed 42, passes the original full-workload
 criteria. Each framework consumes the same 100 TFRecord shards, containing
@@ -392,13 +392,23 @@ inspected: its 200-visit curve and axis labels are readable. The notebook's
 streamed training-aggregate MSE, approximately 0.09213144, is distinct from
 the final checkpoint MSE in the table.
 
+Seed 142 also completes the original 15,800 updates and two million row
+visits per framework and passes the same full-workload criteria. Its
+TensorFlow/native full-domain MSE is 0.083331931307235 /
+0.0833319312767014, and paired field RMS / target RMS is 7.19945e-8.
+All three component-MSE gates, all 352 prefix comparisons and exact paired
+row-consumption checks pass. Independent NumPy recomputation from all one
+million raw predictions reproduces these metrics. The ordinary end cells,
+checkpoint reload and continuation checks pass within the numerical-equality
+scope described above; the actual native 200-visit figure is also inspected.
+
 The native evaluator's filename-resolution metadata cache was changed after
 the untouched TensorFlow run. Independent controls establish the old/new
 native observer's exact state, loss, input and counter agreement; the two full
 runs are not represented as using an identical evaluator hash. Preprovisioned
 environments were used, so this is not a fresh installer or hosted-Colab
-execution claim. Seeds 142 and 242 and the exact TensorFlow seed-42 repeat
-remain pending; this first pair does not complete tutorial 5 acceptance.
+execution claim. Seed 242 and the exact TensorFlow seed-42 repeat remain
+pending; these two pairs do not complete tutorial 5 acceptance.
 
 ### Tutorial 2: first complete pair fails the original field criterion
 

@@ -48,6 +48,13 @@ def assert_tutorial1_gc_scope_v2():
             cell['source']=revised.splitlines(keepends=True)
             changed.append(i)
     assert len(changed)==2
+    # Teaching v1 permits only the three independently validated T1 cells.
+    assert_teaching_markdown_scope(ROOT)
+    teaching=json.loads((ROOT/'dev_tests/teaching_markdown_v1.json').read_text(encoding='utf-8'))
+    for patch in teaching['notebooks']['tutorial/1_simple_1d_wave_pytorch.ipynb']['changes']:
+        cell=expected['cells'][patch['cell']]
+        assert cell['cell_type']=='markdown' and cell['source']==patch['before']
+        cell['source']=patch['after']
     current=json.loads((ROOT/'tutorial/1_simple_1d_wave_pytorch.ipynb').read_text(encoding='utf-8'))
     assert current==expected, 'Only tutorial1 GC selector/call and teaching note are authorized'
 
@@ -56,3 +63,29 @@ def assert_tutorial1_gc_scope_v2():
     expected_generator=(generator.replace(OPTIMIZER,NOTE+OPTIMIZER)
                         .replace(OLD_CALL,NEW_CALL,1).replace(OLD_INTRO,NEW_INTRO))
     assert (ROOT/'dev_tests/generate_native_notebooks.py').read_text(encoding='utf-8')==expected_generator
+
+
+def assert_teaching_markdown_scope(root=ROOT):
+    """Validate precisely the eight published Markdown replacements as JSON."""
+    root=Path(root)
+    name='dev_tests/teaching_markdown_v1.json'
+    raw=(root/name).read_bytes()
+    assert hashlib.sha256(raw).hexdigest()=='aad2865228b9f93d9d47cd56c720f6c3fed56abb7ae1d430311970f0f428adfa',name
+    teaching=json.loads(raw)
+    for archive,digest in teaching['required_archives'].items():
+        assert hashlib.sha256((root/archive).read_bytes()).hexdigest()==digest,archive
+    assert len(teaching['notebooks'])==3
+    assert sum(len(entry['changes']) for entry in teaching['notebooks'].values())==8
+    for name,entry in teaching['notebooks'].items():
+        original=(root/entry['archive']).read_bytes()
+        assert hashlib.sha256(original).hexdigest()==entry['before_sha256'],name
+        expected=json.loads(original)
+        for patch in entry['changes']:
+            cell=expected['cells'][patch['cell']]
+            assert cell['cell_type']=='markdown',name
+            assert cell['source']==patch['before'],name
+            cell['source']=patch['after']
+        current=(root/name).read_bytes()
+        assert json.loads(current)==expected,name
+        assert hashlib.sha256(current).hexdigest()==entry['after_sha256'],name
+    return set(teaching['notebooks'])

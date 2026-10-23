@@ -238,7 +238,7 @@ class AdaBeliefOptimizer(Optimizer):
                     direction = direction.add(p, alpha=wd)
                 if mask is not None:
                     direction = direction * mask
-                p.add_(direction, alpha=-lr)
+                p.sub_(direction * lr)
         return loss
 
     def get_config(self):

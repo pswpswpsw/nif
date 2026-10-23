@@ -73,11 +73,21 @@ def expected_source(name,source):
         source=source.replace(old,new,1)
     if name=='dev_tests/adabelief_moment_scope.py':
         source=expected_checkout_source(source)
+        # Final-update v5: authorize only the one staged parameter-update tuple.
+        old=" 'nif/optimizers/external_optimizers.py':[\n"
+        new=old+"  ('                p.add_(direction, alpha=-lr)\\n',\n   '                p.sub_(direction * lr)\\n',1),\n"
+        assert source.count(old)==1
+        source=source.replace(old,new,1)
+    if name in MARKDOWN_TRANSITIONS:
+        for old,new in MARKDOWN_TRANSITIONS[name]:
+            assert source.count(old)==1,(name,old)
+            source=source.replace(old,new,1)
     return source
 
 
 def assert_publication_windows_scope_v2(root=ROOT):
     root=Path(root)
+    assert_teaching_helper_source(root)
     archive=json.loads((root/ARCHIVE/'manifest.json').read_text(encoding='utf-8'))
     phase1=json.loads((root/'dev_tests/publication_v1_manifest.json').read_text(encoding='utf-8'))
     before1=json.loads((root/'dev_tests/publication_v1_before.json').read_text(encoding='utf-8'))
@@ -118,3 +128,19 @@ def assert_checkout_attributes(root,digest):
     current=(Path(root)/'.gitattributes').read_bytes()
     assert current.endswith(suffix),'.gitattributes'
     assert hashlib.sha256(current[:-len(suffix)]).hexdigest()==digest,'.gitattributes'
+
+
+MARKDOWN_TRANSITIONS={'dev_tests/adabelief_moment_scope.py': [('def assert_adabelief_phase_scope_v4():\n', "def assert_adabelief_phase_scope_v4():\n    from dev_tests.publication_windows_scope import assert_teaching_helper_source\n    assert_teaching_helper_source(ROOT)\n    from dev_tests.tutorial1_gc_scope import assert_teaching_markdown_scope\n    teaching=assert_teaching_markdown_scope(ROOT)|{'dev_tests/tutorial1_gc_scope.py'}\n"), ("        if name not in TRANSITIONS and name not in portable and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):", "        if name not in TRANSITIONS and name not in portable and name not in teaching and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):")], 'dev_tests/test_tutorial1_gc_scope.py': [("                'tutorial/1_simple_1d_wave_pytorch.ipynb','docs/PYTORCH_CANDIDATE_REPORT.md'}", "                'tutorial/1_simple_1d_wave_pytorch.ipynb','docs/PYTORCH_CANDIDATE_REPORT.md',\n                'tutorial/5_large_scale_training_on_tensorflow_record_data_pytorch.ipynb',\n                'tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb'}")], 'dev_tests/publication_projection.py': [("source/'dev_tests/publication_windows_v2_inventory.json'", "source/'dev_tests/teaching_markdown_v1_inventory.json'")]}
+
+
+def assert_teaching_helper_source(root=ROOT):
+    """Freeze the exact JSON validator and require its public provenance."""
+    root=Path(root)
+    name='dev_tests/tutorial1_gc_scope.py'
+    assert hashlib.sha256((root/name).read_bytes()).hexdigest()=='97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32',name
+    archive='dev_tests/fixtures/teaching_markdown_v1/tutorial1_gc_scope.py.before.txt'
+    assert hashlib.sha256((root/archive).read_bytes()).hexdigest()=='29fa494900a56d2a4875d3970fa262f2acddfccae0f0ebdc538a6fd869c585bb',archive
+    successors=json.loads((root/'dev_tests/teaching_markdown_v1_sources.json').read_text(encoding='utf-8'))
+    assert successors['source_before_sha256'][name]=='29fa494900a56d2a4875d3970fa262f2acddfccae0f0ebdc538a6fd869c585bb',name
+    assert successors['source_after_sha256'][name]=='97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32',name
+    assert (root/'dev_tests/fixtures/teaching_markdown_v1/scope.diff').read_bytes()

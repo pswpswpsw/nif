@@ -1,0 +1,204 @@
+{
+  "phase": "teaching-markdown-v1",
+  "published_commit": "5f8a88b41ce41e09bbd5aaef8456950ecb3b0501",
+  "before_commit": "541c7feacd041b086c181d151076f443bd2d15d7",
+  "scope": "Exactly eight published markdown-cell source replacements. Code cells, outputs, metadata, order, mathematics and numerical expectations are unchanged. Ada final-update phase remains independently frozen.",
+  "notebooks": {
+    "tutorial/1_simple_1d_wave_pytorch.ipynb": {
+      "before_sha256": "9c64c3de750de791df2b8f4c7f74a93e5eb4fee618ffe63236d1ddf6ec91a438",
+      "after_sha256": "ce69f3af6063be436cbf0652b2b7c661b970aaa8edf487e54277480020a44bde",
+      "archive": "dev_tests/fixtures/teaching_markdown_v1/1_simple_1d_wave_pytorch.ipynb.before.txt",
+      "changes": [
+        {
+          "cell": 8,
+          "before": [
+            "* we can setup whether to enable\n",
+            "  * **multiple gpus**,\n",
+            "  * **mixed precision (fp32 for store and fp16 for computing)**\n",
+            "\n",
+            "* However at Colab, we don't have multiple-gpu (unless we pay). So it won't be effective here. \n",
+            "\n",
+            "* But you can play around with mixed precision, if your GPU supports it. Typically I found there is a slight increase in training speed. "
+          ],
+          "after": [
+            "* this native notebook uses\n",
+            "  * **one selected device (`cpu` or `cuda`)**,\n",
+            "  * **float32 for storage and computation**\n",
+            "\n",
+            "* Select the device with `NIF_DEVICE` before starting the notebook.\n",
+            "\n",
+            "* The two flags below do not enable multi-GPU or mixed-precision training in this native loop."
+          ]
+        },
+        {
+          "cell": 10,
+          "before": [
+            "* now we can further setup \n",
+            "  * the total number of epochs\n",
+            "  * initial learning rate\n",
+            "  * batch size\n",
+            "  * number of epochs for check point saving\n",
+            "  * number of epochs for logging error file\n",
+            "  * number of epochs for plotting figures"
+          ],
+          "after": [
+            "* now we can further setup \n",
+            "  * the total number of epochs\n",
+            "  * initial learning rate\n",
+            "  * batch size\n",
+            "* The native loop uses fixed frequencies: checkpoints at epoch indices 0, 1000, ... and the final epoch;\n",
+            "  training-history logging at epoch indices 0, 100, ... and the final epoch;\n",
+            "  loss and prediction figures after fitting. The three frequency variables below do not change these intervals."
+          ]
+        },
+        {
+          "cell": 34,
+          "before": [
+            "- now we can fine tune the model with `.minimize(rounds, max_iter)`\n",
+            "  - `max_iter` means the we will run LBFGS updates until maximal number of iterations is achieved or error tolerance is achieved\n",
+            "  - here `rounds` means repeating the above process. it can be useful to force running optimization process when error doesn't change even at the level of 1e-15.  "
+          ],
+          "after": [
+            "- now we can fine tune the model with an outer `rounds` loop and `fine_tuner.step(closure)`\n",
+            "  - `max_iter` means the we will run LBFGS updates until maximal number of iterations is achieved or error tolerance is achieved\n",
+            "  - here `rounds` means repeating the above process. it can be useful to force running optimization process when error doesn't change even at the level of 1e-15.  "
+          ]
+        }
+      ]
+    },
+    "tutorial/5_large_scale_training_on_tensorflow_record_data_pytorch.ipynb": {
+      "before_sha256": "9cbc758bd3cc91e37aaf8828dbb1362804c14468fb1dc4ec89afafd041b57522",
+      "after_sha256": "e0e9017da3fddcd898dac6dc2ee9c40ac160897cfcd404595ee0dc42d5031fd2",
+      "archive": "dev_tests/fixtures/teaching_markdown_v1/5_large_scale_training_on_tensorflow_record_data_pytorch.ipynb.before.txt",
+      "changes": [
+        {
+          "cell": 11,
+          "before": [
+            "### Then, you need to decide \n",
+            "1. How many points to store in one single **tfrecord** file ----> `num_pts_per_file`\n",
+            "    - it doesn't have to be perfectly dividing the total number of points, we will make the last one smaller if it doesn't have a perfect divide.\n",
+            "    - Tensorflow official document [suggest](https://www.tensorflow.org/tutorials/load_data/tfrecord) around 100 MB.\n",
+            "    \n",
+            "2. What's the `npz` filepath? ----> `npz_path`\n",
+            "3. What's the key to access the 2-D matrix pointwise data? ----> `npz_key`\n",
+            "4. Where do you want to put the generated tfrecord file? ----> `tfr_path`\n",
+            "5. What's the prefix you want to put in the filename for the tfrecord file? \n",
+            "    - they will be something like `prefix_0.npz`, ..., `prefix_10.npz`, ..."
+          ],
+          "after": [
+            "### Then, you need to decide \n",
+            "1. How many points to store in one single **tfrecord** file ----> `num_pts_per_file`\n",
+            "    - it doesn't have to be perfectly dividing the total number of points, we will make the last one smaller if it doesn't have a perfect divide.\n",
+            "    - Tensorflow official document [suggest](https://www.tensorflow.org/tutorials/load_data/tfrecord) around 100 MB.\n",
+            "    \n",
+            "2. What's the `npz` filepath? ----> `npz_path`\n",
+            "3. What's the key to access the 2-D matrix pointwise data? ----> `npz_key`\n",
+            "4. Where do you want to put the generated tfrecord file? ----> `tfr_path`\n",
+            "5. What's the prefix you want to put in the filename for the tfrecord file? \n",
+            "    - they will be something like `prefix_0.tfrecord`, ..., `prefix_10.tfrecord`, ..."
+          ]
+        },
+        {
+          "cell": 12,
+          "before": [
+            "###  If you have answers to the above in your mind, now you can just call \n",
+            "### `fh.create_from_npz(num_pts_per_file, npz_path, npz_key, write_tfr_path, prefix)`"
+          ],
+          "after": [
+            "###  If you have answers to the above in your mind, now you can just call \n",
+            "### `fh.create_from_npz(num_pts_per_file, npz_path, npz_key, tfr_path, prefix)`"
+          ]
+        },
+        {
+          "cell": 20,
+          "before": [
+            "### Finally, we do sub-dataset batching with `meta_dataset`\n",
+            "\n",
+            "- we obtain `batch_file`, which are Tensors basically, from meta_dataset\n",
+            "- we create a `sub` dataset from `batch_file`\n",
+            "\n",
+            "- you can add your favourite callbacks if you want\n",
+            "- the default `epoch` in the explicit training loop is 1, which makes sense in this context"
+          ],
+          "after": [
+            "### Finally, we do sub-dataset batching with `meta_dataset`\n",
+            "\n",
+            "- we obtain `batch_file`, which are Tensors basically, from meta_dataset\n",
+            "- we create a `sub` dataset from `batch_file`\n",
+            "\n",
+            "- you can add your favourite callbacks if you want\n",
+            "- each shard is traversed once per pass; `epoch=2` makes `meta_dataset` provide two complete global passes"
+          ]
+        },
+        {
+          "cell": 22,
+          "before": [
+            "### Cautious! \n",
+            "- it is not perfect since we are `the training loop` for each `tfrecord` and this will make epoch information lost after each recall of `the training loop`\n",
+            "- we can hack it by using a training-loop hooks that explicitly write loss to the disk.. in an append way.\n",
+            "- **again what is presented here is not perfect, I am open for your solutions!**"
+          ],
+          "after": [
+            "### Cautious! \n",
+            "- the native loop keeps the same optimizer continuously across all shards and both global passes\n",
+            "- we retain progress with the accumulated `rows_seen` and `shard_visits` counters, and write the complete results to disk.\n",
+            "- **again what is presented here is not perfect, I am open for your solutions!**"
+          ]
+        }
+      ]
+    },
+    "tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb": {
+      "before_sha256": "f37f38c30a2138426235eadf3c17b7940c7220a159034801719c838f492b71ed",
+      "after_sha256": "3834557a00983d04b0cd2f3fa3f388894bc9e1ea5f539e23cd4830f170982479",
+      "archive": "dev_tests/fixtures/teaching_markdown_v1/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb.before.txt",
+      "changes": [
+        {
+          "cell": 10,
+          "before": [
+            "### Here, we will use the following loss function\n",
+            "\n",
+            "$$\n",
+            "\\mathcal{L} = \\mathcal{L}_{mse} + \\alpha \\mathcal{L}_{mse, derivative} = \\frac{1}{M} \\sum_i (u(x_i,y_i) - u_{NN}(x_i,y_i;\\theta))^2 + \\alpha  \\frac{1}{M} \\sum_i (\\frac{\\partial u}{\\partial x}(x_i,y_i) - \\frac{\\partial u_{NN}}{\\partial x}(x_i,y_i;\\theta))^2\n",
+            "$$\n",
+            "\n",
+            "then we use Adam optimizer to find $\\min_{\\theta} \\mathcal{L}$\n",
+            "\n",
+            "We empirically choose $\\alpha=10^{-3}$. Intuitively, this number is related to when will the optimizer turns its attention to minimize $\\mathcal{L}_{mse, derivative}$"
+          ],
+          "after": [
+            "### Here, we will use the following loss function\n",
+            "\n",
+            "$$\n",
+            "\\mathcal{L} = \\mathcal{L}_{mse} + \\alpha \\mathcal{L}_{mse, derivative} = \\frac{1}{M} \\sum_i (u(t_i,x_i) - u_{NN}(t_i,x_i;\\theta))^2 + \\alpha  \\frac{1}{M} \\sum_i (\\frac{\\partial u}{\\partial x}(t_i,x_i) - \\frac{\\partial u_{NN}}{\\partial x}(t_i,x_i;\\theta))^2\n",
+            "$$\n",
+            "\n",
+            "then we use Adam optimizer to find $\\min_{\\theta} \\mathcal{L}$\n",
+            "\n",
+            "We empirically choose $\\alpha=10^{-3}$. Intuitively, this number is related to when will the optimizer turns its attention to minimize $\\mathcal{L}_{mse, derivative}$"
+          ]
+        }
+      ]
+    }
+  },
+  "required_archives": {
+    "dev_tests/fixtures/teaching_markdown_v1/1_simple_1d_wave_pytorch.ipynb.before.txt": "9c64c3de750de791df2b8f4c7f74a93e5eb4fee618ffe63236d1ddf6ec91a438",
+    "dev_tests/fixtures/teaching_markdown_v1/5_large_scale_training_on_tensorflow_record_data_pytorch.ipynb.before.txt": "9cbc758bd3cc91e37aaf8828dbb1362804c14468fb1dc4ec89afafd041b57522",
+    "dev_tests/fixtures/teaching_markdown_v1/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb.before.txt": "f37f38c30a2138426235eadf3c17b7940c7220a159034801719c838f492b71ed",
+    "dev_tests/fixtures/teaching_markdown_v1/tutorial1_gc_scope.py.before.txt": "29fa494900a56d2a4875d3970fa262f2acddfccae0f0ebdc538a6fd869c585bb",
+    "dev_tests/fixtures/teaching_markdown_v1/adabelief_moment_scope.py.before.txt": "5c62cff5d458bd43c2662ec57ffc4d2a888ba149aff1cef427810a047e11a28b",
+    "dev_tests/fixtures/teaching_markdown_v1/test_tutorial1_gc_scope.py.before.txt": "aca3f0e1f5174592cea5ae024a5d498a869e41ce71aa0c33f827112163d383a7",
+    "dev_tests/fixtures/teaching_markdown_v1/publication_windows_scope.py.before.txt": "7ea130e215339a156311c6231c2766dc5ac22e65383e6673fc681bd4488077cb",
+    "dev_tests/fixtures/teaching_markdown_v1/test_publication_checkout_successor.py.before.txt": "945c48e4c00e71243827c026f460f994067b42d3685df485558d2bf1fca03ec7",
+    "dev_tests/fixtures/teaching_markdown_v1/publication_projection.py.before.txt": "ebdaaf1e4441b65c73b324b146c33ceda0cc0c8f9e8decd794cc79801f876e2f",
+    "dev_tests/fixtures/teaching_markdown_v1/test_adabelief_final_update_successor.py.before.txt": "39365dc4f3116e2ada3cd7feb47a8e3167ee8011fd182649b154a646c6a54f47"
+  },
+  "source_archive": {
+    "dev_tests/tutorial1_gc_scope.py": "dev_tests/fixtures/teaching_markdown_v1/tutorial1_gc_scope.py.before.txt",
+    "dev_tests/adabelief_moment_scope.py": "dev_tests/fixtures/teaching_markdown_v1/adabelief_moment_scope.py.before.txt",
+    "dev_tests/test_tutorial1_gc_scope.py": "dev_tests/fixtures/teaching_markdown_v1/test_tutorial1_gc_scope.py.before.txt",
+    "dev_tests/publication_windows_scope.py": "dev_tests/fixtures/teaching_markdown_v1/publication_windows_scope.py.before.txt",
+    "dev_tests/test_publication_checkout_successor.py": "dev_tests/fixtures/teaching_markdown_v1/test_publication_checkout_successor.py.before.txt",
+    "dev_tests/publication_projection.py": "dev_tests/fixtures/teaching_markdown_v1/publication_projection.py.before.txt",
+    "dev_tests/test_adabelief_final_update_successor.py": "dev_tests/fixtures/teaching_markdown_v1/test_adabelief_final_update_successor.py.before.txt"
+  }
+}

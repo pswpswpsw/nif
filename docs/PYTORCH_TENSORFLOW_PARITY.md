@@ -155,11 +155,11 @@ A separately frozen shared-gradient regression localizes a float32 arithmetic
 discrepancy: the TensorFlow AdaBelief reference evaluates bias powers and
 rectification scalars in parameter dtype, whereas the native implementation
 evaluates them in Python double precision. At step 6 this changes the
-rectification coefficient by about 0.185%. Moment slots match bitwise in that
+rectification coefficient by about 0.185%. Moment slots are numerically equal in that
 diagnostic, and all float64 controls pass. The native scalar correction now
 passes all 4,608 independently frozen checks against the unchanged TensorFlow
 trace. In that controlled-hyperparameter fixture, all float32 parameter and
-moment-slot comparisons are bitwise equal. Native candidate 012 has manifest
+moment-slot comparisons are numerically equal. Native candidate 012 has manifest
 `cd0cd078e9fc147d6d9627ad702bcc74bfef15b0551a3f41f2d12e42bd86de62`.
 This local result does not establish that correcting scalar arithmetic will
 eliminate the full-training differences. Default-constructor hyperparameter
@@ -170,18 +170,32 @@ That separate nominal-default control found a second arithmetic discrepancy:
 the native moment coefficients formed Python `1 - beta` before casting, while
 the legacy TensorFlow reference subtracts after casting beta to parameter dtype.
 The corrected native implementation now passes all 2,304 original default-path
-numerical checks, with all 1,280 float32 moment comparisons bitwise equal.
+numerical checks, with all 1,280 float32 moment comparisons numerically equal.
 Nominal and explicitly materialized float32-beta native controls are also
-bitwise equal. The original 4,608 effective-hyperparameter checks remain green.
+numerically equal. The original 4,608 effective-hyperparameter checks remain green.
 Candidate 014 has manifest
 `8dfe4545c7f706d5f10233266239883a6f5f3ac54acf9b625c89d2b1124c3143`.
 The native float64 extension retains caller beta precision; TensorFlow's stored
 hyperparameter representation is explicitly matched in its separate controls.
+Offline reconstruction from the retained JSON traces confirms matching dtype,
+shape and C-order bytes for these equal arrays. The original runtime buffers
+were not archived; the original equality flags use `np.array_equal`.
 
 An all-None-gradient counter bug was separately reproduced and fixed. All 92
 independent behavior checks and 56 TensorFlow numerical comparisons now pass;
 real zero gradients still advance training, and partial missing gradients remain
 supported. These local fixes do not replace full-training acceptance.
+
+A further final-update discrepancy was reproduced independently: the native
+optimizer combined scaling and subtraction with `add_(direction, alpha=-lr)`,
+whereas the TensorFlow reference first forms the scaled update and then
+subtracts it. The minimal correction uses `sub_(direction * lr)`. The same
+public float32/float64 regression changes from two failures to two passes;
+the separately frozen independent regression changes from 37 failures among
+40 cases to 40 passes. Candidate 016 also passes the original 2,304 nominal
+float32 and 4,608 aligned-hyperparameter numerical checks. This establishes
+the local correction only. Affected complete training runs still require
+revalidation; the candidate 014 failures below remain preserved.
 
 The failed candidate and thresholds remain preserved. TensorFlow seed 42's
 exact-configuration repeat has completed all 600 epochs: all 6,722 numerical
@@ -439,8 +453,16 @@ The frozen protocol treats these unsupervised derivative comparisons as
 diagnostics, so their 0.10 diagnostic reference is not introduced as a new
 acceptance gate. Independent raw-array calculations reproduce all 40 paired
 metric scalars and verify all 40,000 paired update records against the frozen
-fit-specific batch orders. Actual disk continuation and the remaining paired
-initializations are still pending.
+fit-specific batch orders.
+
+Actual disk continuation now passes for all six full-fit cases: TensorFlow
+primary and repeat, and PyTorch primary, each for Swish and NIFMultiScale.
+Twenty-four fresh workers each perform two updates, for 48 clone updates
+and 24,576 row visits; the accepted parent runs receive no further updates.
+All 660 original scientific checks and 1,200 observer/restore checks pass,
+including dtype, shape and C-order storage-byte equality. This verifies
+checkpoint continuation under the original controls. The remaining paired
+initializations and the failed cross-framework field criteria remain open.
 
 Eight fresh final-weight restoration/transfer cases have completed with zero
 optimizer updates. All four own-framework restores reproduce their 24 saved
@@ -479,8 +501,8 @@ Neither completes the remaining paired initializations or full acceptance.
 
 | Tutorial | Current finite evidence | Still required |
 |---|---|---|
-| 1 | Corrected nominal-default 32-update comparison passes 1,312 checks; the full-entry two-epoch coupling passes 248 checks and actual postprocessing cells | Full AdaBelief fit, each framework's own L-BFGS refinement, final common metrics and figures |
-| 2 | First full pair completed: Swish passes, NIFMultiScale fails two original paired-field criteria; complete TF repeat agrees exactly at its recorded observations; final-weight diagnostics retain nine SIREN pointwise failures | Original disk-continuation gates, remaining initializations and final acceptance |
+| 1 | Corrected nominal-default 32-update comparison passes 1,312 checks; full TensorFlow seed-42 AdaBelief fit completes 5,000 epochs and actual postprocessing; candidate 016 full revalidation remains pending | Native full AdaBelief fit, each framework's own L-BFGS refinement, final common metrics and figures |
+| 2 | First full pair completed: Swish passes, NIFMultiScale fails two original paired-field criteria; complete TF repeat agrees exactly at its recorded observations; all six disk-continuation cases pass; final-weight diagnostics retain nine SIREN pointwise failures | Remaining initializations and final acceptance |
 | 6 | All nine regularization cases' actual raw/used gradients pass; fresh disk restoration and two updates pass 1,782 strict storage-byte checks | Four small post-momentum discrepancies remain recorded, plus three inherited pre-momentum differences; full nine-case fits and final aggregate/gallery cells remain pending |
 | 7 | Actual TF/native baseline short comparisons and native OFF/ON 8,004-step boundary controls pass, including four actual two-update fresh-disk routes; prior TF-only 8,000-step controls also pass | Own-baseline/full-pruning fits, remaining initializations and real export/quantization quality remain pending |
 | 8 | Both 32-update fits pass 3,584 numerical checks; disk continuation and observer controls pass; actual Colab postprocessing order reproduces all six prior common-metric arrays byte-for-byte | Same-GPU checks, both full fits, remaining initializations and final figures |

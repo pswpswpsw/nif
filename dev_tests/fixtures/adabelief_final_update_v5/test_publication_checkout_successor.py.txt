@@ -1,0 +1,55 @@
+"""Checkout-only succession, with unchanged historical hashes and strict negatives."""
+import hashlib
+import json
+from pathlib import Path
+
+import pytest
+
+from dev_tests.adabelief_moment_scope import assert_adabelief_phase_scope_v4
+from dev_tests.publication_windows_scope import ROOT
+
+
+def test_checkout_helper_is_the_recorded_exact_successor():
+    # New successor hash; the original source is separately frozen by the RED test.
+    assert hashlib.sha256((ROOT/'dev_tests/publication_windows_scope.py').read_bytes()).hexdigest() == (
+        '5e056ad1626384b96d9dca4ffa67dc1d5ed3a6807a52944f633b873ea5cff431')
+
+
+@pytest.mark.parametrize('mutation', ['original-rule', 'extra-rule', 'missing-rule'])
+def test_checkout_attributes_reject_any_change_beyond_the_four_rules(monkeypatch, mutation):
+    original = Path.read_bytes
+    def changed(path):
+        data = original(path)
+        if path == ROOT/'.gitattributes':
+            if mutation == 'original-rule':
+                return data.replace(b'/tests/* text eol=lf', b'/tests/* -text')
+            if mutation == 'extra-rule':
+                return data+b'/nif/** -text\n'
+            return data.replace(b'/tutorial/README.md text eol=lf\n', b'')
+        return data
+    monkeypatch.setattr(Path, 'read_bytes', changed)
+    with pytest.raises(AssertionError, match=r'\.gitattributes'):
+        assert_adabelief_phase_scope_v4()
+
+
+@pytest.mark.parametrize('name,manifest,key', [
+    ('dev_tests/adabelief_moment_scope.diff',
+     'dev_tests/adabelief_moment_candidate_manifest.json', 'source_sha256'),
+    ('dev_tests/publication_v1_scope.diff',
+     'dev_tests/publication_v1_manifest.json', 'public_file_sha256'),
+    ('dev_tests/publication_windows_v2_scope.diff',
+     'dev_tests/publication_windows_v2_manifest.json', 'public_file_sha256'),
+])
+def test_patch_records_retain_their_unchanged_historical_hash(name, manifest, key):
+    recorded = json.loads((ROOT/manifest).read_text(encoding='utf-8'))
+    assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest() == recorded[key][name]
+
+
+def test_checkout_scope_rejects_substantive_readme_edit(monkeypatch):
+    original = Path.read_bytes
+    def changed(path):
+        data = original(path)
+        return data+b'changed\n' if path == ROOT/'tutorial/README.md' else data
+    monkeypatch.setattr(Path, 'read_bytes', changed)
+    with pytest.raises(AssertionError, match='tutorial/README.md'):
+        assert_adabelief_phase_scope_v4()

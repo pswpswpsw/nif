@@ -16,6 +16,8 @@ ROOT=Path(__file__).resolve().parents[1]
 ARCHIVE=ROOT/'dev_tests/fixtures/adabelief_moment_v4'
 TRANSITIONS={
  'nif/optimizers/external_optimizers.py':[
+  ('                p.add_(direction, alpha=-lr)\n',
+   '                p.sub_(direction * lr)\n',1),
   ('    the reference; identical scalars are cached only within a step and group.\n',
    '    the reference; identical scalars are cached only within a step and group.\n'
    '    Moment coefficients subtract from one after casting beta to parameter dtype;\n'
@@ -74,6 +76,10 @@ def expected_source(name,source):
 
 
 def assert_adabelief_phase_scope_v4():
+    from dev_tests.publication_windows_scope import assert_teaching_helper_source
+    assert_teaching_helper_source(ROOT)
+    from dev_tests.tutorial1_gc_scope import assert_teaching_markdown_scope
+    teaching=assert_teaching_markdown_scope(ROOT)|{'dev_tests/tutorial1_gc_scope.py'}
     from dev_tests.publication_windows_scope import assert_publication_windows_scope_v2
     portable = assert_publication_windows_scope_v2(ROOT)
     archive=json.loads((ARCHIVE/'manifest.json').read_text(encoding='utf-8'))
@@ -93,7 +99,7 @@ def assert_adabelief_phase_scope_v4():
         # Publication v1: generated local outputs are not public prerequisites.
         if name.startswith('dev_tests/artifacts/'):
             continue
-        if name not in TRANSITIONS and name not in portable and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):
+        if name not in TRANSITIONS and name not in portable and name not in teaching and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):
             if name=='.gitattributes':
                 from dev_tests.publication_windows_scope import assert_checkout_attributes
                 assert_checkout_attributes(ROOT,digest)

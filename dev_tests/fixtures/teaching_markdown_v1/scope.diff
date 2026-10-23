@@ -1,0 +1,105 @@
+--- a/dev_tests/tutorial1_gc_scope.py
++++ b/dev_tests/tutorial1_gc_scope.py
+@@ -50,0 +51,7 @@
++    # Teaching v1 permits only the three independently validated T1 cells.
++    assert_teaching_markdown_scope(ROOT)
++    teaching=json.loads((ROOT/'dev_tests/teaching_markdown_v1.json').read_text(encoding='utf-8'))
++    for patch in teaching['notebooks']['tutorial/1_simple_1d_wave_pytorch.ipynb']['changes']:
++        cell=expected['cells'][patch['cell']]
++        assert cell['cell_type']=='markdown' and cell['source']==patch['before']
++        cell['source']=patch['after']
+@@ -58,0 +66,26 @@
++
++
++def assert_teaching_markdown_scope(root=ROOT):
++    """Validate precisely the eight published Markdown replacements as JSON."""
++    root=Path(root)
++    name='dev_tests/teaching_markdown_v1.json'
++    raw=(root/name).read_bytes()
++    assert hashlib.sha256(raw).hexdigest()=='aad2865228b9f93d9d47cd56c720f6c3fed56abb7ae1d430311970f0f428adfa',name
++    teaching=json.loads(raw)
++    for archive,digest in teaching['required_archives'].items():
++        assert hashlib.sha256((root/archive).read_bytes()).hexdigest()==digest,archive
++    assert len(teaching['notebooks'])==3
++    assert sum(len(entry['changes']) for entry in teaching['notebooks'].values())==8
++    for name,entry in teaching['notebooks'].items():
++        original=(root/entry['archive']).read_bytes()
++        assert hashlib.sha256(original).hexdigest()==entry['before_sha256'],name
++        expected=json.loads(original)
++        for patch in entry['changes']:
++            cell=expected['cells'][patch['cell']]
++            assert cell['cell_type']=='markdown',name
++            assert cell['source']==patch['before'],name
++            cell['source']=patch['after']
++        current=(root/name).read_bytes()
++        assert json.loads(current)==expected,name
++        assert hashlib.sha256(current).hexdigest()==entry['after_sha256'],name
++    return set(teaching['notebooks'])
+--- a/dev_tests/adabelief_moment_scope.py
++++ b/dev_tests/adabelief_moment_scope.py
+@@ -78,0 +79,4 @@
++    from dev_tests.publication_windows_scope import assert_teaching_helper_source
++    assert_teaching_helper_source(ROOT)
++    from dev_tests.tutorial1_gc_scope import assert_teaching_markdown_scope
++    teaching=assert_teaching_markdown_scope(ROOT)|{'dev_tests/tutorial1_gc_scope.py'}
+@@ -98 +102 @@
+-        if name not in TRANSITIONS and name not in portable and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):
++        if name not in TRANSITIONS and name not in portable and name not in teaching and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):
+--- a/dev_tests/test_tutorial1_gc_scope.py
++++ b/dev_tests/test_tutorial1_gc_scope.py
+@@ -17 +17,3 @@
+-                'tutorial/1_simple_1d_wave_pytorch.ipynb','docs/PYTORCH_CANDIDATE_REPORT.md'}
++                'tutorial/1_simple_1d_wave_pytorch.ipynb','docs/PYTORCH_CANDIDATE_REPORT.md',
++                'tutorial/5_large_scale_training_on_tensorflow_record_data_pytorch.ipynb',
++                'tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb'}
+--- a/dev_tests/publication_windows_scope.py
++++ b/dev_tests/publication_windows_scope.py
+@@ -80,0 +81,4 @@
++    if name in MARKDOWN_TRANSITIONS:
++        for old,new in MARKDOWN_TRANSITIONS[name]:
++            assert source.count(old)==1,(name,old)
++            source=source.replace(old,new,1)
+@@ -85,0 +90 @@
++    assert_teaching_helper_source(root)
+@@ -125,0 +131,16 @@
++
++
++MARKDOWN_TRANSITIONS={'dev_tests/adabelief_moment_scope.py': [('def assert_adabelief_phase_scope_v4():\n', "def assert_adabelief_phase_scope_v4():\n    from dev_tests.publication_windows_scope import assert_teaching_helper_source\n    assert_teaching_helper_source(ROOT)\n    from dev_tests.tutorial1_gc_scope import assert_teaching_markdown_scope\n    teaching=assert_teaching_markdown_scope(ROOT)|{'dev_tests/tutorial1_gc_scope.py'}\n"), ("        if name not in TRANSITIONS and name not in portable and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):", "        if name not in TRANSITIONS and name not in portable and name not in teaching and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):")], 'dev_tests/test_tutorial1_gc_scope.py': [("                'tutorial/1_simple_1d_wave_pytorch.ipynb','docs/PYTORCH_CANDIDATE_REPORT.md'}", "                'tutorial/1_simple_1d_wave_pytorch.ipynb','docs/PYTORCH_CANDIDATE_REPORT.md',\n                'tutorial/5_large_scale_training_on_tensorflow_record_data_pytorch.ipynb',\n                'tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb'}")], 'dev_tests/publication_projection.py': [("source/'dev_tests/publication_windows_v2_inventory.json'", "source/'dev_tests/teaching_markdown_v1_inventory.json'")]}
++
++
++def assert_teaching_helper_source(root=ROOT):
++    """Freeze the exact JSON validator and require its public provenance."""
++    root=Path(root)
++    name='dev_tests/tutorial1_gc_scope.py'
++    assert hashlib.sha256((root/name).read_bytes()).hexdigest()=='97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32',name
++    archive='dev_tests/fixtures/teaching_markdown_v1/tutorial1_gc_scope.py.before.txt'
++    assert hashlib.sha256((root/archive).read_bytes()).hexdigest()=='29fa494900a56d2a4875d3970fa262f2acddfccae0f0ebdc538a6fd869c585bb',archive
++    successors=json.loads((root/'dev_tests/teaching_markdown_v1_sources.json').read_text(encoding='utf-8'))
++    assert successors['source_before_sha256'][name]=='29fa494900a56d2a4875d3970fa262f2acddfccae0f0ebdc538a6fd869c585bb',name
++    assert successors['source_after_sha256'][name]=='97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32',name
++    assert (root/'dev_tests/fixtures/teaching_markdown_v1/scope.diff').read_bytes()
+--- a/dev_tests/test_publication_checkout_successor.py
++++ b/dev_tests/test_publication_checkout_successor.py
+@@ -14,0 +15,4 @@
++    teaching_changes=[(b'        source=source.replace(old,new,1)\n    return source\n', b'        source=source.replace(old,new,1)\n    if name in MARKDOWN_TRANSITIONS:\n        for old,new in MARKDOWN_TRANSITIONS[name]:\n            assert source.count(old)==1,(name,old)\n            source=source.replace(old,new,1)\n    return source\n'), (b'    root=Path(root)\n    archive=json.loads(', b'    root=Path(root)\n    assert_teaching_helper_source(root)\n    archive=json.loads('), (b"    assert hashlib.sha256(current[:-len(suffix)]).hexdigest()==digest,'.gitattributes'\n", b'    assert hashlib.sha256(current[:-len(suffix)]).hexdigest()==digest,\'.gitattributes\'\n\n\nMARKDOWN_TRANSITIONS={\'dev_tests/adabelief_moment_scope.py\': [(\'def assert_adabelief_phase_scope_v4():\\n\', "def assert_adabelief_phase_scope_v4():\\n    from dev_tests.publication_windows_scope import assert_teaching_helper_source\\n    assert_teaching_helper_source(ROOT)\\n    from dev_tests.tutorial1_gc_scope import assert_teaching_markdown_scope\\n    teaching=assert_teaching_markdown_scope(ROOT)|{\'dev_tests/tutorial1_gc_scope.py\'}\\n"), ("        if name not in TRANSITIONS and name not in portable and (name.startswith((\'nif/\',\'tutorial/\',\'dev_tests/\',\'tests/\')) or name==\'.gitattributes\'):", "        if name not in TRANSITIONS and name not in portable and name not in teaching and (name.startswith((\'nif/\',\'tutorial/\',\'dev_tests/\',\'tests/\')) or name==\'.gitattributes\'):")], \'dev_tests/test_tutorial1_gc_scope.py\': [("                \'tutorial/1_simple_1d_wave_pytorch.ipynb\',\'docs/PYTORCH_CANDIDATE_REPORT.md\'}", "                \'tutorial/1_simple_1d_wave_pytorch.ipynb\',\'docs/PYTORCH_CANDIDATE_REPORT.md\',\\n                \'tutorial/5_large_scale_training_on_tensorflow_record_data_pytorch.ipynb\',\\n                \'tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb\'}")], \'dev_tests/publication_projection.py\': [("source/\'dev_tests/publication_windows_v2_inventory.json\'", "source/\'dev_tests/teaching_markdown_v1_inventory.json\'")]}\n\n\ndef assert_teaching_helper_source(root=ROOT):\n    """Freeze the exact JSON validator and require its public provenance."""\n    root=Path(root)\n    name=\'dev_tests/tutorial1_gc_scope.py\'\n    assert hashlib.sha256((root/name).read_bytes()).hexdigest()==\'97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32\',name\n    archive=\'dev_tests/fixtures/teaching_markdown_v1/tutorial1_gc_scope.py.before.txt\'\n    assert hashlib.sha256((root/archive).read_bytes()).hexdigest()==\'29fa494900a56d2a4875d3970fa262f2acddfccae0f0ebdc538a6fd869c585bb\',archive\n    successors=json.loads((root/\'dev_tests/teaching_markdown_v1_sources.json\').read_text(encoding=\'utf-8\'))\n    assert successors[\'source_before_sha256\'][name]==\'29fa494900a56d2a4875d3970fa262f2acddfccae0f0ebdc538a6fd869c585bb\',name\n    assert successors[\'source_after_sha256\'][name]==\'97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32\',name\n    assert (root/\'dev_tests/fixtures/teaching_markdown_v1/scope.diff\').read_bytes()\n')]
++    for old,new in reversed(teaching_changes):
++        assert current.count(new)==1
++        current=current.replace(new,old,1)
+--- a/dev_tests/publication_projection.py
++++ b/dev_tests/publication_projection.py
+@@ -19 +19 @@
+-        files=json.loads((source/'dev_tests/publication_windows_v2_inventory.json').read_text(encoding='utf-8'))
++        files=json.loads((source/'dev_tests/teaching_markdown_v1_inventory.json').read_text(encoding='utf-8'))
+--- a/dev_tests/test_adabelief_final_update_successor.py
++++ b/dev_tests/test_adabelief_final_update_successor.py
+@@ -25,0 +26,10 @@
++    teaching=json.loads((ROOT/'dev_tests/teaching_markdown_v1_sources.json').read_text(encoding='utf-8'))
++    entries={key:teaching['ada_compatibility'][key] for key in ['dev_tests/adabelief_moment_scope.py', 'dev_tests/publication_windows_scope.py', 'dev_tests/test_publication_checkout_successor.py']}
++    assert hashlib.sha256(json.dumps(entries,sort_keys=True).encode()).hexdigest()=='69a0b3c1bc6394c36b1f7d4be69fd789fdb931cc7c0e91d635fd74ac950135b9'
++    entry=entries[name]
++    assert hashlib.sha256(current).hexdigest()==entry['after_sha256'],name
++    for patch in reversed(entry['transforms']):
++        old,new=patch['old'].encode(),patch['new'].encode()
++        assert current.count(new)==1
++        current=current.replace(new,old,1)
++    assert hashlib.sha256(current).hexdigest()==entry['before_sha256'],name

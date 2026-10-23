@@ -1,0 +1,148 @@
+{
+  "phase": "teaching-markdown-v1",
+  "teaching_record_sha256": "aad2865228b9f93d9d47cd56c720f6c3fed56abb7ae1d430311970f0f428adfa",
+  "source_before_sha256": {
+    "dev_tests/tutorial1_gc_scope.py": "29fa494900a56d2a4875d3970fa262f2acddfccae0f0ebdc538a6fd869c585bb",
+    "dev_tests/adabelief_moment_scope.py": "5c62cff5d458bd43c2662ec57ffc4d2a888ba149aff1cef427810a047e11a28b",
+    "dev_tests/test_tutorial1_gc_scope.py": "aca3f0e1f5174592cea5ae024a5d498a869e41ce71aa0c33f827112163d383a7",
+    "dev_tests/publication_windows_scope.py": "7ea130e215339a156311c6231c2766dc5ac22e65383e6673fc681bd4488077cb",
+    "dev_tests/test_publication_checkout_successor.py": "945c48e4c00e71243827c026f460f994067b42d3685df485558d2bf1fca03ec7",
+    "dev_tests/publication_projection.py": "ebdaaf1e4441b65c73b324b146c33ceda0cc0c8f9e8decd794cc79801f876e2f",
+    "dev_tests/test_adabelief_final_update_successor.py": "39365dc4f3116e2ada3cd7feb47a8e3167ee8011fd182649b154a646c6a54f47"
+  },
+  "source_after_sha256": {
+    "dev_tests/tutorial1_gc_scope.py": "97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32",
+    "dev_tests/adabelief_moment_scope.py": "715fdc8e6a1667168017bc701504b7ffe511fa01d5e8abe88864856282b5f943",
+    "dev_tests/test_tutorial1_gc_scope.py": "441e664ddfd35f07f96fce6364ef1109d07202db0da381e675f9f21efd150eec",
+    "dev_tests/publication_windows_scope.py": "368f1008d844d14b9f4854b2f8c125c69cebae286f3b007f6530f9a57f2bfa5f",
+    "dev_tests/test_publication_checkout_successor.py": "0e0a3bac364df2bb1e05217a475ac44dbc137842fe8a4882fcc4a420c36bfbc3",
+    "dev_tests/publication_projection.py": "4e62161579cd668aac7ff669e4ef013736f3a79f2a5bf1c92a2b66aab8f2807c",
+    "dev_tests/test_adabelief_final_update_successor.py": "2f2f394770973896ed1e5ead279b9c6721528c88b75dae27718dee8d7e93ea23"
+  },
+  "exact_transforms": {
+    "dev_tests/tutorial1_gc_scope.py": [
+      {
+        "old": "    assert len(changed)==2\n",
+        "new": "    assert len(changed)==2\n    # Teaching v1 permits only the three independently validated T1 cells.\n    assert_teaching_markdown_scope(ROOT)\n    teaching=json.loads((ROOT/'dev_tests/teaching_markdown_v1.json').read_text(encoding='utf-8'))\n    for patch in teaching['notebooks']['tutorial/1_simple_1d_wave_pytorch.ipynb']['changes']:\n        cell=expected['cells'][patch['cell']]\n        assert cell['cell_type']=='markdown' and cell['source']==patch['before']\n        cell['source']=patch['after']\n",
+        "count": 1
+      },
+      {
+        "old": "    assert (ROOT/'dev_tests/generate_native_notebooks.py').read_text(encoding='utf-8')==expected_generator\n",
+        "new": "    assert (ROOT/'dev_tests/generate_native_notebooks.py').read_text(encoding='utf-8')==expected_generator\n\n\ndef assert_teaching_markdown_scope(root=ROOT):\n    \"\"\"Validate precisely the eight published Markdown replacements as JSON.\"\"\"\n    root=Path(root)\n    name='dev_tests/teaching_markdown_v1.json'\n    raw=(root/name).read_bytes()\n    assert hashlib.sha256(raw).hexdigest()=='aad2865228b9f93d9d47cd56c720f6c3fed56abb7ae1d430311970f0f428adfa',name\n    teaching=json.loads(raw)\n    for archive,digest in teaching['required_archives'].items():\n        assert hashlib.sha256((root/archive).read_bytes()).hexdigest()==digest,archive\n    assert len(teaching['notebooks'])==3\n    assert sum(len(entry['changes']) for entry in teaching['notebooks'].values())==8\n    for name,entry in teaching['notebooks'].items():\n        original=(root/entry['archive']).read_bytes()\n        assert hashlib.sha256(original).hexdigest()==entry['before_sha256'],name\n        expected=json.loads(original)\n        for patch in entry['changes']:\n            cell=expected['cells'][patch['cell']]\n            assert cell['cell_type']=='markdown',name\n            assert cell['source']==patch['before'],name\n            cell['source']=patch['after']\n        current=(root/name).read_bytes()\n        assert json.loads(current)==expected,name\n        assert hashlib.sha256(current).hexdigest()==entry['after_sha256'],name\n    return set(teaching['notebooks'])\n",
+        "count": 1
+      }
+    ],
+    "dev_tests/adabelief_moment_scope.py": [
+      {
+        "old": "def assert_adabelief_phase_scope_v4():\n",
+        "new": "def assert_adabelief_phase_scope_v4():\n    from dev_tests.publication_windows_scope import assert_teaching_helper_source\n    assert_teaching_helper_source(ROOT)\n    from dev_tests.tutorial1_gc_scope import assert_teaching_markdown_scope\n    teaching=assert_teaching_markdown_scope(ROOT)|{'dev_tests/tutorial1_gc_scope.py'}\n",
+        "count": 1
+      },
+      {
+        "old": "        if name not in TRANSITIONS and name not in portable and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):",
+        "new": "        if name not in TRANSITIONS and name not in portable and name not in teaching and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):",
+        "count": 1
+      }
+    ],
+    "dev_tests/test_tutorial1_gc_scope.py": [
+      {
+        "old": "                'tutorial/1_simple_1d_wave_pytorch.ipynb','docs/PYTORCH_CANDIDATE_REPORT.md'}",
+        "new": "                'tutorial/1_simple_1d_wave_pytorch.ipynb','docs/PYTORCH_CANDIDATE_REPORT.md',\n                'tutorial/5_large_scale_training_on_tensorflow_record_data_pytorch.ipynb',\n                'tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb'}",
+        "count": 1
+      }
+    ],
+    "dev_tests/publication_windows_scope.py": [
+      {
+        "old": "        source=source.replace(old,new,1)\n    return source\n",
+        "new": "        source=source.replace(old,new,1)\n    if name in MARKDOWN_TRANSITIONS:\n        for old,new in MARKDOWN_TRANSITIONS[name]:\n            assert source.count(old)==1,(name,old)\n            source=source.replace(old,new,1)\n    return source\n",
+        "count": 1
+      },
+      {
+        "old": "    root=Path(root)\n    archive=json.loads(",
+        "new": "    root=Path(root)\n    assert_teaching_helper_source(root)\n    archive=json.loads(",
+        "count": 1
+      },
+      {
+        "old": "    assert hashlib.sha256(current[:-len(suffix)]).hexdigest()==digest,'.gitattributes'\n",
+        "new": "    assert hashlib.sha256(current[:-len(suffix)]).hexdigest()==digest,'.gitattributes'\n\n\nMARKDOWN_TRANSITIONS={'dev_tests/adabelief_moment_scope.py': [('def assert_adabelief_phase_scope_v4():\\n', \"def assert_adabelief_phase_scope_v4():\\n    from dev_tests.publication_windows_scope import assert_teaching_helper_source\\n    assert_teaching_helper_source(ROOT)\\n    from dev_tests.tutorial1_gc_scope import assert_teaching_markdown_scope\\n    teaching=assert_teaching_markdown_scope(ROOT)|{'dev_tests/tutorial1_gc_scope.py'}\\n\"), (\"        if name not in TRANSITIONS and name not in portable and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):\", \"        if name not in TRANSITIONS and name not in portable and name not in teaching and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):\")], 'dev_tests/test_tutorial1_gc_scope.py': [(\"                'tutorial/1_simple_1d_wave_pytorch.ipynb','docs/PYTORCH_CANDIDATE_REPORT.md'}\", \"                'tutorial/1_simple_1d_wave_pytorch.ipynb','docs/PYTORCH_CANDIDATE_REPORT.md',\\n                'tutorial/5_large_scale_training_on_tensorflow_record_data_pytorch.ipynb',\\n                'tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb'}\")], 'dev_tests/publication_projection.py': [(\"source/'dev_tests/publication_windows_v2_inventory.json'\", \"source/'dev_tests/teaching_markdown_v1_inventory.json'\")]}\n\n\ndef assert_teaching_helper_source(root=ROOT):\n    \"\"\"Freeze the exact JSON validator and require its public provenance.\"\"\"\n    root=Path(root)\n    name='dev_tests/tutorial1_gc_scope.py'\n    assert hashlib.sha256((root/name).read_bytes()).hexdigest()=='97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32',name\n    archive='dev_tests/fixtures/teaching_markdown_v1/tutorial1_gc_scope.py.before.txt'\n    assert hashlib.sha256((root/archive).read_bytes()).hexdigest()=='29fa494900a56d2a4875d3970fa262f2acddfccae0f0ebdc538a6fd869c585bb',archive\n    successors=json.loads((root/'dev_tests/teaching_markdown_v1_sources.json').read_text(encoding='utf-8'))\n    assert successors['source_before_sha256'][name]=='29fa494900a56d2a4875d3970fa262f2acddfccae0f0ebdc538a6fd869c585bb',name\n    assert successors['source_after_sha256'][name]=='97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32',name\n    assert (root/'dev_tests/fixtures/teaching_markdown_v1/scope.diff').read_bytes()\n",
+        "count": 1
+      }
+    ],
+    "dev_tests/test_publication_checkout_successor.py": [
+      {
+        "old": "    current=(ROOT/'dev_tests/publication_windows_scope.py').read_bytes()\n",
+        "new": "    current=(ROOT/'dev_tests/publication_windows_scope.py').read_bytes()\n    teaching_changes=[(b'        source=source.replace(old,new,1)\\n    return source\\n', b'        source=source.replace(old,new,1)\\n    if name in MARKDOWN_TRANSITIONS:\\n        for old,new in MARKDOWN_TRANSITIONS[name]:\\n            assert source.count(old)==1,(name,old)\\n            source=source.replace(old,new,1)\\n    return source\\n'), (b'    root=Path(root)\\n    archive=json.loads(', b'    root=Path(root)\\n    assert_teaching_helper_source(root)\\n    archive=json.loads('), (b\"    assert hashlib.sha256(current[:-len(suffix)]).hexdigest()==digest,'.gitattributes'\\n\", b'    assert hashlib.sha256(current[:-len(suffix)]).hexdigest()==digest,\\'.gitattributes\\'\\n\\n\\nMARKDOWN_TRANSITIONS={\\'dev_tests/adabelief_moment_scope.py\\': [(\\'def assert_adabelief_phase_scope_v4():\\\\n\\', \"def assert_adabelief_phase_scope_v4():\\\\n    from dev_tests.publication_windows_scope import assert_teaching_helper_source\\\\n    assert_teaching_helper_source(ROOT)\\\\n    from dev_tests.tutorial1_gc_scope import assert_teaching_markdown_scope\\\\n    teaching=assert_teaching_markdown_scope(ROOT)|{\\'dev_tests/tutorial1_gc_scope.py\\'}\\\\n\"), (\"        if name not in TRANSITIONS and name not in portable and (name.startswith((\\'nif/\\',\\'tutorial/\\',\\'dev_tests/\\',\\'tests/\\')) or name==\\'.gitattributes\\'):\", \"        if name not in TRANSITIONS and name not in portable and name not in teaching and (name.startswith((\\'nif/\\',\\'tutorial/\\',\\'dev_tests/\\',\\'tests/\\')) or name==\\'.gitattributes\\'):\")], \\'dev_tests/test_tutorial1_gc_scope.py\\': [(\"                \\'tutorial/1_simple_1d_wave_pytorch.ipynb\\',\\'docs/PYTORCH_CANDIDATE_REPORT.md\\'}\", \"                \\'tutorial/1_simple_1d_wave_pytorch.ipynb\\',\\'docs/PYTORCH_CANDIDATE_REPORT.md\\',\\\\n                \\'tutorial/5_large_scale_training_on_tensorflow_record_data_pytorch.ipynb\\',\\\\n                \\'tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb\\'}\")], \\'dev_tests/publication_projection.py\\': [(\"source/\\'dev_tests/publication_windows_v2_inventory.json\\'\", \"source/\\'dev_tests/teaching_markdown_v1_inventory.json\\'\")]}\\n\\n\\ndef assert_teaching_helper_source(root=ROOT):\\n    \"\"\"Freeze the exact JSON validator and require its public provenance.\"\"\"\\n    root=Path(root)\\n    name=\\'dev_tests/tutorial1_gc_scope.py\\'\\n    assert hashlib.sha256((root/name).read_bytes()).hexdigest()==\\'97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32\\',name\\n    archive=\\'dev_tests/fixtures/teaching_markdown_v1/tutorial1_gc_scope.py.before.txt\\'\\n    assert hashlib.sha256((root/archive).read_bytes()).hexdigest()==\\'29fa494900a56d2a4875d3970fa262f2acddfccae0f0ebdc538a6fd869c585bb\\',archive\\n    successors=json.loads((root/\\'dev_tests/teaching_markdown_v1_sources.json\\').read_text(encoding=\\'utf-8\\'))\\n    assert successors[\\'source_before_sha256\\'][name]==\\'29fa494900a56d2a4875d3970fa262f2acddfccae0f0ebdc538a6fd869c585bb\\',name\\n    assert successors[\\'source_after_sha256\\'][name]==\\'97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32\\',name\\n    assert (root/\\'dev_tests/fixtures/teaching_markdown_v1/scope.diff\\').read_bytes()\\n')]\n    for old,new in reversed(teaching_changes):\n        assert current.count(new)==1\n        current=current.replace(new,old,1)\n",
+        "count": 1
+      }
+    ],
+    "dev_tests/publication_projection.py": [
+      {
+        "old": "source/'dev_tests/publication_windows_v2_inventory.json'",
+        "new": "source/'dev_tests/teaching_markdown_v1_inventory.json'",
+        "count": 1
+      }
+    ],
+    "dev_tests/test_adabelief_final_update_successor.py": [
+      {
+        "old": "    current=(ROOT/name).read_bytes()\n",
+        "new": "    current=(ROOT/name).read_bytes()\n    teaching=json.loads((ROOT/'dev_tests/teaching_markdown_v1_sources.json').read_text(encoding='utf-8'))\n    entries={key:teaching['ada_compatibility'][key] for key in ['dev_tests/adabelief_moment_scope.py', 'dev_tests/publication_windows_scope.py', 'dev_tests/test_publication_checkout_successor.py']}\n    assert hashlib.sha256(json.dumps(entries,sort_keys=True).encode()).hexdigest()=='69a0b3c1bc6394c36b1f7d4be69fd789fdb931cc7c0e91d635fd74ac950135b9'\n    entry=entries[name]\n    assert hashlib.sha256(current).hexdigest()==entry['after_sha256'],name\n    for patch in reversed(entry['transforms']):\n        old,new=patch['old'].encode(),patch['new'].encode()\n        assert current.count(new)==1\n        current=current.replace(new,old,1)\n    assert hashlib.sha256(current).hexdigest()==entry['before_sha256'],name\n",
+        "count": 1
+      }
+    ]
+  },
+  "ada_compatibility": {
+    "dev_tests/adabelief_moment_scope.py": {
+      "before_sha256": "5c62cff5d458bd43c2662ec57ffc4d2a888ba149aff1cef427810a047e11a28b",
+      "after_sha256": "715fdc8e6a1667168017bc701504b7ffe511fa01d5e8abe88864856282b5f943",
+      "transforms": [
+        {
+          "old": "def assert_adabelief_phase_scope_v4():\n",
+          "new": "def assert_adabelief_phase_scope_v4():\n    from dev_tests.publication_windows_scope import assert_teaching_helper_source\n    assert_teaching_helper_source(ROOT)\n    from dev_tests.tutorial1_gc_scope import assert_teaching_markdown_scope\n    teaching=assert_teaching_markdown_scope(ROOT)|{'dev_tests/tutorial1_gc_scope.py'}\n",
+          "count": 1
+        },
+        {
+          "old": "        if name not in TRANSITIONS and name not in portable and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):",
+          "new": "        if name not in TRANSITIONS and name not in portable and name not in teaching and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):",
+          "count": 1
+        }
+      ]
+    },
+    "dev_tests/publication_windows_scope.py": {
+      "before_sha256": "7ea130e215339a156311c6231c2766dc5ac22e65383e6673fc681bd4488077cb",
+      "after_sha256": "368f1008d844d14b9f4854b2f8c125c69cebae286f3b007f6530f9a57f2bfa5f",
+      "transforms": [
+        {
+          "old": "        source=source.replace(old,new,1)\n    return source\n",
+          "new": "        source=source.replace(old,new,1)\n    if name in MARKDOWN_TRANSITIONS:\n        for old,new in MARKDOWN_TRANSITIONS[name]:\n            assert source.count(old)==1,(name,old)\n            source=source.replace(old,new,1)\n    return source\n",
+          "count": 1
+        },
+        {
+          "old": "    root=Path(root)\n    archive=json.loads(",
+          "new": "    root=Path(root)\n    assert_teaching_helper_source(root)\n    archive=json.loads(",
+          "count": 1
+        },
+        {
+          "old": "    assert hashlib.sha256(current[:-len(suffix)]).hexdigest()==digest,'.gitattributes'\n",
+          "new": "    assert hashlib.sha256(current[:-len(suffix)]).hexdigest()==digest,'.gitattributes'\n\n\nMARKDOWN_TRANSITIONS={'dev_tests/adabelief_moment_scope.py': [('def assert_adabelief_phase_scope_v4():\\n', \"def assert_adabelief_phase_scope_v4():\\n    from dev_tests.publication_windows_scope import assert_teaching_helper_source\\n    assert_teaching_helper_source(ROOT)\\n    from dev_tests.tutorial1_gc_scope import assert_teaching_markdown_scope\\n    teaching=assert_teaching_markdown_scope(ROOT)|{'dev_tests/tutorial1_gc_scope.py'}\\n\"), (\"        if name not in TRANSITIONS and name not in portable and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):\", \"        if name not in TRANSITIONS and name not in portable and name not in teaching and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):\")], 'dev_tests/test_tutorial1_gc_scope.py': [(\"                'tutorial/1_simple_1d_wave_pytorch.ipynb','docs/PYTORCH_CANDIDATE_REPORT.md'}\", \"                'tutorial/1_simple_1d_wave_pytorch.ipynb','docs/PYTORCH_CANDIDATE_REPORT.md',\\n                'tutorial/5_large_scale_training_on_tensorflow_record_data_pytorch.ipynb',\\n                'tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb'}\")], 'dev_tests/publication_projection.py': [(\"source/'dev_tests/publication_windows_v2_inventory.json'\", \"source/'dev_tests/teaching_markdown_v1_inventory.json'\")]}\n\n\ndef assert_teaching_helper_source(root=ROOT):\n    \"\"\"Freeze the exact JSON validator and require its public provenance.\"\"\"\n    root=Path(root)\n    name='dev_tests/tutorial1_gc_scope.py'\n    assert hashlib.sha256((root/name).read_bytes()).hexdigest()=='97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32',name\n    archive='dev_tests/fixtures/teaching_markdown_v1/tutorial1_gc_scope.py.before.txt'\n    assert hashlib.sha256((root/archive).read_bytes()).hexdigest()=='29fa494900a56d2a4875d3970fa262f2acddfccae0f0ebdc538a6fd869c585bb',archive\n    successors=json.loads((root/'dev_tests/teaching_markdown_v1_sources.json').read_text(encoding='utf-8'))\n    assert successors['source_before_sha256'][name]=='29fa494900a56d2a4875d3970fa262f2acddfccae0f0ebdc538a6fd869c585bb',name\n    assert successors['source_after_sha256'][name]=='97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32',name\n    assert (root/'dev_tests/fixtures/teaching_markdown_v1/scope.diff').read_bytes()\n",
+          "count": 1
+        }
+      ]
+    },
+    "dev_tests/test_publication_checkout_successor.py": {
+      "before_sha256": "945c48e4c00e71243827c026f460f994067b42d3685df485558d2bf1fca03ec7",
+      "after_sha256": "0e0a3bac364df2bb1e05217a475ac44dbc137842fe8a4882fcc4a420c36bfbc3",
+      "transforms": [
+        {
+          "old": "    current=(ROOT/'dev_tests/publication_windows_scope.py').read_bytes()\n",
+          "new": "    current=(ROOT/'dev_tests/publication_windows_scope.py').read_bytes()\n    teaching_changes=[(b'        source=source.replace(old,new,1)\\n    return source\\n', b'        source=source.replace(old,new,1)\\n    if name in MARKDOWN_TRANSITIONS:\\n        for old,new in MARKDOWN_TRANSITIONS[name]:\\n            assert source.count(old)==1,(name,old)\\n            source=source.replace(old,new,1)\\n    return source\\n'), (b'    root=Path(root)\\n    archive=json.loads(', b'    root=Path(root)\\n    assert_teaching_helper_source(root)\\n    archive=json.loads('), (b\"    assert hashlib.sha256(current[:-len(suffix)]).hexdigest()==digest,'.gitattributes'\\n\", b'    assert hashlib.sha256(current[:-len(suffix)]).hexdigest()==digest,\\'.gitattributes\\'\\n\\n\\nMARKDOWN_TRANSITIONS={\\'dev_tests/adabelief_moment_scope.py\\': [(\\'def assert_adabelief_phase_scope_v4():\\\\n\\', \"def assert_adabelief_phase_scope_v4():\\\\n    from dev_tests.publication_windows_scope import assert_teaching_helper_source\\\\n    assert_teaching_helper_source(ROOT)\\\\n    from dev_tests.tutorial1_gc_scope import assert_teaching_markdown_scope\\\\n    teaching=assert_teaching_markdown_scope(ROOT)|{\\'dev_tests/tutorial1_gc_scope.py\\'}\\\\n\"), (\"        if name not in TRANSITIONS and name not in portable and (name.startswith((\\'nif/\\',\\'tutorial/\\',\\'dev_tests/\\',\\'tests/\\')) or name==\\'.gitattributes\\'):\", \"        if name not in TRANSITIONS and name not in portable and name not in teaching and (name.startswith((\\'nif/\\',\\'tutorial/\\',\\'dev_tests/\\',\\'tests/\\')) or name==\\'.gitattributes\\'):\")], \\'dev_tests/test_tutorial1_gc_scope.py\\': [(\"                \\'tutorial/1_simple_1d_wave_pytorch.ipynb\\',\\'docs/PYTORCH_CANDIDATE_REPORT.md\\'}\", \"                \\'tutorial/1_simple_1d_wave_pytorch.ipynb\\',\\'docs/PYTORCH_CANDIDATE_REPORT.md\\',\\\\n                \\'tutorial/5_large_scale_training_on_tensorflow_record_data_pytorch.ipynb\\',\\\\n                \\'tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb\\'}\")], \\'dev_tests/publication_projection.py\\': [(\"source/\\'dev_tests/publication_windows_v2_inventory.json\\'\", \"source/\\'dev_tests/teaching_markdown_v1_inventory.json\\'\")]}\\n\\n\\ndef assert_teaching_helper_source(root=ROOT):\\n    \"\"\"Freeze the exact JSON validator and require its public provenance.\"\"\"\\n    root=Path(root)\\n    name=\\'dev_tests/tutorial1_gc_scope.py\\'\\n    assert hashlib.sha256((root/name).read_bytes()).hexdigest()==\\'97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32\\',name\\n    archive=\\'dev_tests/fixtures/teaching_markdown_v1/tutorial1_gc_scope.py.before.txt\\'\\n    assert hashlib.sha256((root/archive).read_bytes()).hexdigest()==\\'29fa494900a56d2a4875d3970fa262f2acddfccae0f0ebdc538a6fd869c585bb\\',archive\\n    successors=json.loads((root/\\'dev_tests/teaching_markdown_v1_sources.json\\').read_text(encoding=\\'utf-8\\'))\\n    assert successors[\\'source_before_sha256\\'][name]==\\'29fa494900a56d2a4875d3970fa262f2acddfccae0f0ebdc538a6fd869c585bb\\',name\\n    assert successors[\\'source_after_sha256\\'][name]==\\'97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32\\',name\\n    assert (root/\\'dev_tests/fixtures/teaching_markdown_v1/scope.diff\\').read_bytes()\\n')]\n    for old,new in reversed(teaching_changes):\n        assert current.count(new)==1\n        current=current.replace(new,old,1)\n",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "inventory_sha256": "d292df62ee2ba7fdee746070bf8f441259ddcbf42545c1b662c65e89168df631",
+  "diff_path": "dev_tests/fixtures/teaching_markdown_v1/scope.diff",
+  "diff_sha256": "d2f8a92755431a23cd8bdea9f248d00944a9858e6d3519a2c4e54082d94a7616",
+  "frozen_parameter_stage_test_sha256": "f6f863a180a72377c262a18393506a4cd3dcc2f687a5f0a642cfd1cf38da28a6",
+  "frozen_ada_record_sha256": "c57a3387831a0d6b31eab168ce629bcc208f19d638bba535b0e00b3fd2196b10"
+}

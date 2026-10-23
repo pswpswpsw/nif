@@ -14,7 +14,9 @@ def test_tutorial1_gc_only_changes_call_selector_and_teaching_note():
 def test_other_notebooks_package_sources_and_frozen_expectations_phase_v4():
     previous=json.loads((ROOT/'dev_tests/tutorial1_gc_pre_fix_fingerprints.json').read_text(encoding='utf-8'))
     authorized={'dev_tests/test_pruning_adam_state.py','dev_tests/generate_native_notebooks.py',
-                'tutorial/1_simple_1d_wave_pytorch.ipynb','docs/PYTORCH_CANDIDATE_REPORT.md'}
+                'tutorial/1_simple_1d_wave_pytorch.ipynb','docs/PYTORCH_CANDIDATE_REPORT.md',
+                'tutorial/5_large_scale_training_on_tensorflow_record_data_pytorch.ipynb',
+                'tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb'}
     # Coordinator documentation may evolve independently; our implementation scope
     # check covers all notebook/package/data/reference and prior public test files.
     # V4 adds only dtype moments/historical replay; numerical goldens stay fixed.

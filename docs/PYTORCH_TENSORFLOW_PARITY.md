@@ -354,19 +354,26 @@ All twelve original full-training field/Jacobian failures remain unchanged.
 
 ### Candidate 016: complete tutorial 3 revalidation still fails
 
-After the staged AdaBelief update correction, native seed 42 completes the
-original 600 epochs, 112,800 updates and 115,065,000 row visits. The actual
-row-ID sequence matches the frozen order, and all 1,824 prefix checks pass.
-All three original MSE gates pass: weighted normalized MSE is
-0.00144493683520945, against TensorFlow's 0.00149056202153376; physical
-component MSEs are 0.0330707510 and 0.0744900344.
+After the staged AdaBelief update correction, native seeds 42, 1729 and 2718
+each complete the original 600 epochs, 112,800 updates and 115,065,000 row
+visits, compared with their frozen TensorFlow references. Actual consumed
+row-ID sequences match the frozen orders, and all 5,472 prefix checks pass.
+All nine original MSE gates pass, including the weighted normalized MSE and
+both physical component MSEs for each pair.
 
-The four original paired-field/derivative gates still fail. Paired u/v field
-NRMSE is 0.10424254 / 0.08071300, above 0.05; input-Jacobian relative RMS is
-0.24229314 / 0.16823285, above 0.10. Independent saved-array calculations
-reproduce these field and Jacobian distances. Thus the local optimizer
-regression passes, but this complete training result does not pass the
-original acceptance criteria. Further revalidation remains required.
+| Seed | TensorFlow weighted MSE | PyTorch weighted MSE | Paired u/v field NRMSE | u/v Jacobian relative RMS |
+|---|---:|---:|---|---|
+| 42 | 0.00149056202 | 0.00144493684 | 0.10424254 / 0.08071300 | 0.24229314 / 0.16823285 |
+| 1729 | 0.00064450516 | 0.00063270773 | 0.11041576 / 0.08414305 | 0.26798610 / 0.17995844 |
+| 2718 | 0.00148514221 | 0.00152167278 | 0.12537044 / 0.10453710 | 0.29897455 / 0.22360369 |
+
+All twelve original paired-field/derivative gates still fail: each field
+NRMSE exceeds 0.05, and each input-Jacobian relative RMS exceeds 0.10.
+Independent saved-array calculations reproduce these distances for all three
+pairs. The local optimizer regression passes, but complete tutorial 3 training
+still fails the original acceptance criteria. These results do not establish
+the cause of the remaining divergence. The earlier candidate 014 failures
+remain recorded separately above.
 
 ### Tutorial 1: first complete AdaBelief pair
 

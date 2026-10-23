@@ -1,0 +1,15 @@
+{
+  "checkout": "D:\\nif\\dev_tests\\artifacts\\checkout-eol-full-native-2qrn3xch\\checkout",
+  "base_commit": "5dcba14b36829376ed7e1276a5e533b87d4820b8",
+  "autocrlf": "true",
+  "staged_candidate_files": [
+    ".gitattributes",
+    "dev_tests/publication_windows_scope.py",
+    "dev_tests/adabelief_moment_scope.py",
+    "dev_tests/test_publication_checkout_eol.py",
+    "dev_tests/fixtures/publication_checkout_v3/publication_windows_scope.py.txt",
+    "dev_tests/test_publication_checkout_successor.py"
+  ],
+  "python": "C:\\Users\\pswpe\\.cache\\nif-pytorch-evaluation\\env\\Scripts\\python.exe",
+  "platform": "win32"
+}

@@ -1,0 +1,153 @@
+F.                                                                       [100%]
+================================== FAILURES ===================================
+________ test_real_git_checkout_with_autocrlf_true_preserves_integrity ________
+
+tmp_path = WindowsPath('D:/nif/dev_tests/artifacts/checkout-eol-red-native-20261023-a/test_real_git_checkout_with_au0')
+
+    def test_real_git_checkout_with_autocrlf_true_preserves_integrity(tmp_path):
+        if not shutil.which('git') or not (ROOT/'.git').exists():
+            pytest.skip('integration requires a Git source checkout and installed Git')
+        checkout = tmp_path/'checkout'
+        git('-c', 'core.autocrlf=true', 'clone', '--no-checkout', '--no-hardlinks',
+            str(ROOT), str(checkout))
+        git('config', 'core.autocrlf', 'true', cwd=checkout)
+        git('read-tree', 'HEAD', cwd=checkout)
+        # Stage just the explicit candidate without commits or source-repo writes.
+        # checkout-index then performs Git's actual index-to-worktree conversion.
+        for name in CANDIDATE_FILES:
+            oid = git('hash-object', '-w', '--no-filters', '--stdin', cwd=checkout,
+                      data=(ROOT/name).read_bytes())
+            git('update-index', '--add', '--cacheinfo', '100644', oid, name, cwd=checkout)
+        git('checkout-index', '--all', '--force', cwd=checkout)
+        assert git('config', '--get', 'core.autocrlf', cwd=checkout) == 'true'
+        differences = [name for name in BYTE_EXACT
+                       if (checkout/name).read_bytes() != (ROOT/name).read_bytes()]
+        result = subprocess.run([
+            sys.executable, '-m', 'pytest', '-q',
+            'dev_tests/test_adabelief_boundary_succession.py::test_scope_v4_exact_successor_and_utf8_under_gbk_default',
+            'dev_tests/test_publication_scope.py::test_clean_public_scope_runs_without_git_or_generated_outputs',
+            'dev_tests/test_tutorial1_gc_scope.py::test_other_notebooks_package_sources_and_frozen_expectations_phase_v4',
+            '--basetemp', str(tmp_path/'scope-pytest'),
+        ], cwd=checkout, env={**os.environ, 'CUDA_VISIBLE_DEVICES': ''},
+           capture_output=True, text=True, encoding='utf-8')
+>       assert not differences and result.returncode == 0, (
+            f'Git checkout byte deltas: {differences}\n{result.stdout}\n{result.stderr}')
+E       AssertionError: Git checkout byte deltas: ['tutorial/README.md', 'dev_tests/adabelief_moment_scope.diff', 'dev_tests/publication_v1_scope.diff', 'dev_tests/publication_windows_v2_scope.diff']
+E         FFF                                                                      [100%]
+E         ================================== FAILURES ===================================
+E         __________ test_scope_v4_exact_successor_and_utf8_under_gbk_default ___________
+E         
+E         monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000138CF60AD70>
+E         
+E             def test_scope_v4_exact_successor_and_utf8_under_gbk_default(monkeypatch):
+E                 original=Path.read_text
+E                 def gbk_default(path,encoding=None,errors=None,**kwargs):
+E                     return original(path,encoding=encoding or 'gbk',errors=errors,**kwargs)
+E                 monkeypatch.setattr(Path,'read_text',gbk_default)
+E         >       assert assert_adabelief_phase_scope_v4()=={
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E                     'nif/optimizers/external_optimizers.py','dev_tests/test_public_api_regressions.py',
+E                     'dev_tests/test_tutorial1_gc_scope.py','dev_tests/tutorial1_gc_scope.py',
+E                     'dev_tests/test_adabelief_dtype_preservation.py',
+E                     'dev_tests/test_adabelief_boundary_succession.py',
+E                     'dev_tests/test_pruning_adam_state.py','dev_tests/test_tutorial1_gc_behavior.py',
+E                     'dev_tests/test_publication_scope.py','dev_tests/test_publication_transition.py',
+E                     'dev_tests/adabelief_moment_scope.py','dev_tests/publication_projection.py'}
+E         
+E         dev_tests\test_adabelief_boundary_succession.py:60: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+E         
+E             def assert_adabelief_phase_scope_v4():
+E                 from dev_tests.publication_windows_scope import assert_publication_windows_scope_v2
+E                 portable = assert_publication_windows_scope_v2(ROOT)
+E                 archive=json.loads((ARCHIVE/'manifest.json').read_text(encoding='utf-8'))
+E                 previous=json.loads((ROOT/'dev_tests/adabelief_boundary_candidate_manifest.json').read_text(encoding='utf-8'))
+E                 for name,entry in archive.items():
+E                     data=(ROOT/entry['archive']).read_bytes()
+E                     assert hashlib.sha256(data).hexdigest()==entry['sha256'],name
+E                     if name in previous['source_sha256']:
+E                         assert entry['sha256']==previous['source_sha256'][name],name
+E                 for name in TRANSITIONS:
+E                     if name in portable:
+E                         continue  # Already checked against the exact archived successor.
+E                     source=(ROOT/archive[name]['archive']).read_text(encoding='utf-8')
+E                     assert (ROOT/name).read_text(encoding='utf-8')==expected_source(name,source),name
+E                 before=json.loads((ROOT/'dev_tests/adabelief_moment_pre_fix_fingerprints.json').read_text(encoding='utf-8'))
+E                 for name,digest in before.items():
+E                     # Publication v1: generated local outputs are not public prerequisites.
+E                     if name.startswith('dev_tests/artifacts/'):
+E                         continue
+E                     if name not in TRANSITIONS and name not in portable and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):
+E         >               assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,name
+E                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         E               AssertionError: tutorial/README.md
+E         
+E         dev_tests\adabelief_moment_scope.py:97: AssertionError
+E         ________ test_clean_public_scope_runs_without_git_or_generated_outputs ________
+E         
+E         public_root = WindowsPath('D:/nif/dev_tests/artifacts/checkout-eol-red-native-20261023-a/test_real_git_checkout_with_au0/scope-pytest/public_projection0')
+E         
+E             def test_clean_public_scope_runs_without_git_or_generated_outputs(public_root):
+E                 result=scope_result(public_root)
+E         >       assert result.get('passed'),result
+E         E       AssertionError: {'error': 'AssertionError', 'detail': 'tutorial/README.md', 'filename': None}
+E         E       assert None
+E         E        +  where None = <built-in method get of dict object at 0x00000138CF762E00>('passed')
+E         E        +    where <built-in method get of dict object at 0x00000138CF762E00> = {'error': 'AssertionError', 'detail': 'tutorial/README.md', 'filename': None}.get
+E         
+E         dev_tests\test_publication_scope.py:54: AssertionError
+E         ____ test_other_notebooks_package_sources_and_frozen_expectations_phase_v4 ____
+E         
+E             def test_other_notebooks_package_sources_and_frozen_expectations_phase_v4():
+E                 previous=json.loads((ROOT/'dev_tests/tutorial1_gc_pre_fix_fingerprints.json').read_text(encoding='utf-8'))
+E                 authorized={'dev_tests/test_pruning_adam_state.py','dev_tests/generate_native_notebooks.py',
+E                             'tutorial/1_simple_1d_wave_pytorch.ipynb','docs/PYTORCH_CANDIDATE_REPORT.md'}
+E                 # Coordinator documentation may evolve independently; our implementation scope
+E                 # check covers all notebook/package/data/reference and prior public test files.
+E                 # V4 adds only dtype moments/historical replay; numerical goldens stay fixed.
+E                 from dev_tests.adabelief_moment_scope import assert_adabelief_phase_scope_v4
+E         >       superseded = assert_adabelief_phase_scope_v4()
+E                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         
+E         dev_tests\test_tutorial1_gc_scope.py:22: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+E         
+E             def assert_adabelief_phase_scope_v4():
+E                 from dev_tests.publication_windows_scope import assert_publication_windows_scope_v2
+E                 portable = assert_publication_windows_scope_v2(ROOT)
+E                 archive=json.loads((ARCHIVE/'manifest.json').read_text(encoding='utf-8'))
+E                 previous=json.loads((ROOT/'dev_tests/adabelief_boundary_candidate_manifest.json').read_text(encoding='utf-8'))
+E                 for name,entry in archive.items():
+E                     data=(ROOT/entry['archive']).read_bytes()
+E                     assert hashlib.sha256(data).hexdigest()==entry['sha256'],name
+E                     if name in previous['source_sha256']:
+E                         assert entry['sha256']==previous['source_sha256'][name],name
+E                 for name in TRANSITIONS:
+E                     if name in portable:
+E                         continue  # Already checked against the exact archived successor.
+E                     source=(ROOT/archive[name]['archive']).read_text(encoding='utf-8')
+E                     assert (ROOT/name).read_text(encoding='utf-8')==expected_source(name,source),name
+E                 before=json.loads((ROOT/'dev_tests/adabelief_moment_pre_fix_fingerprints.json').read_text(encoding='utf-8'))
+E                 for name,digest in before.items():
+E                     # Publication v1: generated local outputs are not public prerequisites.
+E                     if name.startswith('dev_tests/artifacts/'):
+E                         continue
+E                     if name not in TRANSITIONS and name not in portable and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):
+E         >               assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,name
+E                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         E               AssertionError: tutorial/README.md
+E         
+E         dev_tests\adabelief_moment_scope.py:97: AssertionError
+E         =========================== short test summary info ===========================
+E         FAILED dev_tests/test_adabelief_boundary_succession.py::test_scope_v4_exact_successor_and_utf8_under_gbk_default
+E         FAILED dev_tests/test_publication_scope.py::test_clean_public_scope_runs_without_git_or_generated_outputs
+E         FAILED dev_tests/test_tutorial1_gc_scope.py::test_other_notebooks_package_sources_and_frozen_expectations_phase_v4
+E         3 failed in 4.61s
+E         
+E         
+E       assert (not ['tutorial/README.md', 'dev_tests/adabelief_moment_scope.diff', 'dev_tests/publication_v1_scope.diff', 'dev_tests/publication_windows_v2_scope.diff'])
+
+dev_tests\test_publication_checkout_eol.py:60: AssertionError
+=========================== short test summary info ===========================
+FAILED dev_tests/test_publication_checkout_eol.py::test_real_git_checkout_with_autocrlf_true_preserves_integrity
+1 failed, 1 passed in 10.11s

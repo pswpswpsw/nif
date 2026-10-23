@@ -94,7 +94,11 @@ def assert_adabelief_phase_scope_v4():
         if name.startswith('dev_tests/artifacts/'):
             continue
         if name not in TRANSITIONS and name not in portable and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):
-            assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,name
+            if name=='.gitattributes':
+                from dev_tests.publication_windows_scope import assert_checkout_attributes
+                assert_checkout_attributes(ROOT,digest)
+            else:
+                assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,name
     # Freeze the new oracle at its BEFORE-fix hash. The native source entry in
     # that RED manifest identifies the original snapshot, not the new candidate.
     red=json.loads((ROOT/'dev_tests/adabelief_moment_red_fingerprints.json').read_text(encoding='utf-8'))

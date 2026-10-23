@@ -1,0 +1,186 @@
+{
+  "phase": "publication-checkout-v3",
+  "base_commit": "5dcba14b36829376ed7e1276a5e533b87d4820b8",
+  "source_before_sha256": {
+    ".gitattributes": "e0c742620f55b484167422a1e2934de4e23eac8d41382b36b841b5be9a15b1a2",
+    "dev_tests/adabelief_moment_scope.py": "647c2e4be5db58305b80122d55473c700ee8392a70cb6f4208c8c8de4aef6687",
+    "dev_tests/publication_windows_scope.py": "39d7780ffe31d570cc2aabefd2b7dfffc4cd3fac1310adfa68ad409831136b1e"
+  },
+  "source_after_sha256": {
+    ".gitattributes": "281e29eb207cf48481c96b16a236192ce350eca94f2ea977ae7c25be9222086e",
+    "dev_tests/adabelief_moment_scope.py": "1e1012bde296539af0b36fc88a7bbcee2d57ee2e2c9c2354e2dcc6df6098c466",
+    "dev_tests/publication_windows_scope.py": "5e056ad1626384b96d9dca4ffa67dc1d5ed3a6807a52944f633b873ea5cff431",
+    "dev_tests/test_publication_checkout_eol.py": "16fba47f7c12800fa2179818e25872afc480c7b3efcc176cd021f44e39d36860",
+    "dev_tests/test_publication_checkout_successor.py": "bd0d10b6172ce0f0f9acade7ff3a4de2c629a13b89cc34860d548b54b3826888",
+    "dev_tests/fixtures/publication_checkout_v3/publication_windows_scope.py.txt": "39d7780ffe31d570cc2aabefd2b7dfffc4cd3fac1310adfa68ad409831136b1e"
+  },
+  "unchanged_red_regression_sha256": "16fba47f7c12800fa2179818e25872afc480c7b3efcc176cd021f44e39d36860",
+  "evidence_sha256": {
+    "dev_tests/publication_checkout_v3_red.log": "1cb2d1587581dd1d5c52a0ae11a61e3e65ac8be69ab4d5b7fb083f6d049a7454",
+    "dev_tests/publication_checkout_v3_red_native.log": "da8f9c7550fd304e661e6d9c7c1c73d7b7317370efbea8efbf2c0b63e6f2ee5a",
+    "dev_tests/publication_checkout_v3_green.log": "8a2ecc3d4fb502e803573436de8870922909b38157c7cf09935223b24d164776",
+    "dev_tests/publication_checkout_v3_successor_green.log": "f4cda9e14392d1b54ff71b5db7c69b85265cff308f9065e46be91a6e96c168dc",
+    "dev_tests/publication_checkout_v3_full.log": "9acb6ac9208b7a1b67e7ccbdf892abfed40f26cd3b7342cacd7d80e9a28142a7",
+    "dev_tests/publication_checkout_v3_full_checkout.json": "91534aa7d22d00fc25222951e63b43800bd6a3514df5361b0bd6457abbbb645a",
+    "dev_tests/publication_checkout_v3_lf_green.log": "0db604c7ac736582fca08181bf077508ef89e1a75e0da19c79ad1c536af4252e",
+    "dev_tests/PUBLICATION_CHECKOUT_V3.md": "1f3a6edec781aebb259b3f4721422b908d0d83a363cf3adb209559ced9edaa78",
+    "dev_tests/publication_checkout_v3_scope.md": "4aec31896a87674983e10941d6b782d82967b3df4b94097ef148e6d9785254c1"
+  },
+  "all_owned_files": [
+    ".gitattributes",
+    "dev_tests/adabelief_moment_scope.py",
+    "dev_tests/publication_windows_scope.py",
+    "dev_tests/test_publication_checkout_eol.py",
+    "dev_tests/test_publication_checkout_successor.py",
+    "dev_tests/fixtures/publication_checkout_v3/publication_windows_scope.py.txt",
+    "dev_tests/publication_checkout_v3_red.log",
+    "dev_tests/publication_checkout_v3_red_native.log",
+    "dev_tests/publication_checkout_v3_green.log",
+    "dev_tests/publication_checkout_v3_successor_green.log",
+    "dev_tests/publication_checkout_v3_full.log",
+    "dev_tests/publication_checkout_v3_full_checkout.json",
+    "dev_tests/publication_checkout_v3_lf_green.log",
+    "dev_tests/PUBLICATION_CHECKOUT_V3.md",
+    "dev_tests/publication_checkout_v3_scope.md",
+    "dev_tests/publication_checkout_v3_manifest.json"
+  ],
+  "scientific_namespace_diff": [],
+  "environment": {
+    "python": "3.13.11 (main, Jan 27 2026, 23:41:32) [MSC v.1944 64 bit (AMD64)]",
+    "torch": "2.14.1+cpu",
+    "platform": "win32",
+    "gpu_used": false
+  },
+  "results": {
+    "red": "1 failed, 1 passed; nested original gates: 3 failed; four EOL-only byte deltas",
+    "green_same_regression": "2 passed",
+    "successor_controls": "8 passed",
+    "full_actual_autocrlf_true_checkout": "424 passed, 4 skipped, 576 warnings in 63.88s",
+    "lf_checkout_policy_on_windows": "11 passed in 5.80s"
+  },
+  "limits": [
+    "Native Linux runtime not exercised; LF checkout behavior exercised on Windows.",
+    "Two recorded-Linux-build RNG fingerprints and two CUDA controls skipped explicitly.",
+    "Actual candidate checkout used disposable staged index plus checkout-index, without a new commit.",
+    "Independent private acceptance belongs to coordinator and was not accessed."
+  ],
+  "excluded_preserved_preexisting": {
+    "original_path": "D:/nif/=101",
+    "preserved_path": "D:/nif/dev_tests/artifacts/preexisting-empty-equals101-20261023-a/equals101.empty",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "provenance": "Already present in first agent A git status before A writes; empty; exact generating command unknown.",
+    "operation": "Literal single-file move to fresh verified ignored artifact directory; no deletion."
+  },
+  "remaining_untracked_files": [
+    "dev_tests/PUBLICATION_CHECKOUT_V3.md",
+    "dev_tests/fixtures/publication_checkout_v3/publication_windows_scope.py.txt",
+    "dev_tests/publication_checkout_v3_full.log",
+    "dev_tests/publication_checkout_v3_full_checkout.json",
+    "dev_tests/publication_checkout_v3_green.log",
+    "dev_tests/publication_checkout_v3_lf_green.log",
+    "dev_tests/publication_checkout_v3_manifest.json",
+    "dev_tests/publication_checkout_v3_red.log",
+    "dev_tests/publication_checkout_v3_red_native.log",
+    "dev_tests/publication_checkout_v3_scope.md",
+    "dev_tests/publication_checkout_v3_successor_green.log",
+    "dev_tests/test_publication_checkout_eol.py",
+    "dev_tests/test_publication_checkout_successor.py"
+  ],
+  "serialization_lineage": {
+    "operation": "Only the seven new A9 log/JSON outputs replace CRLF with LF; no source/helper/test/attribute/golden or older evidence changes.",
+    "raw_preservation_directory": "D:\\nif\\dev_tests\\artifacts\\checkout-v3-serialization-x59lzp01\\raw",
+    "records": {
+      "dev_tests/publication_checkout_v3_red.log": {
+        "raw_path": "D:\\nif\\dev_tests\\artifacts\\checkout-v3-serialization-x59lzp01\\raw\\publication_checkout_v3_red.log",
+        "raw_sha256": "4aedf7c06fad237fb4cfdfd9ba02abea672407cc55baa76ab733acfa09f7ddcf",
+        "raw_bytes": 2376,
+        "crlf_pairs_replaced": 37,
+        "canonical_sha256": "1cb2d1587581dd1d5c52a0ae11a61e3e65ac8be69ab4d5b7fb083f6d049a7454",
+        "canonical_bytes": 2339,
+        "only_change": "CRLF to LF"
+      },
+      "dev_tests/publication_checkout_v3_red_native.log": {
+        "raw_path": "D:\\nif\\dev_tests\\artifacts\\checkout-v3-serialization-x59lzp01\\raw\\publication_checkout_v3_red_native.log",
+        "raw_sha256": "dbda7b795c2c194eb090667949c7103a9edaf9c0ab773f81ef8e635f8d5fef7f",
+        "raw_bytes": 11630,
+        "crlf_pairs_replaced": 153,
+        "canonical_sha256": "da8f9c7550fd304e661e6d9c7c1c73d7b7317370efbea8efbf2c0b63e6f2ee5a",
+        "canonical_bytes": 11477,
+        "only_change": "CRLF to LF"
+      },
+      "dev_tests/publication_checkout_v3_green.log": {
+        "raw_path": "D:\\nif\\dev_tests\\artifacts\\checkout-v3-serialization-x59lzp01\\raw\\publication_checkout_v3_green.log",
+        "raw_sha256": "64a8a886d1d9425fac88342b130145ffe91b27ffbe8971d4f589dd4098c6fd8c",
+        "raw_bytes": 101,
+        "crlf_pairs_replaced": 2,
+        "canonical_sha256": "8a2ecc3d4fb502e803573436de8870922909b38157c7cf09935223b24d164776",
+        "canonical_bytes": 99,
+        "only_change": "CRLF to LF"
+      },
+      "dev_tests/publication_checkout_v3_successor_green.log": {
+        "raw_path": "D:\\nif\\dev_tests\\artifacts\\checkout-v3-serialization-x59lzp01\\raw\\publication_checkout_v3_successor_green.log",
+        "raw_sha256": "45c740c4a48ac50a103da05cb789c204784d20a895f1cfc9ffe718ad648b13d2",
+        "raw_bytes": 100,
+        "crlf_pairs_replaced": 2,
+        "canonical_sha256": "f4cda9e14392d1b54ff71b5db7c69b85265cff308f9065e46be91a6e96c168dc",
+        "canonical_bytes": 98,
+        "only_change": "CRLF to LF"
+      },
+      "dev_tests/publication_checkout_v3_full.log": {
+        "raw_path": "D:\\nif\\dev_tests\\artifacts\\checkout-v3-serialization-x59lzp01\\raw\\publication_checkout_v3_full.log",
+        "raw_sha256": "d86f68cf9cd2cd9c0c152126bb50c0881ae4cc1253f9d70b005555c783d0807b",
+        "raw_bytes": 11753,
+        "crlf_pairs_replaced": 140,
+        "canonical_sha256": "9acb6ac9208b7a1b67e7ccbdf892abfed40f26cd3b7342cacd7d80e9a28142a7",
+        "canonical_bytes": 11613,
+        "only_change": "CRLF to LF"
+      },
+      "dev_tests/publication_checkout_v3_full_checkout.json": {
+        "raw_path": "D:\\nif\\dev_tests\\artifacts\\checkout-v3-serialization-x59lzp01\\raw\\publication_checkout_v3_full_checkout.json",
+        "raw_sha256": "e459d0b92decfa9915abd655a0cb6df4e0ad67fb36c96bd970aa9de7f5142cd9",
+        "raw_bytes": 640,
+        "crlf_pairs_replaced": 15,
+        "canonical_sha256": "91534aa7d22d00fc25222951e63b43800bd6a3514df5361b0bd6457abbbb645a",
+        "canonical_bytes": 625,
+        "only_change": "CRLF to LF"
+      },
+      "dev_tests/publication_checkout_v3_lf_green.log": {
+        "raw_path": "D:\\nif\\dev_tests\\artifacts\\checkout-v3-serialization-x59lzp01\\raw\\publication_checkout_v3_lf_green.log",
+        "raw_sha256": "401199947b3bd8a3ca47a9280aac192b7a87229cb516ce0f99c0d3a4ac3c9fda",
+        "raw_bytes": 755,
+        "crlf_pairs_replaced": 2,
+        "canonical_sha256": "0db604c7ac736582fca08181bf077508ef89e1a75e0da19c79ad1c536af4252e",
+        "canonical_bytes": 753,
+        "only_change": "CRLF to LF"
+      }
+    },
+    "prior_manifest": {
+      "raw_path": "D:\\nif\\dev_tests\\artifacts\\checkout-v3-serialization-x59lzp01\\raw\\publication_checkout_v3_manifest.json",
+      "sha256": "2e27e3d6e5532c9d135a00e2b34a1d4e888f8cf7f96fef44b7a4dff8aa3b0e20",
+      "bytes": 5470,
+      "crlf_count": 0
+    },
+    "prior_note": {
+      "raw_path": "D:\\nif\\dev_tests\\artifacts\\checkout-v3-serialization-x59lzp01\\raw\\PUBLICATION_CHECKOUT_V3.md",
+      "sha256": "875d581995ac833934445fd4464e926a512ce7be61ebeaa91710fdace7b5dfde",
+      "bytes": 3158,
+      "crlf_count": 0
+    },
+    "unchanged_scope_proof_sha256": "4aec31896a87674983e10941d6b782d82967b3df4b94097ef148e6d9785254c1",
+    "reproducer": {
+      "path": "D:\\nif\\dev_tests\\artifacts\\checkout-v3-serialization-x59lzp01\\check_serialization.py",
+      "sha256": "bc0cc406f73ce85bc37ea6ed52c13bf8cdaf1b46ee800cddf35ec1a3c1da25cc"
+    },
+    "red": {
+      "path": "D:\\nif\\dev_tests\\artifacts\\checkout-v3-serialization-x59lzp01\\red.json",
+      "sha256": "623459aab48c643ebd2e0903cf3cc8f4c1808a15f9ac19579358fde39c308b04",
+      "result": "8 passed, 7 failed; all 16 index bytes equal disk: False"
+    },
+    "git_index_verification": {
+      "path": "D:\\nif\\dev_tests\\artifacts\\checkout-v3-serialization-x59lzp01\\green.json",
+      "sha256": "77a961c1f757d8721d1993d68f9a039f9aa1a6be1d39bc91efb0a210e66f6f57",
+      "result": "15 passed, 0 failed; all 16 index bytes equal disk: True"
+    }
+  }
+}

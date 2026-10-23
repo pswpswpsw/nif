@@ -1,0 +1,5 @@
+Windows Git LF checkout policy, core.autocrlf=false
+CWD: D:\nif\dev_tests\artifacts\checkout-eol-lf-native-k09budfg\checkout
+Command: C:\Users\pswpe\.cache\nif-pytorch-evaluation\env\Scripts\python.exe -m pytest -q dev_tests/test_adabelief_boundary_succession.py::test_scope_v4_exact_successor_and_utf8_under_gbk_default dev_tests/test_publication_scope.py::test_clean_public_scope_runs_without_git_or_generated_outputs dev_tests/test_tutorial1_gc_scope.py::test_other_notebooks_package_sources_and_frozen_expectations_phase_v4 dev_tests/test_publication_checkout_successor.py --basetemp D:\nif\dev_tests\artifacts\checkout-eol-lf-native-k09budfg\pytest
+...........                                                              [100%]
+11 passed in 5.80s

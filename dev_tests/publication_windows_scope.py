@@ -71,6 +71,8 @@ def expected_source(name,source):
     for old,new in TRANSITIONS[name]:
         assert source.count(old)==1,(name,old)
         source=source.replace(old,new,1)
+    if name=='dev_tests/adabelief_moment_scope.py':
+        source=expected_checkout_source(source)
     return source
 
 
@@ -93,3 +95,26 @@ def assert_publication_windows_scope_v2(root=ROOT):
             assert archive[name]['sha256']==digest,name
         else:assert hashlib.sha256((root/name).read_bytes()).hexdigest()==digest,name
     return set(TRANSITIONS)
+
+
+def expected_checkout_source(source):
+    """Checkout v3 permits only the exact attributes guard succession."""
+    old='            assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,name\n'
+    new=("            if name=='.gitattributes':\n"
+         '                from dev_tests.publication_windows_scope import assert_checkout_attributes\n'
+         '                assert_checkout_attributes(ROOT,digest)\n'
+         '            else:\n'
+         '                assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,name\n')
+    assert source.count(old)==1
+    return source.replace(old,new,1)
+
+
+def assert_checkout_attributes(root,digest):
+    """Keep the historical bytes/hash; allow only four exact checkout rules."""
+    suffix=(b'/tutorial/README.md text eol=lf\n'
+            b'/dev_tests/adabelief_moment_scope.diff -text -whitespace\n'
+            b'/dev_tests/publication_v1_scope.diff -text -whitespace\n'
+            b'/dev_tests/publication_windows_v2_scope.diff -text -whitespace\n')
+    current=(Path(root)/'.gitattributes').read_bytes()
+    assert current.endswith(suffix),'.gitattributes'
+    assert hashlib.sha256(current[:-len(suffix)]).hexdigest()==digest,'.gitattributes'

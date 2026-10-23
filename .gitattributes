@@ -14,3 +14,7 @@
 # Byte-exact historical fixtures must survive checkout without conversion.
 /dev_tests/fixtures/** -text -whitespace
 /docs/README_TENSORFLOW_LEGACY.md -whitespace
+/tutorial/README.md text eol=lf
+/dev_tests/adabelief_moment_scope.diff -text -whitespace
+/dev_tests/publication_v1_scope.diff -text -whitespace
+/dev_tests/publication_windows_v2_scope.diff -text -whitespace

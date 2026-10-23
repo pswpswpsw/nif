@@ -6,13 +6,17 @@ but is not evidence of matched cross-framework training.
 
 ## Independence and source preservation
 
-Agent A owns implementation fixes and public development regressions in an
-isolated container. Agent B owns separate private tests, fixtures and result
-artifacts outside the repository and container mounts. B freezes each relevant
-protocol and regression before A changes its corresponding implementation.
-Only public requirements and sanitized failures reach A. The coordinator
-reviews evaluator changes and retains their provenance. The original
-TensorFlow notebooks, data and reference implementation remain preserved.
+Agent A owns implementation fixes and public development regressions. The
+initial work used an isolated container; after Docker IPC failures, the user
+authorized separate agent contexts without Docker. A is instructed to access
+only the public repository and tools, and not to discover or read B's private
+materials. This later separation relies on those instructions rather than a
+container access boundary. Agent B owns private tests, fixtures and result
+artifacts outside the repository. B freezes each relevant protocol and
+regression before A changes its corresponding implementation. Only public
+requirements and sanitized failures reach A. The coordinator reviews evaluator
+changes and retains their provenance. The original TensorFlow notebooks, data
+and reference implementation remain preserved.
 
 The TensorFlow reference is main at
 `f8f9d31f4aa331b6e7dbc48758302c801441bcce`, with its documented compatibility
@@ -72,8 +76,8 @@ criterion, rather than a post-hoc threshold selected to accept a candidate.
 Historical runs used different actual weights, batch sequences and devices.
 Tutorial 3's recomputed weighted normalized MSE was approximately 0.00184422
 for native PyTorch, 0.00110383 for TensorFlow CPU and 0.000570633 for TensorFlow
-Colab. These values expose a quality gap to investigate; they do not isolate
-its cause. No controlled-training parity pass is claimed yet.
+Colab. These historical values expose a quality gap to investigate; they do
+not isolate its cause or establish controlled-training agreement.
 
 The first controlled diagnostic now passes 101 float64 checks covering all
 19 trainable tensors, both output channels' input Jacobians, losses, raw and
@@ -267,9 +271,9 @@ observer controls pass. These CPU results do not establish GPU optimizer
 agreement or identify the cause of long-training divergence; the corresponding
 GPU diagnostic remains pending.
 
-Full paired-training acceptance for the other learning tutorials, including
-their remaining initializations, is pending. Tutorial 4's derivative-only
-result is recorded below.
+Tutorial 5's first full paired initialization and tutorial 4's derivative-only
+result are recorded below. The remaining full paired-training acceptance is
+pending.
 
 ### Tutorial 4 derivative deliverables
 
@@ -287,6 +291,47 @@ Six supplemental float64 optimizer representation conflicts remain recorded
 separately and are not represented as derivative failures or as optimizer
 parity passes.
 
+### Tutorial 5: first complete controlled pair
+
+The first paired initialization, seed 42, passes the original full-workload
+criteria. Each framework consumes the same 100 TFRecord shards, containing
+one million unique rows, over two passes: 200 shard visits, 15,800 updates
+and two million actual row visits. Every shard includes the original
+16-row remainder batch. Actual consumed row IDs have the same digest,
+`976ee40987acd59e4acf7ecda340faf96f797220bcfdc81e0a1bed933d602860`.
+The 15 actual parameter scalars, inputs, targets, order and training settings
+are matched. Both runs use the same RTX 3080 Ti Laptop GPU, with deterministic
+execution requested and TF32 disabled. The recorded runtimes are TensorFlow
+2.21.0 and PyTorch 2.14.1+cu130, both with NumPy 2.1.3.
+
+| Final metric | TensorFlow | Native PyTorch | Original criterion | Result |
+|---|---:|---:|---|---|
+| Full-domain MSE | 0.0833108572930703 | 0.0833108573612921 | Native <= 1.10 TF + variance floor | Pass |
+| Paired field RMS / target RMS | — | 6.88626e-8 | <= 0.05 | Pass |
+
+All three component-MSE gates and all 352 full-run prefix comparisons also
+pass. Jacobian relative RMS is descriptive under the original tutorial 5
+protocol; no new Jacobian acceptance threshold is introduced. This source
+tutorial trains a three-output linear model on random inputs and targets.
+The close paired results verify the stream-training comparison; they do not
+establish predictive accuracy on a physical problem.
+
+The original ordinary end cells, checkpoint reload and fresh optimizer
+continuation pass. Each clone advances from update 15,800 to 15,801 and agrees
+byte-for-byte with its same-framework in-memory continuation, while the primary
+checkpoint remains unchanged. The actual native loss figure was opened and
+inspected: its 200-visit curve and axis labels are readable. The notebook's
+streamed training-aggregate MSE, approximately 0.09213144, is distinct from
+the final checkpoint MSE in the table.
+
+The native evaluator's filename-resolution metadata cache was changed after
+the untouched TensorFlow run. Independent controls establish the old/new
+native observer's exact state, loss, input and counter agreement; the two full
+runs are not represented as using an identical evaluator hash. Preprovisioned
+environments were used, so this is not a fresh installer or hosted-Colab
+execution claim. Seeds 142 and 242 and the exact TensorFlow seed-42 repeat
+remain pending; this first pair does not complete tutorial 5 acceptance.
+
 ### Remaining learning tutorials: readiness, not full acceptance
 
 The following are finite controls. They do not stand in for the original
@@ -296,7 +341,6 @@ full workloads or the remaining paired initializations.
 |---|---|---|
 | 1 | Corrected nominal-default 32-update comparison passes 1,312 checks; the full-entry two-epoch coupling passes 248 checks and actual postprocessing cells | Full AdaBelief fit, each framework's own L-BFGS refinement, final common metrics and figures |
 | 2 | Both network variants pass 3,328 short-trace checks; fresh disk restoration followed by two actual updates passes 400 strict storage-byte checks | Same-GPU checks, both full fits and remaining initializations |
-| 5 | Actual million-row TFRecord corpus is fixed; the 158-update pilot passes 416 comparisons; current-Colab target shapes/listing and disk restoration followed by two actual next-shard updates are verified | Same-GPU checks, both complete corpus passes and final cells |
 | 6 | All nine regularization cases' actual raw/used gradients pass; fresh disk restoration and two updates pass 1,782 strict storage-byte checks | Four small post-momentum discrepancies remain recorded, plus three inherited pre-momentum differences; full nine-case fits and final aggregate/gallery cells remain pending |
 | 7 | Full-architecture baseline and native pruning boundary controls exist | TF pruning observer neutrality currently fails and blocks full release; pruned disk continuation, own-baseline/full-pruning fits and real export/quantization quality remain pending |
 | 8 | Both 32-update fits pass 3,584 numerical checks; disk continuation and observer controls pass; actual Colab postprocessing order reproduces all six prior common-metric arrays byte-for-byte | Same-GPU checks, both full fits, remaining initializations and final figures |
@@ -325,3 +369,14 @@ their recorded Linux build. Missing public fixtures/provenance and modified
 models, numeric goldens or archives are still rejected. The original failures
 and bounded source successors are preserved in the public development records.
 These regression results do not constitute full scientific parity acceptance.
+
+The subsequent checkout-line-ending correction also passes actual fresh Git
+checkouts of the published candidate on both platforms: Windows has 424 passes
+and four skips, and Linux has 424 passes and four skips. The Linux run explicitly
+disables GPU access; both suites skip two CUDA checks and two Linux-build-specific
+RNG fingerprints when their exact recorded runtime is unavailable. The Windows
+checkout uses the default `core.autocrlf=true`. The correction fixes explicit
+LF treatment for the tutorial README and byte preservation for three archived
+patches; model and notebook scientific source bytes are unchanged. Earlier
+failed checkouts, the artifact-serialization failure, and their passing
+successors are preserved separately.

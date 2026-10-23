@@ -439,8 +439,21 @@ The frozen protocol treats these unsupervised derivative comparisons as
 diagnostics, so their 0.10 diagnostic reference is not introduced as a new
 acceptance gate. Independent raw-array calculations reproduce all 40 paired
 metric scalars and verify all 40,000 paired update records against the frozen
-fit-specific batch orders. Actual disk continuation, final-weight transfer
-diagnostics and the remaining paired initializations are still pending.
+fit-specific batch orders. Actual disk continuation and the remaining paired
+initializations are still pending.
+
+Eight fresh final-weight restoration/transfer cases have completed with zero
+optimizer updates. All four own-framework restores reproduce their 24 saved
+field arrays exactly in dtype, shape and storage bytes. The recorded model/
+optimizer arrays remain unchanged during evaluation. At identical final
+weights, Swish passes all 18 original normalized pointwise checks; SIREN
+passes nine and fails nine across the training and two refined grids. The
+largest normalized field difference is 2.20537e-6 and the largest spatial
+derivative difference is 5.03540e-4. All failed indices are retained.
+SIREN's maximum whole-array relative RMS difference is 8.51456e-7; this is
+descriptive and does not replace the failed pointwise criteria. The original
+complete-training paired-field failures remain. These diagnostics do not
+establish their cause or exclude every implementation defect.
 
 The first evaluator process failed after training while serializing a
 float32 learning-rate record. Its exit status remains failed. A narrowly
@@ -467,7 +480,7 @@ Neither completes the remaining paired initializations or full acceptance.
 | Tutorial | Current finite evidence | Still required |
 |---|---|---|
 | 1 | Corrected nominal-default 32-update comparison passes 1,312 checks; the full-entry two-epoch coupling passes 248 checks and actual postprocessing cells | Full AdaBelief fit, each framework's own L-BFGS refinement, final common metrics and figures |
-| 2 | First full pair completed: Swish passes, NIFMultiScale fails two original paired-field criteria; complete TF repeat agrees exactly at its recorded observations | Original disk-continuation gates, final-weight diagnostics, remaining initializations and final acceptance |
+| 2 | First full pair completed: Swish passes, NIFMultiScale fails two original paired-field criteria; complete TF repeat agrees exactly at its recorded observations; final-weight diagnostics retain nine SIREN pointwise failures | Original disk-continuation gates, remaining initializations and final acceptance |
 | 6 | All nine regularization cases' actual raw/used gradients pass; fresh disk restoration and two updates pass 1,782 strict storage-byte checks | Four small post-momentum discrepancies remain recorded, plus three inherited pre-momentum differences; full nine-case fits and final aggregate/gallery cells remain pending |
 | 7 | Actual TF/native baseline short comparisons and native OFF/ON 8,004-step boundary controls pass, including four actual two-update fresh-disk routes; prior TF-only 8,000-step controls also pass | Own-baseline/full-pruning fits, remaining initializations and real export/quantization quality remain pending |
 | 8 | Both 32-update fits pass 3,584 numerical checks; disk continuation and observer controls pass; actual Colab postprocessing order reproduces all six prior common-metric arrays byte-for-byte | Same-GPU checks, both full fits, remaining initializations and final figures |

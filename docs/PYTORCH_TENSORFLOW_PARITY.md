@@ -317,6 +317,24 @@ field/Jacobian failures remain unchanged. The retained diagnostic metrics'
 legacy `completed_epochs` label contains global counters 4,701 and 9,400;
 the actual interval is the first update after epoch 25 through epoch 50.
 
+A separate descriptive reuse compares the six final checkpoints across the
+same rows and physical scaling. The following distances divide field RMS
+differences by one common target standard deviation per output. This differs
+from the original gate's TensorFlow-field-energy denominator.
+
+| Common-scale field distance | Three observed TF seed pairs | Three matched TF/PT pairs |
+|---|---:|---:|
+| u | 0.12912–0.13335 | 0.09942–0.12055 |
+| v | 0.13145–0.18006 | 0.08070–0.09067 |
+
+Each matched field distance is below the observed TF seed-pair minimum.
+Jacobian comparisons have exceptions: seed 2718's u_x and u_y distances
+exceed some TF seed-pair distances, and u_x also exceeds their median. Every
+matched Jacobian axis remains below its observed TF seed-pair maximum.
+These shared-model comparisons are descriptive, with only three seeds;
+they establish neither statistical equivalence nor a cause of divergence.
+All twelve original full-training field/Jacobian failures remain unchanged.
+
 Tutorial 5's first full paired initialization and tutorial 4's derivative-only
 result are recorded below. The remaining full paired-training acceptance is
 pending.
@@ -379,15 +397,37 @@ environments were used, so this is not a fresh installer or hosted-Colab
 execution claim. Seeds 142 and 242 and the exact TensorFlow seed-42 repeat
 remain pending; this first pair does not complete tutorial 5 acceptance.
 
-### Tutorial 2: complete TensorFlow reference and exact repeat
+### Tutorial 2: first complete pair fails the original field criterion
 
 Both reference fits, Swish and NIFMultiScale, have completed the original
 5,000 epochs each: 20,000 updates and 10 million row visits per fit. A complete
 TensorFlow repeat matches the recorded batch-ID hashes and parsed numeric
 learning-rate and loss records exactly. Recorded model/optimizer states and
 final field arrays agree in dtype, shape and storage bytes. Six ordinary
-notebook PNGs also match exactly. Native full training is running; the paired
-scientific comparison remains pending.
+notebook PNGs also match exactly. Both corresponding native fits and their
+postprocessing have also completed.
+
+The first complete paired initialization passes for Swish and fails for
+NIFMultiScale. All 3,328 prefix checks, actual ID/LR records, training-MSE
+criteria and both grids' field-MSE allowances pass. NIFMultiScale fails both
+original paired-field criteria:
+
+| NIFMultiScale measure | TensorFlow | PyTorch / paired difference | Original criterion | Result |
+|---|---:|---:|---:|---|
+| Training normalized MSE | 1.26055728e-6 | 1.25057260e-6 | <= 1.10 TF + 1e-6 | Pass |
+| Original-time refined-grid field MSE | 0.0031578711 | 0.0030551253 | <= 1.10 TF + variance floor | Pass |
+| Dense space/time field MSE | 0.0388786053 | 0.0388091097 | <= 1.10 TF + variance floor | Pass |
+| Original-time paired field RMS / truth std | — | 0.17341189 | <= 0.05 | Fail |
+| Dense space/time paired field RMS / truth std | — | 0.18983369 | <= 0.05 | Fail |
+
+Spatial-derivative paired distances are 0.31355160 and 0.28607283 on these
+grids; the temporal-derivative distances are 0.02640733 and 0.01952633.
+The frozen protocol treats these unsupervised derivative comparisons as
+diagnostics, so their 0.10 diagnostic reference is not introduced as a new
+acceptance gate. Independent raw-array calculations reproduce all 40 paired
+metric scalars and verify all 40,000 paired update records against the frozen
+fit-specific batch orders. Actual disk continuation, final-weight transfer
+diagnostics and the remaining paired initializations are still pending.
 
 The first evaluator process failed after training while serializing a
 float32 learning-rate record. Its exit status remains failed. A narrowly
@@ -414,9 +454,9 @@ Neither completes the remaining paired initializations or full acceptance.
 | Tutorial | Current finite evidence | Still required |
 |---|---|---|
 | 1 | Corrected nominal-default 32-update comparison passes 1,312 checks; the full-entry two-epoch coupling passes 248 checks and actual postprocessing cells | Full AdaBelief fit, each framework's own L-BFGS refinement, final common metrics and figures |
-| 2 | Both variants pass 3,328 same-GPU short-trace checks, 4,378 strict observer-control checks and 80 initial-tensor checks; both complete TensorFlow reference fits and the exact full repeat are finished | Native full fits, original disk-continuation gates, paired quality, remaining initializations and final acceptance |
+| 2 | First full pair completed: Swish passes, NIFMultiScale fails two original paired-field criteria; complete TF repeat agrees exactly at its recorded observations | Original disk-continuation gates, final-weight diagnostics, remaining initializations and final acceptance |
 | 6 | All nine regularization cases' actual raw/used gradients pass; fresh disk restoration and two updates pass 1,782 strict storage-byte checks | Four small post-momentum discrepancies remain recorded, plus three inherited pre-momentum differences; full nine-case fits and final aggregate/gallery cells remain pending |
-| 7 | TF-only actual 512/464-row GPU OFF/ON controls and natural 8,000-update pruning boundaries pass; 18,002 complete state records agree exactly | Native GPU controls, pruned disk continuation, own-baseline/full-pruning fits and real export/quantization quality remain pending |
+| 7 | Actual TF/native baseline short comparisons and native OFF/ON 8,004-step boundary controls pass, including four actual two-update fresh-disk routes; prior TF-only 8,000-step controls also pass | Own-baseline/full-pruning fits, remaining initializations and real export/quantization quality remain pending |
 | 8 | Both 32-update fits pass 3,584 numerical checks; disk continuation and observer controls pass; actual Colab postprocessing order reproduces all six prior common-metric arrays byte-for-byte | Same-GPU checks, both full fits, remaining initializations and final figures |
 
 The earlier tutorial 7 CPU observer failure remains recorded and is not an

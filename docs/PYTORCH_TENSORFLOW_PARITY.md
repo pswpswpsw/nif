@@ -18,6 +18,12 @@ requirements and sanitized failures reach A. The coordinator reviews evaluator
 changes and retains their provenance. The original TensorFlow notebooks, data
 and reference implementation remain preserved.
 
+Eight Markdown cells in native tutorials 1, 5 and 8 now correct inherited
+API, epoch-counting, TFRecord and coordinate explanations. All 44 code cells,
+their outputs, notebook metadata and cell order are unchanged. These are
+documentation changes to the public copies; the frozen scientific snapshots
+retain their original whole-file hashes.
+
 The TensorFlow reference is main at
 `f8f9d31f4aa331b6e7dbc48758302c801441bcce`, with its documented compatibility
 runtime based on `ad9113df14590189b12068b6b3fa7c8c8d9187d4`. Tutorial 1 uses
@@ -373,21 +379,49 @@ environments were used, so this is not a fresh installer or hosted-Colab
 execution claim. Seeds 142 and 242 and the exact TensorFlow seed-42 repeat
 remain pending; this first pair does not complete tutorial 5 acceptance.
 
+### Tutorial 2: complete TensorFlow reference and exact repeat
+
+Both reference fits, Swish and NIFMultiScale, have completed the original
+5,000 epochs each: 20,000 updates and 10 million row visits per fit. A complete
+TensorFlow repeat matches the recorded batch-ID hashes and parsed numeric
+learning-rate and loss records exactly. Recorded model/optimizer states and
+final field arrays agree in dtype, shape and storage bytes. Six ordinary
+notebook PNGs also match exactly. Native full training is running; the paired
+scientific comparison remains pending.
+
+The first evaluator process failed after training while serializing a
+float32 learning-rate record. Its exit status remains failed. A narrowly
+scoped JSON writer correction preserves the scientific code and criteria;
+durable history and checkpoints were retained. A fresh process completed
+postprocessing on the same GPU with zero optimizer updates and unchanged
+restored states. The original process's live after-state check remains
+unavailable. The complete repeat subsequently finished with a successful
+exit and its actual postprocessing checks.
+
+The source tutorial intentionally uses Swish's poor high-frequency fit as a
+spectral-bias comparison. The original 2,000 training points, 8,000-point
+spatially refined grid and 36,000-point space/time grid are evaluated
+separately. Independent raw-array checks reproduce all 14 stored metric
+scalars, verify finite field/derivative exports and confirm physical inverse
+scaling. These reference and repeat results do not establish
+TensorFlow/PyTorch parity.
+
 ### Remaining learning tutorials: readiness, not full acceptance
 
-The following are finite controls. They do not stand in for the original
-full workloads or the remaining paired initializations.
+The following distinguishes finite controls from completed reference work.
+Neither completes the remaining paired initializations or full acceptance.
 
 | Tutorial | Current finite evidence | Still required |
 |---|---|---|
 | 1 | Corrected nominal-default 32-update comparison passes 1,312 checks; the full-entry two-epoch coupling passes 248 checks and actual postprocessing cells | Full AdaBelief fit, each framework's own L-BFGS refinement, final common metrics and figures |
-| 2 | Both variants pass 3,328 same-GPU short-trace checks, 4,378 strict observer-control checks and 80 initial-tensor checks; earlier CPU fresh disk restoration plus two actual updates passes 400 strict storage-byte checks | Both original 5,000-epoch fits, remaining initializations and TensorFlow repeat; full execution is underway |
+| 2 | Both variants pass 3,328 same-GPU short-trace checks, 4,378 strict observer-control checks and 80 initial-tensor checks; both complete TensorFlow reference fits and the exact full repeat are finished | Native full fits, original disk-continuation gates, paired quality, remaining initializations and final acceptance |
 | 6 | All nine regularization cases' actual raw/used gradients pass; fresh disk restoration and two updates pass 1,782 strict storage-byte checks | Four small post-momentum discrepancies remain recorded, plus three inherited pre-momentum differences; full nine-case fits and final aggregate/gallery cells remain pending |
-| 7 | Full-architecture baseline and native pruning boundary controls exist; TF-only three-row GPU OFF/ON controls pass at one and 32 updates | The earlier CPU observer failure remains recorded; actual 512/464-row GPU controls and natural 8,000-update boundaries, pruned disk continuation, own-baseline/full-pruning fits and real export/quantization quality remain pending |
+| 7 | TF-only actual 512/464-row GPU OFF/ON controls and natural 8,000-update pruning boundaries pass; 18,002 complete state records agree exactly | Native GPU controls, pruned disk continuation, own-baseline/full-pruning fits and real export/quantization quality remain pending |
 | 8 | Both 32-update fits pass 3,584 numerical checks; disk continuation and observer controls pass; actual Colab postprocessing order reproduces all six prior common-metric arrays byte-for-byte | Same-GPU checks, both full fits, remaining initializations and final figures |
 
-The tutorial 7 observer failure is under investigation and is not an
-established product defect. Tutorial 8's replay difference is localized by a
+The earlier tutorial 7 CPU observer failure remains recorded and is not an
+established product defect; its actual TensorFlow GPU controls now pass.
+Tutorial 8's replay difference is localized by a
 controlled same-TensorFlow experiment: calling the common direct-inference
 helper before the original eight Colab prediction calls changes cached
 Jacobian execution paths. The differences occur only in the spatial

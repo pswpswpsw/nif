@@ -349,7 +349,7 @@ These shared-model comparisons are descriptive, with only three seeds;
 they establish neither statistical equivalence nor a cause of divergence.
 All twelve original full-training field/Jacobian failures remain unchanged.
 
-Tutorial 5's first full paired initialization and tutorial 4's derivative-only
+Tutorial 5's full paired initializations and tutorial 4's derivative-only
 result are recorded below. The remaining full paired-training acceptance is
 pending.
 
@@ -369,7 +369,7 @@ Six supplemental float64 optimizer representation conflicts remain recorded
 separately and are not represented as derivative failures or as optimizer
 parity passes.
 
-### Tutorial 5: two complete controlled pairs
+### Tutorial 5: three complete controlled pairs
 
 The first paired initialization, seed 42, passes the original full-workload
 criteria. Each framework consumes the same 100 TFRecord shards, containing
@@ -416,13 +416,23 @@ million raw predictions reproduces these metrics. The ordinary end cells,
 checkpoint reload and continuation checks pass within the numerical-equality
 scope described above; the actual native 200-visit figure is also inspected.
 
+Seed 242 completes the same original workload and passes all three component-
+MSE gates, all 352 prefix comparisons and the exact paired row-consumption
+checks. Its TensorFlow/native full-domain MSE is 0.0833249163339565 /
+0.0833249163102524, and paired field RMS / target RMS is 6.17476e-8.
+Independent NumPy recomputation again uses all one million predictions.
+The original end cells, checkpoint reload and continuation pass within the
+numerical-equality scope described above. The actual native 200-visit figure
+is inspected; its accumulated training MSE of approximately 0.08696509 is
+distinct from the final checkpoint MSE.
+
 The native evaluator's filename-resolution metadata cache was changed after
 the untouched TensorFlow run. Independent controls establish the old/new
 native observer's exact state, loss, input and counter agreement; the two full
 runs are not represented as using an identical evaluator hash. Preprovisioned
 environments were used, so this is not a fresh installer or hosted-Colab
-execution claim. Seed 242 and the exact TensorFlow seed-42 repeat remain
-pending; these two pairs do not complete tutorial 5 acceptance.
+execution claim. The exact TensorFlow seed-42 repeat remains pending;
+these three pairs do not complete tutorial 5 acceptance.
 
 ### Tutorial 2: first complete pair fails the original field criterion
 

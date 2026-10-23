@@ -1,0 +1,134 @@
+{
+  "phase": "publication_v1_exact_generated_namespace",
+  "ownership": "Public development-test portability only; no scientific implementation changes",
+  "environment": {
+    "python": "3.13.17",
+    "device": "cpu",
+    "git_used_only_for_projection_inventory": true,
+    "runtime_git_path": "empty",
+    "python_runtime_mode": "-I"
+  },
+  "preexisting_owned_changes": {
+    "dev_tests/adabelief_moment_scope.py": {
+      "before_sha256": "f479169deb264dd92a82b7aa9e7b8cade3dde474f6e0279491958998723927dc",
+      "after_sha256": "7e322170072a5c1b9d2970076c3a8e15505ddab66d9135b62d5ec002d3b3352b"
+    }
+  },
+  "public_file_sha256": {
+    "dev_tests/adabelief_moment_scope.py": "7e322170072a5c1b9d2970076c3a8e15505ddab66d9135b62d5ec002d3b3352b",
+    "dev_tests/fixtures/publication_scope_v1/adabelief_moment_scope.py.txt": "f479169deb264dd92a82b7aa9e7b8cade3dde474f6e0279491958998723927dc",
+    "dev_tests/fixtures/publication_scope_v1/manifest.json": "d614a4825809328086c83cf2135aa4cd036318f9492ea18c2f6c593708175ed4",
+    "dev_tests/publication_projection.py": "86a52b9f07355290c2be157050340293f96dd89efce957fbd2fb78e0c94ec22f",
+    "dev_tests/publication_v1_before.json": "464110f389bcaaa4528280e60e9406b99f46f4123d96a81d3689804965fdaaef",
+    "dev_tests/publication_v1_clean_full.log": "2e1e3dec0e9fdab71d2d8559b27dcb61e61a4ab16b7fc32b1cae503270f1c3eb",
+    "dev_tests/publication_v1_green.log": "1c3c729297c27bc2a9f58039a2a1b3be70df6493dd189dec80f12554936dd3b5",
+    "dev_tests/publication_v1_inventory.json": "a85a5e16039beae8b7cb5f4b775a0f4fa03d0bc72df41d58e1d165e09c9c8bb4",
+    "dev_tests/publication_v1_local_audit.json": "5615b4370c714564352eeba017da99acc2f70dbfb8b1e56f6c6640e6c7c98de7",
+    "dev_tests/publication_v1_projection.json": "f799315f78d966db89bf52a31206a3ab85df1309611fe837a6d308dd0b5e2d65",
+    "dev_tests/publication_v1_red.log": "2e7ae31e4d6ab0e729dc4efc809c31302b97bb56d767525605d143ac79e80eff",
+    "dev_tests/publication_v1_red_fingerprints.json": "341c1295e4e3ff8f5f6b652fe811eec7a0b3ceb5387736cef2c3d4c963b6cffa",
+    "dev_tests/publication_v1_scope.diff": "3ac6dfdebfa3ec3a5782ab5b234a34730ef990d53ffd71f878eb3f02ac15d2b9",
+    "dev_tests/publication_v1_scope_red.log": "696f3d03310663dc54531d3ba3d9f05f1731d3ad9efcc253190502899c784887",
+    "dev_tests/test_publication_scope.py": "c988c5a5eb9d4445eb3d68baf095dc8f5ac7d13647056fa2cbf9bac4f50ca2f5",
+    "dev_tests/test_publication_transition.py": "8d538709057c9e745dd499490bc0768149d48847ba554f4ad7b2902b22ebab01",
+    "docs/PYTORCH_PUBLICATION_SCOPE_PORTABILITY.md": "5d625edaf12ee4c8d2d6ecf7887ff6b36b2e1e0b4ff622523a8161afd9bfaf11"
+  },
+  "new_public_files": [
+    "dev_tests/fixtures/publication_scope_v1/adabelief_moment_scope.py.txt",
+    "dev_tests/fixtures/publication_scope_v1/manifest.json",
+    "dev_tests/publication_projection.py",
+    "dev_tests/publication_v1_before.json",
+    "dev_tests/publication_v1_clean_full.log",
+    "dev_tests/publication_v1_green.log",
+    "dev_tests/publication_v1_inventory.json",
+    "dev_tests/publication_v1_local_audit.json",
+    "dev_tests/publication_v1_projection.json",
+    "dev_tests/publication_v1_red.log",
+    "dev_tests/publication_v1_red_fingerprints.json",
+    "dev_tests/publication_v1_scope.diff",
+    "dev_tests/publication_v1_scope_red.log",
+    "dev_tests/test_publication_scope.py",
+    "dev_tests/test_publication_transition.py",
+    "docs/PYTORCH_PUBLICATION_SCOPE_PORTABILITY.md"
+  ],
+  "tests": {
+    "setup_failure_not_bug_red": {
+      "errors": 10,
+      "log": "dev_tests/publication_v1_red.log"
+    },
+    "before_fix_red": {
+      "failed": 6,
+      "passed": 5,
+      "log": "dev_tests/publication_v1_scope_red.log"
+    },
+    "same_tests_green": {
+      "passed": 11,
+      "log": "dev_tests/publication_v1_green.log"
+    },
+    "full_public_clean_projection": {
+      "passed": 401,
+      "skipped": 2,
+      "warnings": 571,
+      "seconds": 46.5,
+      "log": "dev_tests/publication_v1_clean_full.log",
+      "selection": "entire dev_tests suite, no deselection",
+      "runtime_command": "absolute Python -I; pytest.main([dev_tests, -q, -p, no:cacheprovider, --basetemp=<new output>, --junitxml=<new output>])"
+    },
+    "negative_controls": [
+      "missing public fixture",
+      "missing public provenance log",
+      "changed package model",
+      "changed historical numeric golden",
+      "changed archived source fixture",
+      "present changed optional local artifact"
+    ],
+    "exact_helper_transition": "passed",
+    "git_diff_check": "passed"
+  },
+  "scope": {
+    "optional_local_namespace": "dev_tests/artifacts/",
+    "historical_entries": 736,
+    "optional_historical_generated": 439,
+    "remaining_public_paths_present": 297,
+    "original_fingerprint_manifest_unchanged": true,
+    "public_required_file_fallback": false,
+    "existing_v4_transformations_and_hash_predicates": "unchanged",
+    "original_helper_archive": "dev_tests/fixtures/publication_scope_v1/adabelief_moment_scope.py.txt"
+  },
+  "projection": {
+    "composition": "dev_tests/publication_v1_projection.json",
+    "file_count": 352,
+    "bytes": 98764255,
+    "metadata_copied": false,
+    "historical_generated_outputs_copied": false,
+    "import_origin": "All checked origins resolve inside clean_public, as printed in full-suite raw log",
+    "post_suite_source_hashes_unchanged": true
+  },
+  "optional_local_audit": {
+    "recorded": 439,
+    "present_and_hash_verified": 439,
+    "missing": 0,
+    "clean_projection_missing": 439,
+    "required_for_publication": false
+  },
+  "generated_evidence_not_for_publication": {
+    "dev_tests/artifacts/publication_v1/public_suite.junit.xml": "97607142e0f4ab8c289e530634a200266351dab5f34a4a42f2bdc64252e77e3e"
+  },
+  "preservation": {
+    "old_manifests_goldens_archived_fixtures_raw_logs_unchanged": true,
+    "red_tests_logs_inventory_unchanged": true,
+    "package_notebooks_generator_data_dependencies_gitattributes_unchanged": true,
+    "scientific_path_count": 65,
+    "scientific_mapping_sha256": "cb32d2e5f6b14a9a60285c8cab79c80a1622630efd6f405c98081bd81ff51155",
+    "preexisting_unchanged_count": 338,
+    "external_observed_changes_left_untouched": [
+      "docs/PYTORCH_TENSORFLOW_PARITY.md"
+    ]
+  },
+  "limitations": [
+    "CPU public regression suite only; no notebook/full scientific training workload",
+    "No full parity, all-tutorial completion or independent-acceptance claim",
+    "No GPU, TensorFlow runtime, network install, Git mutation or GitHub sync",
+    "Generated historical artifacts remain optional local evidence; their absence is explicit"
+  ]
+}

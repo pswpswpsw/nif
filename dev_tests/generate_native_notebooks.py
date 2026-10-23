@@ -189,6 +189,7 @@ def markdown(source):
     # Retain scientific narrative, modernize framework-specific instructions.
     changes = {
        '2. output the real NIF model that needs to be trained, and compile this model\n  - note that here we take Adam optimizer, but it won\'t be used, it is just for compilation purpose.':'2. Reconstruct the native module from its saved configuration and load its state dictionary. Verify predictions after restoration; no compilation is needed.',
+       'we first prune 10% then, train for 1000 epochs. We repeat 50 times of this process, each time we prune a bit more, until we hit the limit of 90% of included weights pruned.':'the cubic schedule starts at 10%, but its first mask refresh is before training step 4,000 (epoch 1,000), after 3,999 dense steps. It refreshes every 4,000 steps, for 50 refreshes, reaching 90% before step 200,000. We remask at every epoch end without an extra final refresh.',
        '`tfmot.sparsity.keras.PolynomialDecay`':'the native cubic magnitude-pruning schedule',
        '`TFPLBFGS`':'native `torch.optim.LBFGS`',
        'given the `n_features = 3` and `n_target = 3`':'given the `n_feature = 4` and `n_target = 3`',
@@ -196,8 +197,8 @@ def markdown(source):
        'keras.Model':'torch.nn.Module', 'Keras Model':'PyTorch module',
        '`Keras`':'the explicit PyTorch loop', '`tf.data.Dataset`':'a `DataLoader`',
        '`model.fit`':'the explicit training loop', '.fit`':'the training loop`',
-       'tensorflow_model_optimization':'torch.nn.utils.prune',
-       'https://www.tensorflow.org/model_optimization':'https://docs.pytorch.org/tutorials/intermediate/pruning_tutorial.html',
+       'tensorflow_model_optimization':'nif.pruning.PolynomialMagnitudePruning',
+       'https://www.tensorflow.org/model_optimization':'../docs/PYTORCH_API.md',
        'HDF5 format':'native state_dict format', 'tflite':'TorchScript', 'TFlite':'TorchScript',
        '`Callback`':'training-loop hook', '`callbacks`':'training-loop hooks',
        '`TensorBoard`':'loss logging', 'tensorboard':'loss logging',
@@ -208,7 +209,13 @@ def markdown(source):
 def emit(number, replacements, notes="", omitted_markdown=()):
     path=original(number); src=nb.read(path,as_version=4)
     cells=[nb.v4.new_markdown_cell(f"# Native PyTorch tutorial {number}\n\n"+notes+"\n\nRun all cells in order. Full scientific workloads are the default; `NIF_SMOKE=1` is a separate development run and does not establish full convergence. The original TensorFlow and `_colab` notebooks are preserved as legacy references."),
-           nb.v4.new_code_cell(SETUP+f'\nOUT = Path(os.environ.get("NIF_OUTPUT_DIR", "pytorch_outputs")) / "tutorial{number}"\nOUT.mkdir(parents=True, exist_ok=True)\n'),nb.v4.new_code_cell(HELPERS)]
+           nb.v4.new_code_cell(SETUP+f'\nOUT = Path(os.environ.get("NIF_OUTPUT_DIR", "pytorch_outputs")) / "tutorial{number}"\nOUT.mkdir(parents=True, exist_ok=True)\n'),nb.v4.new_code_cell(
+               HELPERS.replace('before_epoch=None):', 'before_epoch=None, after_epoch=None):')
+               .replace('        row = {"epoch": epoch',
+                        '        if after_epoch is not None:\n            after_epoch(epoch)\n        row = {"epoch": epoch')
+               .replace('v.detach().cpu() for k,v',
+                        'v.detach().cpu() if isinstance(v, torch.Tensor) else v for k,v')
+               if number == 7 else HELPERS)]
     for i,c in enumerate(src.cells):
         if c.cell_type=='markdown' and i not in omitted_markdown:
             cells.append(nb.v4.new_markdown_cell(markdown(c.source)))
@@ -250,9 +257,12 @@ train_dataset = loader(train_data[:, :2], train_data[:, -1:], batch_size)
 model_ori = nif.NIF(cfg_shape_net, cfg_parameter_net, mixed_policy).to(device)
 model_opt = model_ori.build()
 assert model_opt is model_ori
+# Match actual current TensorFlow tutorial 1: its Colab fit does not activate GC.
+# Set True to opt in to native GC; this changes that primary reference behavior.
+use_gradient_centralization = False
 optimizer = AdaBeliefOptimizer(model_opt.parameters(), lr=lr)
 history = train(model_opt, train_dataset, optimizer, epochs(nepoch), "traveling_wave",
-                schedule=scheduler, centralization=True)
+                schedule=scheduler, centralization=use_gradient_centralization)
 wave_figure(train_data[:, -1], predict(model_opt, train_data[:, :2]).ravel(), "traveling_wave")
 ''',
 27:'''model_p_to_lr = model_ori.model_p_to_lr()
@@ -322,7 +332,7 @@ wave_figure(train_data[:,-1], prediction, "fine_tuned")
 write_metrics({"adabelief_epochs": epochs(nepoch), "lbfgs_rounds": rounds, "lbfgs_max_iter": max_iter,
                "final_mse": float(np.mean((prediction-train_data[:,-1])**2))})
 '''
-},notes="5,000 AdaBelief epochs with gradient centralization, followed by 200 L-BFGS rounds of up to 1,000 iterations. Native build/model return the same trainable module. Logs and checkpoints are written by the visible training loop; GPU selection uses PyTorch devices.",omitted_markdown=(14,16,20,22,35,37,39))
+},notes="5,000 AdaBelief epochs without gradient centralization by default, followed by 200 L-BFGS rounds of up to 1,000 iterations. Native build/model return the same trainable module. Logs and checkpoints are written by the visible training loop; GPU selection uses PyTorch devices.",omitted_markdown=(14,16,20,22,35,37,39))
 
 src2=nb.read(original(2),as_version=4)
 emit(2,{
@@ -335,12 +345,12 @@ def scheduler_swish(epoch, lr):
     return 5e-4
 ''',
 7:'''model_swish = nif.NIF(cfg_shape_net,cfg_parameter_net,"float32").to(device)
-optimizer = torch.optim.Adam(model_swish.parameters(), lr=lr, eps=1e-7)
+optimizer = nif.optimizers.ReferenceAdam(model_swish.parameters(), lr=lr, eps=1e-7)
 history_swish = train(model_swish, train_dataset, optimizer, epochs(nepoch), "swish", schedule=scheduler_swish)
 model_swish = save_and_check(model_swish, optimizer, "swish", train_data[:64,:2])
 ''',
 9:SIREN+SCHEDULE_MS+'''model_siren = nif.NIFMultiScale(cfg_shape_net,cfg_parameter_net,"float32").to(device)
-optimizer = torch.optim.Adam(model_siren.parameters(), lr=lr, eps=1e-7)
+optimizer = nif.optimizers.ReferenceAdam(model_siren.parameters(), lr=lr, eps=1e-7)
 history_siren = train(model_siren, train_dataset, optimizer, epochs(nepoch), "siren", schedule=scheduler)
 model_siren = save_and_check(model_siren, optimizer, "siren", train_data[:64,:2])
 ''',
@@ -489,7 +499,8 @@ assert len(shards) == (10 if SMOKE else 100)
 print("TFRecord shards:",len(shards))
 ''',
 16:'''model=dense_tanh(4,3).to(device)
-optimizer=torch.optim.Adam(model.parameters(),lr=1e-3,eps=1e-7)
+from nif.optimizers import ReferenceAdam
+optimizer=ReferenceAdam(model.parameters(),lr=1e-3,eps=1e-7)
 ''',
 18:'''epoch=2
 meta_dataset=fh.get_tfr_meta_dataset(tfr_path=str(tfr_path),epoch=epoch)
@@ -526,7 +537,7 @@ REG_TRAIN='''def run_regularization(kind=None, coefficient=0.0):
     if kind is not None: config[kind+"_reg"]=coefficient
     name="no_reg" if kind is None else f"{kind}_{coefficient}"
     model=nif.NIFMultiScale(copy.deepcopy(cfg_shape_net),config,"float32").to(device)
-    optimizer=torch.optim.Adam(model.parameters(),lr=1e-3,eps=1e-7)
+    optimizer=nif.optimizers.ReferenceAdam(model.parameters(),lr=1e-3,eps=1e-7)
     history=train(model,train_dataset,optimizer,epochs(nepoch),name)
     model=save_and_check(model,optimizer,name,train_data[:64,:2])
     train_pred=predict(model,train_data[:,:2]).ravel()
@@ -593,7 +604,7 @@ emit(7,{
 8:WAVE_DATA+'''# Shuffling is handled by DataLoader, keeping the source grid available for diagnostics.
 model_ori=nif.NIFMultiScale(cfg_shape_net,cfg_parameter_net,"float32").to(device)
 model=model_ori.build()
-optimizer=torch.optim.Adam(model.parameters(),lr=lr,eps=1e-7)
+optimizer=nif.optimizers.ReferenceAdam(model.parameters(),lr=lr,eps=1e-7)
 history_baseline=train(model,train_dataset,optimizer,epochs(nepoch),"baseline",schedule=scheduler)
 ''',
 10:'''t=np.linspace(-1,1,10,endpoint=True)
@@ -609,11 +620,12 @@ y_pred_unpruned=predict(model,input_feature).reshape(200,10)
 pruning_epochs=50000
 prune_epoch=1000
 # PolynomialDecay's cubic schedule: begin at 10%, end at 90% of the selected kernel.
-# Full mode makes 50 training blocks of 1,000 epochs, then applies the exact final mask.
+# Full mode refreshes before steps 4,000 through 200,000 (50 updates).
+# Steps 1 through 3,999 stay dense; no extra refresh follows training.
 ''',
 16:'''print(model_for_pruning)
 ''',
-18:'''from torch.nn.utils import prune
+18:'''from nif.pruning import PolynomialMagnitudePruning
 from nif.layers import HyperLinearForSIREN
 selected=[(name,layer) for name,layer in model_for_pruning.named_modules()
           if isinstance(layer,HyperLinearForSIREN)]
@@ -621,34 +633,27 @@ assert len(selected)==1
 selected_name,hyper_siren_layer=selected[0]
 print("layer selected =",selected_name,"kernel",tuple(hyper_siren_layer.w.shape))
 
-def set_sparsity(target):
-    # Compute an absolute number of pruned weights; existing zeros stay masked during training.
-    if not hasattr(hyper_siren_layer,"w_orig"):
-        prune.identity(hyper_siren_layer,"w")
-    weight=hyper_siren_layer.w_orig.detach()
-    count=round(target*weight.numel())
-    magnitude=(weight*hyper_siren_layer.w_mask).abs().flatten()
-    mask=torch.ones_like(magnitude)
-    mask[torch.argsort(magnitude)[:count]]=0
-    prune.custom_from_mask(hyper_siren_layer,"w",mask.reshape_as(weight))
-
 run_pruning_epochs=epochs(pruning_epochs)
-def pruning_schedule(epoch):
-    interval=1 if SMOKE else prune_epoch
-    if epoch%interval==0:
-        progress=epoch/run_pruning_epochs
-        set_sparsity(0.90+(0.10-0.90)*(1-progress)**3)
+steps_per_epoch=len(train_dataset)
+# The separate smoke schedule covers the same stages in two development epochs.
+# Full defaults: 2,000 rows / batch 512 -> 4 steps; end=200,000, frequency=4,000.
+pruning_controller=PolynomialMagnitudePruning(hyper_siren_layer,"w",
+    initial_sparsity=.10,final_sparsity=.90,begin_step=0,
+    end_step=run_pruning_epochs*steps_per_epoch,power=3,
+    frequency=(1 if SMOKE else prune_epoch)*steps_per_epoch)
+# Masks are assigned before each forward, with raw gradients and optimizer slots
+# active at masked coordinates. Refresh ranks actual weights, allowing reselection.
 ''',
-22:'''optimizer_prune=torch.optim.Adam(model_for_pruning.parameters(),lr=1e-4,eps=1e-7)
+22:'''optimizer_prune=nif.optimizers.ReferenceAdam(model_for_pruning.parameters(),lr=1e-4,eps=1e-7)
 ''',
 26:'''history_prune=train(model_for_pruning,train_dataset,optimizer_prune,run_pruning_epochs,
-                    "pruning",before_epoch=pruning_schedule)
-set_sparsity(0.90)
-# Refresh the pre-hook cached weight and verify actual values, not merely a claimed mask.
-with torch.no_grad(): model_for_pruning(tensor(input_feature[:2]))
+                    "pruning",after_epoch=lambda epoch:pruning_controller.on_epoch_end())
+# Epoch-end masking precedes checkpoints, without an extra schedule refresh.
+assert pruning_controller.step==run_pruning_epochs*steps_per_epoch
+assert pruning_controller.refresh_count==(2 if SMOKE else 50)
 ''',
 28:'''fig,ax=plt.subplots(figsize=(12,4));ax.semilogy([row["loss"] for row in history_prune])
-for epoch_index in range(0,run_pruning_epochs,1 if SMOKE else prune_epoch):ax.axvline(epoch_index,color="r",alpha=.2)
+for epoch_index in range((1 if SMOKE else prune_epoch)-1,run_pruning_epochs,1 if SMOKE else prune_epoch):ax.axvline(epoch_index,color="r",alpha=.2)
 ax.set(xlabel="epoch",ylabel="training loss",title="Magnitude pruning: 10% to 90%")
 fig.savefig(OUT / "pruned_learning_curve.png");plt.show();plt.close(fig)
 ''',
@@ -660,8 +665,8 @@ print({"zero_weights":zero_count,"total_weights":weight_count,"sparsity":sparsit
 ''',
 32:'''y_pred=predict(model_for_pruning,input_feature).reshape(200,10)
 ''',
-34:'''# Strip the pruning reparameterization: the native .pt contains the actual sparse tensor.
-prune.remove(hyper_siren_layer,"w")
+34:'''# Strip the pruning controls: the native .pt contains the actual sparse tensor.
+pruning_controller.strip()
 model_for_export=save_and_check(model_for_pruning,optimizer_prune,"stripped",input_feature[:64])
 pruned_file=OUT / "stripped.pt"
 ''',
@@ -757,12 +762,12 @@ def sobolev_loss(model,xb,yb,supervise_spatial=True):
                  "weighted_spatial_mse":coef_grad*spatial_mse}
 
 model_opt=nif.NIFMultiScale(copy.deepcopy(cfg_shape_net),copy.deepcopy(cfg_parameter_net),"float32").to(device)
-optimizer=torch.optim.Adam(model_opt.parameters(),lr=lr,eps=1e-7)
+optimizer=nif.optimizers.ReferenceAdam(model_opt.parameters(),lr=lr,eps=1e-7)
 history_sobolev=train(model_opt,train_dataset,optimizer,epochs(nepoch),"with_grad",loss_function=sobolev_loss)
 model_opt=save_and_check(model_opt,optimizer,"with_grad",train_data[:64,:2])
 ''',
 22:'''model_opt_ng=nif.NIFMultiScale(copy.deepcopy(cfg_shape_net),copy.deepcopy(cfg_parameter_net),"float32").to(device)
-optimizer_ng=torch.optim.Adam(model_opt_ng.parameters(),lr=lr,eps=1e-7)
+optimizer_ng=nif.optimizers.ReferenceAdam(model_opt_ng.parameters(),lr=lr,eps=1e-7)
 history_baseline=train(model_opt_ng,train_dataset,optimizer_ng,epochs(nepoch),"without_grad",
                        loss_function=lambda m,x,y:sobolev_loss(m,x,y,False))
 model_opt_ng=save_and_check(model_opt_ng,optimizer_ng,"without_grad",train_data[:64,:2])

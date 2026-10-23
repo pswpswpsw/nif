@@ -1,0 +1,9 @@
+........................................................................ [ 64%]
+.......................................                                  [100%]
+=============================== warnings summary ===============================
+dev_tests/test_adabelief_moment_dtype.py::test_nominal_sparse_observed_rows_keep_dense_momentum_and_epsilon[dtype0]
+  /workspace/dev_tests/test_adabelief_moment_dtype.py:146: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/Context.cpp:848.)
+    p.grad=torch.sparse_coo_tensor(torch.tensor([[row]]),torch.from_numpy(g[row:row+1]),p.shape)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+111 passed, 1 warning in 4.00s

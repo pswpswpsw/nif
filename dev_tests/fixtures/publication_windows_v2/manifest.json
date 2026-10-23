@@ -1,0 +1,34 @@
+{
+  "dev_tests/test_pruning_adam_state.py": {
+    "archive": "dev_tests/fixtures/publication_windows_v2/test_pruning_adam_state.py.txt",
+    "sha256": "da7481619fee541e5fecd64d149ce0eb622746337d40fb9af24410788a6af511"
+  },
+  "dev_tests/test_tutorial1_gc_behavior.py": {
+    "archive": "dev_tests/fixtures/publication_windows_v2/test_tutorial1_gc_behavior.py.txt",
+    "sha256": "6e8c4cb9809c954c06c88e22707114313d42106f388d1e15f5a425fc18ecc6b7"
+  },
+  "dev_tests/test_publication_scope.py": {
+    "archive": "dev_tests/fixtures/publication_windows_v2/test_publication_scope.py.txt",
+    "sha256": "c988c5a5eb9d4445eb3d68baf095dc8f5ac7d13647056fa2cbf9bac4f50ca2f5"
+  },
+  "dev_tests/test_tutorial1_gc_scope.py": {
+    "archive": "dev_tests/fixtures/publication_windows_v2/test_tutorial1_gc_scope.py.txt",
+    "sha256": "e8c106cf0cf1729ed386e2f626e733396e8275fef80ad4f7fee1261d11542887"
+  },
+  "dev_tests/test_adabelief_boundary_succession.py": {
+    "archive": "dev_tests/fixtures/publication_windows_v2/test_adabelief_boundary_succession.py.txt",
+    "sha256": "5cfa70a3d5e81321f8f6ccd33a3ab45a31e088b81c28c83269c3d2348f3f6ea0"
+  },
+  "dev_tests/test_publication_transition.py": {
+    "archive": "dev_tests/fixtures/publication_windows_v2/test_publication_transition.py.txt",
+    "sha256": "8d538709057c9e745dd499490bc0768149d48847ba554f4ad7b2902b22ebab01"
+  },
+  "dev_tests/adabelief_moment_scope.py": {
+    "archive": "dev_tests/fixtures/publication_windows_v2/adabelief_moment_scope.py.txt",
+    "sha256": "7e322170072a5c1b9d2970076c3a8e15505ddab66d9135b62d5ec002d3b3352b"
+  },
+  "dev_tests/publication_projection.py": {
+    "archive": "dev_tests/fixtures/publication_windows_v2/publication_projection.py.txt",
+    "sha256": "86a52b9f07355290c2be157050340293f96dd89efce957fbd2fb78e0c94ec22f"
+  }
+}

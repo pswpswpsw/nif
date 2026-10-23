@@ -1,0 +1,140 @@
+--- publication_v1/dev_tests/test_pruning_adam_state.py
++++ windows_v2/dev_tests/test_pruning_adam_state.py
+@@ -192,7 +192,7 @@
+     assert_tutorial1_gc_scope_v2()
+     for number in (3,4):
+         path=next((root/'tutorial').glob(f'{number}_*_pytorch.ipynb'))
+-        assert hashlib.sha256(path.read_bytes()).hexdigest()==fingerprints[str(path.relative_to(root))]
++        assert hashlib.sha256(path.read_bytes()).hexdigest()==fingerprints[path.relative_to(root).as_posix()]
+ 
+ 
+ @pytest.mark.parametrize('dtype,scalar', [(torch.float32,'float32'),(torch.float64,'float64')])
+--- publication_v1/dev_tests/test_tutorial1_gc_behavior.py
++++ windows_v2/dev_tests/test_tutorial1_gc_behavior.py
+@@ -30,7 +30,7 @@
+                 next(s for s in code if s.startswith('cfg_shape_net =')),
+                 next(s for s in code if s.startswith('def scheduler(')),
+                 next(s for s in code if s.startswith('from nif.optimizers import AdaBeliefOptimizer')))
+-    tree=ast.parse((ROOT/'dev_tests/generate_native_notebooks.py').read_text())
++    tree=ast.parse((ROOT/'dev_tests/generate_native_notebooks.py').read_text(encoding='utf-8'))
+     constants={node.targets[0].id:node.value for node in tree.body
+                if isinstance(node,ast.Assign) and isinstance(node.targets[0],ast.Name)}
+     emit=next(node for node in ast.walk(tree) if isinstance(node,ast.Call)
+--- publication_v1/dev_tests/test_publication_scope.py
++++ windows_v2/dev_tests/test_publication_scope.py
+@@ -34,7 +34,10 @@
+ try:
+     result=scope.assert_adabelief_phase_scope_v4()
+ except Exception as exc:
+-    print(json.dumps({'error':type(exc).__name__,'detail':str(exc)}))
++    filename=getattr(exc,'filename',None)
++    if filename is not None:
++        filename=pathlib.Path(filename).relative_to(root).as_posix()
++    print(json.dumps({'error':type(exc).__name__,'detail':str(exc),'filename':filename}))
+ else:
+     print(json.dumps({'passed':True,'scope':sorted(result),'nif_origin':nif.__file__,'scope_origin':scope.__file__}))
+ '''
+@@ -62,7 +65,7 @@
+         path.unlink()
+         result=scope_result(public_root)
+         assert result.get('error')=='FileNotFoundError',result
+-        assert name in result['detail'],result
++        assert result['filename']==name,result
+     finally:path.write_bytes(before)
+ 
+ 
+--- publication_v1/dev_tests/test_tutorial1_gc_scope.py
++++ windows_v2/dev_tests/test_tutorial1_gc_scope.py
+@@ -37,4 +37,6 @@
+                     '    from dev_tests.tutorial1_gc_scope import assert_tutorial1_gc_scope_v2\n'
+                     '    assert_tutorial1_gc_scope_v2()\n'
+                     '    for number in (3,4):')
++    # Publication Windows v2: only portable lookup of immutable POSIX keys.
++    old=old.replace('str(path.relative_to(root))','path.relative_to(root).as_posix()')
+     assert new==old, 'All historical numerical assertions must remain unchanged'
+--- publication_v1/dev_tests/test_adabelief_boundary_succession.py
++++ windows_v2/dev_tests/test_adabelief_boundary_succession.py
+@@ -61,7 +61,10 @@
+         'nif/optimizers/external_optimizers.py','dev_tests/test_public_api_regressions.py',
+         'dev_tests/test_tutorial1_gc_scope.py','dev_tests/tutorial1_gc_scope.py',
+         'dev_tests/test_adabelief_dtype_preservation.py',
+-        'dev_tests/test_adabelief_boundary_succession.py'}
++        'dev_tests/test_adabelief_boundary_succession.py',
++        'dev_tests/test_pruning_adam_state.py','dev_tests/test_tutorial1_gc_behavior.py',
++        'dev_tests/test_publication_scope.py','dev_tests/test_publication_transition.py',
++        'dev_tests/adabelief_moment_scope.py','dev_tests/publication_projection.py'}
+ 
+ 
+ def test_scope_v4_rejects_unrelated_model_edit(monkeypatch):
+--- publication_v1/dev_tests/test_publication_transition.py
++++ windows_v2/dev_tests/test_publication_transition.py
+@@ -22,8 +22,12 @@
+     return before.replace(old,new,1)
+ 
+ 
+-def test_publication_v1_is_only_exact_namespace_and_documentation_change():
++def test_publication_v1_history_and_windows_v2_exact_successor():
+     archive=(ROOT/ARCHIVE).read_bytes()
+     manifest=json.loads((ROOT/'dev_tests/adabelief_moment_candidate_manifest.json').read_text(encoding='utf-8'))
+     assert hashlib.sha256(archive).hexdigest()==manifest['source_sha256'][SOURCE]
+-    assert (ROOT/SOURCE).read_text(encoding='utf-8')==expected_publication_source(archive.decode('utf-8'))
++    # V1 remains checked verbatim; v2 checks the exact current successor.
++    historical=ROOT/'dev_tests/fixtures/publication_windows_v2/adabelief_moment_scope.py.txt'
++    assert historical.read_text(encoding='utf-8')==expected_publication_source(archive.decode('utf-8'))
++    from dev_tests.publication_windows_scope import assert_publication_windows_scope_v2
++    assert_publication_windows_scope_v2(ROOT)
+--- publication_v1/dev_tests/adabelief_moment_scope.py
++++ windows_v2/dev_tests/adabelief_moment_scope.py
+@@ -5,6 +5,8 @@
+ No expected tensor, tolerance, trajectory hash or scientific setting is changed.
+ Publication v1 makes only dev_tests/artifacts/ optional local history;
+ public source, fixtures and provenance remain mandatory.
++Publication Windows v2 additionally verifies exact nonnumerical test-reader
++and scope successors before applying the unchanged scientific scope checks.
+ """
+ import hashlib
+ import json
+@@ -72,6 +74,8 @@
+ 
+ 
+ def assert_adabelief_phase_scope_v4():
++    from dev_tests.publication_windows_scope import assert_publication_windows_scope_v2
++    portable = assert_publication_windows_scope_v2(ROOT)
+     archive=json.loads((ARCHIVE/'manifest.json').read_text(encoding='utf-8'))
+     previous=json.loads((ROOT/'dev_tests/adabelief_boundary_candidate_manifest.json').read_text(encoding='utf-8'))
+     for name,entry in archive.items():
+@@ -80,6 +84,8 @@
+         if name in previous['source_sha256']:
+             assert entry['sha256']==previous['source_sha256'][name],name
+     for name in TRANSITIONS:
++        if name in portable:
++            continue  # Already checked against the exact archived successor.
+         source=(ROOT/archive[name]['archive']).read_text(encoding='utf-8')
+         assert (ROOT/name).read_text(encoding='utf-8')==expected_source(name,source),name
+     before=json.loads((ROOT/'dev_tests/adabelief_moment_pre_fix_fingerprints.json').read_text(encoding='utf-8'))
+@@ -87,7 +93,7 @@
+         # Publication v1: generated local outputs are not public prerequisites.
+         if name.startswith('dev_tests/artifacts/'):
+             continue
+-        if name not in TRANSITIONS and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):
++        if name not in TRANSITIONS and name not in portable and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):
+             assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,name
+     # Freeze the new oracle at its BEFORE-fix hash. The native source entry in
+     # that RED manifest identifies the original snapshot, not the new candidate.
+@@ -99,4 +105,4 @@
+     # The earlier caller also checks older hashes; these exact successors and
+     # its previously authorized v3 source transformations supersede those only.
+     from dev_tests.adabelief_phase_scope import TRANSITIONS as phase_v3
+-    return set(TRANSITIONS)|set(phase_v3)
++    return set(TRANSITIONS)|set(phase_v3)|portable
+--- publication_v1/dev_tests/publication_projection.py
++++ windows_v2/dev_tests/publication_projection.py
+@@ -16,7 +16,7 @@
+ def project_public_files(source,destination,files=None):
+     source,destination=Path(source),Path(destination)
+     if files is None:
+-        files=json.loads((source/'dev_tests/publication_v1_inventory.json').read_text(encoding='utf-8'))
++        files=json.loads((source/'dev_tests/publication_windows_v2_inventory.json').read_text(encoding='utf-8'))
+     for name in files:
+         relative=Path(name)
+         assert not relative.is_absolute() and '..' not in relative.parts,name

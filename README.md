@@ -6,9 +6,11 @@ network. This branch implements the complete package in PyTorch, including
 SIREN multiscale fields, linear spatial bases, differentiable derivatives,
 streamed TFRecord data, and native optimizers.
 
-Independent acceptance passed **253 CUDA checks and all eight full tutorial
-workloads**. See the [validation report](docs/PYTORCH_VALIDATION.md) for workload
-counts, checkpoint continuations, visual checks and hosted Colab coverage.
+Independent acceptance passed **253 checks in the CUDA-enabled environment and
+all eight full tutorial workloads**. These establish package behavior and full
+execution; matched TensorFlow/PyTorch training validation is in progress. See
+the [validation report](docs/PYTORCH_VALIDATION.md) and
+[controlled comparison protocol](docs/PYTORCH_TENSORFLOW_PARITY.md).
 
 ```bash
 python -m pip install -e .

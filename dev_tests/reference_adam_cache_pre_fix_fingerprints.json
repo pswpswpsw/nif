@@ -1,0 +1,5 @@
+{
+  "nif/optimizers/reference_adam.py": "5b200d768dc963ff01ed0535285facd3efbead73131b308e997ca420fffd9e19",
+  "dev_tests/fixtures/reference_adam_guarded_uncached.py": "5b200d768dc963ff01ed0535285facd3efbead73131b308e997ca420fffd9e19",
+  "dev_tests/test_reference_adam_cache.py": "3f39fa69b7cf87551c35c6ac8531601bdbeb58689745a634ecc49cd4328475f5"
+}

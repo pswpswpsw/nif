@@ -1,0 +1,202 @@
+{
+  "phase": "publication_windows_v2",
+  "ownership": "Minimal public-test portability and exact nonnumerical scope/provenance succession only",
+  "environment": {
+    "system": "Linux",
+    "python": "3.13.17",
+    "torch": "2.14.1+cpu",
+    "device": "cpu"
+  },
+  "supplied_diagnosis": {
+    "native_windows_failure_counts": {
+      "failed": 6,
+      "passed": 393,
+      "skipped": 4
+    },
+    "source": "sanitized user message only; no evaluator file access",
+    "native_windows_green_claimed": false
+  },
+  "owned_before_after": {
+    "dev_tests/adabelief_moment_scope.py": {
+      "before_sha256": "7e322170072a5c1b9d2970076c3a8e15505ddab66d9135b62d5ec002d3b3352b",
+      "after_sha256": "647c2e4be5db58305b80122d55473c700ee8392a70cb6f4208c8c8de4aef6687"
+    },
+    "dev_tests/publication_projection.py": {
+      "before_sha256": "86a52b9f07355290c2be157050340293f96dd89efce957fbd2fb78e0c94ec22f",
+      "after_sha256": "ebdaaf1e4441b65c73b324b146c33ceda0cc0c8f9e8decd794cc79801f876e2f"
+    },
+    "dev_tests/test_adabelief_boundary_succession.py": {
+      "before_sha256": "5cfa70a3d5e81321f8f6ccd33a3ab45a31e088b81c28c83269c3d2348f3f6ea0",
+      "after_sha256": "848e8c8f1ea55a5fdf288b653d0f92a46e90ea163183c0312a2d1d3314925def"
+    },
+    "dev_tests/test_pruning_adam_state.py": {
+      "before_sha256": "da7481619fee541e5fecd64d149ce0eb622746337d40fb9af24410788a6af511",
+      "after_sha256": "c9e7e351739c1338b789d483b95f98425ac858d4cce8486a4598dc567aaec9db"
+    },
+    "dev_tests/test_publication_scope.py": {
+      "before_sha256": "c988c5a5eb9d4445eb3d68baf095dc8f5ac7d13647056fa2cbf9bac4f50ca2f5",
+      "after_sha256": "a991b9da0b024ea8bc3c07ac56eecb159d735177d7b8e2265c2f7f6a4016c8b8"
+    },
+    "dev_tests/test_publication_transition.py": {
+      "before_sha256": "8d538709057c9e745dd499490bc0768149d48847ba554f4ad7b2902b22ebab01",
+      "after_sha256": "3f1f87e2ed6df731f381ba872a3541548889172acd59981e674a1bf64eede426"
+    },
+    "dev_tests/test_tutorial1_gc_behavior.py": {
+      "before_sha256": "6e8c4cb9809c954c06c88e22707114313d42106f388d1e15f5a425fc18ecc6b7",
+      "after_sha256": "09ed0c3dce6eafeabc7a85b99880a6f8b7b56f42efc76cd1e2747f9e5898c2af"
+    },
+    "dev_tests/test_tutorial1_gc_scope.py": {
+      "before_sha256": "e8c106cf0cf1729ed386e2f626e733396e8275fef80ad4f7fee1261d11542887",
+      "after_sha256": "aca3f0e1f5174592cea5ae024a5d498a869e41ce71aa0c33f827112163d383a7"
+    }
+  },
+  "public_file_sha256": {
+    "dev_tests/adabelief_moment_scope.py": "647c2e4be5db58305b80122d55473c700ee8392a70cb6f4208c8c8de4aef6687",
+    "dev_tests/fixtures/publication_windows_v2/adabelief_moment_scope.py.txt": "7e322170072a5c1b9d2970076c3a8e15505ddab66d9135b62d5ec002d3b3352b",
+    "dev_tests/fixtures/publication_windows_v2/manifest.json": "5eec0b7027ead6247ae2c3c85ed3cd811bd455a3f00f6e5a3fae3d6fc550765e",
+    "dev_tests/fixtures/publication_windows_v2/publication_projection.py.txt": "86a52b9f07355290c2be157050340293f96dd89efce957fbd2fb78e0c94ec22f",
+    "dev_tests/fixtures/publication_windows_v2/test_adabelief_boundary_succession.py.txt": "5cfa70a3d5e81321f8f6ccd33a3ab45a31e088b81c28c83269c3d2348f3f6ea0",
+    "dev_tests/fixtures/publication_windows_v2/test_pruning_adam_state.py.txt": "da7481619fee541e5fecd64d149ce0eb622746337d40fb9af24410788a6af511",
+    "dev_tests/fixtures/publication_windows_v2/test_publication_scope.py.txt": "c988c5a5eb9d4445eb3d68baf095dc8f5ac7d13647056fa2cbf9bac4f50ca2f5",
+    "dev_tests/fixtures/publication_windows_v2/test_publication_transition.py.txt": "8d538709057c9e745dd499490bc0768149d48847ba554f4ad7b2902b22ebab01",
+    "dev_tests/fixtures/publication_windows_v2/test_tutorial1_gc_behavior.py.txt": "6e8c4cb9809c954c06c88e22707114313d42106f388d1e15f5a425fc18ecc6b7",
+    "dev_tests/fixtures/publication_windows_v2/test_tutorial1_gc_scope.py.txt": "e8c106cf0cf1729ed386e2f626e733396e8275fef80ad4f7fee1261d11542887",
+    "dev_tests/publication_projection.py": "ebdaaf1e4441b65c73b324b146c33ceda0cc0c8f9e8decd794cc79801f876e2f",
+    "dev_tests/publication_windows_scope.py": "39d7780ffe31d570cc2aabefd2b7dfffc4cd3fac1310adfa68ad409831136b1e",
+    "dev_tests/publication_windows_v2_before.json": "f74e976b6a6eaa6c9ae6a7005cd1dd2c21f258972e42d8a838e0e2bbab44f2bd",
+    "dev_tests/publication_windows_v2_clean_full.log": "526acdeedb698e493146047c566de181c2e1857d8cbce064294506d64f427abf",
+    "dev_tests/publication_windows_v2_green.log": "e814ee53597cb9f143855758f7075ac7be33a0da8c1aedef8911a6a82eb3de97",
+    "dev_tests/publication_windows_v2_import_origins.json": "26dd3887fa05de5f6e2ca87f89dceb5fe9576c8891565331e99967fc042edb05",
+    "dev_tests/publication_windows_v2_inventory.json": "d8591e7ef1d86237115b3f2935ef93136caf94a1ac55f803891c16ad095a92e0",
+    "dev_tests/publication_windows_v2_legacy_scope_red.log": "7419aed2a8df789eb3e3ea67b0d8375c18722a59a4e4bde68fa3c292922e7fdb",
+    "dev_tests/publication_windows_v2_projection.json": "2db0f9a72e0dd44fa8191622356de1bc4b84b51ab787755b144f36722793bbbd",
+    "dev_tests/publication_windows_v2_red.log": "e8790498428ce8e87e0f8fe3eca30588c5f58746b118baa46710a957e3949658",
+    "dev_tests/publication_windows_v2_red_fingerprints.json": "7fad2a1967b2121a46de97fc992b6113419d6e8aaffb0ea8fa8564a44079a8fd",
+    "dev_tests/publication_windows_v2_scope.diff": "afb200ab8626cacbf244b7a41ab2a63d49b974db3505a736c3a301bce123161e",
+    "dev_tests/publication_windows_v2_scope_green.log": "b3ce12828e859de524be05722b84d35db31c5e883d785e4c0f83055e9c216d19",
+    "dev_tests/test_adabelief_boundary_succession.py": "848e8c8f1ea55a5fdf288b653d0f92a46e90ea163183c0312a2d1d3314925def",
+    "dev_tests/test_pruning_adam_state.py": "c9e7e351739c1338b789d483b95f98425ac858d4cce8486a4598dc567aaec9db",
+    "dev_tests/test_publication_scope.py": "a991b9da0b024ea8bc3c07ac56eecb159d735177d7b8e2265c2f7f6a4016c8b8",
+    "dev_tests/test_publication_transition.py": "3f1f87e2ed6df731f381ba872a3541548889172acd59981e674a1bf64eede426",
+    "dev_tests/test_publication_windows.py": "5b67e9f7702d815152a5028587404f9cae6c219005044799cb34a2c959acd218",
+    "dev_tests/test_publication_windows_successor.py": "5b36567948b2faa693cee8622ebba6323927e154b1da850c61102f421808fba7",
+    "dev_tests/test_tutorial1_gc_behavior.py": "09ed0c3dce6eafeabc7a85b99880a6f8b7b56f42efc76cd1e2747f9e5898c2af",
+    "dev_tests/test_tutorial1_gc_scope.py": "aca3f0e1f5174592cea5ae024a5d498a869e41ce71aa0c33f827112163d383a7",
+    "docs/PYTORCH_PUBLICATION_WINDOWS_PORTABILITY.md": "d842e47291eb91d5314a49b578d34edc5d65e4a7abce5516218f82187f180170"
+  },
+  "new_public_files": [
+    "dev_tests/fixtures/publication_windows_v2/adabelief_moment_scope.py.txt",
+    "dev_tests/fixtures/publication_windows_v2/manifest.json",
+    "dev_tests/fixtures/publication_windows_v2/publication_projection.py.txt",
+    "dev_tests/fixtures/publication_windows_v2/test_adabelief_boundary_succession.py.txt",
+    "dev_tests/fixtures/publication_windows_v2/test_pruning_adam_state.py.txt",
+    "dev_tests/fixtures/publication_windows_v2/test_publication_scope.py.txt",
+    "dev_tests/fixtures/publication_windows_v2/test_publication_transition.py.txt",
+    "dev_tests/fixtures/publication_windows_v2/test_tutorial1_gc_behavior.py.txt",
+    "dev_tests/fixtures/publication_windows_v2/test_tutorial1_gc_scope.py.txt",
+    "dev_tests/publication_windows_scope.py",
+    "dev_tests/publication_windows_v2_before.json",
+    "dev_tests/publication_windows_v2_clean_full.log",
+    "dev_tests/publication_windows_v2_green.log",
+    "dev_tests/publication_windows_v2_import_origins.json",
+    "dev_tests/publication_windows_v2_inventory.json",
+    "dev_tests/publication_windows_v2_legacy_scope_red.log",
+    "dev_tests/publication_windows_v2_projection.json",
+    "dev_tests/publication_windows_v2_red.log",
+    "dev_tests/publication_windows_v2_red_fingerprints.json",
+    "dev_tests/publication_windows_v2_scope.diff",
+    "dev_tests/publication_windows_v2_scope_green.log",
+    "dev_tests/test_publication_windows.py",
+    "dev_tests/test_publication_windows_successor.py",
+    "docs/PYTORCH_PUBLICATION_WINDOWS_PORTABILITY.md"
+  ],
+  "transforms": {
+    "primary_fixes": {
+      "dev_tests/test_pruning_adam_state.py": "POSIX dictionary key via relative_to(root).as_posix(); same original hashes",
+      "dev_tests/test_tutorial1_gc_behavior.py": "explicit UTF-8 source read only",
+      "dev_tests/test_publication_scope.py": "structured root-relative POSIX exception filename, exact requested-name equality; same exception-type assertion"
+    },
+    "scope_wiring_files": [
+      "dev_tests/adabelief_moment_scope.py",
+      "dev_tests/publication_projection.py",
+      "dev_tests/test_adabelief_boundary_succession.py",
+      "dev_tests/test_publication_transition.py",
+      "dev_tests/test_tutorial1_gc_scope.py"
+    ],
+    "exact_diff": "dev_tests/publication_windows_v2_scope.diff",
+    "original_sources": "dev_tests/fixtures/publication_windows_v2/manifest.json",
+    "original_source_hash_anchor": "unchanged publication_v1_manifest.json and publication_v1_before.json",
+    "numeric_assertions_and_expectations": "unchanged"
+  },
+  "tests": {
+    "genuine_before_fix_red": {
+      "failed": 6,
+      "passed": 3,
+      "log": "dev_tests/publication_windows_v2_red.log"
+    },
+    "same_frozen_reproductions_green": {
+      "passed": 9,
+      "log": "dev_tests/publication_windows_v2_green.log"
+    },
+    "legacy_guards_before_succession": {
+      "failed": 4,
+      "passed": 2,
+      "deselected": 4,
+      "log": "dev_tests/publication_windows_v2_legacy_scope_red.log"
+    },
+    "focused_green": {
+      "passed": 40,
+      "log": "dev_tests/publication_windows_v2_scope_green.log"
+    },
+    "full_clean_public_suite": {
+      "passed": 416,
+      "skipped": 2,
+      "warnings": 571,
+      "seconds": 47.82,
+      "selection": "entire dev_tests collection; no deselection",
+      "log": "dev_tests/publication_windows_v2_clean_full.log"
+    },
+    "negative_controls": [
+      "different Windows filename rejected",
+      "missing required public fixtures/provenance rejected",
+      "missing new archived source rejected",
+      "changed golden/archive/model rejected",
+      "changed numerical assertion rejected",
+      "weakened exact-filename assertion rejected",
+      "broadened generated namespace rejected"
+    ],
+    "git_diff_check": "passed"
+  },
+  "projection": {
+    "composition": "dev_tests/publication_windows_v2_projection.json",
+    "file_count": 377,
+    "bytes": 98971219,
+    "required_historical_public_paths": 297,
+    "historical_optional_outputs_omitted": 439,
+    "runtime_git_required": false,
+    "runtime_mode": "absolute Python -I, empty PATH, CUDA_VISIBLE_DEVICES empty",
+    "construction": "read-only Git public inventory only",
+    "target_test_import_origins": "dev_tests/publication_windows_v2_import_origins.json",
+    "all_snapshotted_source_bytes_unchanged_after_suite": true
+  },
+  "generated_evidence_not_required_for_publication": {
+    "dev_tests/artifacts/publication_windows_v2/public_suite.junit.xml": "b5ec10a87fb2f7b97336493c815d415291376dd22ee6fea88134805b0dc14d60"
+  },
+  "preservation": {
+    "phase1_logs_manifests_old_fixtures_goldens_unchanged": true,
+    "new_red_test_and_log_unchanged": true,
+    "exact_optional_namespace": "dev_tests/artifacts/",
+    "old_optional_local_artifacts_verified": 439,
+    "scientific_paths_unchanged": 65,
+    "scientific_mapping_sha256": "cb32d2e5f6b14a9a60285c8cab79c80a1622630efd6f405c98081bd81ff51155",
+    "preexisting_unchanged_count": 348,
+    "external_observed_edits_left_untouched": [
+      "docs/PYTORCH_TENSORFLOW_PARITY.md"
+    ]
+  },
+  "limitations": [
+    "Linux-hosted Windows-path/GBK simulations only; native Windows GREEN requires independent runner",
+    "No scientific workload, GPU, TensorFlow runtime, install, Git mutation or publication",
+    "No full-training parity, all-tutorial completion or independent-acceptance claim"
+  ]
+}

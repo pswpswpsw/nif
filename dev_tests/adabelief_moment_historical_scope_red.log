@@ -1,0 +1,732 @@
+FFFFFFFF..FFFFFF..F.                                                     [100%]
+=================================== FAILURES ===================================
+_ test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse[False-False-dtype0] _
+
+dtype = torch.float32, amsgrad = False, sparse = False
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('sparse',[False,True])
+    def test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse(dtype,amsgrad,sparse):
+        p=torch.nn.Parameter(torch.ones(3,2,dtype=dtype))
+        q=torch.nn.Parameter(p.detach().clone())
+        options=dict(lr=lambda t:.002/(1+t*.01),weight_decay=lambda t:.02/(1+t),
+                     total_steps=12,warmup_proportion=.25,min_lr=.0001,decay=.1,
+                     clipvalue=.3,clipnorm=.4,gradient_centralization=not sparse,
+                     amsgrad=amsgrad)
+        current=AdaBeliefOptimizer([p],**options)
+        historical=HistoricalAdaBelief([q],**options)
+        for t in range(1,21):
+            if sparse:
+                g=torch.sparse_coo_tensor(torch.tensor([[t%3]]),torch.tensor([[.1*t,-.2]],dtype=dtype),p.shape)
+            else:
+                g=torch.sin(torch.arange(6,dtype=dtype).reshape(3,2)+t*.1)
+            p.grad=g.clone();q.grad=g.clone()
+            current.step();historical.step()
+            for name,value in current.state[p].items():
+                other=historical.state[q][name]
+                if isinstance(value,torch.Tensor):
+                    assert value.dtype==other.dtype and value.device==other.device
+>                   assert torch.equal(value.contiguous().reshape(-1).view(torch.uint8),
+E                   AssertionError: exp_avg
+E                   assert False
+E                    +  where False = <built-in method equal of type object at 0x74d52f9801a0>(tensor([ 56, 138, 162, 188,  56, 138, 162,  60,  56, 138, 162,  60,  56, 138,\n        162, 188,  47,  14, 105,  59,  64,  14, 105, 187], dtype=torch.uint8), tensor([ 54, 138, 162, 188,  54, 138, 162,  60,  54, 138, 162,  60,  54, 138,\n        162, 188,  43,  14, 105,  59,  61,  14, 105, 187], dtype=torch.uint8))
+E                    +    where <built-in method equal of type object at 0x74d52f9801a0> = torch.equal
+E                    +    and   tensor([ 56, 138, 162, 188,  56, 138, 162,  60,  56, 138, 162,  60,  56, 138,\n        162, 188,  47,  14, 105,  59,  64,  14, 105, 187], dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d50e423980>(torch.uint8)
+E                    +      where <built-in method view of Tensor object at 0x74d50e423980> = tensor([-0.0198,  0.0198,  0.0198, -0.0198,  0.0036, -0.0036]).view
+E                    +        where tensor([-0.0198,  0.0198,  0.0198, -0.0198,  0.0036, -0.0036]) = <built-in method reshape of Tensor object at 0x74d50e423890>(-1)
+E                    +          where <built-in method reshape of Tensor object at 0x74d50e423890> = tensor([[-0.0198,  0.0198],\n        [ 0.0198, -0.0198],\n        [ 0.0036, -0.0036]]).reshape
+E                    +            where tensor([[-0.0198,  0.0198],\n        [ 0.0198, -0.0198],\n        [ 0.0036, -0.0036]]) = <built-in method contiguous of Tensor object at 0x74d50e423890>()
+E                    +              where <built-in method contiguous of Tensor object at 0x74d50e423890> = tensor([[-0.0198,  0.0198],\n        [ 0.0198, -0.0198],\n        [ 0.0036, -0.0036]]).contiguous
+E                    +      and   torch.uint8 = torch.uint8
+E                    +    and   tensor([ 54, 138, 162, 188,  54, 138, 162,  60,  54, 138, 162,  60,  54, 138,\n        162, 188,  43,  14, 105,  59,  61,  14, 105, 187], dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d50e4236b0>(torch.uint8)
+E                    +      where <built-in method view of Tensor object at 0x74d50e4236b0> = tensor([-0.0198,  0.0198,  0.0198, -0.0198,  0.0036, -0.0036]).view
+E                    +        where tensor([-0.0198,  0.0198,  0.0198, -0.0198,  0.0036, -0.0036]) = <built-in method reshape of Tensor object at 0x74d50e405f40>(-1)
+E                    +          where <built-in method reshape of Tensor object at 0x74d50e405f40> = tensor([[-0.0198,  0.0198],\n        [ 0.0198, -0.0198],\n        [ 0.0036, -0.0036]]).reshape
+E                    +            where tensor([[-0.0198,  0.0198],\n        [ 0.0198, -0.0198],\n        [ 0.0036, -0.0036]]) = <built-in method contiguous of Tensor object at 0x74d50e405f40>()
+E                    +              where <built-in method contiguous of Tensor object at 0x74d50e405f40> = tensor([[-0.0198,  0.0198],\n        [ 0.0198, -0.0198],\n        [ 0.0036, -0.0036]]).contiguous
+E                    +      and   torch.uint8 = torch.uint8
+
+dev_tests/test_adabelief_dtype_preservation.py:40: AssertionError
+_ test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse[False-False-dtype1] _
+
+dtype = torch.float64, amsgrad = False, sparse = False
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('sparse',[False,True])
+    def test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse(dtype,amsgrad,sparse):
+        p=torch.nn.Parameter(torch.ones(3,2,dtype=dtype))
+        q=torch.nn.Parameter(p.detach().clone())
+        options=dict(lr=lambda t:.002/(1+t*.01),weight_decay=lambda t:.02/(1+t),
+                     total_steps=12,warmup_proportion=.25,min_lr=.0001,decay=.1,
+                     clipvalue=.3,clipnorm=.4,gradient_centralization=not sparse,
+                     amsgrad=amsgrad)
+        current=AdaBeliefOptimizer([p],**options)
+        historical=HistoricalAdaBelief([q],**options)
+        for t in range(1,21):
+            if sparse:
+                g=torch.sparse_coo_tensor(torch.tensor([[t%3]]),torch.tensor([[.1*t,-.2]],dtype=dtype),p.shape)
+            else:
+                g=torch.sin(torch.arange(6,dtype=dtype).reshape(3,2)+t*.1)
+            p.grad=g.clone();q.grad=g.clone()
+            current.step();historical.step()
+            for name,value in current.state[p].items():
+                other=historical.state[q][name]
+                if isinstance(value,torch.Tensor):
+                    assert value.dtype==other.dtype and value.device==other.device
+>                   assert torch.equal(value.contiguous().reshape(-1).view(torch.uint8),
+E                   AssertionError: exp_avg_var
+E                   assert False
+E                    +  where False = <built-in method equal of type object at 0x74d52f9801a0>(tensor([146, 131, 211,  49, 125, 123,  14,  63, 146, 131, 211,  49, 125, 123,\n         14,  63, 146, 131, 211,  49, 12...,  14,  63,  57, 222, 218,  23, 169,  43, 177,  62,  57, 222,\n        218,  23, 169,  43, 177,  62], dtype=torch.uint8), tensor([145, 131, 211,  49, 125, 123,  14,  63, 145, 131, 211,  49, 125, 123,\n         14,  63, 145, 131, 211,  49, 12...,  14,  63,  57, 222, 218,  23, 169,  43, 177,  62,  57, 222,\n        218,  23, 169,  43, 177,  62], dtype=torch.uint8))
+E                    +    where <built-in method equal of type object at 0x74d52f9801a0> = torch.equal
+E                    +    and   tensor([146, 131, 211,  49, 125, 123,  14,  63, 146, 131, 211,  49, 125, 123,\n         14,  63, 146, 131, 211,  49, 12...,  14,  63,  57, 222, 218,  23, 169,  43, 177,  62,  57, 222,\n        218,  23, 169,  43, 177,  62], dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d511500500>(torch.uint8)
+E                    +      where <built-in method view of Tensor object at 0x74d511500500> = tensor([5.8141e-05, 5.8141e-05, 5.8141e-05, 5.8141e-05, 1.0234e-06, 1.0234e-06],\n       dtype=torch.float64).view
+E                    +        where tensor([5.8141e-05, 5.8141e-05, 5.8141e-05, 5.8141e-05, 1.0234e-06, 1.0234e-06],\n       dtype=torch.float64) = <built-in method reshape of Tensor object at 0x74d50e421090>(-1)
+E                    +          where <built-in method reshape of Tensor object at 0x74d50e421090> = tensor([[5.8141e-05, 5.8141e-05],\n        [5.8141e-05, 5.8141e-05],\n        [1.0234e-06, 1.0234e-06]], dtype=torch.float64).reshape
+E                    +            where tensor([[5.8141e-05, 5.8141e-05],\n        [5.8141e-05, 5.8141e-05],\n        [1.0234e-06, 1.0234e-06]], dtype=torch.float64) = <built-in method contiguous of Tensor object at 0x74d50e421090>()
+E                    +              where <built-in method contiguous of Tensor object at 0x74d50e421090> = tensor([[5.8141e-05, 5.8141e-05],\n        [5.8141e-05, 5.8141e-05],\n        [1.0234e-06, 1.0234e-06]], dtype=torch.float64).contiguous
+E                    +      and   torch.uint8 = torch.uint8
+E                    +    and   tensor([145, 131, 211,  49, 125, 123,  14,  63, 145, 131, 211,  49, 125, 123,\n         14,  63, 145, 131, 211,  49, 12...,  14,  63,  57, 222, 218,  23, 169,  43, 177,  62,  57, 222,\n        218,  23, 169,  43, 177,  62], dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d50e423520>(torch.uint8)
+E                    +      where <built-in method view of Tensor object at 0x74d50e423520> = tensor([5.8141e-05, 5.8141e-05, 5.8141e-05, 5.8141e-05, 1.0234e-06, 1.0234e-06],\n       dtype=torch.float64).view
+E                    +        where tensor([5.8141e-05, 5.8141e-05, 5.8141e-05, 5.8141e-05, 1.0234e-06, 1.0234e-06],\n       dtype=torch.float64) = <built-in method reshape of Tensor object at 0x74d50e421540>(-1)
+E                    +          where <built-in method reshape of Tensor object at 0x74d50e421540> = tensor([[5.8141e-05, 5.8141e-05],\n        [5.8141e-05, 5.8141e-05],\n        [1.0234e-06, 1.0234e-06]], dtype=torch.float64).reshape
+E                    +            where tensor([[5.8141e-05, 5.8141e-05],\n        [5.8141e-05, 5.8141e-05],\n        [1.0234e-06, 1.0234e-06]], dtype=torch.float64) = <built-in method contiguous of Tensor object at 0x74d50e421540>()
+E                    +              where <built-in method contiguous of Tensor object at 0x74d50e421540> = tensor([[5.8141e-05, 5.8141e-05],\n        [5.8141e-05, 5.8141e-05],\n        [1.0234e-06, 1.0234e-06]], dtype=torch.float64).contiguous
+E                    +      and   torch.uint8 = torch.uint8
+
+dev_tests/test_adabelief_dtype_preservation.py:40: AssertionError
+_ test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse[False-True-dtype0] _
+
+dtype = torch.float32, amsgrad = True, sparse = False
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('sparse',[False,True])
+    def test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse(dtype,amsgrad,sparse):
+        p=torch.nn.Parameter(torch.ones(3,2,dtype=dtype))
+        q=torch.nn.Parameter(p.detach().clone())
+        options=dict(lr=lambda t:.002/(1+t*.01),weight_decay=lambda t:.02/(1+t),
+                     total_steps=12,warmup_proportion=.25,min_lr=.0001,decay=.1,
+                     clipvalue=.3,clipnorm=.4,gradient_centralization=not sparse,
+                     amsgrad=amsgrad)
+        current=AdaBeliefOptimizer([p],**options)
+        historical=HistoricalAdaBelief([q],**options)
+        for t in range(1,21):
+            if sparse:
+                g=torch.sparse_coo_tensor(torch.tensor([[t%3]]),torch.tensor([[.1*t,-.2]],dtype=dtype),p.shape)
+            else:
+                g=torch.sin(torch.arange(6,dtype=dtype).reshape(3,2)+t*.1)
+            p.grad=g.clone();q.grad=g.clone()
+            current.step();historical.step()
+            for name,value in current.state[p].items():
+                other=historical.state[q][name]
+                if isinstance(value,torch.Tensor):
+                    assert value.dtype==other.dtype and value.device==other.device
+>                   assert torch.equal(value.contiguous().reshape(-1).view(torch.uint8),
+E                   AssertionError: exp_avg
+E                   assert False
+E                    +  where False = <built-in method equal of type object at 0x74d52f9801a0>(tensor([ 56, 138, 162, 188,  56, 138, 162,  60,  56, 138, 162,  60,  56, 138,\n        162, 188,  47,  14, 105,  59,  64,  14, 105, 187], dtype=torch.uint8), tensor([ 54, 138, 162, 188,  54, 138, 162,  60,  54, 138, 162,  60,  54, 138,\n        162, 188,  43,  14, 105,  59,  61,  14, 105, 187], dtype=torch.uint8))
+E                    +    where <built-in method equal of type object at 0x74d52f9801a0> = torch.equal
+E                    +    and   tensor([ 56, 138, 162, 188,  56, 138, 162,  60,  56, 138, 162,  60,  56, 138,\n        162, 188,  47,  14, 105,  59,  64,  14, 105, 187], dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d50e404e10>(torch.uint8)
+E                    +      where <built-in method view of Tensor object at 0x74d50e404e10> = tensor([-0.0198,  0.0198,  0.0198, -0.0198,  0.0036, -0.0036]).view
+E                    +        where tensor([-0.0198,  0.0198,  0.0198, -0.0198,  0.0036, -0.0036]) = <built-in method reshape of Tensor object at 0x74d50e444140>(-1)
+E                    +          where <built-in method reshape of Tensor object at 0x74d50e444140> = tensor([[-0.0198,  0.0198],\n        [ 0.0198, -0.0198],\n        [ 0.0036, -0.0036]]).reshape
+E                    +            where tensor([[-0.0198,  0.0198],\n        [ 0.0198, -0.0198],\n        [ 0.0036, -0.0036]]) = <built-in method contiguous of Tensor object at 0x74d50e444140>()
+E                    +              where <built-in method contiguous of Tensor object at 0x74d50e444140> = tensor([[-0.0198,  0.0198],\n        [ 0.0198, -0.0198],\n        [ 0.0036, -0.0036]]).contiguous
+E                    +      and   torch.uint8 = torch.uint8
+E                    +    and   tensor([ 54, 138, 162, 188,  54, 138, 162,  60,  54, 138, 162,  60,  54, 138,\n        162, 188,  43,  14, 105,  59,  61,  14, 105, 187], dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d50e444870>(torch.uint8)
+E                    +      where <built-in method view of Tensor object at 0x74d50e444870> = tensor([-0.0198,  0.0198,  0.0198, -0.0198,  0.0036, -0.0036]).view
+E                    +        where tensor([-0.0198,  0.0198,  0.0198, -0.0198,  0.0036, -0.0036]) = <built-in method reshape of Tensor object at 0x74d50e55e710>(-1)
+E                    +          where <built-in method reshape of Tensor object at 0x74d50e55e710> = tensor([[-0.0198,  0.0198],\n        [ 0.0198, -0.0198],\n        [ 0.0036, -0.0036]]).reshape
+E                    +            where tensor([[-0.0198,  0.0198],\n        [ 0.0198, -0.0198],\n        [ 0.0036, -0.0036]]) = <built-in method contiguous of Tensor object at 0x74d50e55e710>()
+E                    +              where <built-in method contiguous of Tensor object at 0x74d50e55e710> = tensor([[-0.0198,  0.0198],\n        [ 0.0198, -0.0198],\n        [ 0.0036, -0.0036]]).contiguous
+E                    +      and   torch.uint8 = torch.uint8
+
+dev_tests/test_adabelief_dtype_preservation.py:40: AssertionError
+_ test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse[False-True-dtype1] _
+
+dtype = torch.float64, amsgrad = True, sparse = False
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('sparse',[False,True])
+    def test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse(dtype,amsgrad,sparse):
+        p=torch.nn.Parameter(torch.ones(3,2,dtype=dtype))
+        q=torch.nn.Parameter(p.detach().clone())
+        options=dict(lr=lambda t:.002/(1+t*.01),weight_decay=lambda t:.02/(1+t),
+                     total_steps=12,warmup_proportion=.25,min_lr=.0001,decay=.1,
+                     clipvalue=.3,clipnorm=.4,gradient_centralization=not sparse,
+                     amsgrad=amsgrad)
+        current=AdaBeliefOptimizer([p],**options)
+        historical=HistoricalAdaBelief([q],**options)
+        for t in range(1,21):
+            if sparse:
+                g=torch.sparse_coo_tensor(torch.tensor([[t%3]]),torch.tensor([[.1*t,-.2]],dtype=dtype),p.shape)
+            else:
+                g=torch.sin(torch.arange(6,dtype=dtype).reshape(3,2)+t*.1)
+            p.grad=g.clone();q.grad=g.clone()
+            current.step();historical.step()
+            for name,value in current.state[p].items():
+                other=historical.state[q][name]
+                if isinstance(value,torch.Tensor):
+                    assert value.dtype==other.dtype and value.device==other.device
+>                   assert torch.equal(value.contiguous().reshape(-1).view(torch.uint8),
+E                   AssertionError: exp_avg_var
+E                   assert False
+E                    +  where False = <built-in method equal of type object at 0x74d52f9801a0>(tensor([146, 131, 211,  49, 125, 123,  14,  63, 146, 131, 211,  49, 125, 123,\n         14,  63, 146, 131, 211,  49, 12...,  14,  63,  57, 222, 218,  23, 169,  43, 177,  62,  57, 222,\n        218,  23, 169,  43, 177,  62], dtype=torch.uint8), tensor([145, 131, 211,  49, 125, 123,  14,  63, 145, 131, 211,  49, 125, 123,\n         14,  63, 145, 131, 211,  49, 12...,  14,  63,  57, 222, 218,  23, 169,  43, 177,  62,  57, 222,\n        218,  23, 169,  43, 177,  62], dtype=torch.uint8))
+E                    +    where <built-in method equal of type object at 0x74d52f9801a0> = torch.equal
+E                    +    and   tensor([146, 131, 211,  49, 125, 123,  14,  63, 146, 131, 211,  49, 125, 123,\n         14,  63, 146, 131, 211,  49, 12...,  14,  63,  57, 222, 218,  23, 169,  43, 177,  62,  57, 222,\n        218,  23, 169,  43, 177,  62], dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d50e4447d0>(torch.uint8)
+E                    +      where <built-in method view of Tensor object at 0x74d50e4447d0> = tensor([5.8141e-05, 5.8141e-05, 5.8141e-05, 5.8141e-05, 1.0234e-06, 1.0234e-06],\n       dtype=torch.float64).view
+E                    +        where tensor([5.8141e-05, 5.8141e-05, 5.8141e-05, 5.8141e-05, 1.0234e-06, 1.0234e-06],\n       dtype=torch.float64) = <built-in method reshape of Tensor object at 0x74d50e444f00>(-1)
+E                    +          where <built-in method reshape of Tensor object at 0x74d50e444f00> = tensor([[5.8141e-05, 5.8141e-05],\n        [5.8141e-05, 5.8141e-05],\n        [1.0234e-06, 1.0234e-06]], dtype=torch.float64).reshape
+E                    +            where tensor([[5.8141e-05, 5.8141e-05],\n        [5.8141e-05, 5.8141e-05],\n        [1.0234e-06, 1.0234e-06]], dtype=torch.float64) = <built-in method contiguous of Tensor object at 0x74d50e444f00>()
+E                    +              where <built-in method contiguous of Tensor object at 0x74d50e444f00> = tensor([[5.8141e-05, 5.8141e-05],\n        [5.8141e-05, 5.8141e-05],\n        [1.0234e-06, 1.0234e-06]], dtype=torch.float64).contiguous
+E                    +      and   torch.uint8 = torch.uint8
+E                    +    and   tensor([145, 131, 211,  49, 125, 123,  14,  63, 145, 131, 211,  49, 125, 123,\n         14,  63, 145, 131, 211,  49, 12...,  14,  63,  57, 222, 218,  23, 169,  43, 177,  62,  57, 222,\n        218,  23, 169,  43, 177,  62], dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d50e444e10>(torch.uint8)
+E                    +      where <built-in method view of Tensor object at 0x74d50e444e10> = tensor([5.8141e-05, 5.8141e-05, 5.8141e-05, 5.8141e-05, 1.0234e-06, 1.0234e-06],\n       dtype=torch.float64).view
+E                    +        where tensor([5.8141e-05, 5.8141e-05, 5.8141e-05, 5.8141e-05, 1.0234e-06, 1.0234e-06],\n       dtype=torch.float64) = <built-in method reshape of Tensor object at 0x74d50e4444b0>(-1)
+E                    +          where <built-in method reshape of Tensor object at 0x74d50e4444b0> = tensor([[5.8141e-05, 5.8141e-05],\n        [5.8141e-05, 5.8141e-05],\n        [1.0234e-06, 1.0234e-06]], dtype=torch.float64).reshape
+E                    +            where tensor([[5.8141e-05, 5.8141e-05],\n        [5.8141e-05, 5.8141e-05],\n        [1.0234e-06, 1.0234e-06]], dtype=torch.float64) = <built-in method contiguous of Tensor object at 0x74d50e4444b0>()
+E                    +              where <built-in method contiguous of Tensor object at 0x74d50e4444b0> = tensor([[5.8141e-05, 5.8141e-05],\n        [5.8141e-05, 5.8141e-05],\n        [1.0234e-06, 1.0234e-06]], dtype=torch.float64).contiguous
+E                    +      and   torch.uint8 = torch.uint8
+
+dev_tests/test_adabelief_dtype_preservation.py:40: AssertionError
+_ test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse[True-False-dtype0] _
+
+dtype = torch.float32, amsgrad = False, sparse = True
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('sparse',[False,True])
+    def test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse(dtype,amsgrad,sparse):
+        p=torch.nn.Parameter(torch.ones(3,2,dtype=dtype))
+        q=torch.nn.Parameter(p.detach().clone())
+        options=dict(lr=lambda t:.002/(1+t*.01),weight_decay=lambda t:.02/(1+t),
+                     total_steps=12,warmup_proportion=.25,min_lr=.0001,decay=.1,
+                     clipvalue=.3,clipnorm=.4,gradient_centralization=not sparse,
+                     amsgrad=amsgrad)
+        current=AdaBeliefOptimizer([p],**options)
+        historical=HistoricalAdaBelief([q],**options)
+        for t in range(1,21):
+            if sparse:
+                g=torch.sparse_coo_tensor(torch.tensor([[t%3]]),torch.tensor([[.1*t,-.2]],dtype=dtype),p.shape)
+            else:
+                g=torch.sin(torch.arange(6,dtype=dtype).reshape(3,2)+t*.1)
+            p.grad=g.clone();q.grad=g.clone()
+            current.step();historical.step()
+            for name,value in current.state[p].items():
+                other=historical.state[q][name]
+                if isinstance(value,torch.Tensor):
+                    assert value.dtype==other.dtype and value.device==other.device
+>                   assert torch.equal(value.contiguous().reshape(-1).view(torch.uint8),
+E                   AssertionError: exp_avg
+E                   assert False
+E                    +  where False = <built-in method equal of type object at 0x74d52f9801a0>(tensor([  0,   0,   0,   0,   0,   0,   0,   0,  13, 215,  35,  60,  13, 215,\n        163, 188,   0,   0,   0,   0,   0,   0,   0,   0], dtype=torch.uint8), tensor([  0,   0,   0,   0,   0,   0,   0,   0,  11, 215,  35,  60,  11, 215,\n        163, 188,   0,   0,   0,   0,   0,   0,   0,   0], dtype=torch.uint8))
+E                    +    where <built-in method equal of type object at 0x74d52f9801a0> = torch.equal
+E                    +    and   tensor([  0,   0,   0,   0,   0,   0,   0,   0,  13, 215,  35,  60,  13, 215,\n        163, 188,   0,   0,   0,   0,   0,   0,   0,   0], dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d50e4459f0>(torch.uint8)
+E                    +      where <built-in method view of Tensor object at 0x74d50e4459f0> = tensor([ 0.0000,  0.0000,  0.0100, -0.0200,  0.0000,  0.0000]).view
+E                    +        where tensor([ 0.0000,  0.0000,  0.0100, -0.0200,  0.0000,  0.0000]) = <built-in method reshape of Tensor object at 0x74d50e445b80>(-1)
+E                    +          where <built-in method reshape of Tensor object at 0x74d50e445b80> = tensor([[ 0.0000,  0.0000],\n        [ 0.0100, -0.0200],\n        [ 0.0000,  0.0000]]).reshape
+E                    +            where tensor([[ 0.0000,  0.0000],\n        [ 0.0100, -0.0200],\n        [ 0.0000,  0.0000]]) = <built-in method contiguous of Tensor object at 0x74d50e445b80>()
+E                    +              where <built-in method contiguous of Tensor object at 0x74d50e445b80> = tensor([[ 0.0000,  0.0000],\n        [ 0.0100, -0.0200],\n        [ 0.0000,  0.0000]]).contiguous
+E                    +      and   torch.uint8 = torch.uint8
+E                    +    and   tensor([  0,   0,   0,   0,   0,   0,   0,   0,  11, 215,  35,  60,  11, 215,\n        163, 188,   0,   0,   0,   0,   0,   0,   0,   0], dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d50e445a40>(torch.uint8)
+E                    +      where <built-in method view of Tensor object at 0x74d50e445a40> = tensor([ 0.0000,  0.0000,  0.0100, -0.0200,  0.0000,  0.0000]).view
+E                    +        where tensor([ 0.0000,  0.0000,  0.0100, -0.0200,  0.0000,  0.0000]) = <built-in method reshape of Tensor object at 0x74d50e445d60>(-1)
+E                    +          where <built-in method reshape of Tensor object at 0x74d50e445d60> = tensor([[ 0.0000,  0.0000],\n        [ 0.0100, -0.0200],\n        [ 0.0000,  0.0000]]).reshape
+E                    +            where tensor([[ 0.0000,  0.0000],\n        [ 0.0100, -0.0200],\n        [ 0.0000,  0.0000]]) = <built-in method contiguous of Tensor object at 0x74d50e445d60>()
+E                    +              where <built-in method contiguous of Tensor object at 0x74d50e445d60> = tensor([[ 0.0000,  0.0000],\n        [ 0.0100, -0.0200],\n        [ 0.0000,  0.0000]]).contiguous
+E                    +      and   torch.uint8 = torch.uint8
+
+dev_tests/test_adabelief_dtype_preservation.py:40: AssertionError
+_ test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse[True-False-dtype1] _
+
+dtype = torch.float64, amsgrad = False, sparse = True
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('sparse',[False,True])
+    def test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse(dtype,amsgrad,sparse):
+        p=torch.nn.Parameter(torch.ones(3,2,dtype=dtype))
+        q=torch.nn.Parameter(p.detach().clone())
+        options=dict(lr=lambda t:.002/(1+t*.01),weight_decay=lambda t:.02/(1+t),
+                     total_steps=12,warmup_proportion=.25,min_lr=.0001,decay=.1,
+                     clipvalue=.3,clipnorm=.4,gradient_centralization=not sparse,
+                     amsgrad=amsgrad)
+        current=AdaBeliefOptimizer([p],**options)
+        historical=HistoricalAdaBelief([q],**options)
+        for t in range(1,21):
+            if sparse:
+                g=torch.sparse_coo_tensor(torch.tensor([[t%3]]),torch.tensor([[.1*t,-.2]],dtype=dtype),p.shape)
+            else:
+                g=torch.sin(torch.arange(6,dtype=dtype).reshape(3,2)+t*.1)
+            p.grad=g.clone();q.grad=g.clone()
+            current.step();historical.step()
+            for name,value in current.state[p].items():
+                other=historical.state[q][name]
+                if isinstance(value,torch.Tensor):
+                    assert value.dtype==other.dtype and value.device==other.device
+>                   assert torch.equal(value.contiguous().reshape(-1).view(torch.uint8),
+E                   AssertionError: exp_avg_var
+E                   assert False
+E                    +  where False = <built-in method equal of type object at 0x74d52f9801a0>(tensor([ 20, 146, 202, 118,  60,  28,  19,  63, 122, 227,  46, 134, 167, 252,\n          0,  63,  49, 188,  35,  33, 24...,   0,  63, 217, 236, 196,  68,  78, 248,   0,  63, 217, 236,\n        196,  68,  78, 248,   0,  63], dtype=torch.uint8), tensor([ 19, 146, 202, 118,  60,  28,  19,  63, 122, 227,  46, 134, 167, 252,\n          0,  63,  49, 188,  35,  33, 24...,   0,  63, 217, 236, 196,  68,  78, 248,   0,  63, 217, 236,\n        196,  68,  78, 248,   0,  63], dtype=torch.uint8))
+E                    +    where <built-in method equal of type object at 0x74d52f9801a0> = torch.equal
+E                    +    and   tensor([ 20, 146, 202, 118,  60,  28,  19,  63, 122, 227,  46, 134, 167, 252,\n          0,  63,  49, 188,  35,  33, 24...,   0,  63, 217, 236, 196,  68,  78, 248,   0,  63, 217, 236,\n        196,  68,  78, 248,   0,  63], dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d5115032a0>(torch.uint8)
+E                    +      where <built-in method view of Tensor object at 0x74d5115032a0> = tensor([7.2900e-05, 3.2400e-05, 8.0838e-06, 3.2335e-05, 3.2368e-05, 3.2368e-05],\n       dtype=torch.float64).view
+E                    +        where tensor([7.2900e-05, 3.2400e-05, 8.0838e-06, 3.2335e-05, 3.2368e-05, 3.2368e-05],\n       dtype=torch.float64) = <built-in method reshape of Tensor object at 0x74d511500c30>(-1)
+E                    +          where <built-in method reshape of Tensor object at 0x74d511500c30> = tensor([[7.2900e-05, 3.2400e-05],\n        [8.0838e-06, 3.2335e-05],\n        [3.2368e-05, 3.2368e-05]], dtype=torch.float64).reshape
+E                    +            where tensor([[7.2900e-05, 3.2400e-05],\n        [8.0838e-06, 3.2335e-05],\n        [3.2368e-05, 3.2368e-05]], dtype=torch.float64) = <built-in method contiguous of Tensor object at 0x74d511500c30>()
+E                    +              where <built-in method contiguous of Tensor object at 0x74d511500c30> = tensor([[7.2900e-05, 3.2400e-05],\n        [8.0838e-06, 3.2335e-05],\n        [3.2368e-05, 3.2368e-05]], dtype=torch.float64).contiguous
+E                    +      and   torch.uint8 = torch.uint8
+E                    +    and   tensor([ 19, 146, 202, 118,  60,  28,  19,  63, 122, 227,  46, 134, 167, 252,\n          0,  63,  49, 188,  35,  33, 24...,   0,  63, 217, 236, 196,  68,  78, 248,   0,  63, 217, 236,\n        196,  68,  78, 248,   0,  63], dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d511503200>(torch.uint8)
+E                    +      where <built-in method view of Tensor object at 0x74d511503200> = tensor([7.2900e-05, 3.2400e-05, 8.0838e-06, 3.2335e-05, 3.2368e-05, 3.2368e-05],\n       dtype=torch.float64).view
+E                    +        where tensor([7.2900e-05, 3.2400e-05, 8.0838e-06, 3.2335e-05, 3.2368e-05, 3.2368e-05],\n       dtype=torch.float64) = <built-in method reshape of Tensor object at 0x74d50e405f40>(-1)
+E                    +          where <built-in method reshape of Tensor object at 0x74d50e405f40> = tensor([[7.2900e-05, 3.2400e-05],\n        [8.0838e-06, 3.2335e-05],\n        [3.2368e-05, 3.2368e-05]], dtype=torch.float64).reshape
+E                    +            where tensor([[7.2900e-05, 3.2400e-05],\n        [8.0838e-06, 3.2335e-05],\n        [3.2368e-05, 3.2368e-05]], dtype=torch.float64) = <built-in method contiguous of Tensor object at 0x74d50e405f40>()
+E                    +              where <built-in method contiguous of Tensor object at 0x74d50e405f40> = tensor([[7.2900e-05, 3.2400e-05],\n        [8.0838e-06, 3.2335e-05],\n        [3.2368e-05, 3.2368e-05]], dtype=torch.float64).contiguous
+E                    +      and   torch.uint8 = torch.uint8
+
+dev_tests/test_adabelief_dtype_preservation.py:40: AssertionError
+_ test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse[True-True-dtype0] _
+
+dtype = torch.float32, amsgrad = True, sparse = True
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('sparse',[False,True])
+    def test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse(dtype,amsgrad,sparse):
+        p=torch.nn.Parameter(torch.ones(3,2,dtype=dtype))
+        q=torch.nn.Parameter(p.detach().clone())
+        options=dict(lr=lambda t:.002/(1+t*.01),weight_decay=lambda t:.02/(1+t),
+                     total_steps=12,warmup_proportion=.25,min_lr=.0001,decay=.1,
+                     clipvalue=.3,clipnorm=.4,gradient_centralization=not sparse,
+                     amsgrad=amsgrad)
+        current=AdaBeliefOptimizer([p],**options)
+        historical=HistoricalAdaBelief([q],**options)
+        for t in range(1,21):
+            if sparse:
+                g=torch.sparse_coo_tensor(torch.tensor([[t%3]]),torch.tensor([[.1*t,-.2]],dtype=dtype),p.shape)
+            else:
+                g=torch.sin(torch.arange(6,dtype=dtype).reshape(3,2)+t*.1)
+            p.grad=g.clone();q.grad=g.clone()
+            current.step();historical.step()
+            for name,value in current.state[p].items():
+                other=historical.state[q][name]
+                if isinstance(value,torch.Tensor):
+                    assert value.dtype==other.dtype and value.device==other.device
+>                   assert torch.equal(value.contiguous().reshape(-1).view(torch.uint8),
+E                   AssertionError: exp_avg
+E                   assert False
+E                    +  where False = <built-in method equal of type object at 0x74d52f9801a0>(tensor([  0,   0,   0,   0,   0,   0,   0,   0,  13, 215,  35,  60,  13, 215,\n        163, 188,   0,   0,   0,   0,   0,   0,   0,   0], dtype=torch.uint8), tensor([  0,   0,   0,   0,   0,   0,   0,   0,  11, 215,  35,  60,  11, 215,\n        163, 188,   0,   0,   0,   0,   0,   0,   0,   0], dtype=torch.uint8))
+E                    +    where <built-in method equal of type object at 0x74d52f9801a0> = torch.equal
+E                    +    and   tensor([  0,   0,   0,   0,   0,   0,   0,   0,  13, 215,  35,  60,  13, 215,\n        163, 188,   0,   0,   0,   0,   0,   0,   0,   0], dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d50e423890>(torch.uint8)
+E                    +      where <built-in method view of Tensor object at 0x74d50e423890> = tensor([ 0.0000,  0.0000,  0.0100, -0.0200,  0.0000,  0.0000]).view
+E                    +        where tensor([ 0.0000,  0.0000,  0.0100, -0.0200,  0.0000,  0.0000]) = <built-in method reshape of Tensor object at 0x74d50e445590>(-1)
+E                    +          where <built-in method reshape of Tensor object at 0x74d50e445590> = tensor([[ 0.0000,  0.0000],\n        [ 0.0100, -0.0200],\n        [ 0.0000,  0.0000]]).reshape
+E                    +            where tensor([[ 0.0000,  0.0000],\n        [ 0.0100, -0.0200],\n        [ 0.0000,  0.0000]]) = <built-in method contiguous of Tensor object at 0x74d50e445590>()
+E                    +              where <built-in method contiguous of Tensor object at 0x74d50e445590> = tensor([[ 0.0000,  0.0000],\n        [ 0.0100, -0.0200],\n        [ 0.0000,  0.0000]]).contiguous
+E                    +      and   torch.uint8 = torch.uint8
+E                    +    and   tensor([  0,   0,   0,   0,   0,   0,   0,   0,  11, 215,  35,  60,  11, 215,\n        163, 188,   0,   0,   0,   0,   0,   0,   0,   0], dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d50e445900>(torch.uint8)
+E                    +      where <built-in method view of Tensor object at 0x74d50e445900> = tensor([ 0.0000,  0.0000,  0.0100, -0.0200,  0.0000,  0.0000]).view
+E                    +        where tensor([ 0.0000,  0.0000,  0.0100, -0.0200,  0.0000,  0.0000]) = <built-in method reshape of Tensor object at 0x74d50e423930>(-1)
+E                    +          where <built-in method reshape of Tensor object at 0x74d50e423930> = tensor([[ 0.0000,  0.0000],\n        [ 0.0100, -0.0200],\n        [ 0.0000,  0.0000]]).reshape
+E                    +            where tensor([[ 0.0000,  0.0000],\n        [ 0.0100, -0.0200],\n        [ 0.0000,  0.0000]]) = <built-in method contiguous of Tensor object at 0x74d50e423930>()
+E                    +              where <built-in method contiguous of Tensor object at 0x74d50e423930> = tensor([[ 0.0000,  0.0000],\n        [ 0.0100, -0.0200],\n        [ 0.0000,  0.0000]]).contiguous
+E                    +      and   torch.uint8 = torch.uint8
+
+dev_tests/test_adabelief_dtype_preservation.py:40: AssertionError
+_ test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse[True-True-dtype1] _
+
+dtype = torch.float64, amsgrad = True, sparse = True
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('sparse',[False,True])
+    def test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse(dtype,amsgrad,sparse):
+        p=torch.nn.Parameter(torch.ones(3,2,dtype=dtype))
+        q=torch.nn.Parameter(p.detach().clone())
+        options=dict(lr=lambda t:.002/(1+t*.01),weight_decay=lambda t:.02/(1+t),
+                     total_steps=12,warmup_proportion=.25,min_lr=.0001,decay=.1,
+                     clipvalue=.3,clipnorm=.4,gradient_centralization=not sparse,
+                     amsgrad=amsgrad)
+        current=AdaBeliefOptimizer([p],**options)
+        historical=HistoricalAdaBelief([q],**options)
+        for t in range(1,21):
+            if sparse:
+                g=torch.sparse_coo_tensor(torch.tensor([[t%3]]),torch.tensor([[.1*t,-.2]],dtype=dtype),p.shape)
+            else:
+                g=torch.sin(torch.arange(6,dtype=dtype).reshape(3,2)+t*.1)
+            p.grad=g.clone();q.grad=g.clone()
+            current.step();historical.step()
+            for name,value in current.state[p].items():
+                other=historical.state[q][name]
+                if isinstance(value,torch.Tensor):
+                    assert value.dtype==other.dtype and value.device==other.device
+>                   assert torch.equal(value.contiguous().reshape(-1).view(torch.uint8),
+E                   AssertionError: exp_avg_var
+E                   assert False
+E                    +  where False = <built-in method equal of type object at 0x74d52f9801a0>(tensor([ 20, 146, 202, 118,  60,  28,  19,  63, 122, 227,  46, 134, 167, 252,\n          0,  63,  49, 188,  35,  33, 24...,   0,  63, 217, 236, 196,  68,  78, 248,   0,  63, 217, 236,\n        196,  68,  78, 248,   0,  63], dtype=torch.uint8), tensor([ 19, 146, 202, 118,  60,  28,  19,  63, 122, 227,  46, 134, 167, 252,\n          0,  63,  49, 188,  35,  33, 24...,   0,  63, 217, 236, 196,  68,  78, 248,   0,  63, 217, 236,\n        196,  68,  78, 248,   0,  63], dtype=torch.uint8))
+E                    +    where <built-in method equal of type object at 0x74d52f9801a0> = torch.equal
+E                    +    and   tensor([ 20, 146, 202, 118,  60,  28,  19,  63, 122, 227,  46, 134, 167, 252,\n          0,  63,  49, 188,  35,  33, 24...,   0,  63, 217, 236, 196,  68,  78, 248,   0,  63, 217, 236,\n        196,  68,  78, 248,   0,  63], dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d50e4464e0>(torch.uint8)
+E                    +      where <built-in method view of Tensor object at 0x74d50e4464e0> = tensor([7.2900e-05, 3.2400e-05, 8.0838e-06, 3.2335e-05, 3.2368e-05, 3.2368e-05],\n       dtype=torch.float64).view
+E                    +        where tensor([7.2900e-05, 3.2400e-05, 8.0838e-06, 3.2335e-05, 3.2368e-05, 3.2368e-05],\n       dtype=torch.float64) = <built-in method reshape of Tensor object at 0x74d50e4460d0>(-1)
+E                    +          where <built-in method reshape of Tensor object at 0x74d50e4460d0> = tensor([[7.2900e-05, 3.2400e-05],\n        [8.0838e-06, 3.2335e-05],\n        [3.2368e-05, 3.2368e-05]], dtype=torch.float64).reshape
+E                    +            where tensor([[7.2900e-05, 3.2400e-05],\n        [8.0838e-06, 3.2335e-05],\n        [3.2368e-05, 3.2368e-05]], dtype=torch.float64) = <built-in method contiguous of Tensor object at 0x74d50e4460d0>()
+E                    +              where <built-in method contiguous of Tensor object at 0x74d50e4460d0> = tensor([[7.2900e-05, 3.2400e-05],\n        [8.0838e-06, 3.2335e-05],\n        [3.2368e-05, 3.2368e-05]], dtype=torch.float64).contiguous
+E                    +      and   torch.uint8 = torch.uint8
+E                    +    and   tensor([ 19, 146, 202, 118,  60,  28,  19,  63, 122, 227,  46, 134, 167, 252,\n          0,  63,  49, 188,  35,  33, 24...,   0,  63, 217, 236, 196,  68,  78, 248,   0,  63, 217, 236,\n        196,  68,  78, 248,   0,  63], dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d50e4467b0>(torch.uint8)
+E                    +      where <built-in method view of Tensor object at 0x74d50e4467b0> = tensor([7.2900e-05, 3.2400e-05, 8.0838e-06, 3.2335e-05, 3.2368e-05, 3.2368e-05],\n       dtype=torch.float64).view
+E                    +        where tensor([7.2900e-05, 3.2400e-05, 8.0838e-06, 3.2335e-05, 3.2368e-05, 3.2368e-05],\n       dtype=torch.float64) = <built-in method reshape of Tensor object at 0x74d50e4461c0>(-1)
+E                    +          where <built-in method reshape of Tensor object at 0x74d50e4461c0> = tensor([[7.2900e-05, 3.2400e-05],\n        [8.0838e-06, 3.2335e-05],\n        [3.2368e-05, 3.2368e-05]], dtype=torch.float64).reshape
+E                    +            where tensor([[7.2900e-05, 3.2400e-05],\n        [8.0838e-06, 3.2335e-05],\n        [3.2368e-05, 3.2368e-05]], dtype=torch.float64) = <built-in method contiguous of Tensor object at 0x74d50e4461c0>()
+E                    +              where <built-in method contiguous of Tensor object at 0x74d50e4461c0> = tensor([[7.2900e-05, 3.2400e-05],\n        [8.0838e-06, 3.2335e-05],\n        [3.2368e-05, 3.2368e-05]], dtype=torch.float64).contiguous
+E                    +      and   torch.uint8 = torch.uint8
+
+dev_tests/test_adabelief_dtype_preservation.py:40: AssertionError
+_ test_actual_updates_bitwise_match_scalar_phase_including_resume[False-False] _
+
+rectify = False, amsgrad = False
+
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    def test_actual_updates_bitwise_match_scalar_phase_including_resume(rectify,amsgrad):
+        params=[torch.nn.Parameter(torch.zeros(3,dtype=d)) for d in (torch.float32,torch.float64)]
+        control=[torch.nn.Parameter(p.detach().clone()) for p in params]
+        def make(cls,values):
+            return cls([{'params':[values[0]]},{'params':[values[1]],'lr':.002}],rectify=rectify,amsgrad=amsgrad)
+        current=make(AdaBeliefOptimizer,params);previous=make(ScalarPhaseAdaBelief,control)
+        for step in range(1,17):
+            for opt in (current,previous):
+                for i,g in enumerate(opt.param_groups):g['lr']=.001*(i+1)/(step+1)
+            for i,(p,q) in enumerate(zip(params,control)):
+                if i==0 and step%4==0:p.grad=q.grad=None
+                else:
+                    p.grad=p.detach().sin()+p.new_tensor([.1,0.,1e-12])
+                    q.grad=q.detach().sin()+q.new_tensor([.1,0.,1e-12])
+            current.step();previous.step()
+>           same(params,control);same(current.state_dict(),previous.state_dict())
+            ^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_boundary_succession.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_adabelief_boundary_succession.py:23: in same
+    for x,y in zip(a,b):same(x,y)
+                        ^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = Parameter containing:
+tensor([-5.5556e-04,  0.0000e+00, -1.5811e-10], requires_grad=True)
+b = Parameter containing:
+tensor([-5.5555e-04,  0.0000e+00, -1.5811e-10], requires_grad=True)
+
+    def same(a,b):
+        if isinstance(a,torch.Tensor):
+            assert a.dtype==b.dtype and a.device==b.device
+>           assert torch.equal(a.detach().reshape(-1).view(torch.uint8),b.detach().reshape(-1).view(torch.uint8))
+E           assert False
+E            +  where False = <built-in method equal of type object at 0x74d52f9801a0>(tensor([181, 162,  17, 186,   0,   0,   0,   0, 209, 216,  45, 175],\n       dtype=torch.uint8), tensor([117, 162,  17, 186,   0,   0,   0,   0, 207, 216,  45, 175],\n       dtype=torch.uint8))
+E            +    where <built-in method equal of type object at 0x74d52f9801a0> = torch.equal
+E            +    and   tensor([181, 162,  17, 186,   0,   0,   0,   0, 209, 216,  45, 175],\n       dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d5115031b0>(torch.uint8)
+E            +      where <built-in method view of Tensor object at 0x74d5115031b0> = tensor([-5.5556e-04,  0.0000e+00, -1.5811e-10]).view
+E            +        where tensor([-5.5556e-04,  0.0000e+00, -1.5811e-10]) = <built-in method reshape of Tensor object at 0x74d50e4237f0>(-1)
+E            +          where <built-in method reshape of Tensor object at 0x74d50e4237f0> = tensor([-5.5556e-04,  0.0000e+00, -1.5811e-10]).reshape
+E            +            where tensor([-5.5556e-04,  0.0000e+00, -1.5811e-10]) = <built-in method detach of Parameter object at 0x74d50e4041e0>()
+E            +              where <built-in method detach of Parameter object at 0x74d50e4041e0> = Parameter containing:\ntensor([-5.5556e-04,  0.0000e+00, -1.5811e-10], requires_grad=True).detach
+E            +      and   torch.uint8 = torch.uint8
+E            +    and   tensor([117, 162,  17, 186,   0,   0,   0,   0, 207, 216,  45, 175],\n       dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d50e37fb10>(torch.uint8)
+E            +      where <built-in method view of Tensor object at 0x74d50e37fb10> = tensor([-5.5555e-04,  0.0000e+00, -1.5811e-10]).view
+E            +        where tensor([-5.5555e-04,  0.0000e+00, -1.5811e-10]) = <built-in method reshape of Tensor object at 0x74d50e405d10>(-1)
+E            +          where <built-in method reshape of Tensor object at 0x74d50e405d10> = tensor([-5.5555e-04,  0.0000e+00, -1.5811e-10]).reshape
+E            +            where tensor([-5.5555e-04,  0.0000e+00, -1.5811e-10]) = <built-in method detach of Parameter object at 0x74d50e404730>()
+E            +              where <built-in method detach of Parameter object at 0x74d50e404730> = Parameter containing:\ntensor([-5.5555e-04,  0.0000e+00, -1.5811e-10], requires_grad=True).detach
+E            +      and   torch.uint8 = torch.uint8
+
+dev_tests/test_adabelief_boundary_succession.py:17: AssertionError
+_ test_actual_updates_bitwise_match_scalar_phase_including_resume[False-True] __
+
+rectify = True, amsgrad = False
+
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    def test_actual_updates_bitwise_match_scalar_phase_including_resume(rectify,amsgrad):
+        params=[torch.nn.Parameter(torch.zeros(3,dtype=d)) for d in (torch.float32,torch.float64)]
+        control=[torch.nn.Parameter(p.detach().clone()) for p in params]
+        def make(cls,values):
+            return cls([{'params':[values[0]]},{'params':[values[1]],'lr':.002}],rectify=rectify,amsgrad=amsgrad)
+        current=make(AdaBeliefOptimizer,params);previous=make(ScalarPhaseAdaBelief,control)
+        for step in range(1,17):
+            for opt in (current,previous):
+                for i,g in enumerate(opt.param_groups):g['lr']=.001*(i+1)/(step+1)
+            for i,(p,q) in enumerate(zip(params,control)):
+                if i==0 and step%4==0:p.grad=q.grad=None
+                else:
+                    p.grad=p.detach().sin()+p.new_tensor([.1,0.,1e-12])
+                    q.grad=q.detach().sin()+q.new_tensor([.1,0.,1e-12])
+            current.step();previous.step()
+>           same(params,control);same(current.state_dict(),previous.state_dict())
+            ^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_boundary_succession.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_adabelief_boundary_succession.py:23: in same
+    for x,y in zip(a,b):same(x,y)
+                        ^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = Parameter containing:
+tensor([-5.0000e-05,  0.0000e+00, -5.0000e-16], requires_grad=True)
+b = Parameter containing:
+tensor([-5.0000e-05,  0.0000e+00, -5.0000e-16], requires_grad=True)
+
+    def same(a,b):
+        if isinstance(a,torch.Tensor):
+            assert a.dtype==b.dtype and a.device==b.device
+>           assert torch.equal(a.detach().reshape(-1).view(torch.uint8),b.detach().reshape(-1).view(torch.uint8))
+E           assert False
+E            +  where False = <built-in method equal of type object at 0x74d52f9801a0>(tensor([ 24, 183,  81, 184,   0,   0,   0,   0, 125,  29,  16, 166],\n       dtype=torch.uint8), tensor([ 22, 183,  81, 184,   0,   0,   0,   0, 123,  29,  16, 166],\n       dtype=torch.uint8))
+E            +    where <built-in method equal of type object at 0x74d52f9801a0> = torch.equal
+E            +    and   tensor([ 24, 183,  81, 184,   0,   0,   0,   0, 125,  29,  16, 166],\n       dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d50e397ca0>(torch.uint8)
+E            +      where <built-in method view of Tensor object at 0x74d50e397ca0> = tensor([-5.0000e-05,  0.0000e+00, -5.0000e-16]).view
+E            +        where tensor([-5.0000e-05,  0.0000e+00, -5.0000e-16]) = <built-in method reshape of Tensor object at 0x74d50e37f8e0>(-1)
+E            +          where <built-in method reshape of Tensor object at 0x74d50e37f8e0> = tensor([-5.0000e-05,  0.0000e+00, -5.0000e-16]).reshape
+E            +            where tensor([-5.0000e-05,  0.0000e+00, -5.0000e-16]) = <built-in method detach of Parameter object at 0x74d50e37f110>()
+E            +              where <built-in method detach of Parameter object at 0x74d50e37f110> = Parameter containing:\ntensor([-5.0000e-05,  0.0000e+00, -5.0000e-16], requires_grad=True).detach
+E            +      and   torch.uint8 = torch.uint8
+E            +    and   tensor([ 22, 183,  81, 184,   0,   0,   0,   0, 123,  29,  16, 166],\n       dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d50e397b60>(torch.uint8)
+E            +      where <built-in method view of Tensor object at 0x74d50e397b60> = tensor([-5.0000e-05,  0.0000e+00, -5.0000e-16]).view
+E            +        where tensor([-5.0000e-05,  0.0000e+00, -5.0000e-16]) = <built-in method reshape of Tensor object at 0x74d50e397bb0>(-1)
+E            +          where <built-in method reshape of Tensor object at 0x74d50e397bb0> = tensor([-5.0000e-05,  0.0000e+00, -5.0000e-16]).reshape
+E            +            where tensor([-5.0000e-05,  0.0000e+00, -5.0000e-16]) = <built-in method detach of Parameter object at 0x74d50e444690>()
+E            +              where <built-in method detach of Parameter object at 0x74d50e444690> = Parameter containing:\ntensor([-5.0000e-05,  0.0000e+00, -5.0000e-16], requires_grad=True).detach
+E            +      and   torch.uint8 = torch.uint8
+
+dev_tests/test_adabelief_boundary_succession.py:17: AssertionError
+_ test_actual_updates_bitwise_match_scalar_phase_including_resume[True-False] __
+
+rectify = False, amsgrad = True
+
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    def test_actual_updates_bitwise_match_scalar_phase_including_resume(rectify,amsgrad):
+        params=[torch.nn.Parameter(torch.zeros(3,dtype=d)) for d in (torch.float32,torch.float64)]
+        control=[torch.nn.Parameter(p.detach().clone()) for p in params]
+        def make(cls,values):
+            return cls([{'params':[values[0]]},{'params':[values[1]],'lr':.002}],rectify=rectify,amsgrad=amsgrad)
+        current=make(AdaBeliefOptimizer,params);previous=make(ScalarPhaseAdaBelief,control)
+        for step in range(1,17):
+            for opt in (current,previous):
+                for i,g in enumerate(opt.param_groups):g['lr']=.001*(i+1)/(step+1)
+            for i,(p,q) in enumerate(zip(params,control)):
+                if i==0 and step%4==0:p.grad=q.grad=None
+                else:
+                    p.grad=p.detach().sin()+p.new_tensor([.1,0.,1e-12])
+                    q.grad=q.detach().sin()+q.new_tensor([.1,0.,1e-12])
+            current.step();previous.step()
+>           same(params,control);same(current.state_dict(),previous.state_dict())
+            ^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_boundary_succession.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_adabelief_boundary_succession.py:23: in same
+    for x,y in zip(a,b):same(x,y)
+                        ^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = Parameter containing:
+tensor([-5.5556e-04,  0.0000e+00, -1.5811e-10], requires_grad=True)
+b = Parameter containing:
+tensor([-5.5555e-04,  0.0000e+00, -1.5811e-10], requires_grad=True)
+
+    def same(a,b):
+        if isinstance(a,torch.Tensor):
+            assert a.dtype==b.dtype and a.device==b.device
+>           assert torch.equal(a.detach().reshape(-1).view(torch.uint8),b.detach().reshape(-1).view(torch.uint8))
+E           assert False
+E            +  where False = <built-in method equal of type object at 0x74d52f9801a0>(tensor([181, 162,  17, 186,   0,   0,   0,   0, 209, 216,  45, 175],\n       dtype=torch.uint8), tensor([117, 162,  17, 186,   0,   0,   0,   0, 207, 216,  45, 175],\n       dtype=torch.uint8))
+E            +    where <built-in method equal of type object at 0x74d52f9801a0> = torch.equal
+E            +    and   tensor([181, 162,  17, 186,   0,   0,   0,   0, 209, 216,  45, 175],\n       dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d50e444190>(torch.uint8)
+E            +      where <built-in method view of Tensor object at 0x74d50e444190> = tensor([-5.5556e-04,  0.0000e+00, -1.5811e-10]).view
+E            +        where tensor([-5.5556e-04,  0.0000e+00, -1.5811e-10]) = <built-in method reshape of Tensor object at 0x74d50e394b90>(-1)
+E            +          where <built-in method reshape of Tensor object at 0x74d50e394b90> = tensor([-5.5556e-04,  0.0000e+00, -1.5811e-10]).reshape
+E            +            where tensor([-5.5556e-04,  0.0000e+00, -1.5811e-10]) = <built-in method detach of Parameter object at 0x74d50e397f20>()
+E            +              where <built-in method detach of Parameter object at 0x74d50e397f20> = Parameter containing:\ntensor([-5.5556e-04,  0.0000e+00, -1.5811e-10], requires_grad=True).detach
+E            +      and   torch.uint8 = torch.uint8
+E            +    and   tensor([117, 162,  17, 186,   0,   0,   0,   0, 207, 216,  45, 175],\n       dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d50e4a45f0>(torch.uint8)
+E            +      where <built-in method view of Tensor object at 0x74d50e4a45f0> = tensor([-5.5555e-04,  0.0000e+00, -1.5811e-10]).view
+E            +        where tensor([-5.5555e-04,  0.0000e+00, -1.5811e-10]) = <built-in method reshape of Tensor object at 0x74d50e4a48c0>(-1)
+E            +          where <built-in method reshape of Tensor object at 0x74d50e4a48c0> = tensor([-5.5555e-04,  0.0000e+00, -1.5811e-10]).reshape
+E            +            where tensor([-5.5555e-04,  0.0000e+00, -1.5811e-10]) = <built-in method detach of Parameter object at 0x74d50e397b10>()
+E            +              where <built-in method detach of Parameter object at 0x74d50e397b10> = Parameter containing:\ntensor([-5.5555e-04,  0.0000e+00, -1.5811e-10], requires_grad=True).detach
+E            +      and   torch.uint8 = torch.uint8
+
+dev_tests/test_adabelief_boundary_succession.py:17: AssertionError
+__ test_actual_updates_bitwise_match_scalar_phase_including_resume[True-True] __
+
+rectify = True, amsgrad = True
+
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    def test_actual_updates_bitwise_match_scalar_phase_including_resume(rectify,amsgrad):
+        params=[torch.nn.Parameter(torch.zeros(3,dtype=d)) for d in (torch.float32,torch.float64)]
+        control=[torch.nn.Parameter(p.detach().clone()) for p in params]
+        def make(cls,values):
+            return cls([{'params':[values[0]]},{'params':[values[1]],'lr':.002}],rectify=rectify,amsgrad=amsgrad)
+        current=make(AdaBeliefOptimizer,params);previous=make(ScalarPhaseAdaBelief,control)
+        for step in range(1,17):
+            for opt in (current,previous):
+                for i,g in enumerate(opt.param_groups):g['lr']=.001*(i+1)/(step+1)
+            for i,(p,q) in enumerate(zip(params,control)):
+                if i==0 and step%4==0:p.grad=q.grad=None
+                else:
+                    p.grad=p.detach().sin()+p.new_tensor([.1,0.,1e-12])
+                    q.grad=q.detach().sin()+q.new_tensor([.1,0.,1e-12])
+            current.step();previous.step()
+>           same(params,control);same(current.state_dict(),previous.state_dict())
+            ^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_boundary_succession.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_adabelief_boundary_succession.py:23: in same
+    for x,y in zip(a,b):same(x,y)
+                        ^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = Parameter containing:
+tensor([-5.0000e-05,  0.0000e+00, -5.0000e-16], requires_grad=True)
+b = Parameter containing:
+tensor([-5.0000e-05,  0.0000e+00, -5.0000e-16], requires_grad=True)
+
+    def same(a,b):
+        if isinstance(a,torch.Tensor):
+            assert a.dtype==b.dtype and a.device==b.device
+>           assert torch.equal(a.detach().reshape(-1).view(torch.uint8),b.detach().reshape(-1).view(torch.uint8))
+E           assert False
+E            +  where False = <built-in method equal of type object at 0x74d52f9801a0>(tensor([ 24, 183,  81, 184,   0,   0,   0,   0, 125,  29,  16, 166],\n       dtype=torch.uint8), tensor([ 22, 183,  81, 184,   0,   0,   0,   0, 123,  29,  16, 166],\n       dtype=torch.uint8))
+E            +    where <built-in method equal of type object at 0x74d52f9801a0> = torch.equal
+E            +    and   tensor([ 24, 183,  81, 184,   0,   0,   0,   0, 125,  29,  16, 166],\n       dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d50e4045a0>(torch.uint8)
+E            +      where <built-in method view of Tensor object at 0x74d50e4045a0> = tensor([-5.0000e-05,  0.0000e+00, -5.0000e-16]).view
+E            +        where tensor([-5.0000e-05,  0.0000e+00, -5.0000e-16]) = <built-in method reshape of Tensor object at 0x74d50e405f40>(-1)
+E            +          where <built-in method reshape of Tensor object at 0x74d50e405f40> = tensor([-5.0000e-05,  0.0000e+00, -5.0000e-16]).reshape
+E            +            where tensor([-5.0000e-05,  0.0000e+00, -5.0000e-16]) = <built-in method detach of Parameter object at 0x74d50ed48f50>()
+E            +              where <built-in method detach of Parameter object at 0x74d50ed48f50> = Parameter containing:\ntensor([-5.0000e-05,  0.0000e+00, -5.0000e-16], requires_grad=True).detach
+E            +      and   torch.uint8 = torch.uint8
+E            +    and   tensor([ 22, 183,  81, 184,   0,   0,   0,   0, 123,  29,  16, 166],\n       dtype=torch.uint8) = <built-in method view of Tensor object at 0x74d50e423750>(torch.uint8)
+E            +      where <built-in method view of Tensor object at 0x74d50e423750> = tensor([-5.0000e-05,  0.0000e+00, -5.0000e-16]).view
+E            +        where tensor([-5.0000e-05,  0.0000e+00, -5.0000e-16]) = <built-in method reshape of Tensor object at 0x74d50e4061c0>(-1)
+E            +          where <built-in method reshape of Tensor object at 0x74d50e4061c0> = tensor([-5.0000e-05,  0.0000e+00, -5.0000e-16]).reshape
+E            +            where tensor([-5.0000e-05,  0.0000e+00, -5.0000e-16]) = <built-in method detach of Parameter object at 0x74d50ece4cd0>()
+E            +              where <built-in method detach of Parameter object at 0x74d50ece4cd0> = Parameter containing:\ntensor([-5.0000e-05,  0.0000e+00, -5.0000e-16], requires_grad=True).detach
+E            +      and   torch.uint8 = torch.uint8
+
+dev_tests/test_adabelief_boundary_succession.py:17: AssertionError
+___________ test_scope_v3_exact_successor_and_utf8_under_gbk_default ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x74d50e489f30>
+
+    def test_scope_v3_exact_successor_and_utf8_under_gbk_default(monkeypatch):
+        original=Path.read_text
+        def gbk_default(path,encoding=None,errors=None,**kwargs):
+            return original(path,encoding=encoding or 'gbk',errors=errors,**kwargs)
+        monkeypatch.setattr(Path,'read_text',gbk_default)
+>       assert assert_adabelief_phase_scope_v3()=={
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            'nif/optimizers/external_optimizers.py','dev_tests/test_public_api_regressions.py',
+            'dev_tests/test_tutorial1_gc_scope.py','dev_tests/tutorial1_gc_scope.py',
+            'dev_tests/test_adabelief_dtype_preservation.py'}
+
+dev_tests/test_adabelief_boundary_succession.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def assert_adabelief_phase_scope_v3():
+        archive=json.loads((ARCHIVE/'manifest.json').read_text(encoding='utf-8'))
+        for name,entry in archive.items():
+            data=(ROOT/entry['archive']).read_bytes()
+            assert hashlib.sha256(data).hexdigest()==entry['sha256'],name
+        # Retain the scalar-phase source, goldens and raw two-failure result exactly.
+        scalar=json.loads((ROOT/'dev_tests/adabelief_dtype_candidate_manifest.json').read_text(encoding='utf-8'))
+        assert archive['nif/optimizers/external_optimizers.py']['sha256']==scalar['source_sha256']['nif/optimizers/external_optimizers.py']
+        assert (ROOT/archive['dev_tests/adabelief_dtype_full_final.log']['archive']).read_bytes()==(ROOT/'dev_tests/adabelief_dtype_full_final.log').read_bytes()
+        for name in ('dev_tests/public_api_pre_fix_fingerprints.json','dev_tests/public_api_pre_fix_environment.json'):
+            assert (ROOT/name).read_bytes()==(ROOT/archive[name]['archive']).read_bytes()
+        for name in TRANSITIONS:
+            before=(ROOT/archive[name]['archive']).read_text(encoding='utf-8')
+>           assert (ROOT/name).read_text(encoding='utf-8')==expected_source(name,before),name
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: nif/optimizers/external_optimizers.py
+
+dev_tests/adabelief_phase_scope.py:89: AssertionError
+__________________ test_scope_v3_rejects_unrelated_model_edit __________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x74d50e489e00>
+
+    def test_scope_v3_rejects_unrelated_model_edit(monkeypatch):
+        original=Path.read_bytes
+        def changed(path):
+            data=original(path)
+            return data+b'\n# unauthorized\n' if path==ROOT/'nif/model.py' else data
+        monkeypatch.setattr(Path,'read_bytes',changed)
+>       with pytest.raises(AssertionError,match='nif/model.py'):assert_adabelief_phase_scope_v3()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'nif/model.py'
+E         Actual message: 'nif/optimizers/external_optimizers.py'
+
+dev_tests/test_adabelief_boundary_succession.py:68: AssertionError
+____ test_other_notebooks_package_sources_and_frozen_expectations_phase_v3 _____
+
+    def test_other_notebooks_package_sources_and_frozen_expectations_phase_v3():
+        previous=json.loads((ROOT/'dev_tests/tutorial1_gc_pre_fix_fingerprints.json').read_text(encoding='utf-8'))
+        authorized={'dev_tests/test_pruning_adam_state.py','dev_tests/generate_native_notebooks.py',
+                    'tutorial/1_simple_1d_wave_pytorch.ipynb','docs/PYTORCH_CANDIDATE_REPORT.md'}
+        # Coordinator documentation may evolve independently; our implementation scope
+        # check covers all notebook/package/data/reference and prior public test files.
+        # V3 authorizes only exact, archived source transforms; numerical goldens stay fixed.
+        from dev_tests.adabelief_phase_scope import assert_adabelief_phase_scope_v3
+>       superseded = assert_adabelief_phase_scope_v3()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_tutorial1_gc_scope.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def assert_adabelief_phase_scope_v3():
+        archive=json.loads((ARCHIVE/'manifest.json').read_text(encoding='utf-8'))
+        for name,entry in archive.items():
+            data=(ROOT/entry['archive']).read_bytes()
+            assert hashlib.sha256(data).hexdigest()==entry['sha256'],name
+        # Retain the scalar-phase source, goldens and raw two-failure result exactly.
+        scalar=json.loads((ROOT/'dev_tests/adabelief_dtype_candidate_manifest.json').read_text(encoding='utf-8'))
+        assert archive['nif/optimizers/external_optimizers.py']['sha256']==scalar['source_sha256']['nif/optimizers/external_optimizers.py']
+        assert (ROOT/archive['dev_tests/adabelief_dtype_full_final.log']['archive']).read_bytes()==(ROOT/'dev_tests/adabelief_dtype_full_final.log').read_bytes()
+        for name in ('dev_tests/public_api_pre_fix_fingerprints.json','dev_tests/public_api_pre_fix_environment.json'):
+            assert (ROOT/name).read_bytes()==(ROOT/archive[name]['archive']).read_bytes()
+        for name in TRANSITIONS:
+            before=(ROOT/archive[name]['archive']).read_text(encoding='utf-8')
+>           assert (ROOT/name).read_text(encoding='utf-8')==expected_source(name,before),name
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: nif/optimizers/external_optimizers.py
+
+dev_tests/adabelief_phase_scope.py:89: AssertionError
+=============================== warnings summary ===============================
+dev_tests/test_adabelief_dtype_preservation.py::test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse[True-False-dtype0]
+  /workspace/dev_tests/test_adabelief_dtype_preservation.py:31: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/Context.cpp:848.)
+    g=torch.sparse_coo_tensor(torch.tensor([[t%3]]),torch.tensor([[.1*t,-.2]],dtype=dtype),p.shape)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED dev_tests/test_adabelief_dtype_preservation.py::test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse[False-False-dtype0]
+FAILED dev_tests/test_adabelief_dtype_preservation.py::test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse[False-False-dtype1]
+FAILED dev_tests/test_adabelief_dtype_preservation.py::test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse[False-True-dtype0]
+FAILED dev_tests/test_adabelief_dtype_preservation.py::test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse[False-True-dtype1]
+FAILED dev_tests/test_adabelief_dtype_preservation.py::test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse[True-False-dtype0]
+FAILED dev_tests/test_adabelief_dtype_preservation.py::test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse[True-False-dtype1]
+FAILED dev_tests/test_adabelief_dtype_preservation.py::test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse[True-True-dtype0]
+FAILED dev_tests/test_adabelief_dtype_preservation.py::test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse[True-True-dtype1]
+FAILED dev_tests/test_adabelief_boundary_succession.py::test_actual_updates_bitwise_match_scalar_phase_including_resume[False-False]
+FAILED dev_tests/test_adabelief_boundary_succession.py::test_actual_updates_bitwise_match_scalar_phase_including_resume[False-True]
+FAILED dev_tests/test_adabelief_boundary_succession.py::test_actual_updates_bitwise_match_scalar_phase_including_resume[True-False]
+FAILED dev_tests/test_adabelief_boundary_succession.py::test_actual_updates_bitwise_match_scalar_phase_including_resume[True-True]
+FAILED dev_tests/test_adabelief_boundary_succession.py::test_scope_v3_exact_successor_and_utf8_under_gbk_default
+FAILED dev_tests/test_adabelief_boundary_succession.py::test_scope_v3_rejects_unrelated_model_edit
+FAILED dev_tests/test_tutorial1_gc_scope.py::test_other_notebooks_package_sources_and_frozen_expectations_phase_v3
+15 failed, 5 passed, 1 warning in 3.85s

@@ -81,6 +81,10 @@ Port the models, data, original comments/teaching narrative, plotting,
 checkpoint restore, and algorithms of all tutorials. Required full workloads:
 
 1. Traveling wave: 5,000 AdaBelief epochs and L-BFGS rounds=200/max_iter=1000.
+   For controlled parity, match the actual tutorial-1 Colab runtime's GC
+   behavior, not the separate suite bootstrap. Its legacy public gradient
+   assignment is inactive in modern fit. Keep native GC available explicitly;
+   do not silently enable it in the primary reference comparison.
 2. Multiscale: two 5,000-epoch fits.
 3. Linear representation: 600 epochs on all 191,775 cylinder-flow samples,
    including weighted loss and actual gradient centralization.

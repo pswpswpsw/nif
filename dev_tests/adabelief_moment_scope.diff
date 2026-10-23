@@ -1,0 +1,165 @@
+--- pre_moment/nif/optimizers/external_optimizers.py
++++ nif/optimizers/external_optimizers.py
+@@ -134,6 +134,9 @@
+     clipping, and gradient centralization are supported. Bias-correction powers,
+     step scalars, SMA and rectification use each parameter's dtype/device, as in
+     the reference; identical scalars are cached only within a step and group.
++    Moment coefficients subtract from one after casting beta to parameter dtype;
++    each product is evaluated before addition, using the updated m in variance.
++    Native float64 parameters retain caller beta precision without a float32 cast.
+     After the closure, all-None gradients raise before optimizer/schedule mutation.
+     Zero tensors count as updates. On a real update all existing groups advance
+     their per-group clocks; a late-added group starts with its own step one.
+@@ -200,8 +203,8 @@
+                         rho = rho_inf - 2 * local_step * power2 / correction2
+                         rectify = (rho >= group['sma_threshold']) & (rho > 4)
+                         r = ((rho-4)/(rho_inf-4)*(rho-2)/(rho_inf-2)*rho_inf/rho).sqrt()
+-                    scalar_cache[key] = correction1, correction2, rectify, r
+-                correction1, correction2, rectify, r = scalar_cache[key]
++                    scalar_cache[key] = beta1, beta2, 1 - beta1, 1 - beta2, correction1, correction2, rectify, r
++                beta1, beta2, complement1, complement2, correction1, correction2, rectify, r = scalar_cache[key]
+                 state = self.state[p]
+                 if not state:
+                     state['exp_avg'] = torch.zeros_like(p)
+@@ -210,7 +213,8 @@
+                         state['max_exp_avg_var'] = torch.zeros_like(p)
+                 state['step'] = step
+                 m, v = state['exp_avg'], state['exp_avg_var']
+-                m.mul_(b1).add_(grad, alpha=1-b1)
++                # The reference forms both products before their sum/assignment.
++                m.mul_(beta1).add_(grad * complement1)
+                 residual = (grad-m).square()
+                 mask = None
+                 if sparse is not None:
+@@ -219,7 +223,7 @@
+                     mask = torch.zeros_like(p, dtype=torch.bool)
+                     mask[tuple(sparse.indices())] = True
+                     residual = residual * mask
+-                v.mul_(b2).add_(residual, alpha=1-b2).add_(eps)
++                v.mul_(beta2).add_(residual * complement2).add_(eps)
+                 variance = v
+                 if group['amsgrad']:
+                     variance = state['max_exp_avg_var']
+--- pre_moment/dev_tests/test_adabelief_dtype_preservation.py
++++ dev_tests/test_adabelief_dtype_preservation.py
+@@ -1,4 +1,8 @@
+-"""Preservation controls separate from the unchanged historical fingerprint gates."""
++"""V4: historical PRE-moment slot replay; current module scope/model controls.
++
++Current moments are checked by the RED-frozen test_adabelief_moment_dtype.py
++source oracle. Every historical slot assertion below remains unchanged.
++"""
+ import ast
+ import hashlib
+ import importlib.util
+@@ -7,7 +11,7 @@
+ 
+ import pytest
+ import torch
+-from nif.optimizers import AdaBeliefOptimizer
++from dev_tests.adabelief_moment_history import PreMomentAdaBelief as AdaBeliefOptimizer
+ 
+ ROOT=Path(__file__).resolve().parents[1]
+ BASELINE=ROOT/'dev_tests/fixtures/adabelief_dtype/native_before.py.txt'
+@@ -17,7 +21,7 @@
+ @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+ @pytest.mark.parametrize('amsgrad',[False,True])
+ @pytest.mark.parametrize('sparse',[False,True])
+-def test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse(dtype,amsgrad,sparse):
++def test_historical_pre_moment_slots_unchanged_with_clipping_schedules_and_sparse_v4(dtype,amsgrad,sparse):
+     p=torch.nn.Parameter(torch.ones(3,2,dtype=dtype))
+     q=torch.nn.Parameter(p.detach().clone())
+     options=dict(lr=lambda t:.002/(1+t*.01),weight_decay=lambda t:.02/(1+t),
+--- pre_moment/dev_tests/test_adabelief_boundary_succession.py
++++ dev_tests/test_adabelief_boundary_succession.py
+@@ -1,12 +1,16 @@
+-"""Current guard equivalence and bounded historical-to-current test succession."""
++"""V4: historical atomic-phase equivalence; current bounded scope guards.
++
++The PRE-moment optimizer actually replays every old trajectory/slot assertion.
++Current checkpoint continuation and source moments have separate frozen tests.
++"""
+ import copy
+ from pathlib import Path
+ import runpy
+ 
+ import pytest
+ import torch
+-from nif.optimizers import AdaBeliefOptimizer
+-from dev_tests.adabelief_phase_scope import ROOT,assert_adabelief_phase_scope_v3
++from dev_tests.adabelief_moment_history import PreMomentAdaBelief as AdaBeliefOptimizer
++from dev_tests.adabelief_moment_scope import ROOT,assert_adabelief_phase_scope_v4
+ 
+ ScalarPhaseAdaBelief=runpy.run_path(str(ROOT/'dev_tests/fixtures/adabelief_boundary_v3/external_optimizers.py.txt'))['AdaBeliefOptimizer']
+ 
+@@ -26,7 +30,7 @@
+ 
+ @pytest.mark.parametrize('rectify',[False,True])
+ @pytest.mark.parametrize('amsgrad',[False,True])
+-def test_actual_updates_bitwise_match_scalar_phase_including_resume(rectify,amsgrad):
++def test_historical_pre_moment_updates_match_scalar_phase_including_resume_v4(rectify,amsgrad):
+     params=[torch.nn.Parameter(torch.zeros(3,dtype=d)) for d in (torch.float32,torch.float64)]
+     control=[torch.nn.Parameter(p.detach().clone()) for p in params]
+     def make(cls,values):
+@@ -48,30 +52,31 @@
+             previous=make(ScalarPhaseAdaBelief,control);previous.load_state_dict(b)
+ 
+ 
+-def test_scope_v3_exact_successor_and_utf8_under_gbk_default(monkeypatch):
++def test_scope_v4_exact_successor_and_utf8_under_gbk_default(monkeypatch):
+     original=Path.read_text
+     def gbk_default(path,encoding=None,errors=None,**kwargs):
+         return original(path,encoding=encoding or 'gbk',errors=errors,**kwargs)
+     monkeypatch.setattr(Path,'read_text',gbk_default)
+-    assert assert_adabelief_phase_scope_v3()=={
++    assert assert_adabelief_phase_scope_v4()=={
+         'nif/optimizers/external_optimizers.py','dev_tests/test_public_api_regressions.py',
+         'dev_tests/test_tutorial1_gc_scope.py','dev_tests/tutorial1_gc_scope.py',
+-        'dev_tests/test_adabelief_dtype_preservation.py'}
++        'dev_tests/test_adabelief_dtype_preservation.py',
++        'dev_tests/test_adabelief_boundary_succession.py'}
+ 
+ 
+-def test_scope_v3_rejects_unrelated_model_edit(monkeypatch):
++def test_scope_v4_rejects_unrelated_model_edit(monkeypatch):
+     original=Path.read_bytes
+     def changed(path):
+         data=original(path)
+         return data+b'\n# unauthorized\n' if path==ROOT/'nif/model.py' else data
+     monkeypatch.setattr(Path,'read_bytes',changed)
+-    with pytest.raises(AssertionError,match='nif/model.py'):assert_adabelief_phase_scope_v3()
++    with pytest.raises(AssertionError,match='nif/model.py'):assert_adabelief_phase_scope_v4()
+ 
+ 
+-def test_scope_v3_rejects_optimizer_math_edit(monkeypatch):
++def test_scope_v4_rejects_optimizer_math_edit(monkeypatch):
+     original=Path.read_text
+     def changed(path,*args,**kwargs):
+         source=original(path,*args,**kwargs)
+-        return source.replace('m.mul_(b1)','m.mul_(b2)') if path==ROOT/'nif/optimizers/external_optimizers.py' else source
++        return source.replace('m.mul_(beta1)','m.mul_(beta2)') if path==ROOT/'nif/optimizers/external_optimizers.py' else source
+     monkeypatch.setattr(Path,'read_text',changed)
+-    with pytest.raises(AssertionError,match='nif/optimizers/external_optimizers.py'):assert_adabelief_phase_scope_v3()
++    with pytest.raises(AssertionError,match='nif/optimizers/external_optimizers.py'):assert_adabelief_phase_scope_v4()
+--- pre_moment/dev_tests/test_tutorial1_gc_scope.py
++++ dev_tests/test_tutorial1_gc_scope.py
+@@ -11,15 +11,15 @@
+     assert_tutorial1_gc_scope_v2()
+ 
+ 
+-def test_other_notebooks_package_sources_and_frozen_expectations_phase_v3():
++def test_other_notebooks_package_sources_and_frozen_expectations_phase_v4():
+     previous=json.loads((ROOT/'dev_tests/tutorial1_gc_pre_fix_fingerprints.json').read_text(encoding='utf-8'))
+     authorized={'dev_tests/test_pruning_adam_state.py','dev_tests/generate_native_notebooks.py',
+                 'tutorial/1_simple_1d_wave_pytorch.ipynb','docs/PYTORCH_CANDIDATE_REPORT.md'}
+     # Coordinator documentation may evolve independently; our implementation scope
+     # check covers all notebook/package/data/reference and prior public test files.
+-    # V3 authorizes only exact, archived source transforms; numerical goldens stay fixed.
+-    from dev_tests.adabelief_phase_scope import assert_adabelief_phase_scope_v3
+-    superseded = assert_adabelief_phase_scope_v3()
++    # V4 adds only dtype moments/historical replay; numerical goldens stay fixed.
++    from dev_tests.adabelief_moment_scope import assert_adabelief_phase_scope_v4
++    superseded = assert_adabelief_phase_scope_v4()
+     for name,digest in previous.items():
+         if name in superseded:
+             continue  # Already checked against the exact approved transformation.

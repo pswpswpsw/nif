@@ -131,7 +131,15 @@ class AdaBeliefOptimizer(Optimizer):
     Epsilon is added both to the uncorrected variance and the final square-root
     denominator, exactly as in the baseline. Weight decay is decoupled from
     moments. Rectification, AMSGrad, warmup/linear decay, learning-rate schedules,
-    clipping, and gradient centralization are supported.
+    clipping, and gradient centralization are supported. Bias-correction powers,
+    step scalars, SMA and rectification use each parameter's dtype/device, as in
+    the reference; identical scalars are cached only within a step and group.
+    Moment coefficients subtract from one after casting beta to parameter dtype;
+    each product is evaluated before addition, using the updated m in variance.
+    Native float64 parameters retain caller beta precision without a float32 cast.
+    After the closure, all-None gradients raise before optimizer/schedule mutation.
+    Zero tensors count as updates. On a real update all existing groups advance
+    their per-group clocks; a late-added group starts with its own step one.
     Explicit ``epsilon=None`` or zero uses the baseline backend default 1e-7.
     The native ``eps`` alias takes precedence when supplied and uses the same
     fallback; omitting both retains this optimizer's default epsilon of 1e-14.
@@ -160,6 +168,8 @@ class AdaBeliefOptimizer(Optimizer):
         if closure is not None:
             with torch.enable_grad():
                 loss = closure()
+        if not any(p.grad is not None for group in self.param_groups for p in group['params']):
+            raise ValueError('No gradients provided for any parameter')
         for group, entries in _gradients(self):
             # The baseline optimizer has one time counter, including parameters
             # without a gradient. Keep it per group for native parameter groups.
@@ -176,11 +186,25 @@ class AdaBeliefOptimizer(Optimizer):
                     decay_steps = max(total - warmup, 1)
                     lr += (group['min_lr'] - lr) * min(step - warmup, decay_steps) / decay_steps
             wd = _number(group['weight_decay'], step - 1)
-            rho_inf = 2 / (1-b2) - 1
-            rho = rho_inf - 2 * step * b2**step / (1-b2**step)
-            rectify = group['rectify'] and rho >= group['sma_threshold'] and rho > 4
-            r = math.sqrt((rho-4)/(rho_inf-4)*(rho-2)/(rho_inf-2)*rho_inf/rho) if rectify else 1.
+            # Reference scalar arithmetic uses the parameter dtype, including
+            # powers and cancellation-sensitive SMA. Cache only within this step
+            # and group; tensor selection avoids a host sync for each parameter.
+            scalar_cache = {}
             for p, grad, sparse in entries:
+                key = (p.device, p.dtype)
+                if key not in scalar_cache:
+                    beta1, beta2 = p.new_tensor(b1), p.new_tensor(b2)
+                    local_step = p.new_tensor(step)
+                    power1, power2 = beta1.pow(local_step), beta2.pow(local_step)
+                    correction1, correction2 = 1 - power1, 1 - power2
+                    rectify, r = None, None
+                    if group['rectify']:
+                        rho_inf = 2 / (1 - beta2) - 1
+                        rho = rho_inf - 2 * local_step * power2 / correction2
+                        rectify = (rho >= group['sma_threshold']) & (rho > 4)
+                        r = ((rho-4)/(rho_inf-4)*(rho-2)/(rho_inf-2)*rho_inf/rho).sqrt()
+                    scalar_cache[key] = beta1, beta2, 1 - beta1, 1 - beta2, correction1, correction2, rectify, r
+                beta1, beta2, complement1, complement2, correction1, correction2, rectify, r = scalar_cache[key]
                 state = self.state[p]
                 if not state:
                     state['exp_avg'] = torch.zeros_like(p)
@@ -189,7 +213,8 @@ class AdaBeliefOptimizer(Optimizer):
                         state['max_exp_avg_var'] = torch.zeros_like(p)
                 state['step'] = step
                 m, v = state['exp_avg'], state['exp_avg_var']
-                m.mul_(b1).add_(grad, alpha=1-b1)
+                # The reference forms both products before their sum/assignment.
+                m.mul_(beta1).add_(grad * complement1)
                 residual = (grad-m).square()
                 mask = None
                 if sparse is not None:
@@ -198,14 +223,17 @@ class AdaBeliefOptimizer(Optimizer):
                     mask = torch.zeros_like(p, dtype=torch.bool)
                     mask[tuple(sparse.indices())] = True
                     residual = residual * mask
-                v.mul_(b2).add_(residual, alpha=1-b2).add_(eps)
+                v.mul_(beta2).add_(residual * complement2).add_(eps)
                 variance = v
                 if group['amsgrad']:
                     variance = state['max_exp_avg_var']
                     torch.maximum(variance, v, out=variance)
-                direction = m / (1-b1**step)
-                if not group['rectify'] or rectify:
-                    direction = direction * r / ((variance/(1-b2**step)).sqrt()+eps)
+                direction = m / correction1
+                denominator = (variance / correction2).sqrt() + eps
+                if group['rectify']:
+                    direction = torch.where(rectify, r * direction / denominator, direction)
+                else:
+                    direction = direction / denominator
                 if wd:
                     direction = direction.add(p, alpha=wd)
                 if mask is not None:

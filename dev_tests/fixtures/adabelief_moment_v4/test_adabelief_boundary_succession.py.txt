@@ -1,0 +1,77 @@
+"""Current guard equivalence and bounded historical-to-current test succession."""
+import copy
+from pathlib import Path
+import runpy
+
+import pytest
+import torch
+from nif.optimizers import AdaBeliefOptimizer
+from dev_tests.adabelief_phase_scope import ROOT,assert_adabelief_phase_scope_v3
+
+ScalarPhaseAdaBelief=runpy.run_path(str(ROOT/'dev_tests/fixtures/adabelief_boundary_v3/external_optimizers.py.txt'))['AdaBeliefOptimizer']
+
+
+def same(a,b):
+    if isinstance(a,torch.Tensor):
+        assert a.dtype==b.dtype and a.device==b.device
+        assert torch.equal(a.detach().reshape(-1).view(torch.uint8),b.detach().reshape(-1).view(torch.uint8))
+    elif isinstance(a,dict):
+        assert a.keys()==b.keys()
+        for k in a:same(a[k],b[k])
+    elif isinstance(a,(list,tuple)):
+        assert len(a)==len(b)
+        for x,y in zip(a,b):same(x,y)
+    else:assert a==b
+
+
+@pytest.mark.parametrize('rectify',[False,True])
+@pytest.mark.parametrize('amsgrad',[False,True])
+def test_actual_updates_bitwise_match_scalar_phase_including_resume(rectify,amsgrad):
+    params=[torch.nn.Parameter(torch.zeros(3,dtype=d)) for d in (torch.float32,torch.float64)]
+    control=[torch.nn.Parameter(p.detach().clone()) for p in params]
+    def make(cls,values):
+        return cls([{'params':[values[0]]},{'params':[values[1]],'lr':.002}],rectify=rectify,amsgrad=amsgrad)
+    current=make(AdaBeliefOptimizer,params);previous=make(ScalarPhaseAdaBelief,control)
+    for step in range(1,17):
+        for opt in (current,previous):
+            for i,g in enumerate(opt.param_groups):g['lr']=.001*(i+1)/(step+1)
+        for i,(p,q) in enumerate(zip(params,control)):
+            if i==0 and step%4==0:p.grad=q.grad=None
+            else:
+                p.grad=p.detach().sin()+p.new_tensor([.1,0.,1e-12])
+                q.grad=q.detach().sin()+q.new_tensor([.1,0.,1e-12])
+        current.step();previous.step()
+        same(params,control);same(current.state_dict(),previous.state_dict())
+        if step in (5,9):
+            a,b=copy.deepcopy(current.state_dict()),copy.deepcopy(previous.state_dict())
+            current=make(AdaBeliefOptimizer,params);current.load_state_dict(a)
+            previous=make(ScalarPhaseAdaBelief,control);previous.load_state_dict(b)
+
+
+def test_scope_v3_exact_successor_and_utf8_under_gbk_default(monkeypatch):
+    original=Path.read_text
+    def gbk_default(path,encoding=None,errors=None,**kwargs):
+        return original(path,encoding=encoding or 'gbk',errors=errors,**kwargs)
+    monkeypatch.setattr(Path,'read_text',gbk_default)
+    assert assert_adabelief_phase_scope_v3()=={
+        'nif/optimizers/external_optimizers.py','dev_tests/test_public_api_regressions.py',
+        'dev_tests/test_tutorial1_gc_scope.py','dev_tests/tutorial1_gc_scope.py',
+        'dev_tests/test_adabelief_dtype_preservation.py'}
+
+
+def test_scope_v3_rejects_unrelated_model_edit(monkeypatch):
+    original=Path.read_bytes
+    def changed(path):
+        data=original(path)
+        return data+b'\n# unauthorized\n' if path==ROOT/'nif/model.py' else data
+    monkeypatch.setattr(Path,'read_bytes',changed)
+    with pytest.raises(AssertionError,match='nif/model.py'):assert_adabelief_phase_scope_v3()
+
+
+def test_scope_v3_rejects_optimizer_math_edit(monkeypatch):
+    original=Path.read_text
+    def changed(path,*args,**kwargs):
+        source=original(path,*args,**kwargs)
+        return source.replace('m.mul_(b1)','m.mul_(b2)') if path==ROOT/'nif/optimizers/external_optimizers.py' else source
+    monkeypatch.setattr(Path,'read_text',changed)
+    with pytest.raises(AssertionError,match='nif/optimizers/external_optimizers.py'):assert_adabelief_phase_scope_v3()

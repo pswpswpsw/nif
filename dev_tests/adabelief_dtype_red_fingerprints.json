@@ -1,0 +1,5 @@
+{
+  "dev_tests/test_adabelief_scalar_dtype.py": "5c5ab1b91da47d335d97150e6ba96524ff72a6c7b1f5465911be05cb440927b8",
+  "dev_tests/fixtures/adabelief_dtype/tf_external_optimizers_ad9113d.py.txt": "016b79ec31e9e66418c39c4fc1e0ba174d054798bc6c59b6aef0ff7bed41352a",
+  "dev_tests/fixtures/adabelief_dtype/native_before.py.txt": "e63840e3cd096a077dc4afcc47496a855afba9e9811146db3154d984c2145e2e"
+}

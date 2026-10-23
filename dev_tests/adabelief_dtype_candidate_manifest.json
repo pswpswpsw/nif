@@ -1,0 +1,102 @@
+{
+  "environment": {
+    "python": "3.13.17",
+    "torch": "2.14.1+cpu",
+    "numpy": "2.1.3",
+    "device": "cpu"
+  },
+  "source_sha256": {
+    "dev_tests/adabelief_dtype_focused_final.log": "bed2bd8e0f2d66379fcf7adabc1027ae2a1f6060ce839a7ec8fa993d846ffddc",
+    "dev_tests/adabelief_dtype_full_final.log": "cdce214d60bdc60aa18167d0a6eeee4f7f4e600be161719cd79591e48d858d86",
+    "dev_tests/adabelief_dtype_full_scope_red.log": "889b7086bb4356a9325d129aabd84c869aa293e39539ff90b75d118615775ac7",
+    "dev_tests/adabelief_dtype_green.log": "f8543c13ea6163421b6bd1478b66afd400462e027d10eb242b0d170ba1d1feb4",
+    "dev_tests/adabelief_dtype_pre_fix_fingerprints.json": "aef8b6a9c15922a450b081492c1aa1375cbb656798c2b5f4ae339a6a2ca4fe48",
+    "dev_tests/adabelief_dtype_red.log": "49de50fec8219f964c213f8a83a01cb0857e12a3826d09977de4058bcf760663",
+    "dev_tests/adabelief_dtype_red_fingerprints.json": "9777a9cea38f14a31c41a88dd45a20e0c8e766596350ed2b1aad0cbd829d46e4",
+    "dev_tests/adabelief_dtype_smoke.log": "a409f19de901928d1d6aea1e384644a5f27a48c276aff2ce17b545d338b9ae34",
+    "dev_tests/adabelief_dtype_smoke_summary.json": "587aa7794d822f476e16013d3dd4c2696ccb972c47c8562969b3ee36ccb6e674",
+    "dev_tests/fixtures/adabelief_dtype/native_before.py.txt": "e63840e3cd096a077dc4afcc47496a855afba9e9811146db3154d984c2145e2e",
+    "dev_tests/fixtures/adabelief_dtype/tf_external_optimizers_ad9113d.py.txt": "016b79ec31e9e66418c39c4fc1e0ba174d054798bc6c59b6aef0ff7bed41352a",
+    "dev_tests/run_adabelief_dtype_smoke.py": "144a1aeeb23c3a047f8aa52d07aca582e491521c5785108e2825865a2a08f380",
+    "dev_tests/test_adabelief_dtype_preservation.py": "435e227badea8f3d6b2aaa6ff7e8d1804aa4ad4f1eeb37e40f9ed8e35552163a",
+    "dev_tests/test_adabelief_scalar_dtype.py": "5c5ab1b91da47d335d97150e6ba96524ff72a6c7b1f5465911be05cb440927b8",
+    "docs/PYTORCH_ADABELIEF_DTYPE_CORRECTION.md": "90682b9e9da45e5bd87cda863071946aaa5533f650845dd46c88b2aed8d5a532",
+    "docs/PYTORCH_CANDIDATE_REPORT.md": "d62095a3e16807a1d396f809af12961c23062a67edc411ffacebbf2cbca5483a",
+    "nif/optimizers/external_optimizers.py": "f0976ef6c1abf3040cc65d638604a0c3aa1b38b45bf2b4c0faaa13d20c17ce34"
+  },
+  "checks": {
+    "red": {
+      "failed": 20,
+      "passed": 35
+    },
+    "initial_green": {
+      "passed": 102
+    },
+    "focused_final": {
+      "passed": 112
+    },
+    "full_public": {
+      "passed": 319,
+      "failed": 2,
+      "skipped": 2
+    }
+  },
+  "full_suite_conflicts": [
+    "test_public_api_regressions.py::test_existing_2d_rng_and_default_training_trajectories_unchanged: historical float32 training hashes",
+    "test_tutorial1_gc_scope.py::test_other_notebooks_package_sources_and_previous_frozen_regressions_unchanged: historical package-file hash"
+  ],
+  "smoke": [
+    {
+      "notebook": "1_simple_1d_wave_pytorch.ipynb",
+      "mode": "smoke",
+      "device": "cpu",
+      "source_sha256": "9c64c3de750de791df2b8f4c7f74a93e5eb4fee618ffe63236d1ddf6ec91a438",
+      "status": "passed",
+      "executed_code_cells": 18,
+      "metrics": {
+        "mode": "smoke",
+        "adabelief_epochs": 2,
+        "lbfgs_rounds": 1,
+        "lbfgs_max_iter": 2,
+        "final_mse": 0.9995570182800293
+      },
+      "seconds": 4.980983067999659
+    },
+    {
+      "notebook": "3_multi_scale_linear_NIF_pytorch.ipynb",
+      "mode": "smoke",
+      "device": "cpu",
+      "source_sha256": "ab7533c64635dce6faf3b8c931b191b1a7fdb3a34427c46702a9ace69b5a23bc",
+      "status": "passed",
+      "executed_code_cells": 12,
+      "metrics": {
+        "mode": "smoke",
+        "epochs": 2,
+        "training_rows": 4096,
+        "all_rows": 191775,
+        "weighted_mse": 0.07029975175927881,
+        "physical_u_mse": 1.602237302101234,
+        "physical_v_mse": 2.483214487536651
+      },
+      "seconds": 4.571483173999695
+    }
+  ],
+  "preservation": {
+    "owned_preexisting_changes": [
+      "docs/PYTORCH_CANDIDATE_REPORT.md",
+      "nif/optimizers/external_optimizers.py"
+    ],
+    "externally_observed_changes": [
+      ".gitattributes"
+    ],
+    "preexisting_unchanged_count": 255,
+    "earlier_tests_and_artifacts_unchanged": true,
+    "red_test_unchanged": true,
+    "all_notebooks_data_other_optimizers_unchanged": true
+  },
+  "limitations": [
+    "Two conflicting legacy fingerprint assertions remain unchanged and failing",
+    "CPU-only source-derived controls and separate smoke; no actual TensorFlow runtime validation",
+    "No full-training, CUDA parity, or independent acceptance claim"
+  ]
+}

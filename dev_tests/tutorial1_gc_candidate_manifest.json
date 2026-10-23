@@ -1,0 +1,90 @@
+{
+  "environment": {
+    "python": "3.13.17",
+    "torch": "2.14.1+cpu",
+    "numpy": "2.1.3",
+    "device": "cpu"
+  },
+  "changed_file_sha256": {
+    "dev_tests/fixtures/tutorial1_gc_scope_v1/generator_before.py.txt": "bc540c80ecd5bd9d111e895bbd6467187499b92be25bfa3ac3c1a32fde920102",
+    "dev_tests/fixtures/tutorial1_gc_scope_v1/historical_public_suite.log": "3619f04214ee1f216756e4aa2b2ea1251454742eba6b01b6a48d6409b20a6ed5",
+    "dev_tests/fixtures/tutorial1_gc_scope_v1/manifest.json": "b1a7f3aede58dcb14fd35b8dc1e92a9ab93ce8074c0ddf4eeeb9953d3eedc442",
+    "dev_tests/fixtures/tutorial1_gc_scope_v1/test_pruning_adam_state.py.txt": "60e83c210615ca5a4d478a484d5ad08940a6e8841ac1d597780e44f13186c268",
+    "dev_tests/fixtures/tutorial1_gc_scope_v1/tutorial1_before.ipynb.txt": "b9eb9b0e3985ac8302664e80b09990880d02ef445230428485b1d08b060350c6",
+    "dev_tests/generate_native_notebooks.py": "371c946f3fdf2105c0af50894a2fbad3d7ea74ae7b91886dc8967b6b0d66df20",
+    "dev_tests/run_tutorial1_gc_smoke.py": "26fcac8e838042f5abdf5a354d4a0abf4a115bd39ebd65ca1f794df0cd545234",
+    "dev_tests/test_pruning_adam_state.py": "da7481619fee541e5fecd64d149ce0eb622746337d40fb9af24410788a6af511",
+    "dev_tests/test_tutorial1_gc_behavior.py": "6e8c4cb9809c954c06c88e22707114313d42106f388d1e15f5a425fc18ecc6b7",
+    "dev_tests/test_tutorial1_gc_scope.py": "4423c8fce6e5ec2fc24fb7efae5c7b545278f7d17afdd5f14452a350f4d9e8f9",
+    "dev_tests/tutorial1_gc_full.log": "9351d21db78f5c6063fd8f40c63ec100a055bd79de546263a7e0974427ce6a72",
+    "dev_tests/tutorial1_gc_green.log": "748ec0522b57b80c2e3d60f2e4a5279593e11f788418ed2c3ed331a395301234",
+    "dev_tests/tutorial1_gc_pre_fix_fingerprints.json": "49f172070d013e71fcf5ad68bb94ba1df32161e2e1f99e11b9206fdab12ebc12",
+    "dev_tests/tutorial1_gc_red.log": "2d2df53ba0cc841813b28a01717e428a6f1425c536a423524eb8a25783eadb35",
+    "dev_tests/tutorial1_gc_red_test_fingerprint.json": "25da3ec8aa01d9c043f0f179efa048dc48152a32f95807164f4bab37a380a76c",
+    "dev_tests/tutorial1_gc_scope.py": "027980995d8e8ea15e147914fd93524823d02173225ce538806432ee61cd502e",
+    "dev_tests/tutorial1_gc_smoke.log": "a61e06dc1b8afa948100e65e9a6f9e2f87f84a9bfca985f69c8a7f65137b1c70",
+    "dev_tests/tutorial1_gc_smoke_summary.json": "d8383f8e2a43bd6e5ec91de87fec22df5c96b58db1a262f00bb65c79cf7c7cd0",
+    "docs/PYTORCH_CANDIDATE_REPORT.md": "e1079496f68d93ccd3246b5cb0336a869075179ccdaf2d1d608db221edca6a82",
+    "tutorial/1_simple_1d_wave_pytorch.ipynb": "9c64c3de750de791df2b8f4c7f74a93e5eb4fee618ffe63236d1ddf6ec91a438"
+  },
+  "checks": {
+    "red": {
+      "failed": 2,
+      "passed": 2
+    },
+    "focused_green": {
+      "passed": 11
+    },
+    "full_public": {
+      "passed": 256,
+      "skipped": 2
+    }
+  },
+  "smoke": {
+    "notebook": "1_simple_1d_wave_pytorch.ipynb",
+    "mode": "smoke",
+    "device": "cpu",
+    "source_sha256": "9c64c3de750de791df2b8f4c7f74a93e5eb4fee618ffe63236d1ddf6ec91a438",
+    "status": "passed",
+    "executed_code_cells": 18,
+    "metrics": {
+      "mode": "smoke",
+      "adabelief_epochs": 2,
+      "lbfgs_rounds": 1,
+      "lbfgs_max_iter": 2,
+      "final_mse": 0.9995570778846741
+    },
+    "artifacts": [
+      "fine_tune_loss.png",
+      "fine_tuned.pt",
+      "fine_tuned_reconstruction.png",
+      "latent.png",
+      "metrics.json",
+      "parameter_to_latent.pt",
+      "traveling_wave.pt",
+      "traveling_wave_history.json",
+      "traveling_wave_latest.pt",
+      "traveling_wave_loss.png",
+      "traveling_wave_reconstruction.png"
+    ],
+    "seconds": 5.380893492999803
+  },
+  "preservation": {
+    "preexisting_changed": [
+      "dev_tests/generate_native_notebooks.py",
+      "dev_tests/test_pruning_adam_state.py",
+      "docs/PYTORCH_CANDIDATE_REPORT.md",
+      "tutorial/1_simple_1d_wave_pytorch.ipynb"
+    ],
+    "preexisting_unchanged_count": 242,
+    "archived_tf_notebooks_unchanged": 16,
+    "red_test_unchanged": true,
+    "historical_guard": "dev_tests/fixtures/tutorial1_gc_scope_v1/manifest.json",
+    "current_guard_version": 2
+  },
+  "limitations": [
+    "Separate CPU smoke only; no full scientific workload",
+    "No paired TensorFlow/GPU verification",
+    "No independent acceptance claim"
+  ]
+}

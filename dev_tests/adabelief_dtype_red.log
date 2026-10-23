@@ -1,0 +1,751 @@
+.........F...F...F.F.F.F.F.F.F.F.F.F.F.F...F...F.F.F.FF                  [100%]
+=================================== FAILURES ===================================
+____ test_single_update_uses_parameter_dtype_scalars[5-False-False-dtype0] _____
+
+dtype = torch.float32, rectify = False, amsgrad = False, step = 5
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('step',[1,5,6,7,20,50])
+    def test_single_update_uses_parameter_dtype_scalars(dtype,rectify,amsgrad,step):
+        # Zero parameter values expose the update itself without cancellation against
+        # an arbitrary large initial value; include zero/tiny/ordinary gradients.
+        p=torch.nn.Parameter(torch.zeros(4,dtype=dtype))
+        optimizer=AdaBeliefOptimizer([p],lr=.001,betas=BETAS,rectify=rectify,amsgrad=amsgrad)
+        optimizer.param_groups[0]['step']=step-1
+        m=torch.tensor([0.,2e-13,.15,-.3],dtype=dtype) if step>1 else torch.zeros_like(p)
+        v=torch.tensor([0.,1e-25,.03,.005],dtype=dtype) if step>1 else torch.zeros_like(p)
+        maximum=v*2
+        optimizer.state[p].update(exp_avg=m.clone(),exp_avg_var=v.clone(),step=step-1)
+        if amsgrad:optimizer.state[p]['max_exp_avg_var']=maximum.clone()
+        g=torch.tensor([0.,1e-12,.2,-.4],dtype=dtype)
+        p.grad=g
+        b1,b2=BETAS
+        expected_m=b1*m+(1-b1)*g
+        expected_v=b2*v+(1-b2)*(g-expected_m).square()+1e-14
+        if amsgrad:maximum=torch.maximum(maximum,expected_v)
+        expected=-.001*direction(expected_m,maximum if amsgrad else expected_v,dtype,step,rectify)
+        optimizer.step()
+        tolerance=4e-7 if dtype==torch.float32 else 2e-12
+        torch.testing.assert_close(optimizer.state[p]['exp_avg'],expected_m,rtol=tolerance,atol=0)
+        torch.testing.assert_close(optimizer.state[p]['exp_avg_var'],expected_v,rtol=tolerance,atol=0)
+        if amsgrad:torch.testing.assert_close(optimizer.state[p]['max_exp_avg_var'],maximum,rtol=tolerance,atol=0)
+>       torch.testing.assert_close(p,expected,rtol=tolerance,atol=0)
+E       AssertionError: Tensor-likes are not close!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 1.8044374883174896e-09 at index (3,) (up to 0 allowed)
+E       Greatest relative difference: 2.38680718211981e-06 at index (3,) (up to 4e-07 allowed)
+
+dev_tests/test_adabelief_scalar_dtype.py:81: AssertionError
+_____ test_single_update_uses_parameter_dtype_scalars[5-True-False-dtype0] _____
+
+dtype = torch.float32, rectify = False, amsgrad = True, step = 5
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('step',[1,5,6,7,20,50])
+    def test_single_update_uses_parameter_dtype_scalars(dtype,rectify,amsgrad,step):
+        # Zero parameter values expose the update itself without cancellation against
+        # an arbitrary large initial value; include zero/tiny/ordinary gradients.
+        p=torch.nn.Parameter(torch.zeros(4,dtype=dtype))
+        optimizer=AdaBeliefOptimizer([p],lr=.001,betas=BETAS,rectify=rectify,amsgrad=amsgrad)
+        optimizer.param_groups[0]['step']=step-1
+        m=torch.tensor([0.,2e-13,.15,-.3],dtype=dtype) if step>1 else torch.zeros_like(p)
+        v=torch.tensor([0.,1e-25,.03,.005],dtype=dtype) if step>1 else torch.zeros_like(p)
+        maximum=v*2
+        optimizer.state[p].update(exp_avg=m.clone(),exp_avg_var=v.clone(),step=step-1)
+        if amsgrad:optimizer.state[p]['max_exp_avg_var']=maximum.clone()
+        g=torch.tensor([0.,1e-12,.2,-.4],dtype=dtype)
+        p.grad=g
+        b1,b2=BETAS
+        expected_m=b1*m+(1-b1)*g
+        expected_v=b2*v+(1-b2)*(g-expected_m).square()+1e-14
+        if amsgrad:maximum=torch.maximum(maximum,expected_v)
+        expected=-.001*direction(expected_m,maximum if amsgrad else expected_v,dtype,step,rectify)
+        optimizer.step()
+        tolerance=4e-7 if dtype==torch.float32 else 2e-12
+        torch.testing.assert_close(optimizer.state[p]['exp_avg'],expected_m,rtol=tolerance,atol=0)
+        torch.testing.assert_close(optimizer.state[p]['exp_avg_var'],expected_v,rtol=tolerance,atol=0)
+        if amsgrad:torch.testing.assert_close(optimizer.state[p]['max_exp_avg_var'],maximum,rtol=tolerance,atol=0)
+>       torch.testing.assert_close(p,expected,rtol=tolerance,atol=0)
+E       AssertionError: Tensor-likes are not close!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 1.2223608791828156e-09 at index (3,) (up to 0 allowed)
+E       Greatest relative difference: 2.4663429485372035e-06 at index (2,) (up to 4e-07 allowed)
+
+dev_tests/test_adabelief_scalar_dtype.py:81: AssertionError
+____ test_single_update_uses_parameter_dtype_scalars[6-False-False-dtype0] _____
+
+dtype = torch.float32, rectify = False, amsgrad = False, step = 6
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('step',[1,5,6,7,20,50])
+    def test_single_update_uses_parameter_dtype_scalars(dtype,rectify,amsgrad,step):
+        # Zero parameter values expose the update itself without cancellation against
+        # an arbitrary large initial value; include zero/tiny/ordinary gradients.
+        p=torch.nn.Parameter(torch.zeros(4,dtype=dtype))
+        optimizer=AdaBeliefOptimizer([p],lr=.001,betas=BETAS,rectify=rectify,amsgrad=amsgrad)
+        optimizer.param_groups[0]['step']=step-1
+        m=torch.tensor([0.,2e-13,.15,-.3],dtype=dtype) if step>1 else torch.zeros_like(p)
+        v=torch.tensor([0.,1e-25,.03,.005],dtype=dtype) if step>1 else torch.zeros_like(p)
+        maximum=v*2
+        optimizer.state[p].update(exp_avg=m.clone(),exp_avg_var=v.clone(),step=step-1)
+        if amsgrad:optimizer.state[p]['max_exp_avg_var']=maximum.clone()
+        g=torch.tensor([0.,1e-12,.2,-.4],dtype=dtype)
+        p.grad=g
+        b1,b2=BETAS
+        expected_m=b1*m+(1-b1)*g
+        expected_v=b2*v+(1-b2)*(g-expected_m).square()+1e-14
+        if amsgrad:maximum=torch.maximum(maximum,expected_v)
+        expected=-.001*direction(expected_m,maximum if amsgrad else expected_v,dtype,step,rectify)
+        optimizer.step()
+        tolerance=4e-7 if dtype==torch.float32 else 2e-12
+        torch.testing.assert_close(optimizer.state[p]['exp_avg'],expected_m,rtol=tolerance,atol=0)
+        torch.testing.assert_close(optimizer.state[p]['exp_avg_var'],expected_v,rtol=tolerance,atol=0)
+        if amsgrad:torch.testing.assert_close(optimizer.state[p]['max_exp_avg_var'],maximum,rtol=tolerance,atol=0)
+>       torch.testing.assert_close(p,expected,rtol=tolerance,atol=0)
+E       AssertionError: Tensor-likes are not close!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 1.1059455573558807e-09 at index (3,) (up to 0 allowed)
+E       Greatest relative difference: 1.681062485658913e-06 at index (1,) (up to 4e-07 allowed)
+
+dev_tests/test_adabelief_scalar_dtype.py:81: AssertionError
+_____ test_single_update_uses_parameter_dtype_scalars[6-False-True-dtype0] _____
+
+dtype = torch.float32, rectify = True, amsgrad = False, step = 6
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('step',[1,5,6,7,20,50])
+    def test_single_update_uses_parameter_dtype_scalars(dtype,rectify,amsgrad,step):
+        # Zero parameter values expose the update itself without cancellation against
+        # an arbitrary large initial value; include zero/tiny/ordinary gradients.
+        p=torch.nn.Parameter(torch.zeros(4,dtype=dtype))
+        optimizer=AdaBeliefOptimizer([p],lr=.001,betas=BETAS,rectify=rectify,amsgrad=amsgrad)
+        optimizer.param_groups[0]['step']=step-1
+        m=torch.tensor([0.,2e-13,.15,-.3],dtype=dtype) if step>1 else torch.zeros_like(p)
+        v=torch.tensor([0.,1e-25,.03,.005],dtype=dtype) if step>1 else torch.zeros_like(p)
+        maximum=v*2
+        optimizer.state[p].update(exp_avg=m.clone(),exp_avg_var=v.clone(),step=step-1)
+        if amsgrad:optimizer.state[p]['max_exp_avg_var']=maximum.clone()
+        g=torch.tensor([0.,1e-12,.2,-.4],dtype=dtype)
+        p.grad=g
+        b1,b2=BETAS
+        expected_m=b1*m+(1-b1)*g
+        expected_v=b2*v+(1-b2)*(g-expected_m).square()+1e-14
+        if amsgrad:maximum=torch.maximum(maximum,expected_v)
+        expected=-.001*direction(expected_m,maximum if amsgrad else expected_v,dtype,step,rectify)
+        optimizer.step()
+        tolerance=4e-7 if dtype==torch.float32 else 2e-12
+        torch.testing.assert_close(optimizer.state[p]['exp_avg'],expected_m,rtol=tolerance,atol=0)
+        torch.testing.assert_close(optimizer.state[p]['exp_avg_var'],expected_v,rtol=tolerance,atol=0)
+        if amsgrad:torch.testing.assert_close(optimizer.state[p]['max_exp_avg_var'],maximum,rtol=tolerance,atol=0)
+>       torch.testing.assert_close(p,expected,rtol=tolerance,atol=0)
+E       AssertionError: Tensor-likes are not close!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 3.457171260379255e-08 at index (3,) (up to 0 allowed)
+E       Greatest relative difference: 0.0018470528302714229 at index (1,) (up to 4e-07 allowed)
+
+dev_tests/test_adabelief_scalar_dtype.py:81: AssertionError
+_____ test_single_update_uses_parameter_dtype_scalars[6-True-False-dtype0] _____
+
+dtype = torch.float32, rectify = False, amsgrad = True, step = 6
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('step',[1,5,6,7,20,50])
+    def test_single_update_uses_parameter_dtype_scalars(dtype,rectify,amsgrad,step):
+        # Zero parameter values expose the update itself without cancellation against
+        # an arbitrary large initial value; include zero/tiny/ordinary gradients.
+        p=torch.nn.Parameter(torch.zeros(4,dtype=dtype))
+        optimizer=AdaBeliefOptimizer([p],lr=.001,betas=BETAS,rectify=rectify,amsgrad=amsgrad)
+        optimizer.param_groups[0]['step']=step-1
+        m=torch.tensor([0.,2e-13,.15,-.3],dtype=dtype) if step>1 else torch.zeros_like(p)
+        v=torch.tensor([0.,1e-25,.03,.005],dtype=dtype) if step>1 else torch.zeros_like(p)
+        maximum=v*2
+        optimizer.state[p].update(exp_avg=m.clone(),exp_avg_var=v.clone(),step=step-1)
+        if amsgrad:optimizer.state[p]['max_exp_avg_var']=maximum.clone()
+        g=torch.tensor([0.,1e-12,.2,-.4],dtype=dtype)
+        p.grad=g
+        b1,b2=BETAS
+        expected_m=b1*m+(1-b1)*g
+        expected_v=b2*v+(1-b2)*(g-expected_m).square()+1e-14
+        if amsgrad:maximum=torch.maximum(maximum,expected_v)
+        expected=-.001*direction(expected_m,maximum if amsgrad else expected_v,dtype,step,rectify)
+        optimizer.step()
+        tolerance=4e-7 if dtype==torch.float32 else 2e-12
+        torch.testing.assert_close(optimizer.state[p]['exp_avg'],expected_m,rtol=tolerance,atol=0)
+        torch.testing.assert_close(optimizer.state[p]['exp_avg_var'],expected_v,rtol=tolerance,atol=0)
+        if amsgrad:torch.testing.assert_close(optimizer.state[p]['max_exp_avg_var'],maximum,rtol=tolerance,atol=0)
+>       torch.testing.assert_close(p,expected,rtol=tolerance,atol=0)
+E       AssertionError: Tensor-likes are not close!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 8.731149137020111e-10 at index (3,) (up to 0 allowed)
+E       Greatest relative difference: 1.7058595176422386e-06 at index (3,) (up to 4e-07 allowed)
+
+dev_tests/test_adabelief_scalar_dtype.py:81: AssertionError
+_____ test_single_update_uses_parameter_dtype_scalars[6-True-True-dtype0] ______
+
+dtype = torch.float32, rectify = True, amsgrad = True, step = 6
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('step',[1,5,6,7,20,50])
+    def test_single_update_uses_parameter_dtype_scalars(dtype,rectify,amsgrad,step):
+        # Zero parameter values expose the update itself without cancellation against
+        # an arbitrary large initial value; include zero/tiny/ordinary gradients.
+        p=torch.nn.Parameter(torch.zeros(4,dtype=dtype))
+        optimizer=AdaBeliefOptimizer([p],lr=.001,betas=BETAS,rectify=rectify,amsgrad=amsgrad)
+        optimizer.param_groups[0]['step']=step-1
+        m=torch.tensor([0.,2e-13,.15,-.3],dtype=dtype) if step>1 else torch.zeros_like(p)
+        v=torch.tensor([0.,1e-25,.03,.005],dtype=dtype) if step>1 else torch.zeros_like(p)
+        maximum=v*2
+        optimizer.state[p].update(exp_avg=m.clone(),exp_avg_var=v.clone(),step=step-1)
+        if amsgrad:optimizer.state[p]['max_exp_avg_var']=maximum.clone()
+        g=torch.tensor([0.,1e-12,.2,-.4],dtype=dtype)
+        p.grad=g
+        b1,b2=BETAS
+        expected_m=b1*m+(1-b1)*g
+        expected_v=b2*v+(1-b2)*(g-expected_m).square()+1e-14
+        if amsgrad:maximum=torch.maximum(maximum,expected_v)
+        expected=-.001*direction(expected_m,maximum if amsgrad else expected_v,dtype,step,rectify)
+        optimizer.step()
+        tolerance=4e-7 if dtype==torch.float32 else 2e-12
+        torch.testing.assert_close(optimizer.state[p]['exp_avg'],expected_m,rtol=tolerance,atol=0)
+        torch.testing.assert_close(optimizer.state[p]['exp_avg_var'],expected_v,rtol=tolerance,atol=0)
+        if amsgrad:torch.testing.assert_close(optimizer.state[p]['max_exp_avg_var'],maximum,rtol=tolerance,atol=0)
+>       torch.testing.assert_close(p,expected,rtol=tolerance,atol=0)
+E       AssertionError: Tensor-likes are not close!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 2.4455403035972267e-08 at index (3,) (up to 0 allowed)
+E       Greatest relative difference: 0.0018470528302714229 at index (1,) (up to 4e-07 allowed)
+
+dev_tests/test_adabelief_scalar_dtype.py:81: AssertionError
+____ test_single_update_uses_parameter_dtype_scalars[7-False-False-dtype0] _____
+
+dtype = torch.float32, rectify = False, amsgrad = False, step = 7
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('step',[1,5,6,7,20,50])
+    def test_single_update_uses_parameter_dtype_scalars(dtype,rectify,amsgrad,step):
+        # Zero parameter values expose the update itself without cancellation against
+        # an arbitrary large initial value; include zero/tiny/ordinary gradients.
+        p=torch.nn.Parameter(torch.zeros(4,dtype=dtype))
+        optimizer=AdaBeliefOptimizer([p],lr=.001,betas=BETAS,rectify=rectify,amsgrad=amsgrad)
+        optimizer.param_groups[0]['step']=step-1
+        m=torch.tensor([0.,2e-13,.15,-.3],dtype=dtype) if step>1 else torch.zeros_like(p)
+        v=torch.tensor([0.,1e-25,.03,.005],dtype=dtype) if step>1 else torch.zeros_like(p)
+        maximum=v*2
+        optimizer.state[p].update(exp_avg=m.clone(),exp_avg_var=v.clone(),step=step-1)
+        if amsgrad:optimizer.state[p]['max_exp_avg_var']=maximum.clone()
+        g=torch.tensor([0.,1e-12,.2,-.4],dtype=dtype)
+        p.grad=g
+        b1,b2=BETAS
+        expected_m=b1*m+(1-b1)*g
+        expected_v=b2*v+(1-b2)*(g-expected_m).square()+1e-14
+        if amsgrad:maximum=torch.maximum(maximum,expected_v)
+        expected=-.001*direction(expected_m,maximum if amsgrad else expected_v,dtype,step,rectify)
+        optimizer.step()
+        tolerance=4e-7 if dtype==torch.float32 else 2e-12
+        torch.testing.assert_close(optimizer.state[p]['exp_avg'],expected_m,rtol=tolerance,atol=0)
+        torch.testing.assert_close(optimizer.state[p]['exp_avg_var'],expected_v,rtol=tolerance,atol=0)
+        if amsgrad:torch.testing.assert_close(optimizer.state[p]['max_exp_avg_var'],maximum,rtol=tolerance,atol=0)
+>       torch.testing.assert_close(p,expected,rtol=tolerance,atol=0)
+E       AssertionError: Tensor-likes are not close!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 9.313225746154785e-10 at index (3,) (up to 0 allowed)
+E       Greatest relative difference: 1.3270494036987657e-06 at index (3,) (up to 4e-07 allowed)
+
+dev_tests/test_adabelief_scalar_dtype.py:81: AssertionError
+_____ test_single_update_uses_parameter_dtype_scalars[7-False-True-dtype0] _____
+
+dtype = torch.float32, rectify = True, amsgrad = False, step = 7
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('step',[1,5,6,7,20,50])
+    def test_single_update_uses_parameter_dtype_scalars(dtype,rectify,amsgrad,step):
+        # Zero parameter values expose the update itself without cancellation against
+        # an arbitrary large initial value; include zero/tiny/ordinary gradients.
+        p=torch.nn.Parameter(torch.zeros(4,dtype=dtype))
+        optimizer=AdaBeliefOptimizer([p],lr=.001,betas=BETAS,rectify=rectify,amsgrad=amsgrad)
+        optimizer.param_groups[0]['step']=step-1
+        m=torch.tensor([0.,2e-13,.15,-.3],dtype=dtype) if step>1 else torch.zeros_like(p)
+        v=torch.tensor([0.,1e-25,.03,.005],dtype=dtype) if step>1 else torch.zeros_like(p)
+        maximum=v*2
+        optimizer.state[p].update(exp_avg=m.clone(),exp_avg_var=v.clone(),step=step-1)
+        if amsgrad:optimizer.state[p]['max_exp_avg_var']=maximum.clone()
+        g=torch.tensor([0.,1e-12,.2,-.4],dtype=dtype)
+        p.grad=g
+        b1,b2=BETAS
+        expected_m=b1*m+(1-b1)*g
+        expected_v=b2*v+(1-b2)*(g-expected_m).square()+1e-14
+        if amsgrad:maximum=torch.maximum(maximum,expected_v)
+        expected=-.001*direction(expected_m,maximum if amsgrad else expected_v,dtype,step,rectify)
+        optimizer.step()
+        tolerance=4e-7 if dtype==torch.float32 else 2e-12
+        torch.testing.assert_close(optimizer.state[p]['exp_avg'],expected_m,rtol=tolerance,atol=0)
+        torch.testing.assert_close(optimizer.state[p]['exp_avg_var'],expected_v,rtol=tolerance,atol=0)
+        if amsgrad:torch.testing.assert_close(optimizer.state[p]['max_exp_avg_var'],maximum,rtol=tolerance,atol=0)
+>       torch.testing.assert_close(p,expected,rtol=tolerance,atol=0)
+E       AssertionError: Tensor-likes are not close!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 2.1138475858606398e-08 at index (3,) (up to 0 allowed)
+E       Greatest relative difference: 0.0009208728442899883 at index (3,) (up to 4e-07 allowed)
+
+dev_tests/test_adabelief_scalar_dtype.py:81: AssertionError
+_____ test_single_update_uses_parameter_dtype_scalars[7-True-False-dtype0] _____
+
+dtype = torch.float32, rectify = False, amsgrad = True, step = 7
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('step',[1,5,6,7,20,50])
+    def test_single_update_uses_parameter_dtype_scalars(dtype,rectify,amsgrad,step):
+        # Zero parameter values expose the update itself without cancellation against
+        # an arbitrary large initial value; include zero/tiny/ordinary gradients.
+        p=torch.nn.Parameter(torch.zeros(4,dtype=dtype))
+        optimizer=AdaBeliefOptimizer([p],lr=.001,betas=BETAS,rectify=rectify,amsgrad=amsgrad)
+        optimizer.param_groups[0]['step']=step-1
+        m=torch.tensor([0.,2e-13,.15,-.3],dtype=dtype) if step>1 else torch.zeros_like(p)
+        v=torch.tensor([0.,1e-25,.03,.005],dtype=dtype) if step>1 else torch.zeros_like(p)
+        maximum=v*2
+        optimizer.state[p].update(exp_avg=m.clone(),exp_avg_var=v.clone(),step=step-1)
+        if amsgrad:optimizer.state[p]['max_exp_avg_var']=maximum.clone()
+        g=torch.tensor([0.,1e-12,.2,-.4],dtype=dtype)
+        p.grad=g
+        b1,b2=BETAS
+        expected_m=b1*m+(1-b1)*g
+        expected_v=b2*v+(1-b2)*(g-expected_m).square()+1e-14
+        if amsgrad:maximum=torch.maximum(maximum,expected_v)
+        expected=-.001*direction(expected_m,maximum if amsgrad else expected_v,dtype,step,rectify)
+        optimizer.step()
+        tolerance=4e-7 if dtype==torch.float32 else 2e-12
+        torch.testing.assert_close(optimizer.state[p]['exp_avg'],expected_m,rtol=tolerance,atol=0)
+        torch.testing.assert_close(optimizer.state[p]['exp_avg_var'],expected_v,rtol=tolerance,atol=0)
+        if amsgrad:torch.testing.assert_close(optimizer.state[p]['max_exp_avg_var'],maximum,rtol=tolerance,atol=0)
+>       torch.testing.assert_close(p,expected,rtol=tolerance,atol=0)
+E       AssertionError: Tensor-likes are not close!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 5.820766091346741e-10 at index (3,) (up to 0 allowed)
+E       Greatest relative difference: 1.220708782057045e-06 at index (2,) (up to 4e-07 allowed)
+
+dev_tests/test_adabelief_scalar_dtype.py:81: AssertionError
+_____ test_single_update_uses_parameter_dtype_scalars[7-True-True-dtype0] ______
+
+dtype = torch.float32, rectify = True, amsgrad = True, step = 7
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('step',[1,5,6,7,20,50])
+    def test_single_update_uses_parameter_dtype_scalars(dtype,rectify,amsgrad,step):
+        # Zero parameter values expose the update itself without cancellation against
+        # an arbitrary large initial value; include zero/tiny/ordinary gradients.
+        p=torch.nn.Parameter(torch.zeros(4,dtype=dtype))
+        optimizer=AdaBeliefOptimizer([p],lr=.001,betas=BETAS,rectify=rectify,amsgrad=amsgrad)
+        optimizer.param_groups[0]['step']=step-1
+        m=torch.tensor([0.,2e-13,.15,-.3],dtype=dtype) if step>1 else torch.zeros_like(p)
+        v=torch.tensor([0.,1e-25,.03,.005],dtype=dtype) if step>1 else torch.zeros_like(p)
+        maximum=v*2
+        optimizer.state[p].update(exp_avg=m.clone(),exp_avg_var=v.clone(),step=step-1)
+        if amsgrad:optimizer.state[p]['max_exp_avg_var']=maximum.clone()
+        g=torch.tensor([0.,1e-12,.2,-.4],dtype=dtype)
+        p.grad=g
+        b1,b2=BETAS
+        expected_m=b1*m+(1-b1)*g
+        expected_v=b2*v+(1-b2)*(g-expected_m).square()+1e-14
+        if amsgrad:maximum=torch.maximum(maximum,expected_v)
+        expected=-.001*direction(expected_m,maximum if amsgrad else expected_v,dtype,step,rectify)
+        optimizer.step()
+        tolerance=4e-7 if dtype==torch.float32 else 2e-12
+        torch.testing.assert_close(optimizer.state[p]['exp_avg'],expected_m,rtol=tolerance,atol=0)
+        torch.testing.assert_close(optimizer.state[p]['exp_avg_var'],expected_v,rtol=tolerance,atol=0)
+        if amsgrad:torch.testing.assert_close(optimizer.state[p]['max_exp_avg_var'],maximum,rtol=tolerance,atol=0)
+>       torch.testing.assert_close(p,expected,rtol=tolerance,atol=0)
+E       AssertionError: Tensor-likes are not close!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 1.4950273907743394e-08 at index (3,) (up to 0 allowed)
+E       Greatest relative difference: 0.0009208087576553226 at index (2,) (up to 4e-07 allowed)
+
+dev_tests/test_adabelief_scalar_dtype.py:81: AssertionError
+____ test_single_update_uses_parameter_dtype_scalars[20-False-False-dtype0] ____
+
+dtype = torch.float32, rectify = False, amsgrad = False, step = 20
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('step',[1,5,6,7,20,50])
+    def test_single_update_uses_parameter_dtype_scalars(dtype,rectify,amsgrad,step):
+        # Zero parameter values expose the update itself without cancellation against
+        # an arbitrary large initial value; include zero/tiny/ordinary gradients.
+        p=torch.nn.Parameter(torch.zeros(4,dtype=dtype))
+        optimizer=AdaBeliefOptimizer([p],lr=.001,betas=BETAS,rectify=rectify,amsgrad=amsgrad)
+        optimizer.param_groups[0]['step']=step-1
+        m=torch.tensor([0.,2e-13,.15,-.3],dtype=dtype) if step>1 else torch.zeros_like(p)
+        v=torch.tensor([0.,1e-25,.03,.005],dtype=dtype) if step>1 else torch.zeros_like(p)
+        maximum=v*2
+        optimizer.state[p].update(exp_avg=m.clone(),exp_avg_var=v.clone(),step=step-1)
+        if amsgrad:optimizer.state[p]['max_exp_avg_var']=maximum.clone()
+        g=torch.tensor([0.,1e-12,.2,-.4],dtype=dtype)
+        p.grad=g
+        b1,b2=BETAS
+        expected_m=b1*m+(1-b1)*g
+        expected_v=b2*v+(1-b2)*(g-expected_m).square()+1e-14
+        if amsgrad:maximum=torch.maximum(maximum,expected_v)
+        expected=-.001*direction(expected_m,maximum if amsgrad else expected_v,dtype,step,rectify)
+        optimizer.step()
+        tolerance=4e-7 if dtype==torch.float32 else 2e-12
+        torch.testing.assert_close(optimizer.state[p]['exp_avg'],expected_m,rtol=tolerance,atol=0)
+        torch.testing.assert_close(optimizer.state[p]['exp_avg_var'],expected_v,rtol=tolerance,atol=0)
+        if amsgrad:torch.testing.assert_close(optimizer.state[p]['max_exp_avg_var'],maximum,rtol=tolerance,atol=0)
+>       torch.testing.assert_close(p,expected,rtol=tolerance,atol=0)
+E       AssertionError: Tensor-likes are not close!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 4.656612873077393e-10 at index (3,) (up to 0 allowed)
+E       Greatest relative difference: 8.042439390010259e-07 at index (1,) (up to 4e-07 allowed)
+
+dev_tests/test_adabelief_scalar_dtype.py:81: AssertionError
+____ test_single_update_uses_parameter_dtype_scalars[20-False-True-dtype0] _____
+
+dtype = torch.float32, rectify = True, amsgrad = False, step = 20
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('step',[1,5,6,7,20,50])
+    def test_single_update_uses_parameter_dtype_scalars(dtype,rectify,amsgrad,step):
+        # Zero parameter values expose the update itself without cancellation against
+        # an arbitrary large initial value; include zero/tiny/ordinary gradients.
+        p=torch.nn.Parameter(torch.zeros(4,dtype=dtype))
+        optimizer=AdaBeliefOptimizer([p],lr=.001,betas=BETAS,rectify=rectify,amsgrad=amsgrad)
+        optimizer.param_groups[0]['step']=step-1
+        m=torch.tensor([0.,2e-13,.15,-.3],dtype=dtype) if step>1 else torch.zeros_like(p)
+        v=torch.tensor([0.,1e-25,.03,.005],dtype=dtype) if step>1 else torch.zeros_like(p)
+        maximum=v*2
+        optimizer.state[p].update(exp_avg=m.clone(),exp_avg_var=v.clone(),step=step-1)
+        if amsgrad:optimizer.state[p]['max_exp_avg_var']=maximum.clone()
+        g=torch.tensor([0.,1e-12,.2,-.4],dtype=dtype)
+        p.grad=g
+        b1,b2=BETAS
+        expected_m=b1*m+(1-b1)*g
+        expected_v=b2*v+(1-b2)*(g-expected_m).square()+1e-14
+        if amsgrad:maximum=torch.maximum(maximum,expected_v)
+        expected=-.001*direction(expected_m,maximum if amsgrad else expected_v,dtype,step,rectify)
+        optimizer.step()
+        tolerance=4e-7 if dtype==torch.float32 else 2e-12
+        torch.testing.assert_close(optimizer.state[p]['exp_avg'],expected_m,rtol=tolerance,atol=0)
+        torch.testing.assert_close(optimizer.state[p]['exp_avg_var'],expected_v,rtol=tolerance,atol=0)
+        if amsgrad:torch.testing.assert_close(optimizer.state[p]['max_exp_avg_var'],maximum,rtol=tolerance,atol=0)
+>       torch.testing.assert_close(p,expected,rtol=tolerance,atol=0)
+E       AssertionError: Tensor-likes are not close!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 5.504261935129762e-09 at index (3,) (up to 0 allowed)
+E       Greatest relative difference: 9.246837726095691e-05 at index (1,) (up to 4e-07 allowed)
+
+dev_tests/test_adabelief_scalar_dtype.py:81: AssertionError
+____ test_single_update_uses_parameter_dtype_scalars[20-True-False-dtype0] _____
+
+dtype = torch.float32, rectify = False, amsgrad = True, step = 20
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('step',[1,5,6,7,20,50])
+    def test_single_update_uses_parameter_dtype_scalars(dtype,rectify,amsgrad,step):
+        # Zero parameter values expose the update itself without cancellation against
+        # an arbitrary large initial value; include zero/tiny/ordinary gradients.
+        p=torch.nn.Parameter(torch.zeros(4,dtype=dtype))
+        optimizer=AdaBeliefOptimizer([p],lr=.001,betas=BETAS,rectify=rectify,amsgrad=amsgrad)
+        optimizer.param_groups[0]['step']=step-1
+        m=torch.tensor([0.,2e-13,.15,-.3],dtype=dtype) if step>1 else torch.zeros_like(p)
+        v=torch.tensor([0.,1e-25,.03,.005],dtype=dtype) if step>1 else torch.zeros_like(p)
+        maximum=v*2
+        optimizer.state[p].update(exp_avg=m.clone(),exp_avg_var=v.clone(),step=step-1)
+        if amsgrad:optimizer.state[p]['max_exp_avg_var']=maximum.clone()
+        g=torch.tensor([0.,1e-12,.2,-.4],dtype=dtype)
+        p.grad=g
+        b1,b2=BETAS
+        expected_m=b1*m+(1-b1)*g
+        expected_v=b2*v+(1-b2)*(g-expected_m).square()+1e-14
+        if amsgrad:maximum=torch.maximum(maximum,expected_v)
+        expected=-.001*direction(expected_m,maximum if amsgrad else expected_v,dtype,step,rectify)
+        optimizer.step()
+        tolerance=4e-7 if dtype==torch.float32 else 2e-12
+        torch.testing.assert_close(optimizer.state[p]['exp_avg'],expected_m,rtol=tolerance,atol=0)
+        torch.testing.assert_close(optimizer.state[p]['exp_avg_var'],expected_v,rtol=tolerance,atol=0)
+        if amsgrad:torch.testing.assert_close(optimizer.state[p]['max_exp_avg_var'],maximum,rtol=tolerance,atol=0)
+>       torch.testing.assert_close(p,expected,rtol=tolerance,atol=0)
+E       AssertionError: Tensor-likes are not close!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 4.0745362639427185e-10 at index (3,) (up to 0 allowed)
+E       Greatest relative difference: 8.202924277611601e-07 at index (3,) (up to 4e-07 allowed)
+
+dev_tests/test_adabelief_scalar_dtype.py:81: AssertionError
+_____ test_single_update_uses_parameter_dtype_scalars[20-True-True-dtype0] _____
+
+dtype = torch.float32, rectify = True, amsgrad = True, step = 20
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('step',[1,5,6,7,20,50])
+    def test_single_update_uses_parameter_dtype_scalars(dtype,rectify,amsgrad,step):
+        # Zero parameter values expose the update itself without cancellation against
+        # an arbitrary large initial value; include zero/tiny/ordinary gradients.
+        p=torch.nn.Parameter(torch.zeros(4,dtype=dtype))
+        optimizer=AdaBeliefOptimizer([p],lr=.001,betas=BETAS,rectify=rectify,amsgrad=amsgrad)
+        optimizer.param_groups[0]['step']=step-1
+        m=torch.tensor([0.,2e-13,.15,-.3],dtype=dtype) if step>1 else torch.zeros_like(p)
+        v=torch.tensor([0.,1e-25,.03,.005],dtype=dtype) if step>1 else torch.zeros_like(p)
+        maximum=v*2
+        optimizer.state[p].update(exp_avg=m.clone(),exp_avg_var=v.clone(),step=step-1)
+        if amsgrad:optimizer.state[p]['max_exp_avg_var']=maximum.clone()
+        g=torch.tensor([0.,1e-12,.2,-.4],dtype=dtype)
+        p.grad=g
+        b1,b2=BETAS
+        expected_m=b1*m+(1-b1)*g
+        expected_v=b2*v+(1-b2)*(g-expected_m).square()+1e-14
+        if amsgrad:maximum=torch.maximum(maximum,expected_v)
+        expected=-.001*direction(expected_m,maximum if amsgrad else expected_v,dtype,step,rectify)
+        optimizer.step()
+        tolerance=4e-7 if dtype==torch.float32 else 2e-12
+        torch.testing.assert_close(optimizer.state[p]['exp_avg'],expected_m,rtol=tolerance,atol=0)
+        torch.testing.assert_close(optimizer.state[p]['exp_avg_var'],expected_v,rtol=tolerance,atol=0)
+        if amsgrad:torch.testing.assert_close(optimizer.state[p]['max_exp_avg_var'],maximum,rtol=tolerance,atol=0)
+>       torch.testing.assert_close(p,expected,rtol=tolerance,atol=0)
+E       AssertionError: Tensor-likes are not close!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 3.8962753023952246e-09 at index (3,) (up to 0 allowed)
+E       Greatest relative difference: 9.249984577763826e-05 at index (3,) (up to 4e-07 allowed)
+
+dev_tests/test_adabelief_scalar_dtype.py:81: AssertionError
+____ test_single_update_uses_parameter_dtype_scalars[50-False-True-dtype0] _____
+
+dtype = torch.float32, rectify = True, amsgrad = False, step = 50
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('step',[1,5,6,7,20,50])
+    def test_single_update_uses_parameter_dtype_scalars(dtype,rectify,amsgrad,step):
+        # Zero parameter values expose the update itself without cancellation against
+        # an arbitrary large initial value; include zero/tiny/ordinary gradients.
+        p=torch.nn.Parameter(torch.zeros(4,dtype=dtype))
+        optimizer=AdaBeliefOptimizer([p],lr=.001,betas=BETAS,rectify=rectify,amsgrad=amsgrad)
+        optimizer.param_groups[0]['step']=step-1
+        m=torch.tensor([0.,2e-13,.15,-.3],dtype=dtype) if step>1 else torch.zeros_like(p)
+        v=torch.tensor([0.,1e-25,.03,.005],dtype=dtype) if step>1 else torch.zeros_like(p)
+        maximum=v*2
+        optimizer.state[p].update(exp_avg=m.clone(),exp_avg_var=v.clone(),step=step-1)
+        if amsgrad:optimizer.state[p]['max_exp_avg_var']=maximum.clone()
+        g=torch.tensor([0.,1e-12,.2,-.4],dtype=dtype)
+        p.grad=g
+        b1,b2=BETAS
+        expected_m=b1*m+(1-b1)*g
+        expected_v=b2*v+(1-b2)*(g-expected_m).square()+1e-14
+        if amsgrad:maximum=torch.maximum(maximum,expected_v)
+        expected=-.001*direction(expected_m,maximum if amsgrad else expected_v,dtype,step,rectify)
+        optimizer.step()
+        tolerance=4e-7 if dtype==torch.float32 else 2e-12
+        torch.testing.assert_close(optimizer.state[p]['exp_avg'],expected_m,rtol=tolerance,atol=0)
+        torch.testing.assert_close(optimizer.state[p]['exp_avg_var'],expected_v,rtol=tolerance,atol=0)
+        if amsgrad:torch.testing.assert_close(optimizer.state[p]['max_exp_avg_var'],maximum,rtol=tolerance,atol=0)
+>       torch.testing.assert_close(p,expected,rtol=tolerance,atol=0)
+E       AssertionError: Tensor-likes are not close!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 1.949956640601158e-09 at index (3,) (up to 0 allowed)
+E       Greatest relative difference: 1.3560596016759519e-05 at index (1,) (up to 4e-07 allowed)
+
+dev_tests/test_adabelief_scalar_dtype.py:81: AssertionError
+_____ test_single_update_uses_parameter_dtype_scalars[50-True-True-dtype0] _____
+
+dtype = torch.float32, rectify = True, amsgrad = True, step = 50
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('step',[1,5,6,7,20,50])
+    def test_single_update_uses_parameter_dtype_scalars(dtype,rectify,amsgrad,step):
+        # Zero parameter values expose the update itself without cancellation against
+        # an arbitrary large initial value; include zero/tiny/ordinary gradients.
+        p=torch.nn.Parameter(torch.zeros(4,dtype=dtype))
+        optimizer=AdaBeliefOptimizer([p],lr=.001,betas=BETAS,rectify=rectify,amsgrad=amsgrad)
+        optimizer.param_groups[0]['step']=step-1
+        m=torch.tensor([0.,2e-13,.15,-.3],dtype=dtype) if step>1 else torch.zeros_like(p)
+        v=torch.tensor([0.,1e-25,.03,.005],dtype=dtype) if step>1 else torch.zeros_like(p)
+        maximum=v*2
+        optimizer.state[p].update(exp_avg=m.clone(),exp_avg_var=v.clone(),step=step-1)
+        if amsgrad:optimizer.state[p]['max_exp_avg_var']=maximum.clone()
+        g=torch.tensor([0.,1e-12,.2,-.4],dtype=dtype)
+        p.grad=g
+        b1,b2=BETAS
+        expected_m=b1*m+(1-b1)*g
+        expected_v=b2*v+(1-b2)*(g-expected_m).square()+1e-14
+        if amsgrad:maximum=torch.maximum(maximum,expected_v)
+        expected=-.001*direction(expected_m,maximum if amsgrad else expected_v,dtype,step,rectify)
+        optimizer.step()
+        tolerance=4e-7 if dtype==torch.float32 else 2e-12
+        torch.testing.assert_close(optimizer.state[p]['exp_avg'],expected_m,rtol=tolerance,atol=0)
+        torch.testing.assert_close(optimizer.state[p]['exp_avg_var'],expected_v,rtol=tolerance,atol=0)
+        if amsgrad:torch.testing.assert_close(optimizer.state[p]['max_exp_avg_var'],maximum,rtol=tolerance,atol=0)
+>       torch.testing.assert_close(p,expected,rtol=tolerance,atol=0)
+E       AssertionError: Tensor-likes are not close!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 1.3751559890806675e-09 at index (3,) (up to 0 allowed)
+E       Greatest relative difference: 1.3560596016759519e-05 at index (1,) (up to 4e-07 allowed)
+
+dev_tests/test_adabelief_scalar_dtype.py:81: AssertionError
+____ test_default_beta_bias_correction_from_measured_moments[False-dtype0] _____
+
+dtype = torch.float32, rectify = False
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    def test_default_beta_bias_correction_from_measured_moments(dtype,rectify):
+        # Keep the already measured native moment recurrence unchanged. This control
+        # isolates only scalar bias/rectification calculations at declared defaults.
+        p=torch.nn.Parameter(torch.zeros(3,dtype=dtype))
+        opt=AdaBeliefOptimizer([p],lr=.001,rectify=rectify)
+        for step in range(1,13):
+            p.grad=torch.tensor([.1,-.3,0.],dtype=dtype)
+            with torch.no_grad():p.zero_()  # expose each individual update
+            opt.step()
+            state=opt.state[p]
+            expected=-.001*direction(state['exp_avg'],state['exp_avg_var'],dtype,step,rectify,betas=(.9,.999))
+>           torch.testing.assert_close(p,expected,rtol=4e-7 if dtype==torch.float32 else 2e-12,atol=0)
+E           AssertionError: Tensor-likes are not close!
+E           
+E           Mismatched elements: 2 / 3 (66.7%)
+E           Greatest absolute difference: 7.566995918750763e-09 at index (1,) (up to 0 allowed)
+E           Greatest relative difference: 6.810341801610775e-06 at index (1,) (up to 4e-07 allowed)
+
+dev_tests/test_adabelief_scalar_dtype.py:98: AssertionError
+_____ test_default_beta_bias_correction_from_measured_moments[True-dtype0] _____
+
+dtype = torch.float32, rectify = True
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    def test_default_beta_bias_correction_from_measured_moments(dtype,rectify):
+        # Keep the already measured native moment recurrence unchanged. This control
+        # isolates only scalar bias/rectification calculations at declared defaults.
+        p=torch.nn.Parameter(torch.zeros(3,dtype=dtype))
+        opt=AdaBeliefOptimizer([p],lr=.001,rectify=rectify)
+        for step in range(1,13):
+            p.grad=torch.tensor([.1,-.3,0.],dtype=dtype)
+            with torch.no_grad():p.zero_()  # expose each individual update
+            opt.step()
+            state=opt.state[p]
+            expected=-.001*direction(state['exp_avg'],state['exp_avg_var'],dtype,step,rectify,betas=(.9,.999))
+>           torch.testing.assert_close(p,expected,rtol=4e-7 if dtype==torch.float32 else 2e-12,atol=0)
+E           AssertionError: Tensor-likes are not close!
+E           
+E           Mismatched elements: 2 / 3 (66.7%)
+E           Greatest absolute difference: 6.645859684795141e-08 at index (0,) (up to 0 allowed)
+E           Greatest relative difference: 0.0018338820664212108 at index (0,) (up to 4e-07 allowed)
+
+dev_tests/test_adabelief_scalar_dtype.py:98: AssertionError
+________ test_mixed_dtype_groups_schedules_and_checkpoint_continuation _________
+
+    def test_mixed_dtype_groups_schedules_and_checkpoint_continuation():
+        parameters=[torch.nn.Parameter(torch.zeros(3,dtype=d)) for d in (torch.float32,torch.float64)*2]
+        opt=AdaBeliefOptimizer([{'params':parameters[:2]},{'params':parameters[2:],'amsgrad':True}],betas=BETAS)
+        control=None
+        for step in range(1,18):
+            for i,group in enumerate(opt.param_groups):group['lr']=.001*(i+1)/(step+1)
+            if control is not None:
+                for a,b in zip(control.param_groups,opt.param_groups):a['lr']=b['lr']
+            before=[p.detach().clone() for p in parameters]
+            for i,p in enumerate(parameters):p.grad=torch.full_like(p,(i+1)*.01)
+            if control is not None:
+                for p,q in zip(parameters,resumed):q.grad=p.grad.clone()
+            opt.step()
+            for i,p in enumerate(parameters):
+                state=opt.state[p]
+                v=state.get('max_exp_avg_var',state['exp_avg_var'])
+                expected=before[i]-.001*(i//2+1)/(step+1)*direction(state['exp_avg'],v,p.dtype,step,True)
+>               torch.testing.assert_close(p,expected,rtol=4e-7 if p.dtype==torch.float32 else 2e-12,atol=0)
+E               AssertionError: Tensor-likes are not close!
+E               
+E               Mismatched elements: 3 / 3 (100.0%)
+E               Greatest absolute difference: 9.560608305037022e-09 at index (0,) (up to 0 allowed)
+E               Greatest relative difference: 0.00048587549827061594 at index (0,) (up to 4e-07 allowed)
+
+dev_tests/test_adabelief_scalar_dtype.py:118: AssertionError
+____ test_sparse_observed_rows_share_corrected_scalars_and_keep_other_rows _____
+
+    def test_sparse_observed_rows_share_corrected_scalars_and_keep_other_rows():
+        p=torch.nn.Parameter(torch.zeros(3,2,dtype=torch.float32))
+        opt=AdaBeliefOptimizer([p],betas=BETAS,amsgrad=True)
+        for step in range(1,11):
+            before=p.detach().clone()
+            row=step%2
+            p.grad=torch.sparse_coo_tensor(torch.tensor([[row]]),torch.tensor([[.1,-.2]]),p.shape)
+            opt.step()
+            state=opt.state[p]
+            expected=before-.001*direction(state['exp_avg'],state['max_exp_avg_var'],p.dtype,step,True)
+>           torch.testing.assert_close(p[row],expected[row],rtol=4e-7,atol=0)
+E           AssertionError: Tensor-likes are not close!
+E           
+E           Mismatched elements: 2 / 2 (100.0%)
+E           Greatest absolute difference: 4.303001333028078e-08 at index (0,) (up to 0 allowed)
+E           Greatest relative difference: 0.00033470202470198274 at index (0,) (up to 4e-07 allowed)
+
+dev_tests/test_adabelief_scalar_dtype.py:143: AssertionError
+=============================== warnings summary ===============================
+dev_tests/test_adabelief_scalar_dtype.py::test_sparse_observed_rows_share_corrected_scalars_and_keep_other_rows
+  /workspace/dev_tests/test_adabelief_scalar_dtype.py:139: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/Context.cpp:848.)
+    p.grad=torch.sparse_coo_tensor(torch.tensor([[row]]),torch.tensor([[.1,-.2]]),p.shape)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED dev_tests/test_adabelief_scalar_dtype.py::test_single_update_uses_parameter_dtype_scalars[5-False-False-dtype0]
+FAILED dev_tests/test_adabelief_scalar_dtype.py::test_single_update_uses_parameter_dtype_scalars[5-True-False-dtype0]
+FAILED dev_tests/test_adabelief_scalar_dtype.py::test_single_update_uses_parameter_dtype_scalars[6-False-False-dtype0]
+FAILED dev_tests/test_adabelief_scalar_dtype.py::test_single_update_uses_parameter_dtype_scalars[6-False-True-dtype0]
+FAILED dev_tests/test_adabelief_scalar_dtype.py::test_single_update_uses_parameter_dtype_scalars[6-True-False-dtype0]
+FAILED dev_tests/test_adabelief_scalar_dtype.py::test_single_update_uses_parameter_dtype_scalars[6-True-True-dtype0]
+FAILED dev_tests/test_adabelief_scalar_dtype.py::test_single_update_uses_parameter_dtype_scalars[7-False-False-dtype0]
+FAILED dev_tests/test_adabelief_scalar_dtype.py::test_single_update_uses_parameter_dtype_scalars[7-False-True-dtype0]
+FAILED dev_tests/test_adabelief_scalar_dtype.py::test_single_update_uses_parameter_dtype_scalars[7-True-False-dtype0]
+FAILED dev_tests/test_adabelief_scalar_dtype.py::test_single_update_uses_parameter_dtype_scalars[7-True-True-dtype0]
+FAILED dev_tests/test_adabelief_scalar_dtype.py::test_single_update_uses_parameter_dtype_scalars[20-False-False-dtype0]
+FAILED dev_tests/test_adabelief_scalar_dtype.py::test_single_update_uses_parameter_dtype_scalars[20-False-True-dtype0]
+FAILED dev_tests/test_adabelief_scalar_dtype.py::test_single_update_uses_parameter_dtype_scalars[20-True-False-dtype0]
+FAILED dev_tests/test_adabelief_scalar_dtype.py::test_single_update_uses_parameter_dtype_scalars[20-True-True-dtype0]
+FAILED dev_tests/test_adabelief_scalar_dtype.py::test_single_update_uses_parameter_dtype_scalars[50-False-True-dtype0]
+FAILED dev_tests/test_adabelief_scalar_dtype.py::test_single_update_uses_parameter_dtype_scalars[50-True-True-dtype0]
+FAILED dev_tests/test_adabelief_scalar_dtype.py::test_default_beta_bias_correction_from_measured_moments[False-dtype0]
+FAILED dev_tests/test_adabelief_scalar_dtype.py::test_default_beta_bias_correction_from_measured_moments[True-dtype0]
+FAILED dev_tests/test_adabelief_scalar_dtype.py::test_mixed_dtype_groups_schedules_and_checkpoint_continuation
+FAILED dev_tests/test_adabelief_scalar_dtype.py::test_sparse_observed_rows_share_corrected_scalars_and_keep_other_rows
+20 failed, 35 passed, 1 warning in 2.90s

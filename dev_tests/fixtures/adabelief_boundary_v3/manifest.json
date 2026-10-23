@@ -1,0 +1,34 @@
+{
+  "dev_tests/test_public_api_regressions.py": {
+    "archive": "dev_tests/fixtures/adabelief_boundary_v3/test_public_api_regressions.py.txt",
+    "sha256": "e560d4b6121280fe25a70595bcfa56a1177dd8784b417bbf3a54ea75e7d37993"
+  },
+  "dev_tests/test_tutorial1_gc_scope.py": {
+    "archive": "dev_tests/fixtures/adabelief_boundary_v3/test_tutorial1_gc_scope.py.txt",
+    "sha256": "4423c8fce6e5ec2fc24fb7efae5c7b545278f7d17afdd5f14452a350f4d9e8f9"
+  },
+  "dev_tests/tutorial1_gc_scope.py": {
+    "archive": "dev_tests/fixtures/adabelief_boundary_v3/tutorial1_gc_scope.py.txt",
+    "sha256": "027980995d8e8ea15e147914fd93524823d02173225ce538806432ee61cd502e"
+  },
+  "dev_tests/test_adabelief_dtype_preservation.py": {
+    "archive": "dev_tests/fixtures/adabelief_boundary_v3/test_adabelief_dtype_preservation.py.txt",
+    "sha256": "435e227badea8f3d6b2aaa6ff7e8d1804aa4ad4f1eeb37e40f9ed8e35552163a"
+  },
+  "dev_tests/public_api_pre_fix_fingerprints.json": {
+    "archive": "dev_tests/fixtures/adabelief_boundary_v3/public_api_pre_fix_fingerprints.json.txt",
+    "sha256": "91f2bff6b6d7b63c25bf7e20a3dcbcc30d4559ad38161294b1ce56979db5ea85"
+  },
+  "dev_tests/public_api_pre_fix_environment.json": {
+    "archive": "dev_tests/fixtures/adabelief_boundary_v3/public_api_pre_fix_environment.json.txt",
+    "sha256": "a3ddbdb5f316df7928ccd4602f8b455f7f1d3f8bd1c42c65af1675a797f9a777"
+  },
+  "dev_tests/adabelief_dtype_full_final.log": {
+    "archive": "dev_tests/fixtures/adabelief_boundary_v3/adabelief_dtype_full_final.log.txt",
+    "sha256": "cdce214d60bdc60aa18167d0a6eeee4f7f4e600be161719cd79591e48d858d86"
+  },
+  "nif/optimizers/external_optimizers.py": {
+    "archive": "dev_tests/fixtures/adabelief_boundary_v3/external_optimizers.py.txt",
+    "sha256": "f0976ef6c1abf3040cc65d638604a0c3aa1b38b45bf2b4c0faaa13d20c17ce34"
+  }
+}

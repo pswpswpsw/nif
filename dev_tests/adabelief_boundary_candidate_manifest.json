@@ -1,0 +1,169 @@
+{
+  "environment": {
+    "python": "3.13.17",
+    "torch": "2.14.1+cpu",
+    "numpy": "2.1.3",
+    "device": "cpu"
+  },
+  "source_sha256": {
+    "dev_tests/adabelief_boundary_equivalence_green.log": "a89f4d54f12f5a36d873abfc42deb405005a2a768117bb04531abcd8f83258d8",
+    "dev_tests/adabelief_boundary_full.log": "56d1b88d7014c21f0f6551e1e5c8a6b0d4f3515fa890a609f75405d7fcba99ac",
+    "dev_tests/adabelief_boundary_green.log": "352cf32234c2eb8e68f4bfc64688d60d3aea064ee7f09f3c28534f5d699e92b6",
+    "dev_tests/adabelief_boundary_pre_fix_fingerprints.json": "04ca34585adf6fe2b8001a449f12e69d85c40f083604cbc8c2b69d89f1bf9db1",
+    "dev_tests/adabelief_boundary_red_test_fingerprints.json": "42dd94c9dd824b912aa1ce544060c901a68bcc21340d95d92eb2af0e0366e060",
+    "dev_tests/adabelief_boundary_smoke.log": "269fc364fd8eb6afe641840d851613b8432ee531acf0a70cfec696e56b5950ee",
+    "dev_tests/adabelief_boundary_smoke_summary.json": "54a693416c6c598d69e79aac29465e755e7b35f5d0f522d4442062add628db7c",
+    "dev_tests/adabelief_boundary_succession_green.log": "cad1ab1eabcac9d1754550d0f46a4076cdc6d2af8c03359b649d439070b5ad33",
+    "dev_tests/adabelief_empty_red.log": "3e347abfe777c8fd58c54f57a532bc4da880f1e8da7eb57f08f3cfdc9ec72a04",
+    "dev_tests/adabelief_history.py": "8b115baa3754c12644ffb96f3bbc3d1ef449f9007eac720d02fe0da063f85994",
+    "dev_tests/adabelief_phase_scope.py": "6361852f79399850f65782293c1e74a56198ee1476b6fc524d9a24a9bd33db49",
+    "dev_tests/fixtures/adabelief_boundary_v3/adabelief_dtype_full_final.log.txt": "cdce214d60bdc60aa18167d0a6eeee4f7f4e600be161719cd79591e48d858d86",
+    "dev_tests/fixtures/adabelief_boundary_v3/external_optimizers.py.txt": "f0976ef6c1abf3040cc65d638604a0c3aa1b38b45bf2b4c0faaa13d20c17ce34",
+    "dev_tests/fixtures/adabelief_boundary_v3/manifest.json": "db230a7322abea0e401d276e66428e00a06620a7bfbfde00ad68c4d75be7dd49",
+    "dev_tests/fixtures/adabelief_boundary_v3/public_api_pre_fix_environment.json.txt": "a3ddbdb5f316df7928ccd4602f8b455f7f1d3f8bd1c42c65af1675a797f9a777",
+    "dev_tests/fixtures/adabelief_boundary_v3/public_api_pre_fix_fingerprints.json.txt": "91f2bff6b6d7b63c25bf7e20a3dcbcc30d4559ad38161294b1ce56979db5ea85",
+    "dev_tests/fixtures/adabelief_boundary_v3/test_adabelief_dtype_preservation.py.txt": "435e227badea8f3d6b2aaa6ff7e8d1804aa4ad4f1eeb37e40f9ed8e35552163a",
+    "dev_tests/fixtures/adabelief_boundary_v3/test_public_api_regressions.py.txt": "e560d4b6121280fe25a70595bcfa56a1177dd8784b417bbf3a54ea75e7d37993",
+    "dev_tests/fixtures/adabelief_boundary_v3/test_tutorial1_gc_scope.py.txt": "4423c8fce6e5ec2fc24fb7efae5c7b545278f7d17afdd5f14452a350f4d9e8f9",
+    "dev_tests/fixtures/adabelief_boundary_v3/tutorial1_gc_scope.py.txt": "027980995d8e8ea15e147914fd93524823d02173225ce538806432ee61cd502e",
+    "dev_tests/run_adabelief_boundary_smoke.py": "6ddb55ec4656c97e8a0f662551b8db70f9a34818539d202a385bf613aeb4a6f4",
+    "dev_tests/scope_helper_utf8_archives_red.log": "cbf68bd7bb5558968c37a60919b37efa2adf196ba901e41acf420c53db929ec9",
+    "dev_tests/scope_helper_utf8_archives_red_fingerprint.json": "e0ad78ba23b6438ea5fb07c9c7e7b3fdd02c259c8b43b3eef1f0c03a72f0b0e2",
+    "dev_tests/scope_helper_utf8_red.log": "8564f790a36976e27268ebf63b9f2cf024b3d9889f4621ffba39dc29cdca884f",
+    "dev_tests/test_adabelief_boundary_succession.py": "3cf8c86b2056b95dbee333bfa4fd291d1f5476de1715a63db15c97a8f9c32011",
+    "dev_tests/test_adabelief_dtype_preservation.py": "0e8a39a13b146394257da8cffca66704b867ab56d65c542df19f07da3d819d87",
+    "dev_tests/test_adabelief_empty_gradients.py": "152a2eff0343b43d80e3025572b0ee8fde7ce7ed7cac31bd7b2152c9589e470e",
+    "dev_tests/test_public_api_regressions.py": "f0a7b71615e932a62baa6b791a149701a91154c5720a1a6fa8fb8a52684da261",
+    "dev_tests/test_scope_helper_utf8.py": "15a526b173fc497eb3900ff267c1d9eaea59dd72dc5a81a89ba061fa6e994f8d",
+    "dev_tests/test_scope_helper_utf8_archives.py": "4015d95aee77a8bd44100d5f9960265dd12fb0f3eb5bb817575bad8eaa31d3d0",
+    "dev_tests/test_tutorial1_gc_scope.py": "302ffdff8d4d41fc648d491307026fa745273f3313ef9b62800757f7ca1b96cc",
+    "dev_tests/tutorial1_gc_scope.py": "29fa494900a56d2a4875d3970fa262f2acddfccae0f0ebdc538a6fd869c585bb",
+    "docs/PYTORCH_ADABELIEF_BOUNDARY_SUCCESSION.md": "dd812e898ab37d414cb1ddafc79da590ade8bc0adf52b5ad68bae3e7f838500f",
+    "docs/PYTORCH_CANDIDATE_REPORT.md": "09869b8fdbbe38c7914e6d6942f3d5a0c84d465dd79f9e87d327c828518ab422",
+    "nif/optimizers/external_optimizers.py": "918afd7ee94d2a8f197971d108afa9eb3a209d04a799ae234b4cd7aceb30bb62"
+  },
+  "checks": {
+    "empty_red": {
+      "failed": 8,
+      "passed": 2
+    },
+    "utf8_red": {
+      "failed": 1,
+      "passed": 2
+    },
+    "utf8_source_red": {
+      "failed": 1
+    },
+    "initial_green": {
+      "passed": 69
+    },
+    "succession_green": {
+      "passed": 170
+    },
+    "equivalence_green": {
+      "passed": 7
+    },
+    "full_public": {
+      "passed": 342,
+      "skipped": 2
+    }
+  },
+  "history": {
+    "archive": {
+      "dev_tests/test_public_api_regressions.py": {
+        "archive": "dev_tests/fixtures/adabelief_boundary_v3/test_public_api_regressions.py.txt",
+        "sha256": "e560d4b6121280fe25a70595bcfa56a1177dd8784b417bbf3a54ea75e7d37993"
+      },
+      "dev_tests/test_tutorial1_gc_scope.py": {
+        "archive": "dev_tests/fixtures/adabelief_boundary_v3/test_tutorial1_gc_scope.py.txt",
+        "sha256": "4423c8fce6e5ec2fc24fb7efae5c7b545278f7d17afdd5f14452a350f4d9e8f9"
+      },
+      "dev_tests/tutorial1_gc_scope.py": {
+        "archive": "dev_tests/fixtures/adabelief_boundary_v3/tutorial1_gc_scope.py.txt",
+        "sha256": "027980995d8e8ea15e147914fd93524823d02173225ce538806432ee61cd502e"
+      },
+      "dev_tests/test_adabelief_dtype_preservation.py": {
+        "archive": "dev_tests/fixtures/adabelief_boundary_v3/test_adabelief_dtype_preservation.py.txt",
+        "sha256": "435e227badea8f3d6b2aaa6ff7e8d1804aa4ad4f1eeb37e40f9ed8e35552163a"
+      },
+      "dev_tests/public_api_pre_fix_fingerprints.json": {
+        "archive": "dev_tests/fixtures/adabelief_boundary_v3/public_api_pre_fix_fingerprints.json.txt",
+        "sha256": "91f2bff6b6d7b63c25bf7e20a3dcbcc30d4559ad38161294b1ce56979db5ea85"
+      },
+      "dev_tests/public_api_pre_fix_environment.json": {
+        "archive": "dev_tests/fixtures/adabelief_boundary_v3/public_api_pre_fix_environment.json.txt",
+        "sha256": "a3ddbdb5f316df7928ccd4602f8b455f7f1d3f8bd1c42c65af1675a797f9a777"
+      },
+      "dev_tests/adabelief_dtype_full_final.log": {
+        "archive": "dev_tests/fixtures/adabelief_boundary_v3/adabelief_dtype_full_final.log.txt",
+        "sha256": "cdce214d60bdc60aa18167d0a6eeee4f7f4e600be161719cd79591e48d858d86"
+      },
+      "nif/optimizers/external_optimizers.py": {
+        "archive": "dev_tests/fixtures/adabelief_boundary_v3/external_optimizers.py.txt",
+        "sha256": "f0976ef6c1abf3040cc65d638604a0c3aa1b38b45bf2b4c0faaa13d20c17ce34"
+      }
+    },
+    "raw_two_failure_log_preserved": true,
+    "original_expected_json_unchanged": true,
+    "current_trajectory_contract": "CURRENT initializers/models + frozen PRE-scalar optimizer + ORIGINAL expected hashes",
+    "current_optimizer_contract": "Unchanged frozen source-derived parameter-dtype regressions plus atomic guard/bitwise scalar-phase equivalence",
+    "scope_version": 3
+  },
+  "smoke": [
+    {
+      "notebook": "1_simple_1d_wave_pytorch.ipynb",
+      "mode": "smoke",
+      "device": "cpu",
+      "source_sha256": "9c64c3de750de791df2b8f4c7f74a93e5eb4fee618ffe63236d1ddf6ec91a438",
+      "status": "passed",
+      "executed_code_cells": 18,
+      "metrics": {
+        "mode": "smoke",
+        "adabelief_epochs": 2,
+        "lbfgs_rounds": 1,
+        "lbfgs_max_iter": 2,
+        "final_mse": 0.9995570182800293
+      },
+      "seconds": 6.010814850000315
+    },
+    {
+      "notebook": "3_multi_scale_linear_NIF_pytorch.ipynb",
+      "mode": "smoke",
+      "device": "cpu",
+      "source_sha256": "ab7533c64635dce6faf3b8c931b191b1a7fdb3a34427c46702a9ace69b5a23bc",
+      "status": "passed",
+      "executed_code_cells": 12,
+      "metrics": {
+        "mode": "smoke",
+        "epochs": 2,
+        "training_rows": 4096,
+        "all_rows": 191775,
+        "weighted_mse": 0.07029975175927881,
+        "physical_u_mse": 1.602237302101234,
+        "physical_v_mse": 2.483214487536651
+      },
+      "seconds": 6.3664276640001844
+    }
+  ],
+  "preservation": {
+    "owned_preexisting_changes": [
+      "dev_tests/test_adabelief_dtype_preservation.py",
+      "dev_tests/test_public_api_regressions.py",
+      "dev_tests/test_tutorial1_gc_scope.py",
+      "dev_tests/tutorial1_gc_scope.py",
+      "docs/PYTORCH_CANDIDATE_REPORT.md",
+      "nif/optimizers/external_optimizers.py"
+    ],
+    "external_observed_changes": [
+      "docs/PYTORCH_TENSORFLOW_PARITY.md"
+    ],
+    "preexisting_unchanged_count": 283,
+    "gitattributes_unchanged": true,
+    "scalar_phase_logs_snapshots_manifests_unchanged": true,
+    "red_test_sources_unchanged": true
+  },
+  "limitations": [
+    "CPU smoke and controlled GBK simulation only",
+    "No full cross-framework training/GPU/independent acceptance claim"
+  ]
+}

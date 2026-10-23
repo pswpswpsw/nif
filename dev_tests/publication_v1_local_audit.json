@@ -1,0 +1,8 @@
+{
+  "namespace": "dev_tests/artifacts/",
+  "recorded": 439,
+  "present_and_hash_verified": 439,
+  "missing": [],
+  "mandatory_for_public_scope": false,
+  "historical_manifest_sha256": "0597fc1dee3a7f0ee1de46d5ab732275a23e8a06cc666f39d00789b2f59b2daa"
+}

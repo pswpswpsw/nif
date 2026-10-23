@@ -1,0 +1,645 @@
+{
+  "scope": "Native/public-source diagnosis only; no TF execution or parity acceptance",
+  "reference_sources": {
+    "tensorflow": "f8f9d31f4aa331b6e7dbc48758302c801441bcce",
+    "compatibility": "ad9113df14590189b12068b6b3fa7c8c8d9187d4",
+    "native_baseline_from_contract": "220771c6fb5e567fb4e38fa5021253c3682b1cca"
+  },
+  "current_source_sha256": {
+    "nif/__about__.py": "da997374411bdb814b8c4d88d97c8105c2443d858771c34be1282d2c2ffa7ab8",
+    "nif/__init__.py": "f3ca8b722364eeb636b00855d90446ef7c4e51fb7c119ab043da0424a16be60b",
+    "nif/data/__init__.py": "dca18fbd911726b35105d92eaad7092bcd254f6d7ce1a77240bc09e7204b2a08",
+    "nif/data/point_wise_data.py": "1a3f2ae571fd8d723449e1ca6a6ae79dbb7431558e0fc84237963a9213f901d5",
+    "nif/data/tfr_dataset.py": "c6f19c447ac774a27f84276a6768de590baaddb88001f6973c7c73baca63dee0",
+    "nif/demo/__init__.py": "74b7f6f8b5537f986a82b9d98428ac7f110ceeabcad8f1a42a52807079d03f00",
+    "nif/demo/_test.py": "c19e8a456faffeb0fde44e3a18fcdb0f26fa04dfd3721406cd7525401eff44c4",
+    "nif/demo/cylinderflow.py": "7ab0f5402cfd706abbf0515416f68219a1083ee1493933583e1470ee71730b9d",
+    "nif/demo/traveling_wave.py": "264658c74976fc2636b3fe32c5f22795dd5b94106d6e3ca51e4b04a6e0260d37",
+    "nif/demo/traveling_wave_high_freq.py": "8acf2e9e315ac856d746ea5c4d6a11afb7e70d167e1747f48c14fe53a5390a4a",
+    "nif/layers/__init__.py": "d866caf6a8240f4c4442b55dcd34eabf33a1745fd12d79d7845ac27d04541bca",
+    "nif/layers/_common.py": "a52dc9c15e95dbbb311b83f9443dce6c32593dc6f8ad4885b9023380ee36e812",
+    "nif/layers/gradient.py": "ae4bedeeb8e76c1f3443b5558b3634fac60ab78ffd68040a9465d59f1c5f23ba",
+    "nif/layers/mlp.py": "7a689765155cc201aec6333f1f1da71d4c5f93b5c790061ee642db4e0e2e32e5",
+    "nif/layers/regularization.py": "1e6f19a0c3df504795d16245d053ec809d095689c28d36dd155ec50764327037",
+    "nif/layers/siren.py": "df7da28f8ff4a58a8f8c7e32308dad7f9569c1c3eb5c5d126652f47f6a8d9af7",
+    "nif/model.py": "a310128998a160f273eb04a121598033812d6342e302645be53d0444962a1761",
+    "nif/optimizers/__init__.py": "6f14e2614a9fd2da1eced6fe73b28b06a28be7f22269a578ff91389db75f5e4a",
+    "nif/optimizers/external_optimizers.py": "e63840e3cd096a077dc4afcc47496a855afba9e9811146db3154d984c2145e2e",
+    "nif/optimizers/gtcf.py": "8698637fb975ff7df70a38a0503fa231f037855beeaf68efa0cb5b7ca37ac1b4",
+    "nif/optimizers/lbfgs.py": "26636c2f9ed24f88b54f333e7ddc88388d5ad5e5d2cb823f74a5f573da5197ab",
+    "nif/optimizers/lbfgs_V2.py": "ab8707b26f61034507cdf4adbcaeb1c07c53a9c5d553332885aee3a041e1fc8e",
+    "dev_tests/generate_native_notebooks.py": "51b2c6518c19d04d4d5a78b642312d4dc8a365b8850a892fa4ce7205429ce00d",
+    "tutorial/3_multi_scale_linear_NIF_pytorch.ipynb": "ab7533c64635dce6faf3b8c931b191b1a7fdb3a34427c46702a9ace69b5a23bc"
+  },
+  "environment": {
+    "python": "3.13.17",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+    "torch": "2.14.1+cpu",
+    "numpy": "2.1.3",
+    "threads": 1
+  },
+  "limitations": [
+    "References execute explicit public formulas in Torch, not TensorFlow",
+    "Tensor scalar emulation does not establish TF compiler fusion or hyperparameter storage/cast behavior",
+    "Float64/float32 cases each transfer actual tensors internally; no shared-seed cross-framework claim",
+    "Optimizer probes use identical frozen gradients to isolate arithmetic; not coupled training trajectories"
+  ],
+  "batches": {
+    "rows": 191775,
+    "steps": 188,
+    "remainder": 287,
+    "actual_ids_once_each": true,
+    "schedule": {
+      "0": 0.001,
+      "199": 0.001,
+      "200": 0.0005,
+      "399": 0.0005,
+      "400": 0.0002,
+      "599": 0.0002
+    }
+  },
+  "whole_model": {
+    "torch.float64": {
+      "parameter_tensors": 19,
+      "parameter_values": 4912,
+      "semantic_layout": {
+        "pnet_list.0.linear.weight": [
+          1,
+          30
+        ],
+        "pnet_list.0.linear.bias": [
+          30
+        ],
+        "pnet_list.1.L1.w": [
+          30,
+          30
+        ],
+        "pnet_list.1.L1.b": [
+          30
+        ],
+        "pnet_list.2.L1.w": [
+          30,
+          30
+        ],
+        "pnet_list.2.L1.b": [
+          30
+        ],
+        "pnet_list.3.linear.weight": [
+          30,
+          10
+        ],
+        "pnet_list.3.linear.bias": [
+          10
+        ],
+        "pnet_list.4.w": [
+          10,
+          10
+        ],
+        "pnet_list.4.b": [
+          10
+        ],
+        "snet_list.0.w": [
+          2,
+          30
+        ],
+        "snet_list.0.b": [
+          30
+        ],
+        "snet_list.1.w": [
+          30,
+          30
+        ],
+        "snet_list.1.b": [
+          30
+        ],
+        "snet_list.2.w": [
+          30,
+          30
+        ],
+        "snet_list.2.b": [
+          30
+        ],
+        "snet_list.3.w": [
+          30,
+          20
+        ],
+        "snet_list.3.b": [
+          20
+        ],
+        "last_bias_layer.last_layer_bias": [
+          2
+        ]
+      },
+      "buffer_shapes": {
+        "_precision_anchor": [
+          0
+        ],
+        "pnet_list.0._dtype_anchor": [
+          0
+        ],
+        "pnet_list.3._dtype_anchor": [
+          0
+        ]
+      },
+      "output_max_abs_error": 5.551115123125783e-17,
+      "intermediate_max_abs_error": 3.122502256758253e-17,
+      "weighted_loss": 0.06116185334295079,
+      "loss_abs_error": 0.0,
+      "input_loss_gradient_max_abs_error": 2.168404344971009e-19,
+      "full_input_jacobian_max_abs_error": 2.220446049250313e-16,
+      "all_parameter_gradient_max_abs_error": 5.551115123125783e-17,
+      "all_gc_gradient_max_abs_error": 5.551115123125783e-17,
+      "first_temporal_gc_nonzero": 0,
+      "first_temporal_kernel_update_max_abs": 0.0,
+      "all_parameters_shared_by_views": true,
+      "all_parameter_same_gradient_updates": [
+        {
+          "step": 1,
+          "all_parameter_max_abs": 3.3881317890172014e-21,
+          "all_moment_max_abs": 0.0,
+          "all_variance_max_abs": 0.0
+        },
+        {
+          "step": 2,
+          "all_parameter_max_abs": 3.3881317890172014e-21,
+          "all_moment_max_abs": 6.938893903907228e-18,
+          "all_variance_max_abs": 1.3552527156068805e-20
+        },
+        {
+          "step": 3,
+          "all_parameter_max_abs": 4.336808689942018e-19,
+          "all_moment_max_abs": 6.938893903907228e-18,
+          "all_variance_max_abs": 1.3552527156068805e-20
+        },
+        {
+          "step": 4,
+          "all_parameter_max_abs": 4.336808689942018e-19,
+          "all_moment_max_abs": 3.469446951953614e-18,
+          "all_variance_max_abs": 1.3552527156068805e-20
+        },
+        {
+          "step": 5,
+          "all_parameter_max_abs": 1.734723475976807e-18,
+          "all_moment_max_abs": 6.938893903907228e-18,
+          "all_variance_max_abs": 1.3552527156068805e-20
+        },
+        {
+          "step": 6,
+          "all_parameter_max_abs": 1.734723475976807e-18,
+          "all_moment_max_abs": 6.938893903907228e-18,
+          "all_variance_max_abs": 2.710505431213761e-20
+        },
+        {
+          "step": 7,
+          "all_parameter_max_abs": 3.469446951953614e-18,
+          "all_moment_max_abs": 3.469446951953614e-18,
+          "all_variance_max_abs": 2.710505431213761e-20
+        },
+        {
+          "step": 8,
+          "all_parameter_max_abs": 6.938893903907228e-18,
+          "all_moment_max_abs": 3.469446951953614e-18,
+          "all_variance_max_abs": 2.710505431213761e-20
+        },
+        {
+          "step": 9,
+          "all_parameter_max_abs": 6.938893903907228e-18,
+          "all_moment_max_abs": 5.204170427930421e-18,
+          "all_variance_max_abs": 2.710505431213761e-20
+        },
+        {
+          "step": 10,
+          "all_parameter_max_abs": 6.938893903907228e-18,
+          "all_moment_max_abs": 6.938893903907228e-18,
+          "all_variance_max_abs": 2.710505431213761e-20
+        },
+        {
+          "step": 11,
+          "all_parameter_max_abs": 6.938893903907228e-18,
+          "all_moment_max_abs": 8.673617379884035e-18,
+          "all_variance_max_abs": 2.710505431213761e-20
+        },
+        {
+          "step": 12,
+          "all_parameter_max_abs": 6.938893903907228e-18,
+          "all_moment_max_abs": 1.0408340855860843e-17,
+          "all_variance_max_abs": 2.710505431213761e-20
+        }
+      ]
+    },
+    "torch.float32": {
+      "parameter_tensors": 19,
+      "parameter_values": 4912,
+      "semantic_layout": {
+        "pnet_list.0.linear.weight": [
+          1,
+          30
+        ],
+        "pnet_list.0.linear.bias": [
+          30
+        ],
+        "pnet_list.1.L1.w": [
+          30,
+          30
+        ],
+        "pnet_list.1.L1.b": [
+          30
+        ],
+        "pnet_list.2.L1.w": [
+          30,
+          30
+        ],
+        "pnet_list.2.L1.b": [
+          30
+        ],
+        "pnet_list.3.linear.weight": [
+          30,
+          10
+        ],
+        "pnet_list.3.linear.bias": [
+          10
+        ],
+        "pnet_list.4.w": [
+          10,
+          10
+        ],
+        "pnet_list.4.b": [
+          10
+        ],
+        "snet_list.0.w": [
+          2,
+          30
+        ],
+        "snet_list.0.b": [
+          30
+        ],
+        "snet_list.1.w": [
+          30,
+          30
+        ],
+        "snet_list.1.b": [
+          30
+        ],
+        "snet_list.2.w": [
+          30,
+          30
+        ],
+        "snet_list.2.b": [
+          30
+        ],
+        "snet_list.3.w": [
+          30,
+          20
+        ],
+        "snet_list.3.b": [
+          20
+        ],
+        "last_bias_layer.last_layer_bias": [
+          2
+        ]
+      },
+      "buffer_shapes": {
+        "_precision_anchor": [
+          0
+        ],
+        "pnet_list.0._dtype_anchor": [
+          0
+        ],
+        "pnet_list.3._dtype_anchor": [
+          0
+        ]
+      },
+      "output_max_abs_error": 1.4901161193847656e-08,
+      "intermediate_max_abs_error": 2.9802322387695312e-08,
+      "weighted_loss": 0.059249166399240494,
+      "loss_abs_error": 0.0,
+      "input_loss_gradient_max_abs_error": 7.275957614183426e-11,
+      "full_input_jacobian_max_abs_error": 5.820766091346741e-11,
+      "all_parameter_gradient_max_abs_error": 3.725290298461914e-09,
+      "all_gc_gradient_max_abs_error": 3.725290298461914e-09,
+      "first_temporal_gc_nonzero": 0,
+      "first_temporal_kernel_update_max_abs": 0.0,
+      "all_parameters_shared_by_views": true,
+      "all_parameter_same_gradient_updates": [
+        {
+          "step": 1,
+          "all_parameter_max_abs": 1.4551915228366852e-11,
+          "all_moment_max_abs": 3.725290298461914e-09,
+          "all_variance_max_abs": 2.9467628337442875e-10
+        },
+        {
+          "step": 2,
+          "all_parameter_max_abs": 1.4551915228366852e-11,
+          "all_moment_max_abs": 7.450580596923828e-09,
+          "all_variance_max_abs": 5.311449058353901e-10
+        },
+        {
+          "step": 3,
+          "all_parameter_max_abs": 9.313225746154785e-10,
+          "all_moment_max_abs": 1.1175870895385742e-08,
+          "all_variance_max_abs": 7.275957614183426e-10
+        },
+        {
+          "step": 4,
+          "all_parameter_max_abs": 9.313225746154785e-10,
+          "all_moment_max_abs": 1.1175870895385742e-08,
+          "all_variance_max_abs": 8.803908713161945e-10
+        },
+        {
+          "step": 5,
+          "all_parameter_max_abs": 9.313225746154785e-10,
+          "all_moment_max_abs": 1.4901161193847656e-08,
+          "all_variance_max_abs": 1.0113581083714962e-09
+        },
+        {
+          "step": 6,
+          "all_parameter_max_abs": 1.1920928955078125e-07,
+          "all_moment_max_abs": 1.1175870895385742e-08,
+          "all_variance_max_abs": 1.1132215149700642e-09
+        },
+        {
+          "step": 7,
+          "all_parameter_max_abs": 5.960464477539063e-08,
+          "all_moment_max_abs": 1.1175870895385742e-08,
+          "all_variance_max_abs": 1.2005330063402653e-09
+        },
+        {
+          "step": 8,
+          "all_parameter_max_abs": 5.960464477539063e-08,
+          "all_moment_max_abs": 1.1175870895385742e-08,
+          "all_variance_max_abs": 1.2732925824820995e-09
+        },
+        {
+          "step": 9,
+          "all_parameter_max_abs": 1.1920928955078125e-07,
+          "all_moment_max_abs": 1.4901161193847656e-08,
+          "all_variance_max_abs": 1.3242242857813835e-09
+        },
+        {
+          "step": 10,
+          "all_parameter_max_abs": 1.1920928955078125e-07,
+          "all_moment_max_abs": 2.2351741790771484e-08,
+          "all_variance_max_abs": 1.367880031466484e-09
+        },
+        {
+          "step": 11,
+          "all_parameter_max_abs": 1.1920928955078125e-07,
+          "all_moment_max_abs": 1.4901161193847656e-08,
+          "all_variance_max_abs": 1.4042598195374012e-09
+        },
+        {
+          "step": 12,
+          "all_parameter_max_abs": 1.341104507446289e-07,
+          "all_moment_max_abs": 1.4901161193847656e-08,
+          "all_variance_max_abs": 1.4260876923799515e-09
+        }
+      ]
+    }
+  },
+  "optimizer_same_gradient_diagnostics": {
+    "torch.float64": [
+      {
+        "step": 1,
+        "tensor_rho": 1.0,
+        "python_rho": 1.0,
+        "parameter_max_abs": 0.0,
+        "update_max_abs": 0.0,
+        "update_relative_l2": 0.0,
+        "moment_max_abs": 0.0,
+        "variance_max_abs": 0.0
+      },
+      {
+        "step": 2,
+        "tensor_rho": 1.999499749846109,
+        "python_rho": 1.999499749846109,
+        "parameter_max_abs": 0.0,
+        "update_max_abs": 0.0,
+        "update_relative_l2": 0.0,
+        "moment_max_abs": 4.336808689942018e-19,
+        "variance_max_abs": 4.235164736271502e-22
+      },
+      {
+        "step": 3,
+        "tensor_rho": 2.9986659997755396,
+        "python_rho": 2.9986659997755396,
+        "parameter_max_abs": 0.0,
+        "update_max_abs": 0.0,
+        "update_relative_l2": 0.0,
+        "moment_max_abs": 0.0,
+        "variance_max_abs": 1.6940658945086007e-21
+      },
+      {
+        "step": 4,
+        "tensor_rho": 3.9974987498546852,
+        "python_rho": 3.9974987498546852,
+        "parameter_max_abs": 0.0,
+        "update_max_abs": 0.0,
+        "update_relative_l2": 0.0,
+        "moment_max_abs": 4.336808689942018e-19,
+        "variance_max_abs": 3.3881317890172014e-21
+      },
+      {
+        "step": 5,
+        "tensor_rho": 4.995998000395048,
+        "python_rho": 4.995998000395048,
+        "parameter_max_abs": 0.0,
+        "update_max_abs": 0.0,
+        "update_relative_l2": 0.0,
+        "moment_max_abs": 6.938893903907228e-18,
+        "variance_max_abs": 3.3881317890172014e-21
+      },
+      {
+        "step": 6,
+        "tensor_rho": 5.994163751655833,
+        "python_rho": 5.994163751655833,
+        "parameter_max_abs": 0.0,
+        "update_max_abs": 0.0,
+        "update_relative_l2": 0.0,
+        "moment_max_abs": 6.938893903907228e-18,
+        "variance_max_abs": 6.776263578034403e-21
+      },
+      {
+        "step": 7,
+        "tensor_rho": 6.991996003993108,
+        "python_rho": 6.991996003993108,
+        "parameter_max_abs": 0.0,
+        "update_max_abs": 0.0,
+        "update_relative_l2": 0.0,
+        "moment_max_abs": 1.3877787807814457e-17,
+        "variance_max_abs": 1.3552527156068805e-20
+      },
+      {
+        "step": 8,
+        "tensor_rho": 7.989494757897319,
+        "python_rho": 7.989494757897319,
+        "parameter_max_abs": 0.0,
+        "update_max_abs": 0.0,
+        "update_relative_l2": 0.0,
+        "moment_max_abs": 1.3877787807814457e-17,
+        "variance_max_abs": 1.3552527156068805e-20
+      },
+      {
+        "step": 9,
+        "tensor_rho": 8.986660013807295,
+        "python_rho": 8.986660013807295,
+        "parameter_max_abs": 0.0,
+        "update_max_abs": 0.0,
+        "update_relative_l2": 0.0,
+        "moment_max_abs": 1.3877787807814457e-17,
+        "variance_max_abs": 1.3552527156068805e-20
+      },
+      {
+        "step": 10,
+        "tensor_rho": 9.98349177230557,
+        "python_rho": 9.98349177230557,
+        "parameter_max_abs": 0.0,
+        "update_max_abs": 0.0,
+        "update_relative_l2": 0.0,
+        "moment_max_abs": 2.7755575615628914e-17,
+        "variance_max_abs": 2.710505431213761e-20
+      },
+      {
+        "step": 11,
+        "tensor_rho": 10.979990034062212,
+        "python_rho": 10.979990034062212,
+        "parameter_max_abs": 0.0,
+        "update_max_abs": 0.0,
+        "update_relative_l2": 0.0,
+        "moment_max_abs": 2.7755575615628914e-17,
+        "variance_max_abs": 5.421010862427522e-20
+      },
+      {
+        "step": 12,
+        "tensor_rho": 11.97615479973524,
+        "python_rho": 11.97615479973524,
+        "parameter_max_abs": 0.0,
+        "update_max_abs": 0.0,
+        "update_relative_l2": 0.0,
+        "moment_max_abs": 2.7755575615628914e-17,
+        "variance_max_abs": 8.131516293641283e-20
+      }
+    ],
+    "torch.float32": [
+      {
+        "step": 1,
+        "tensor_rho": 1.0,
+        "python_rho": 1.0,
+        "parameter_max_abs": 0.0,
+        "update_max_abs": 0.0,
+        "update_relative_l2": 0.0,
+        "moment_max_abs": 3.725290298461914e-09,
+        "variance_max_abs": 4.220055416226387e-10
+      },
+      {
+        "step": 2,
+        "tensor_rho": 1.9862060546875,
+        "python_rho": 1.999499749846109,
+        "parameter_max_abs": 0.0,
+        "update_max_abs": 0.0,
+        "update_relative_l2": 0.0,
+        "moment_max_abs": 1.862645149230957e-09,
+        "variance_max_abs": 9.313225746154785e-10
+      },
+      {
+        "step": 3,
+        "tensor_rho": 3.01123046875,
+        "python_rho": 2.9986659997755396,
+        "parameter_max_abs": 0.0,
+        "update_max_abs": 0.0,
+        "update_relative_l2": 0.0,
+        "moment_max_abs": 5.587935447692871e-09,
+        "variance_max_abs": 1.3533281162381172e-09
+      },
+      {
+        "step": 4,
+        "tensor_rho": 3.9853515625,
+        "python_rho": 3.9974987498546852,
+        "parameter_max_abs": 0.0,
+        "update_max_abs": 0.0,
+        "update_relative_l2": 0.0,
+        "moment_max_abs": 7.450580596923828e-09,
+        "variance_max_abs": 1.862645149230957e-09
+      },
+      {
+        "step": 5,
+        "tensor_rho": 4.9864501953125,
+        "python_rho": 4.995998000395048,
+        "parameter_max_abs": 0.0,
+        "update_max_abs": 0.0,
+        "update_relative_l2": 0.0,
+        "moment_max_abs": 1.1175870895385742e-08,
+        "variance_max_abs": 2.2846506908535957e-09
+      },
+      {
+        "step": 6,
+        "tensor_rho": 6.00048828125,
+        "python_rho": 5.994163751655833,
+        "parameter_max_abs": 5.960464477539063e-08,
+        "update_max_abs": 5.960464477539063e-08,
+        "update_relative_l2": 0.0018130956450477242,
+        "moment_max_abs": 1.4901161193847656e-08,
+        "variance_max_abs": 2.764863893389702e-09
+      },
+      {
+        "step": 7,
+        "tensor_rho": 6.9873046875,
+        "python_rho": 6.991996003993108,
+        "parameter_max_abs": 2.9802322387695312e-08,
+        "update_max_abs": 2.9802322387695312e-08,
+        "update_relative_l2": 0.0007384761702269316,
+        "moment_max_abs": 1.4901161193847656e-08,
+        "variance_max_abs": 3.2014213502407074e-09
+      },
+      {
+        "step": 8,
+        "tensor_rho": 7.9866943359375,
+        "python_rho": 7.989494757897319,
+        "parameter_max_abs": 2.9802322387695312e-08,
+        "update_max_abs": 2.9802322387695312e-08,
+        "update_relative_l2": 0.0005363626405596733,
+        "moment_max_abs": 1.4901161193847656e-08,
+        "variance_max_abs": 3.6670826375484467e-09
+      },
+      {
+        "step": 9,
+        "tensor_rho": 8.980712890625,
+        "python_rho": 8.986660013807295,
+        "parameter_max_abs": 5.960464477539063e-08,
+        "update_max_abs": 5.960464477539063e-08,
+        "update_relative_l2": 0.0009261962259188294,
+        "moment_max_abs": 2.2351741790771484e-08,
+        "variance_max_abs": 4.103640094399452e-09
+      },
+      {
+        "step": 10,
+        "tensor_rho": 9.98291015625,
+        "python_rho": 9.98349177230557,
+        "parameter_max_abs": 5.960464477539063e-08,
+        "update_max_abs": 0.0,
+        "update_relative_l2": 0.0,
+        "moment_max_abs": 2.9802322387695312e-08,
+        "variance_max_abs": 4.5693013817071915e-09
+      },
+      {
+        "step": 11,
+        "tensor_rho": 10.9796142578125,
+        "python_rho": 10.979990034062212,
+        "parameter_max_abs": 5.960464477539063e-08,
+        "update_max_abs": 0.0,
+        "update_relative_l2": 0.0,
+        "moment_max_abs": 4.470348358154297e-08,
+        "variance_max_abs": 5.034962669014931e-09
+      },
+      {
+        "step": 12,
+        "tensor_rho": 11.9720458984375,
+        "python_rho": 11.97615479973524,
+        "parameter_max_abs": 8.940696716308594e-08,
+        "update_max_abs": 2.9802322387695312e-08,
+        "update_relative_l2": 0.00030140983290039003,
+        "moment_max_abs": 5.960464477539063e-08,
+        "variance_max_abs": 5.50062395632267e-09
+      }
+    ]
+  }
+}

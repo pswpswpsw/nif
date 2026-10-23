@@ -1,0 +1,662 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "9411b8e5",
+   "metadata": {},
+   "source": [
+    "# Native PyTorch tutorial 1\n",
+    "\n",
+    "5,000 AdaBelief epochs with gradient centralization, followed by 200 L-BFGS rounds of up to 1,000 iterations. Native build/model return the same trainable module. Logs and checkpoints are written by the visible training loop; GPU selection uses PyTorch devices.\n",
+    "\n",
+    "Run all cells in order. Full scientific workloads are the default; `NIF_SMOKE=1` is a separate development run and does not establish full convergence. The original TensorFlow and `_colab` notebooks are preserved as legacy references."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "af4c19ae",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Run this cell first in a clean Colab Python 3.11–3.13 session.\n",
+    "import os, sys, subprocess, importlib.util\n",
+    "from pathlib import Path\n",
+    "# A local checkout is used directly for development; Colab installs the public pytorch branch.\n",
+    "repo = next((p for p in (Path.cwd(), *Path.cwd().parents)\n",
+    "             if (p / \"nif\" / \"model.py\").exists()), None)\n",
+    "if repo is not None:\n",
+    "    sys.path.insert(0, str(repo))\n",
+    "else:\n",
+    "    subprocess.check_call([sys.executable, \"-m\", \"pip\", \"install\", \"--quiet\",\n",
+    "        \"torch==2.14.1\", \"numpy==2.1.3\", \"scipy==1.16.3\", \"matplotlib==3.10.0\",\n",
+    "        \"protobuf==7.36.2\", \"google-crc32c==1.9.0\", \"tfrecord==1.14.6\",\n",
+    "        \"git+https://github.com/pswpswpsw/nif.git@pytorch\"])\n",
+    "import copy, json, time, math\n",
+    "import numpy as np\n",
+    "import torch\n",
+    "from torch import nn\n",
+    "from torch.utils.data import DataLoader, TensorDataset\n",
+    "from matplotlib import pyplot as plt\n",
+    "import nif\n",
+    "# FULL is the default. Set NIF_SMOKE=1 before starting only for a short development check.\n",
+    "SMOKE = os.environ.get(\"NIF_SMOKE\", \"0\") == \"1\"\n",
+    "device = torch.device(os.environ.get(\"NIF_DEVICE\", \"cuda\" if torch.cuda.is_available() else \"cpu\"))\n",
+    "torch.manual_seed(42)\n",
+    "np.random.seed(42)\n",
+    "if device.type == \"cpu\":\n",
+    "    torch.set_num_threads(min(4, os.cpu_count() or 1))\n",
+    "print({\"torch\": torch.__version__, \"device\": str(device), \"mode\": \"SMOKE\" if SMOKE else \"FULL\"})\n",
+    "\n",
+    "OUT = Path(os.environ.get(\"NIF_OUTPUT_DIR\", \"pytorch_outputs\")) / \"tutorial1\"\n",
+    "OUT.mkdir(parents=True, exist_ok=True)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b98165dd",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Explicit native loops replace compile/fit/callbacks. The loss reduction is per row,\n",
+    "# then the mean over the batch; area weights multiply each row's MSE (not weight-normalized).\n",
+    "def dense_tanh(inputs, outputs):\n",
+    "    # Preserve the original Dense default: Glorot uniform kernel and zero bias.\n",
+    "    layer = nn.Linear(inputs, outputs)\n",
+    "    nn.init.xavier_uniform_(layer.weight)\n",
+    "    nn.init.zeros_(layer.bias)\n",
+    "    return nn.Sequential(layer, nn.Tanh())\n",
+    "\n",
+    "def epochs(full):\n",
+    "    return 2 if SMOKE else full\n",
+    "\n",
+    "def tensor(array, on_device=device):\n",
+    "    return torch.as_tensor(array, dtype=torch.float32, device=on_device)\n",
+    "\n",
+    "def loader(features, target, batch_size, weight=None):\n",
+    "    arrays = [tensor(features, \"cpu\"), tensor(target, \"cpu\")]\n",
+    "    if weight is not None:\n",
+    "        arrays.append(tensor(weight, \"cpu\").reshape(-1))\n",
+    "    return DataLoader(TensorDataset(*arrays), batch_size=batch_size, shuffle=True,\n",
+    "                      drop_last=False, pin_memory=device.type == \"cuda\")\n",
+    "\n",
+    "def predict(model, features, batch_size=1024):\n",
+    "    model.eval()\n",
+    "    result = []\n",
+    "    with torch.no_grad():\n",
+    "        for xb in torch.as_tensor(features, dtype=torch.float32).split(batch_size):\n",
+    "            result.append(model(xb.to(next(model.parameters()).device)).detach().cpu())\n",
+    "    return torch.cat(result).numpy()\n",
+    "\n",
+    "def centralize_gradients(model):\n",
+    "    # TF kernels are [input,output]; native Linear stores [output,input].\n",
+    "    # Centralize along the input axes, preserving the original mathematical operation.\n",
+    "    for module in model.modules():\n",
+    "        for name, parameter in module.named_parameters(recurse=False):\n",
+    "            if parameter.grad is not None and parameter.ndim > 1:\n",
+    "                axes = tuple(range(1, parameter.ndim)) if isinstance(module, nn.Linear) else tuple(range(parameter.ndim-1))\n",
+    "                parameter.grad.sub_(parameter.grad.mean(dim=axes, keepdim=True))\n",
+    "\n",
+    "def save_checkpoint(model, optimizer, path, epoch):\n",
+    "    payload = {\"model_state\": {k: v.detach().cpu() for k,v in model.state_dict().items()},\n",
+    "               \"optimizer_state\": optimizer.state_dict(), \"epoch\": epoch,\n",
+    "               \"framework\": \"pytorch\", \"smoke\": SMOKE}\n",
+    "    if hasattr(model, \"cfg_shape_net\"):\n",
+    "        payload.update(model_class=type(model).__name__, cfg_shape_net=model.cfg_shape_net,\n",
+    "                       cfg_parameter_net=model.cfg_parameter_net, mixed_policy=\"float32\")\n",
+    "    torch.save(payload, path)\n",
+    "\n",
+    "def save_and_check(model, optimizer, name, example, factory=None):\n",
+    "    path = OUT / (name + \".pt\")\n",
+    "    save_checkpoint(model, optimizer, path, -1)\n",
+    "    checkpoint = torch.load(path, map_location=device, weights_only=True)\n",
+    "    if factory is None:\n",
+    "        factory = lambda: type(model)(copy.deepcopy(model.cfg_shape_net),\n",
+    "                                       copy.deepcopy(model.cfg_parameter_net), \"float32\")\n",
+    "    restored = factory().to(device)\n",
+    "    restored.load_state_dict(checkpoint[\"model_state\"])\n",
+    "    restored.eval(); model.eval()\n",
+    "    with torch.no_grad():\n",
+    "        expected, actual = model(tensor(example)), restored(tensor(example))\n",
+    "    torch.testing.assert_close(actual, expected, rtol=1e-5, atol=1e-6)\n",
+    "    print(\"Checkpoint predictions verified:\", path)\n",
+    "    return restored\n",
+    "\n",
+    "def train(model, batches, optimizer, nepoch, name, schedule=None,\n",
+    "          centralization=False, loss_function=None, before_epoch=None):\n",
+    "    history = []\n",
+    "    start = time.monotonic()\n",
+    "    for epoch in range(nepoch):\n",
+    "        model.train()\n",
+    "        if schedule is not None:\n",
+    "            for group in optimizer.param_groups:\n",
+    "                group[\"lr\"] = schedule(epoch, group[\"lr\"])\n",
+    "        if before_epoch is not None:\n",
+    "            before_epoch(epoch)\n",
+    "        summed, seen = {}, 0\n",
+    "        for batch in batches:\n",
+    "            xb, yb = (item.to(device) for item in batch[:2])\n",
+    "            optimizer.zero_grad(set_to_none=True)\n",
+    "            if loss_function is None:\n",
+    "                per_row = (model(xb) - yb).square().mean(dim=-1)\n",
+    "                if len(batch) == 3:\n",
+    "                    per_row = per_row * batch[2].to(device).reshape(-1)\n",
+    "                data_loss = per_row.mean()\n",
+    "                values = {\"mse\": data_loss}\n",
+    "            else:\n",
+    "                data_loss, values = loss_function(model, xb, yb)\n",
+    "            regularization = model.regularization_loss(xb) if hasattr(model, \"regularization_loss\") else xb.new_zeros(())\n",
+    "            loss = data_loss + regularization\n",
+    "            if not torch.isfinite(loss):\n",
+    "                raise FloatingPointError(f\"Non-finite loss in {name}, epoch {epoch}\")\n",
+    "            loss.backward()\n",
+    "            if centralization:\n",
+    "                centralize_gradients(model)\n",
+    "            optimizer.step()\n",
+    "            for key, value in {**values, \"regularization\": regularization, \"loss\": loss}.items():\n",
+    "                summed[key] = summed.get(key, 0.0) + float(value.detach()) * len(xb)\n",
+    "            seen += len(xb)\n",
+    "        row = {\"epoch\": epoch, \"rows\": seen, **{key: value / seen for key,value in summed.items()}}\n",
+    "        history.append(row)\n",
+    "        if epoch % 100 == 0 or epoch == nepoch - 1:\n",
+    "            print(name, row, \"elapsed_seconds\", round(time.monotonic()-start, 2))\n",
+    "            (OUT / (name + \"_history.json\")).write_text(json.dumps(history, indent=2))\n",
+    "        if epoch % 1000 == 0 or epoch == nepoch - 1:\n",
+    "            save_checkpoint(model, optimizer, OUT / (name + \"_latest.pt\"), epoch)\n",
+    "    fig, ax = plt.subplots(figsize=(7, 3))\n",
+    "    ax.semilogy([row[\"loss\"] for row in history]); ax.set(xlabel=\"epoch\", ylabel=\"loss\", title=name)\n",
+    "    fig.tight_layout(); fig.savefig(OUT / (name + \"_loss.png\")); plt.show(); plt.close(fig)\n",
+    "    return history\n",
+    "\n",
+    "def wave_figure(truth, prediction, name):\n",
+    "    fig, axs = plt.subplots(1,3,figsize=(15,3))\n",
+    "    for ax, values, title in zip(axs, (truth,prediction,prediction-truth), (\"true\",\"pred\",\"error\")):\n",
+    "        im=ax.contourf(tt,xx,values.reshape(10,200),levels=50,cmap=\"seismic\")\n",
+    "        fig.colorbar(im,ax=ax); ax.set(xlabel=\"t\",ylabel=\"x\",title=title)\n",
+    "    fig.tight_layout(); fig.savefig(OUT / (name+\"_reconstruction.png\")); plt.show(); plt.close(fig)\n",
+    "\n",
+    "def write_metrics(values):\n",
+    "    print(json.dumps(values, indent=2))\n",
+    "    (OUT / \"metrics.json\").write_text(json.dumps({\"mode\": \"smoke\" if SMOKE else \"full\", **values}, indent=2))\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c08e24a3",
+   "metadata": {},
+   "source": [
+    "# Generate 1D travelling wave data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "fe1c0379",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "NT=10 # 20\n",
+    "NX=200\n",
+    "\n",
+    "x = np.linspace(0,1,NX,endpoint=False)\n",
+    "t = np.linspace(0,100,NT,endpoint=False)\n",
+    "\n",
+    "xx,tt=np.meshgrid(x,t)\n",
+    "\n",
+    "omega = 4\n",
+    "c = 0.12/20\n",
+    "x0 = 0.2\n",
+    "\n",
+    "u = np.exp(-1000*(xx-x0-c*tt)**2)*np.sin(omega*(xx-x0-c*tt))\n",
+    "\n",
+    "# vis\n",
+    "plt.figure()\n",
+    "for i in range(NT):\n",
+    "    plt.plot(x,u[i,:],'-',label=str(i) + '-th time')\n",
+    "\n",
+    "plt.xlabel('$x$',fontsize=25)\n",
+    "plt.ylabel('$u$',fontsize=25)\n",
+    "\n",
+    "# vis iso\n",
+    "plt.figure(figsize=(4,4))\n",
+    "ax = plt.axes(projection='3d')\n",
+    "ax.plot_surface(xx,tt,u,cmap=\"rainbow\", lw=2)#,rstride=1, cstride=1)\n",
+    "ax.view_init(57, -80)\n",
+    "ax.set_xlabel(r'$x$',fontsize=25)\n",
+    "ax.set_ylabel(r'$t$',fontsize=25)\n",
+    "ax.set_zlabel(r'$u$',fontsize=25)\n",
+    "\n",
+    "plt.tight_layout()\n",
+    "# Keep all three axis labels inside the ordinary inline tight crop.\n",
+    "ax.set_box_aspect(None, zoom=0.75)\n",
+    "ax.xaxis.labelpad = ax.yaxis.labelpad = ax.zaxis.labelpad = 12\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "8e3f14da",
+   "metadata": {},
+   "source": [
+    "# Fitting $u(x,t) \\approx u_{nif}(x,t) = u_{shape}(x; \\Theta_{parameter}(t))$ \n",
+    "where $u_{shape}$ and $\\Theta_{parameter}$ are two feedforward neural networks"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "33ff892d",
+   "metadata": {},
+   "source": [
+    "\n",
+    "\n",
+    "* We define a shape-net with 1 input $x$, 1 output $u$, 2 hidden layers, Swish activation function, each layer has 30 units\n",
+    "\n",
+    "  * note that here we assume parameter-net fully parameterizes the shape-net, so `connectivity` is `full`\n",
+    "\n",
+    "* Then we define a parameter-net, still 1 input, $t$, and 1 latent dimension, 2 layers with each layer 30 units, also activated by Swish\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "454cb0eb",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "cfg_shape_net = {\"connectivity\": \"full\", \"input_dim\": 1, \"output_dim\": 1,\n",
+    "                 \"units\": 30, \"nlayers\": 2, \"activation\": \"swish\"}\n",
+    "cfg_parameter_net = {\"input_dim\": 1, \"latent_dim\": 1, \"units\": 30,\n",
+    "                     \"nlayers\": 2, \"activation\": \"swish\"}\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2606754b",
+   "metadata": {},
+   "source": [
+    "* we can setup whether to enable\n",
+    "  * **multiple gpus**,\n",
+    "  * **mixed precision (fp32 for store and fp16 for computing)**\n",
+    "\n",
+    "* However at Colab, we don't have multiple-gpu (unless we pay). So it won't be effective here. \n",
+    "\n",
+    "* But you can play around with mixed precision, if your GPU supports it. Typically I found there is a slight increase in training speed. "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a96e477d",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "enable_multi_gpu = False\n",
+    "enable_mixed_precision = False\n",
+    "mixed_policy = \"float32\"\n",
+    "# Set device=NIF_DEVICE/cuda for GPU execution; this full workload uses FP32.\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "06213679",
+   "metadata": {},
+   "source": [
+    "* now we can further setup \n",
+    "  * the total number of epochs\n",
+    "  * initial learning rate\n",
+    "  * batch size\n",
+    "  * number of epochs for check point saving\n",
+    "  * number of epochs for logging error file\n",
+    "  * number of epochs for plotting figures"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "fa8ed5d2",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "nepoch = 5000\n",
+    "lr = 5e-3\n",
+    "batch_size = 512\n",
+    "checkpt_epoch, display_epoch, print_figure_epoch = 1000, 100, 100\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "10a8d955",
+   "metadata": {},
+   "source": [
+    "* now let's read the data from the disk\n",
+    "* then we create a a `DataLoader` with `features` as `t,x` and `target` as `u`. everything is point-wise.\n",
+    "* we will further shuffle, batching, and pre-fetch it so as to optimize the speed, in which case, we won't have data I/O as out bottleneck "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "86bff7bd",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# alternatively, get the training dataset from nif.demo for this example\n",
+    "from nif.demo import TravelingWave\n",
+    "tw = TravelingWave()\n",
+    "train_data = tw.data\n",
+    "train_dataset = loader(train_data[:, :2], train_data[:, -1:], batch_size)\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6402dca3",
+   "metadata": {},
+   "source": [
+    "* Here we define another training-loop hook to modulate the learning rate, it is intuitive and heuristic, so you need to learn how to tune it a bit. but most of the time it is okay. indeed, in our nif paper, we didn't do any tuning but here I am doing this just to show that we can. "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "5c0a7011",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def scheduler(epoch, lr):\n",
+    "    if epoch < 1000: return lr\n",
+    "    if epoch < 2000: return 1e-3\n",
+    "    if epoch < 4000: return 5e-4\n",
+    "    return 1e-4\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b2b5899e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from nif.optimizers import AdaBeliefOptimizer\n",
+    "model_ori = nif.NIF(cfg_shape_net, cfg_parameter_net, mixed_policy).to(device)\n",
+    "model_opt = model_ori.build()\n",
+    "assert model_opt is model_ori\n",
+    "optimizer = AdaBeliefOptimizer(model_opt.parameters(), lr=lr)\n",
+    "history = train(model_opt, train_dataset, optimizer, epochs(nepoch), \"traveling_wave\",\n",
+    "                schedule=scheduler, centralization=True)\n",
+    "wave_figure(train_data[:, -1], predict(model_opt, train_data[:, :2]).ravel(), \"traveling_wave\")\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "79df6565",
+   "metadata": {},
+   "source": [
+    "* Finally, you can just visualize the loss and predictions"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a4c548eb",
+   "metadata": {},
+   "source": [
+    "# Get the mapping from parameter to latent representation\n",
+    "* Note it is only part of the ParameterNet"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "dd22a4ae",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "model_p_to_lr = model_ori.model_p_to_lr()\n",
+    "print(model_p_to_lr)\n",
+    "p = tensor(train_data[:32, :1])\n",
+    "latent = model_p_to_lr(p)\n",
+    "# Plot every training time separately from the 32-row shared-subnet example.\n",
+    "plot_p = tensor(np.unique(train_data[:, 0]).reshape(-1, 1))\n",
+    "with torch.no_grad():\n",
+    "    plot_latent = model_p_to_lr(plot_p)\n",
+    "fig, ax=plt.subplots(); ax.plot(plot_p.cpu(),plot_latent.cpu(),\"o\"); ax.set(xlabel=\"normalized t\",ylabel=\"latent\")\n",
+    "fig.savefig(OUT / \"latent.png\"); plt.show(); plt.close(fig)\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "65139cd4",
+   "metadata": {},
+   "source": [
+    "* You can also save such model separately\n",
+    " - note that here you don't have to save the checkpoints for those **derived model**, because anyway they won't be used to further train at all, unless for special purpose"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "341f932c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "torch.save(model_p_to_lr.state_dict(), OUT / \"parameter_to_latent.pt\")\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d4889009",
+   "metadata": {},
+   "source": [
+    "# Get the mapping from latent representation to weights and biases"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b162f41b",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "model_lr_to_w = model_ori.model_lr_to_w()\n",
+    "w = model_lr_to_w(latent)\n",
+    "torch.testing.assert_close(w, model_ori.model_p_to_w()(p))\n",
+    "print(\"latent-to-weights:\", w.shape)\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "23d368c1",
+   "metadata": {},
+   "source": [
+    "# Get ShapeNet conditioned on weights and biases\n",
+    "\n",
+    "* there SHOULD NOT be any trainable variables. the below is just to give a sanity-check"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "2d460756",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "model_x_to_u_given_w = model_ori.model_x_to_u_given_w()\n",
+    "torch.testing.assert_close(model_x_to_u_given_w([tensor(train_data[:32,1:2]), w]),\n",
+    "                           model_opt(tensor(train_data[:32,:2])))\n",
+    "print(model_x_to_u_given_w)\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4ad2f72d",
+   "metadata": {},
+   "source": [
+    "# Restore model from checkpoint\n",
+    "\n",
+    "1. construct a NIF instance (what I previously call *hub of model*) with the **same** configurations for shape net and parameter net, as the one consistent with the checkpoint\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d5e29715",
+   "metadata": {},
+   "source": [
+    "2. Reconstruct the native module from its saved configuration and load its state dictionary. Verify predictions after restoration; no compilation is needed."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "316503e3",
+   "metadata": {},
+   "source": [
+    "3. Now, we load weights from the desired checkpoint directory"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "cccc4d5b",
+   "metadata": {},
+   "source": [
+    "# Fine-tuning with L-BFGS\n",
+    "* **it is not used at all in our paper, but just to show that if you want you can**\n",
+    "* early researchers have tried using L-BFGS instead of standard GD/SGD. it does NOT work well in the early stage training deep nets. but in the late stage of training, many works on PINN have reported its usefulness."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e2a043a1",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "new_model = save_and_check(model_opt, optimizer, \"traveling_wave\", train_data[:64,:2])\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "69e354ea",
+   "metadata": {},
+   "source": [
+    "- first we prepare the feature and labels"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9beaf9ba",
+   "metadata": {},
+   "source": [
+    "- then we use native `torch.optim.LBFGS` to wrap around our model, get an instance that can further fine tune the model"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a150385b",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data_feature = tensor(train_data[:, :2])\n",
+    "data_label = tensor(train_data[:, -1:])\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e8f184aa",
+   "metadata": {},
+   "source": [
+    "- now we can fine tune the model with `.minimize(rounds, max_iter)`\n",
+    "  - `max_iter` means the we will run LBFGS updates until maximal number of iterations is achieved or error tolerance is achieved\n",
+    "  - here `rounds` means repeating the above process. it can be useful to force running optimization process when error doesn't change even at the level of 1e-15.  "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "caa01449",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Native torch.optim.LBFGS uses a closure: recompute loss and gradients at every line search.\n",
+    "lbfgs_history = []\n",
+    "rounds, max_iter = (1, 2) if SMOKE else (200, 1000)\n",
+    "# Public TFPLBFGS scientific controls, retained in full AND smoke modes.\n",
+    "tolerance = x_tolerance = f_relative_tolerance = 1e-15\n",
+    "num_correction_pairs = 20\n",
+    "max_line_search_iterations = 100\n",
+    "# Native convention (the same mapping as nif.optimizers.TFPLBFGS):\n",
+    "# PyTorch uses strong-Wolfe line search and a per-round max_eval budget of\n",
+    "# max_iter * max_line_search_iterations. Its internal trial accounting is not\n",
+    "# TFP's separate limit of 100 iterations per individual line search.\n",
+    "# tolerance_change applies to absolute step/objective changes (and the descent\n",
+    "# directional derivative); it cannot express TFP's independent relative-objective\n",
+    "# tolerance. Both original change thresholds are 1e-15 and map to that value.\n",
+    "# Thus the controls are retained, but solver trajectories/stopping can differ.\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6b197e15",
+   "metadata": {},
+   "source": [
+    "## Finally, let's visualize the fine-tuned results"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "d56ac757",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "for round_index in range(rounds):\n",
+    "    fine_tuner = torch.optim.LBFGS(new_model.parameters(), max_iter=max_iter,\n",
+    "                                 max_eval=max_iter * max_line_search_iterations,\n",
+    "                                 history_size=num_correction_pairs,\n",
+    "                                 tolerance_grad=tolerance,\n",
+    "                                 tolerance_change=max(x_tolerance, f_relative_tolerance),\n",
+    "                                 line_search_fn=\"strong_wolfe\")\n",
+    "    def closure():\n",
+    "        fine_tuner.zero_grad(set_to_none=True)\n",
+    "        loss = (new_model(data_feature)-data_label).square().mean() + new_model.regularization_loss(data_feature)\n",
+    "        if not torch.isfinite(loss): raise FloatingPointError(\"non-finite LBFGS loss\")\n",
+    "        loss.backward(); lbfgs_history.append(float(loss.detach()))\n",
+    "        return loss\n",
+    "    fine_tuner.step(closure)\n",
+    "new_model = save_and_check(new_model, fine_tuner, \"fine_tuned\", train_data[:64,:2])\n",
+    "fig,ax=plt.subplots(figsize=(8,2)); ax.semilogy(lbfgs_history); ax.set(xlabel=\"closure evaluation\",ylabel=\"loss\")\n",
+    "fig.tight_layout(); fig.savefig(OUT / \"fine_tune_loss.png\"); plt.show(); plt.close(fig)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b0ecabf6",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "prediction = predict(new_model, train_data[:, :2]).ravel()\n",
+    "wave_figure(train_data[:,-1], prediction, \"fine_tuned\")\n",
+    "write_metrics({\"adabelief_epochs\": epochs(nepoch), \"lbfgs_rounds\": rounds, \"lbfgs_max_iter\": max_iter,\n",
+    "               \"final_mse\": float(np.mean((prediction-train_data[:,-1])**2))})\n"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "name": "python",
+   "version": "3.13"
+  },
+  "nif": {
+   "framework": "pytorch",
+   "full_default": true,
+   "reference": "1_simple_1d_wave.ipynb"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

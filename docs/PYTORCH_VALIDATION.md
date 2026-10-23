@@ -1,8 +1,17 @@
 # Native PyTorch validation
 
-Status: **full integration validation passed**, 2026-10-22.
+Status: **full execution validation passed; controlled TensorFlow/PyTorch
+training comparison in progress**, 2026-10-22.
 Implementation branch: `pytorch`; TensorFlow reference branch: `main`.
 Accepted code commit: `19f264b7ee54454a0aa46629e0ab82e7dc84a70a`.
+
+The previous acceptance below does not establish equivalent full-training
+results between frameworks. Its direct TensorFlow numerical fixtures cover
+six ShapeNet configurations with explicit generated weights, bypassing
+ParameterNet. They compare outputs and contracted derivatives on CPU. Full
+ParameterNet-to-ShapeNet gradients, matched optimizer trajectories, and paired
+training from the same actual weights and batch order are being added, starting
+with tutorial 3. See [the controlled comparison protocol](PYTORCH_TENSORFLOW_PARITY.md).
 
 ## Independent package acceptance
 
@@ -15,8 +24,9 @@ The initial 177-test suite was frozen before implementation. Additional
 regression cases were frozen before their corresponding fixes; evaluator
 corrections retain versioned provenance and coordinator review.
 
-The corrected native implementation passed **253/253 checks on CUDA**, with no
-skips or failures. Its CPU result was **250 passed, 3 CUDA-only checks skipped**.
+The corrected native implementation passed **253/253 checks in the CUDA-enabled
+environment**, with no skips or failures; some checks use CPU tensors. Its
+CPU-only result was **250 passed, 3 CUDA-only checks skipped**.
 Coverage includes all three architectures, generated-weight layouts against
 TensorFlow numerical references, shared subnets, derivatives and higher-order
 autograd, regularization reductions, optimizer formulas and restoration,

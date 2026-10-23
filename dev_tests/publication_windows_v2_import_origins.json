@@ -1,0 +1,7 @@
+{
+  "dev_tests.test_pruning_adam_state": "/workspace/dev_tests/artifacts/publication_windows_v2/clean_public/dev_tests/test_pruning_adam_state.py",
+  "dev_tests.test_tutorial1_gc_behavior": "/workspace/dev_tests/artifacts/publication_windows_v2/clean_public/dev_tests/test_tutorial1_gc_behavior.py",
+  "dev_tests.test_publication_scope": "/workspace/dev_tests/artifacts/publication_windows_v2/clean_public/dev_tests/test_publication_scope.py",
+  "dev_tests.test_publication_windows": "/workspace/dev_tests/artifacts/publication_windows_v2/clean_public/dev_tests/test_publication_windows.py",
+  "dev_tests.test_publication_windows_successor": "/workspace/dev_tests/artifacts/publication_windows_v2/clean_public/dev_tests/test_publication_windows_successor.py"
+}

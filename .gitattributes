@@ -11,4 +11,6 @@
 
 # Captured console output and the verbatim archive retain their whitespace.
 /dev_tests/*.log text eol=lf -whitespace
+# Byte-exact historical fixtures must survive checkout without conversion.
+/dev_tests/fixtures/** -text -whitespace
 /docs/README_TENSORFLOW_LEGACY.md -whitespace

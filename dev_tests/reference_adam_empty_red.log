@@ -1,0 +1,163 @@
+FFFFF...                                                                 [100%]
+=================================== FAILURES ===================================
+_ test_all_none_raises_without_mutating_parameters_slots_or_iteration[False-False] _
+
+warmup = False, use_closure = False
+
+    @pytest.mark.parametrize('warmup', [False, True])
+    @pytest.mark.parametrize('use_closure', [False, True])
+    def test_all_none_raises_without_mutating_parameters_slots_or_iteration(warmup, use_closure):
+        p, q, optimizer = make_pair()
+        if warmup:
+            p.grad = torch.full_like(p, 1e-10)
+            q.grad = torch.ones_like(q)
+            optimizer.step()
+        optimizer.zero_grad(set_to_none=True)
+        parameters = [p.detach().clone(), q.detach().clone()]
+        state = copy.deepcopy(optimizer.state_dict())
+        calls = []
+        def closure():
+            # Guard must inspect gradients AFTER the closure clears them.
+            assert torch.is_grad_enabled()
+            optimizer.zero_grad(set_to_none=True)
+            calls.append(True)
+            return p.square().sum()
+        if use_closure:
+            p.grad = torch.ones_like(p)
+>       with pytest.raises(ValueError, match='[Nn]o gradients'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+dev_tests/test_reference_adam_empty_gradients.py:53: Failed
+_ test_all_none_raises_without_mutating_parameters_slots_or_iteration[False-True] _
+
+warmup = True, use_closure = False
+
+    @pytest.mark.parametrize('warmup', [False, True])
+    @pytest.mark.parametrize('use_closure', [False, True])
+    def test_all_none_raises_without_mutating_parameters_slots_or_iteration(warmup, use_closure):
+        p, q, optimizer = make_pair()
+        if warmup:
+            p.grad = torch.full_like(p, 1e-10)
+            q.grad = torch.ones_like(q)
+            optimizer.step()
+        optimizer.zero_grad(set_to_none=True)
+        parameters = [p.detach().clone(), q.detach().clone()]
+        state = copy.deepcopy(optimizer.state_dict())
+        calls = []
+        def closure():
+            # Guard must inspect gradients AFTER the closure clears them.
+            assert torch.is_grad_enabled()
+            optimizer.zero_grad(set_to_none=True)
+            calls.append(True)
+            return p.square().sum()
+        if use_closure:
+            p.grad = torch.ones_like(p)
+>       with pytest.raises(ValueError, match='[Nn]o gradients'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+dev_tests/test_reference_adam_empty_gradients.py:53: Failed
+_ test_all_none_raises_without_mutating_parameters_slots_or_iteration[True-False] _
+
+warmup = False, use_closure = True
+
+    @pytest.mark.parametrize('warmup', [False, True])
+    @pytest.mark.parametrize('use_closure', [False, True])
+    def test_all_none_raises_without_mutating_parameters_slots_or_iteration(warmup, use_closure):
+        p, q, optimizer = make_pair()
+        if warmup:
+            p.grad = torch.full_like(p, 1e-10)
+            q.grad = torch.ones_like(q)
+            optimizer.step()
+        optimizer.zero_grad(set_to_none=True)
+        parameters = [p.detach().clone(), q.detach().clone()]
+        state = copy.deepcopy(optimizer.state_dict())
+        calls = []
+        def closure():
+            # Guard must inspect gradients AFTER the closure clears them.
+            assert torch.is_grad_enabled()
+            optimizer.zero_grad(set_to_none=True)
+            calls.append(True)
+            return p.square().sum()
+        if use_closure:
+            p.grad = torch.ones_like(p)
+>       with pytest.raises(ValueError, match='[Nn]o gradients'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+dev_tests/test_reference_adam_empty_gradients.py:53: Failed
+_ test_all_none_raises_without_mutating_parameters_slots_or_iteration[True-True] _
+
+warmup = True, use_closure = True
+
+    @pytest.mark.parametrize('warmup', [False, True])
+    @pytest.mark.parametrize('use_closure', [False, True])
+    def test_all_none_raises_without_mutating_parameters_slots_or_iteration(warmup, use_closure):
+        p, q, optimizer = make_pair()
+        if warmup:
+            p.grad = torch.full_like(p, 1e-10)
+            q.grad = torch.ones_like(q)
+            optimizer.step()
+        optimizer.zero_grad(set_to_none=True)
+        parameters = [p.detach().clone(), q.detach().clone()]
+        state = copy.deepcopy(optimizer.state_dict())
+        calls = []
+        def closure():
+            # Guard must inspect gradients AFTER the closure clears them.
+            assert torch.is_grad_enabled()
+            optimizer.zero_grad(set_to_none=True)
+            calls.append(True)
+            return p.square().sum()
+        if use_closure:
+            p.grad = torch.ones_like(p)
+>       with pytest.raises(ValueError, match='[Nn]o gradients'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+dev_tests/test_reference_adam_empty_gradients.py:53: Failed
+__________ test_rejected_empty_call_cannot_shift_next_bias_correction __________
+
+    def test_rejected_empty_call_cannot_shift_next_bias_correction():
+        p, q, optimizer = make_pair()
+        a, b, control = make_pair()
+        for param in (p, q, a, b):
+            param.grad = torch.full_like(param, 1e-12)
+        optimizer.step(); control.step()
+        optimizer.zero_grad(set_to_none=True)
+        try:
+            optimizer.step()
+        except ValueError:
+            pass
+        for param in (p, q, a, b):
+            param.grad = torch.full_like(param, -2e-12)
+        optimizer.step(); control.step()
+>       assert_identical([p, q], [a, b])
+
+dev_tests/test_reference_adam_empty_gradients.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_reference_adam_empty_gradients.py:21: in assert_identical
+    assert_identical(a, b)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+actual = Parameter containing:
+tensor([ 0.2500, -0.5000], dtype=torch.float64, requires_grad=True)
+expected = Parameter containing:
+tensor([ 0.2500, -0.5000], dtype=torch.float64, requires_grad=True)
+
+    def assert_identical(actual, expected):
+        if isinstance(actual, torch.Tensor):
+            assert actual.dtype == expected.dtype and actual.device == expected.device
+>           assert torch.equal(actual, expected)
+E           assert False
+E            +  where False = <built-in method equal of type object at 0x70f133b801a0>(Parameter containing:\ntensor([ 0.2500, -0.5000], dtype=torch.float64, requires_grad=True), Parameter containing:\ntensor([ 0.2500, -0.5000], dtype=torch.float64, requires_grad=True))
+E            +    where <built-in method equal of type object at 0x70f133b801a0> = torch.equal
+
+dev_tests/test_reference_adam_empty_gradients.py:13: AssertionError
+=========================== short test summary info ============================
+FAILED dev_tests/test_reference_adam_empty_gradients.py::test_all_none_raises_without_mutating_parameters_slots_or_iteration[False-False]
+FAILED dev_tests/test_reference_adam_empty_gradients.py::test_all_none_raises_without_mutating_parameters_slots_or_iteration[False-True]
+FAILED dev_tests/test_reference_adam_empty_gradients.py::test_all_none_raises_without_mutating_parameters_slots_or_iteration[True-False]
+FAILED dev_tests/test_reference_adam_empty_gradients.py::test_all_none_raises_without_mutating_parameters_slots_or_iteration[True-True]
+FAILED dev_tests/test_reference_adam_empty_gradients.py::test_rejected_empty_call_cannot_shift_next_bias_correction
+5 failed, 3 passed in 2.51s

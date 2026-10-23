@@ -1,0 +1,9 @@
+........................................................................ [ 74%]
+.........................                                                [100%]
+=============================== warnings summary ===============================
+dev_tests/test_adabelief_dtype_preservation.py::test_historical_pre_moment_slots_unchanged_with_clipping_schedules_and_sparse_v4[True-False-dtype0]
+  /workspace/dev_tests/test_adabelief_dtype_preservation.py:35: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/Context.cpp:848.)
+    g=torch.sparse_coo_tensor(torch.tensor([[t%3]]),torch.tensor([[.1*t,-.2]],dtype=dtype),p.shape)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+97 passed, 1 warning in 15.09s

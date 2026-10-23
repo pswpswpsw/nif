@@ -1,0 +1,504 @@
+....FFFFF.F.F.FFFFFFFF                                                   [100%]
+=================================== FAILURES ===================================
+___________ test_epsilon_hat_recurrence[1e-12-betas0-dtype0-float64] ___________
+
+dtype = torch.float64, scalar = <class 'numpy.float64'>, betas = (0.9, 0.999)
+scale = 1e-12
+
+    @pytest.mark.parametrize('dtype,scalar', [(torch.float64, np.float64), (torch.float32, np.float32)])
+    @pytest.mark.parametrize('betas', [(0.9, 0.999), (0.5, 0.75)])
+    @pytest.mark.parametrize('scale', [0., 1e-12, 0.2])
+    def test_epsilon_hat_recurrence(dtype, scalar, betas, scale):
+        # Binary-exact betas isolate algebra from hyperparameter representation.
+        # Decimal betas are explicitly represented at the parameter's precision;
+        # backend float32-to-float64 promotion is a separate rounding diagnostic.
+        p = torch.nn.Parameter(torch.zeros(3, dtype=dtype))
+        opt = Adam([p], lr=1e-3, betas=betas, eps=1e-7)
+        expected = np.zeros(3, dtype=scalar)
+        m, v = expected.copy(), expected.copy()
+        b1, b2 = map(scalar, betas)
+        for step in range(1, 11):
+            g = np.array([scale, -scale * step, scale * (step % 3)], dtype=scalar)
+            p.grad = torch.tensor(g, dtype=dtype)
+            opt.step()
+            m = b1*m + (scalar(1)-b1)*g
+            v = b2*v + (scalar(1)-b2)*g*g
+            alpha = scalar(1e-3)*np.sqrt(scalar(1)-b2**scalar(step))/(scalar(1)-b1**scalar(step))
+            expected -= alpha*m/(np.sqrt(v)+scalar(1e-7))
+            tol = 3e-5 if dtype == torch.float32 else 2e-13
+>           torch.testing.assert_close(p, torch.tensor(expected), rtol=tol, atol=1e-25)
+E           AssertionError: Tensor-likes are not close!
+E           
+E           Mismatched elements: 3 / 3 (100.0%)
+E           Greatest absolute difference: 9.683672334983118e-09 at index (0,) (up to 1e-25 allowed)
+E           Greatest relative difference: 30.62247037698 at index (0,) (up to 2e-13 allowed)
+
+dev_tests/test_reference_adam.py:36: AssertionError
+___________ test_epsilon_hat_recurrence[1e-12-betas0-dtype1-float32] ___________
+
+dtype = torch.float32, scalar = <class 'numpy.float32'>, betas = (0.9, 0.999)
+scale = 1e-12
+
+    @pytest.mark.parametrize('dtype,scalar', [(torch.float64, np.float64), (torch.float32, np.float32)])
+    @pytest.mark.parametrize('betas', [(0.9, 0.999), (0.5, 0.75)])
+    @pytest.mark.parametrize('scale', [0., 1e-12, 0.2])
+    def test_epsilon_hat_recurrence(dtype, scalar, betas, scale):
+        # Binary-exact betas isolate algebra from hyperparameter representation.
+        # Decimal betas are explicitly represented at the parameter's precision;
+        # backend float32-to-float64 promotion is a separate rounding diagnostic.
+        p = torch.nn.Parameter(torch.zeros(3, dtype=dtype))
+        opt = Adam([p], lr=1e-3, betas=betas, eps=1e-7)
+        expected = np.zeros(3, dtype=scalar)
+        m, v = expected.copy(), expected.copy()
+        b1, b2 = map(scalar, betas)
+        for step in range(1, 11):
+            g = np.array([scale, -scale * step, scale * (step % 3)], dtype=scalar)
+            p.grad = torch.tensor(g, dtype=dtype)
+            opt.step()
+            m = b1*m + (scalar(1)-b1)*g
+            v = b2*v + (scalar(1)-b2)*g*g
+            alpha = scalar(1e-3)*np.sqrt(scalar(1)-b2**scalar(step))/(scalar(1)-b1**scalar(step))
+            expected -= alpha*m/(np.sqrt(v)+scalar(1e-7))
+            tol = 3e-5 if dtype == torch.float32 else 2e-13
+>           torch.testing.assert_close(p, torch.tensor(expected), rtol=tol, atol=1e-25)
+E           AssertionError: Tensor-likes are not close!
+E           
+E           Mismatched elements: 3 / 3 (100.0%)
+E           Greatest absolute difference: 9.683674306870671e-09 at index (0,) (up to 1e-25 allowed)
+E           Greatest relative difference: 30.622671127319336 at index (0,) (up to 3e-05 allowed)
+
+dev_tests/test_reference_adam.py:36: AssertionError
+___________ test_epsilon_hat_recurrence[1e-12-betas1-dtype0-float64] ___________
+
+dtype = torch.float64, scalar = <class 'numpy.float64'>, betas = (0.5, 0.75)
+scale = 1e-12
+
+    @pytest.mark.parametrize('dtype,scalar', [(torch.float64, np.float64), (torch.float32, np.float32)])
+    @pytest.mark.parametrize('betas', [(0.9, 0.999), (0.5, 0.75)])
+    @pytest.mark.parametrize('scale', [0., 1e-12, 0.2])
+    def test_epsilon_hat_recurrence(dtype, scalar, betas, scale):
+        # Binary-exact betas isolate algebra from hyperparameter representation.
+        # Decimal betas are explicitly represented at the parameter's precision;
+        # backend float32-to-float64 promotion is a separate rounding diagnostic.
+        p = torch.nn.Parameter(torch.zeros(3, dtype=dtype))
+        opt = Adam([p], lr=1e-3, betas=betas, eps=1e-7)
+        expected = np.zeros(3, dtype=scalar)
+        m, v = expected.copy(), expected.copy()
+        b1, b2 = map(scalar, betas)
+        for step in range(1, 11):
+            g = np.array([scale, -scale * step, scale * (step % 3)], dtype=scalar)
+            p.grad = torch.tensor(g, dtype=dtype)
+            opt.step()
+            m = b1*m + (scalar(1)-b1)*g
+            v = b2*v + (scalar(1)-b2)*g*g
+            alpha = scalar(1e-3)*np.sqrt(scalar(1)-b2**scalar(step))/(scalar(1)-b1**scalar(step))
+            expected -= alpha*m/(np.sqrt(v)+scalar(1e-7))
+            tol = 3e-5 if dtype == torch.float32 else 2e-13
+>           torch.testing.assert_close(p, torch.tensor(expected), rtol=tol, atol=1e-25)
+E           AssertionError: Tensor-likes are not close!
+E           
+E           Mismatched elements: 3 / 3 (100.0%)
+E           Greatest absolute difference: 4.999925000874992e-09 at index (0,) (up to 1e-25 allowed)
+E           Greatest relative difference: 0.9999900000999992 at index (0,) (up to 2e-13 allowed)
+
+dev_tests/test_reference_adam.py:36: AssertionError
+___________ test_epsilon_hat_recurrence[1e-12-betas1-dtype1-float32] ___________
+
+dtype = torch.float32, scalar = <class 'numpy.float32'>, betas = (0.5, 0.75)
+scale = 1e-12
+
+    @pytest.mark.parametrize('dtype,scalar', [(torch.float64, np.float64), (torch.float32, np.float32)])
+    @pytest.mark.parametrize('betas', [(0.9, 0.999), (0.5, 0.75)])
+    @pytest.mark.parametrize('scale', [0., 1e-12, 0.2])
+    def test_epsilon_hat_recurrence(dtype, scalar, betas, scale):
+        # Binary-exact betas isolate algebra from hyperparameter representation.
+        # Decimal betas are explicitly represented at the parameter's precision;
+        # backend float32-to-float64 promotion is a separate rounding diagnostic.
+        p = torch.nn.Parameter(torch.zeros(3, dtype=dtype))
+        opt = Adam([p], lr=1e-3, betas=betas, eps=1e-7)
+        expected = np.zeros(3, dtype=scalar)
+        m, v = expected.copy(), expected.copy()
+        b1, b2 = map(scalar, betas)
+        for step in range(1, 11):
+            g = np.array([scale, -scale * step, scale * (step % 3)], dtype=scalar)
+            p.grad = torch.tensor(g, dtype=dtype)
+            opt.step()
+            m = b1*m + (scalar(1)-b1)*g
+            v = b2*v + (scalar(1)-b2)*g*g
+            alpha = scalar(1e-3)*np.sqrt(scalar(1)-b2**scalar(step))/(scalar(1)-b1**scalar(step))
+            expected -= alpha*m/(np.sqrt(v)+scalar(1e-7))
+            tol = 3e-5 if dtype == torch.float32 else 2e-13
+>           torch.testing.assert_close(p, torch.tensor(expected), rtol=tol, atol=1e-25)
+E           AssertionError: Tensor-likes are not close!
+E           
+E           Mismatched elements: 3 / 3 (100.0%)
+E           Greatest absolute difference: 4.999924474446971e-09 at index (0,) (up to 1e-25 allowed)
+E           Greatest relative difference: 0.9999898672103882 at index (0,) (up to 3e-05 allowed)
+
+dev_tests/test_reference_adam.py:36: AssertionError
+____________ test_epsilon_hat_recurrence[0.2-betas0-dtype0-float64] ____________
+
+dtype = torch.float64, scalar = <class 'numpy.float64'>, betas = (0.9, 0.999)
+scale = 0.2
+
+    @pytest.mark.parametrize('dtype,scalar', [(torch.float64, np.float64), (torch.float32, np.float32)])
+    @pytest.mark.parametrize('betas', [(0.9, 0.999), (0.5, 0.75)])
+    @pytest.mark.parametrize('scale', [0., 1e-12, 0.2])
+    def test_epsilon_hat_recurrence(dtype, scalar, betas, scale):
+        # Binary-exact betas isolate algebra from hyperparameter representation.
+        # Decimal betas are explicitly represented at the parameter's precision;
+        # backend float32-to-float64 promotion is a separate rounding diagnostic.
+        p = torch.nn.Parameter(torch.zeros(3, dtype=dtype))
+        opt = Adam([p], lr=1e-3, betas=betas, eps=1e-7)
+        expected = np.zeros(3, dtype=scalar)
+        m, v = expected.copy(), expected.copy()
+        b1, b2 = map(scalar, betas)
+        for step in range(1, 11):
+            g = np.array([scale, -scale * step, scale * (step % 3)], dtype=scalar)
+            p.grad = torch.tensor(g, dtype=dtype)
+            opt.step()
+            m = b1*m + (scalar(1)-b1)*g
+            v = b2*v + (scalar(1)-b2)*g*g
+            alpha = scalar(1e-3)*np.sqrt(scalar(1)-b2**scalar(step))/(scalar(1)-b1**scalar(step))
+            expected -= alpha*m/(np.sqrt(v)+scalar(1e-7))
+            tol = 3e-5 if dtype == torch.float32 else 2e-13
+>           torch.testing.assert_close(p, torch.tensor(expected), rtol=tol, atol=1e-25)
+E           AssertionError: Tensor-likes are not close!
+E           
+E           Mismatched elements: 3 / 3 (100.0%)
+E           Greatest absolute difference: 1.5311138554718537e-08 at index (0,) (up to 1e-25 allowed)
+E           Greatest relative difference: 1.5311380645075555e-05 at index (0,) (up to 2e-13 allowed)
+
+dev_tests/test_reference_adam.py:36: AssertionError
+____________ test_epsilon_hat_recurrence[0.2-betas1-dtype0-float64] ____________
+
+dtype = torch.float64, scalar = <class 'numpy.float64'>, betas = (0.5, 0.75)
+scale = 0.2
+
+    @pytest.mark.parametrize('dtype,scalar', [(torch.float64, np.float64), (torch.float32, np.float32)])
+    @pytest.mark.parametrize('betas', [(0.9, 0.999), (0.5, 0.75)])
+    @pytest.mark.parametrize('scale', [0., 1e-12, 0.2])
+    def test_epsilon_hat_recurrence(dtype, scalar, betas, scale):
+        # Binary-exact betas isolate algebra from hyperparameter representation.
+        # Decimal betas are explicitly represented at the parameter's precision;
+        # backend float32-to-float64 promotion is a separate rounding diagnostic.
+        p = torch.nn.Parameter(torch.zeros(3, dtype=dtype))
+        opt = Adam([p], lr=1e-3, betas=betas, eps=1e-7)
+        expected = np.zeros(3, dtype=scalar)
+        m, v = expected.copy(), expected.copy()
+        b1, b2 = map(scalar, betas)
+        for step in range(1, 11):
+            g = np.array([scale, -scale * step, scale * (step % 3)], dtype=scalar)
+            p.grad = torch.tensor(g, dtype=dtype)
+            opt.step()
+            m = b1*m + (scalar(1)-b1)*g
+            v = b2*v + (scalar(1)-b2)*g*g
+            alpha = scalar(1e-3)*np.sqrt(scalar(1)-b2**scalar(step))/(scalar(1)-b1**scalar(step))
+            expected -= alpha*m/(np.sqrt(v)+scalar(1e-7))
+            tol = 3e-5 if dtype == torch.float32 else 2e-13
+>           torch.testing.assert_close(p, torch.tensor(expected), rtol=tol, atol=1e-25)
+E           AssertionError: Tensor-likes are not close!
+E           
+E           Mismatched elements: 3 / 3 (100.0%)
+E           Greatest absolute difference: 4.9999925011944e-10 at index (0,) (up to 1e-25 allowed)
+E           Greatest relative difference: 4.999997501186902e-07 at index (0,) (up to 2e-13 allowed)
+
+dev_tests/test_reference_adam.py:36: AssertionError
+_______ test_float32_promoted_betas_are_separate_from_epsilon_placement ________
+
+    def test_float32_promoted_betas_are_separate_from_epsilon_placement():
+        # Match actual float32-declared beta values exactly in a float64 diagnostic.
+        b1, b2 = (float(np.float32(b)) for b in (.9, .999))
+        p = torch.nn.Parameter(torch.zeros(1, dtype=torch.float64))
+        opt = Adam([p], betas=(b1, b2), lr=1e-3, eps=1e-7)
+        p.grad = torch.tensor([1e-12], dtype=p.dtype)
+        opt.step()
+        m, v = (1-b1)*1e-12, (1-b2)*1e-24
+        expected = -1e-3*np.sqrt(1-b2)/(1-b1)*m/(np.sqrt(v)+1e-7)
+>       assert p.item() == pytest.approx(expected, rel=1e-13, abs=0.)
+E       assert -9.999900000999992e-09 == -3.1622563035...e-10 ± 3.2e-23
+E         
+E         comparison failed
+E         Obtained: -9.999900000999992e-09
+E         Expected: -3.1622563035808946e-10 ± 3.2e-23
+
+dev_tests/test_reference_adam.py:50: AssertionError
+___________ test_first_refresh_is_before_forward_4000_not_epoch_zero ___________
+
+    def test_first_refresh_is_before_forward_4000_not_epoch_zero():
+        layer, model, scope, ctl = setup(range(1, 11))
+        begin(scope, ctl, 0)
+        model.train()
+        for step in range(1, 4000):
+            with torch.no_grad(): model(torch.ones(1,1,dtype=torch.float64))
+>           assert torch.count_nonzero(layer.w) == 10, f'premature mask at step {step}'
+E           AssertionError: premature mask at step 1
+E           assert tensor(9) == 10
+E            +  where tensor(9) = <built-in method count_nonzero of type object at 0x7dc9331801a0>(tensor([[ 0.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10.]],\n       dtype=torch.float64))
+E            +    where <built-in method count_nonzero of type object at 0x7dc9331801a0> = torch.count_nonzero
+E            +    and   tensor([[ 0.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10.]],\n       dtype=torch.float64) = HyperLinearForSIREN().w
+
+dev_tests/test_tutorial7_pruning.py:64: AssertionError
+----------------------------- Captured stdout call -----------------------------
+layer selected = 0 kernel (1, 10)
+________________ test_raw_gradient_slots_and_transient_regrowth ________________
+
+    def test_raw_gradient_slots_and_transient_regrowth():
+        layer, model, scope, ctl = setup(range(1, 11), end=1, frequency=1, initial=.5, final=.5)
+        begin(scope, ctl, 0)
+        if ctl is None: scope['set_sparsity'](.5)
+        opt = torch.optim.Adam(model.parameters(), lr=.01)
+        model(torch.ones(1,1,dtype=torch.float64)).sum().backward()
+>       torch.testing.assert_close(raw(layer).grad, torch.ones_like(raw(layer)))
+E       AssertionError: Tensor-likes are not close!
+E       
+E       Mismatched elements: 5 / 10 (50.0%)
+E       Greatest absolute difference: 1.0 at index (0, 0) (up to 1e-07 allowed)
+E       Greatest relative difference: 1.0 at index (0, 0) (up to 1e-07 allowed)
+
+dev_tests/test_tutorial7_pruning.py:76: AssertionError
+----------------------------- Captured stdout call -----------------------------
+layer selected = 0 kernel (1, 10)
+_________________ test_refresh_can_reselect_regrown_coordinate _________________
+
+    def test_refresh_can_reselect_regrown_coordinate():
+        layer, model, scope, ctl = setup([1.,2.,3.,4.], end=2, frequency=1, initial=.5, final=.5)
+        begin(scope, ctl, 0)
+        if ctl is None: scope['set_sparsity'](.5)
+        with torch.no_grad():
+            model(torch.ones(1,1,dtype=torch.float64))
+            raw(layer)[0,0] = 100.  # a preceding optimizer update can regrow it
+            if ctl is None: scope['set_sparsity'](.5)
+            model(torch.ones(1,1,dtype=torch.float64))
+>       assert mask(layer, ctl).tolist() == [[1.,0.,0.,1.]]
+E       assert [[0.0, 0.0, 1.0, 1.0]] == [[1.0, 0.0, 0.0, 1.0]]
+E         
+E         At index 0 diff: [0.0, 0.0, 1.0, 1.0] != [1.0, 0.0, 0.0, 1.0]
+E         Use -v to get more diff
+
+dev_tests/test_tutorial7_pruning.py:96: AssertionError
+----------------------------- Captured stdout call -----------------------------
+layer selected = 0 kernel (1, 4)
+__ test_threshold_ties_round_to_even_and_minimum_one[weights0-0.4-expected0] ___
+
+weights = [1.0, 2.0, 2.0, 2.0, 3.0], target = 0.4, expected = [0, 1, 1, 1, 1]
+
+    @pytest.mark.parametrize('weights,target,expected', [
+        ([1.,2.,2.,2.,3.], .4, [0,1,1,1,1]),  # threshold ties all survive
+        ([1.,2.,3.,4.,5.], .5, [0,0,0,1,1]),  # round(2.5) -> 2, not N-round(2.5)
+        ([0.,0.,0.], .9, [1,1,1]),            # zero threshold keeps tied zeros
+        ([1.,2.,3.], 1., [0,0,1]),           # at least one survivor
+    ])
+    def test_threshold_ties_round_to_even_and_minimum_one(weights, target, expected):
+        layer, model, scope, ctl = setup(weights, end=1, frequency=1, initial=target, final=target)
+        if ctl is None: scope['set_sparsity'](target)
+        with torch.no_grad(): model(torch.ones(1,1,dtype=torch.float64))
+>       assert mask(layer, ctl).tolist() == [expected]
+E       assert [[0.0, 0.0, 1.0, 1.0, 1.0]] == [[0, 1, 1, 1, 1]]
+E         
+E         At index 0 diff: [0.0, 0.0, 1.0, 1.0, 1.0] != [0, 1, 1, 1, 1]
+E         Use -v to get more diff
+
+dev_tests/test_tutorial7_pruning.py:110: AssertionError
+----------------------------- Captured stdout call -----------------------------
+layer selected = 0 kernel (1, 5)
+__ test_threshold_ties_round_to_even_and_minimum_one[weights1-0.5-expected1] ___
+
+weights = [1.0, 2.0, 3.0, 4.0, 5.0], target = 0.5, expected = [0, 0, 0, 1, 1]
+
+    @pytest.mark.parametrize('weights,target,expected', [
+        ([1.,2.,2.,2.,3.], .4, [0,1,1,1,1]),  # threshold ties all survive
+        ([1.,2.,3.,4.,5.], .5, [0,0,0,1,1]),  # round(2.5) -> 2, not N-round(2.5)
+        ([0.,0.,0.], .9, [1,1,1]),            # zero threshold keeps tied zeros
+        ([1.,2.,3.], 1., [0,0,1]),           # at least one survivor
+    ])
+    def test_threshold_ties_round_to_even_and_minimum_one(weights, target, expected):
+        layer, model, scope, ctl = setup(weights, end=1, frequency=1, initial=target, final=target)
+        if ctl is None: scope['set_sparsity'](target)
+        with torch.no_grad(): model(torch.ones(1,1,dtype=torch.float64))
+>       assert mask(layer, ctl).tolist() == [expected]
+E       assert [[0.0, 0.0, 1.0, 1.0, 1.0]] == [[0, 0, 0, 1, 1]]
+E         
+E         At index 0 diff: [0.0, 0.0, 1.0, 1.0, 1.0] != [0, 0, 0, 1, 1]
+E         Use -v to get more diff
+
+dev_tests/test_tutorial7_pruning.py:110: AssertionError
+----------------------------- Captured stdout call -----------------------------
+layer selected = 0 kernel (1, 5)
+__ test_threshold_ties_round_to_even_and_minimum_one[weights2-0.9-expected2] ___
+
+weights = [0.0, 0.0, 0.0], target = 0.9, expected = [1, 1, 1]
+
+    @pytest.mark.parametrize('weights,target,expected', [
+        ([1.,2.,2.,2.,3.], .4, [0,1,1,1,1]),  # threshold ties all survive
+        ([1.,2.,3.,4.,5.], .5, [0,0,0,1,1]),  # round(2.5) -> 2, not N-round(2.5)
+        ([0.,0.,0.], .9, [1,1,1]),            # zero threshold keeps tied zeros
+        ([1.,2.,3.], 1., [0,0,1]),           # at least one survivor
+    ])
+    def test_threshold_ties_round_to_even_and_minimum_one(weights, target, expected):
+        layer, model, scope, ctl = setup(weights, end=1, frequency=1, initial=target, final=target)
+        if ctl is None: scope['set_sparsity'](target)
+        with torch.no_grad(): model(torch.ones(1,1,dtype=torch.float64))
+>       assert mask(layer, ctl).tolist() == [expected]
+E       assert [[0.0, 0.0, 0.0]] == [[1, 1, 1]]
+E         
+E         At index 0 diff: [0.0, 0.0, 0.0] != [1, 1, 1]
+E         Use -v to get more diff
+
+dev_tests/test_tutorial7_pruning.py:110: AssertionError
+----------------------------- Captured stdout call -----------------------------
+layer selected = 0 kernel (1, 3)
+__ test_threshold_ties_round_to_even_and_minimum_one[weights3-1.0-expected3] ___
+
+weights = [1.0, 2.0, 3.0], target = 1.0, expected = [0, 0, 1]
+
+    @pytest.mark.parametrize('weights,target,expected', [
+        ([1.,2.,2.,2.,3.], .4, [0,1,1,1,1]),  # threshold ties all survive
+        ([1.,2.,3.,4.,5.], .5, [0,0,0,1,1]),  # round(2.5) -> 2, not N-round(2.5)
+        ([0.,0.,0.], .9, [1,1,1]),            # zero threshold keeps tied zeros
+        ([1.,2.,3.], 1., [0,0,1]),           # at least one survivor
+    ])
+    def test_threshold_ties_round_to_even_and_minimum_one(weights, target, expected):
+        layer, model, scope, ctl = setup(weights, end=1, frequency=1, initial=target, final=target)
+        if ctl is None: scope['set_sparsity'](target)
+        with torch.no_grad(): model(torch.ones(1,1,dtype=torch.float64))
+>       assert mask(layer, ctl).tolist() == [expected]
+E       assert [[0.0, 0.0, 0.0]] == [[0, 0, 1]]
+E         
+E         At index 0 diff: [0.0, 0.0, 0.0] != [0, 0, 1]
+E         Use -v to get more diff
+
+dev_tests/test_tutorial7_pruning.py:110: AssertionError
+----------------------------- Captured stdout call -----------------------------
+layer selected = 0 kernel (1, 3)
+__________________ test_epoch_end_cleanup_precedes_checkpoint __________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-31/test_epoch_end_cleanup_precede0')
+
+    def test_epoch_end_cleanup_precedes_checkpoint(tmp_path):
+        layer, model, scope, ctl = setup(range(1,11), end=1, frequency=1, initial=.5, final=.5)
+        if ctl is None: scope['set_sparsity'](.5)
+        scope.update(nn=torch.nn, device=torch.device('cpu'), OUT=tmp_path, json=json,
+                     time=time, plt=plt, np=np)
+        exec(NB.cells[2].source, scope)
+        opt = torch.optim.Adam(model.parameters(), lr=.01)
+        kwargs = {} if ctl is None else {'after_epoch':lambda epoch:ctl.on_epoch_end()}
+        scope['train'](model, [(torch.ones(1,1,dtype=torch.float64), torch.zeros(1,10,dtype=torch.float64))],
+                       opt, 1, 'cleanup', **kwargs)
+        saved = torch.load(tmp_path/'cleanup_latest.pt', weights_only=True)['model_state']
+        selected = mask(layer, ctl)==0
+>       assert (raw(layer)[selected]==0).all(), 'epoch end must clean transient regrowth'
+E       AssertionError: epoch end must clean transient regrowth
+E       assert tensor(False)
+E        +  where tensor(False) = <built-in method all of Tensor object at 0x7dc918f0ebc0>()
+E        +    where <built-in method all of Tensor object at 0x7dc918f0ebc0> = tensor([1., 2., 3., 4., 5.], dtype=torch.float64, grad_fn=<IndexBackward0>) == 0.all
+
+dev_tests/test_tutorial7_pruning.py:125: AssertionError
+----------------------------- Captured stdout call -----------------------------
+layer selected = 0 kernel (1, 10)
+cleanup {'epoch': 0, 'rows': 1, 'mse': 33.0, 'regularization': 0.0, 'loss': 33.0} elapsed_seconds 0.0
+=============================== warnings summary ===============================
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:64
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:64: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    prop = Group((name + Suppress("=") + comma_separated(value)) | oneOf(_CONSTANTS))
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:85: 6 warnings
+dev_tests/test_tutorial7_pruning.py: 25 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:85: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+    parse = parser.parseString(pattern)
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:89: 6 warnings
+dev_tests/test_tutorial7_pruning.py: 25 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:89: PyparsingDeprecationWarning: 'resetCache' deprecated - use 'reset_cache'
+    parser.resetCache()
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:45
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:45: PyparsingDeprecationWarning: 'enablePackrat' deprecated - use 'enable_packrat'
+    ParserElement.enablePackrat()
+
+dev_tests/test_tutorial7_pruning.py::test_epoch_end_cleanup_precedes_checkpoint
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2010: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.space          = oneOf(self._space_widths)("space")
+
+dev_tests/test_tutorial7_pruning.py::test_epoch_end_cleanup_precedes_checkpoint
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2012: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.style_literal  = oneOf(
+
+dev_tests/test_tutorial7_pruning.py::test_epoch_end_cleanup_precedes_checkpoint
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2020: PyparsingDeprecationWarning: 'leaveWhitespace' deprecated - use 'leave_whitespace'
+    )("sym").leaveWhitespace()
+
+dev_tests/test_tutorial7_pruning.py::test_epoch_end_cleanup_precedes_checkpoint
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2024: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.start_group    = Optional(r"\math" + oneOf(self._fontnames)("font")) + "{"
+
+dev_tests/test_tutorial7_pruning.py::test_epoch_end_cleanup_precedes_checkpoint
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2027: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.delim          = oneOf(self._delims)
+
+dev_tests/test_tutorial7_pruning.py: 47 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:1984: PyparsingDeprecationWarning: 'setName' deprecated - use 'set_name'
+    val.setName(key)
+
+dev_tests/test_tutorial7_pruning.py: 44 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:1987: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    val.setParseAction(getattr(self, key))
+
+dev_tests/test_tutorial7_pruning.py: 16 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:1748: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    return Empty().setParseAction(raise_error)
+
+dev_tests/test_tutorial7_pruning.py::test_epoch_end_cleanup_precedes_checkpoint
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2088: PyparsingDeprecationWarning: 'endQuoteChar' argument is deprecated, use 'end_quote_char'
+    p.text = cmd(r"\text", QuotedString('{', '\\', endQuoteChar="}"))
+
+dev_tests/test_tutorial7_pruning.py::test_epoch_end_cleanup_precedes_checkpoint
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2097: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    + OneOrMore(oneOf(["_", "^"]) - p.placeable)("subsuper")
+
+dev_tests/test_tutorial7_pruning.py::test_epoch_end_cleanup_precedes_checkpoint
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2146: PyparsingDeprecationWarning: 'unquoteResults' argument is deprecated, use 'unquote_results'
+    p.math_string   = QuotedString('$', '\\', unquoteResults=False)
+
+dev_tests/test_tutorial7_pruning.py::test_epoch_end_cleanup_precedes_checkpoint
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2147: PyparsingDeprecationWarning: 'leaveWhitespace' deprecated - use 'leave_whitespace'
+    p.non_math      = Regex(r"(?:(?:\\[$])|[^$])*").leaveWhitespace()
+
+dev_tests/test_tutorial7_pruning.py::test_epoch_end_cleanup_precedes_checkpoint
+dev_tests/test_tutorial7_pruning.py::test_epoch_end_cleanup_precedes_checkpoint
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2170: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+    result = self._expression.parseString(s)
+
+dev_tests/test_tutorial7_pruning.py::test_epoch_end_cleanup_precedes_checkpoint
+dev_tests/test_tutorial7_pruning.py::test_epoch_end_cleanup_precedes_checkpoint
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2197: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+    return self._math_expression.parseString(toks[0][1:-1], parseAll=True)
+
+dev_tests/test_tutorial7_pruning.py::test_epoch_end_cleanup_precedes_checkpoint
+dev_tests/test_tutorial7_pruning.py::test_epoch_end_cleanup_precedes_checkpoint
+  /usr/local/lib/python3.13/site-packages/pyparsing/util.py:466: PyparsingDeprecationWarning: 'parseAll' argument is deprecated, use 'parse_all'
+    return fn(self, *args, **kwargs)
+
+dev_tests/test_tutorial7_pruning.py::test_epoch_end_cleanup_precedes_checkpoint
+dev_tests/test_tutorial7_pruning.py::test_epoch_end_cleanup_precedes_checkpoint
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2178: PyparsingDeprecationWarning: 'resetCache' deprecated - use 'reset_cache'
+    ParserElement.resetCache()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED dev_tests/test_reference_adam.py::test_epsilon_hat_recurrence[1e-12-betas0-dtype0-float64]
+FAILED dev_tests/test_reference_adam.py::test_epsilon_hat_recurrence[1e-12-betas0-dtype1-float32]
+FAILED dev_tests/test_reference_adam.py::test_epsilon_hat_recurrence[1e-12-betas1-dtype0-float64]
+FAILED dev_tests/test_reference_adam.py::test_epsilon_hat_recurrence[1e-12-betas1-dtype1-float32]
+FAILED dev_tests/test_reference_adam.py::test_epsilon_hat_recurrence[0.2-betas0-dtype0-float64]
+FAILED dev_tests/test_reference_adam.py::test_epsilon_hat_recurrence[0.2-betas1-dtype0-float64]
+FAILED dev_tests/test_reference_adam.py::test_float32_promoted_betas_are_separate_from_epsilon_placement
+FAILED dev_tests/test_tutorial7_pruning.py::test_first_refresh_is_before_forward_4000_not_epoch_zero
+FAILED dev_tests/test_tutorial7_pruning.py::test_raw_gradient_slots_and_transient_regrowth
+FAILED dev_tests/test_tutorial7_pruning.py::test_refresh_can_reselect_regrown_coordinate
+FAILED dev_tests/test_tutorial7_pruning.py::test_threshold_ties_round_to_even_and_minimum_one[weights0-0.4-expected0]
+FAILED dev_tests/test_tutorial7_pruning.py::test_threshold_ties_round_to_even_and_minimum_one[weights1-0.5-expected1]
+FAILED dev_tests/test_tutorial7_pruning.py::test_threshold_ties_round_to_even_and_minimum_one[weights2-0.9-expected2]
+FAILED dev_tests/test_tutorial7_pruning.py::test_threshold_ties_round_to_even_and_minimum_one[weights3-1.0-expected3]
+FAILED dev_tests/test_tutorial7_pruning.py::test_epoch_end_cleanup_precedes_checkpoint
+15 failed, 7 passed, 188 warnings in 3.73s

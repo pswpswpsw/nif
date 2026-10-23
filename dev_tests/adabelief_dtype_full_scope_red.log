@@ -1,0 +1,201 @@
+................................................................s....... [ 23%]
+........................................................................ [ 46%]
+..................................s..................................... [ 69%]
+....................................F................................... [ 92%]
+...........F.............                                                [100%]
+=================================== FAILURES ===================================
+_______ test_existing_2d_rng_and_default_training_trajectories_unchanged _______
+
+    def test_existing_2d_rng_and_default_training_trajectories_unchanged():
+        """Compare with self-owned fingerprints captured before either source fix."""
+        import hashlib
+        import json
+        from pathlib import Path
+        from nif import NIF, NIFMultiScale, NIFMultiScaleLastLayerParameterized
+        from nif.optimizers import AdaBeliefOptimizer
+        # The companion metadata describes the original capture environment. Keep
+        # the pre-fix tensor/RNG hashes untouched; other builds use portable checks.
+        metadata = json.loads(Path(__file__).with_name(
+            'public_api_pre_fix_environment.json').read_text(encoding='utf-8'))
+        require_recorded_fingerprint_environment(metadata['environment'])
+        path = Path(__file__).with_name('public_api_pre_fix_fingerprints.json')
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == metadata['fingerprints_sha256']
+        baseline = json.loads(path.read_text(encoding='utf-8'))
+        assert baseline['torch'] == metadata['environment']['torch_version']
+        def digest(tensor):
+            return hashlib.sha256(tensor.detach().cpu().contiguous().numpy().tobytes()).hexdigest()
+        original_threads = torch.get_num_threads()
+        try:
+            torch.set_num_threads(1)
+            for key, expected in baseline['initializers'].items():
+                dtype_name, name = key.split(':')
+                dtype = getattr(torch, dtype_name.removeprefix('torch.'))
+                torch.manual_seed(319)
+                values = torch.empty(13, 19, dtype=dtype)
+                initialize(values, name)
+                assert digest(values) == expected['values'], key
+                assert digest(torch.get_rng_state()) == expected['rng'], key
+            for cls in (NIF, NIFMultiScale, NIFMultiScaleLastLayerParameterized):
+                torch.manual_seed(918)
+                shape = dict(input_dim=1, output_dim=1, units=30, nlayers=2, activation='swish',
+                             connectivity='last_layer' if cls is NIFMultiScaleLastLayerParameterized else 'full',
+                             use_resblock=False, omega_0=30., weight_init_factor=.01)
+                parameter = dict(input_dim=1, latent_dim=1, units=30, nlayers=2,
+                                 activation='swish', use_resblock=False)
+                model = cls(shape, parameter)
+                optimizer = AdaBeliefOptimizer(model.parameters(), lr=.001)
+                centralized_gradients_for_optimizer(optimizer)
+                x = torch.linspace(-1, 1, 32).reshape(16, 2); y = torch.sin(x[:, 1:2])
+                hashes = [digest(torch.cat([p.detach().flatten() for p in model.parameters()]))]
+                for _ in range(3):
+                    optimizer.zero_grad()
+                    loss = (model(x)-y).square().mean()
+                    loss.backward(); optimizer.step()
+                    hashes.append(digest(torch.cat([p.detach().flatten() for p in model.parameters()])))
+>               assert hashes == baseline['trajectories'][cls.__name__], cls.__name__
+E               AssertionError: NIF
+E               assert ['3a0c0796980...27d602d8d0bb'] == ['3a0c0796980...9b095f163cf8']
+E                 
+E                 At index 3 diff: '6680584bf1a5ef2e0db80da29911707594744ca947dfb8f9e15d27d602d8d0bb' != '17e08aabd62ded996d3b0ba3eee9ab7c148d943ae8a3955528a29b095f163cf8'
+E                 Use -v to get more diff
+
+dev_tests/test_public_api_regressions.py:234: AssertionError
+_ test_other_notebooks_package_sources_and_previous_frozen_regressions_unchanged _
+
+    def test_other_notebooks_package_sources_and_previous_frozen_regressions_unchanged():
+        previous=json.loads((ROOT/'dev_tests/tutorial1_gc_pre_fix_fingerprints.json').read_text())
+        authorized={'dev_tests/test_pruning_adam_state.py','dev_tests/generate_native_notebooks.py',
+                    'tutorial/1_simple_1d_wave_pytorch.ipynb','docs/PYTORCH_CANDIDATE_REPORT.md'}
+        # Coordinator documentation may evolve independently; our implementation scope
+        # check covers all notebook/package/data/reference and prior public test files.
+        for name,digest in previous.items():
+            if name not in authorized and name.startswith(('tutorial/','nif/','dev_tests/','tests/')):
+>               assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,name
+E               AssertionError: nif/optimizers/external_optimizers.py
+E               assert 'f0976ef6c1ab...a13d20c17ce34' == 'e63840e3cd09...4d984c2145e2e'
+E                 
+E                 - e63840e3cd096a077dc4afcc47496a855afba9e9811146db3154d984c2145e2e
+E                 + f0976ef6c1abf3040cc65d638604a0c3aa1b38b45bf2b4c0faaa13d20c17ce34
+
+dev_tests/test_tutorial1_gc_scope.py:22: AssertionError
+=============================== warnings summary ===============================
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:64
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:64: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    prop = Group((name + Suppress("=") + comma_separated(value)) | oneOf(_CONSTANTS))
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:85: 6 warnings
+dev_tests/test_notebook_displays.py: 25 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:85: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+    parse = parser.parseString(pattern)
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:89: 6 warnings
+dev_tests/test_notebook_displays.py: 25 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:89: PyparsingDeprecationWarning: 'resetCache' deprecated - use 'reset_cache'
+    parser.resetCache()
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:45
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:45: PyparsingDeprecationWarning: 'enablePackrat' deprecated - use 'enable_packrat'
+    ParserElement.enablePackrat()
+
+dev_tests/test_adabelief_scalar_dtype.py::test_sparse_observed_rows_share_corrected_scalars_and_keep_other_rows
+  /workspace/dev_tests/test_adabelief_scalar_dtype.py:139: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/Context.cpp:848.)
+    p.grad=torch.sparse_coo_tensor(torch.tensor([[row]]),torch.tensor([[.1,-.2]]),p.shape)
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2010: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.space          = oneOf(self._space_widths)("space")
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2012: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.style_literal  = oneOf(
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2020: PyparsingDeprecationWarning: 'leaveWhitespace' deprecated - use 'leave_whitespace'
+    )("sym").leaveWhitespace()
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2024: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.start_group    = Optional(r"\math" + oneOf(self._fontnames)("font")) + "{"
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2027: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.delim          = oneOf(self._delims)
+
+dev_tests/test_notebook_displays.py: 47 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:1984: PyparsingDeprecationWarning: 'setName' deprecated - use 'set_name'
+    val.setName(key)
+
+dev_tests/test_notebook_displays.py: 44 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:1987: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    val.setParseAction(getattr(self, key))
+
+dev_tests/test_notebook_displays.py: 16 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:1748: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    return Empty().setParseAction(raise_error)
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2088: PyparsingDeprecationWarning: 'endQuoteChar' argument is deprecated, use 'end_quote_char'
+    p.text = cmd(r"\text", QuotedString('{', '\\', endQuoteChar="}"))
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2097: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    + OneOrMore(oneOf(["_", "^"]) - p.placeable)("subsuper")
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2146: PyparsingDeprecationWarning: 'unquoteResults' argument is deprecated, use 'unquote_results'
+    p.math_string   = QuotedString('$', '\\', unquoteResults=False)
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2147: PyparsingDeprecationWarning: 'leaveWhitespace' deprecated - use 'leave_whitespace'
+    p.non_math      = Regex(r"(?:(?:\\[$])|[^$])*").leaveWhitespace()
+
+dev_tests/test_notebook_displays.py: 48 warnings
+dev_tests/test_tutorial1_gc_behavior.py: 8 warnings
+dev_tests/test_tutorial7_pruning.py: 2 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2170: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+    result = self._expression.parseString(s)
+
+dev_tests/test_notebook_displays.py: 48 warnings
+dev_tests/test_tutorial1_gc_behavior.py: 8 warnings
+dev_tests/test_tutorial7_pruning.py: 2 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2197: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+    return self._math_expression.parseString(toks[0][1:-1], parseAll=True)
+
+dev_tests/test_notebook_displays.py: 48 warnings
+dev_tests/test_tutorial1_gc_behavior.py: 8 warnings
+dev_tests/test_tutorial7_pruning.py: 2 warnings
+  /usr/local/lib/python3.13/site-packages/pyparsing/util.py:466: PyparsingDeprecationWarning: 'parseAll' argument is deprecated, use 'parse_all'
+    return fn(self, *args, **kwargs)
+
+dev_tests/test_notebook_displays.py: 48 warnings
+dev_tests/test_tutorial1_gc_behavior.py: 8 warnings
+dev_tests/test_tutorial7_pruning.py: 2 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2178: PyparsingDeprecationWarning: 'resetCache' deprecated - use 'reset_cache'
+    ParserElement.resetCache()
+
+dev_tests/test_optimizers_data.py::test_tfrecord_external_reader_and_multiworker_epochs
+dev_tests/test_optimizers_data.py::test_tfrecord_external_reader_and_multiworker_epochs
+  /usr/local/lib/python3.13/multiprocessing/popen_fork.py:73: DeprecationWarning: This process (pid=2387) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    self.pid = os.fork()
+
+dev_tests/test_pruning_adam_state.py::test_checkpoint_resume_preserves_schedule_slots_and_strip
+  /usr/local/lib/python3.13/site-packages/torch/jit/_trace.py:1006: FutureWarning: `torch.jit.trace` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+dev_tests/test_pruning_adam_state.py::test_checkpoint_resume_preserves_schedule_slots_and_strip
+  /usr/local/lib/python3.13/site-packages/torch/jit/_trace.py:1145: FutureWarning: `torch.jit.trace_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+dev_tests/test_pruning_adam_state.py::test_checkpoint_resume_preserves_schedule_slots_and_strip
+  /usr/local/lib/python3.13/site-packages/torch/jit/_serialization.py:89: FutureWarning: `torch.jit.save` is deprecated. Please switch to `torch.export`.
+    warnings.warn(
+
+dev_tests/test_pruning_adam_state.py::test_checkpoint_resume_preserves_schedule_slots_and_strip
+  /usr/local/lib/python3.13/site-packages/torch/jit/_serialization.py:176: FutureWarning: `torch.jit.load` is deprecated. Please switch to `torch.export`.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED dev_tests/test_public_api_regressions.py::test_existing_2d_rng_and_default_training_trajectories_unchanged
+FAILED dev_tests/test_tutorial1_gc_scope.py::test_other_notebooks_package_sources_and_previous_frozen_regressions_unchanged
+2 failed, 309 passed, 2 skipped, 419 warnings in 17.75s

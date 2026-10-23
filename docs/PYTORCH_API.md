@@ -56,6 +56,51 @@ batch is used. With no penalties the returned zero remains differentiable.
 Constant/linear fields yield valid zero higher derivatives. The graph is kept
 for trainable-parameter differentiation and Sobolev losses.
 
+## Reference Adam epsilon convention
+
+`nif.optimizers.ReferenceAdam` is the native optimizer for the source-dependent
+Adam training in tutorials 2, 5, 6, 7 and 8. Defaults are `lr=1e-3`,
+`betas=(0.9, 0.999)` and `eps=1e-7`; each notebook retains its original learning
+rates, schedules and epochs. At optimizer iteration `t`, it applies
+`alpha = lr * sqrt(1-beta2**t) / (1-beta1**t)` and
+`parameter -= alpha*m / (sqrt(v)+eps)`, where `m` and `v` are the raw moments.
+This is the reference's **epsilon-hat** convention: epsilon follows the square
+root of the uncorrected variance. Setting the same epsilon on
+`torch.optim.Adam` is not equivalent because that optimizer puts epsilon after
+the square root of the bias-corrected variance. See the
+[TensorFlow Adam epsilon documentation](https://www.tensorflow.org/api_docs/python/tf/keras/optimizers/Adam).
+Ordinary PyTorch Adam is unchanged, including tutorial 4's supplemental example.
+
+The dense slot update follows the reference new Adam's add-difference order;
+Python `(1-beta)` is evaluated before conversion to the parameter dtype. Powers
+and the step scale use the parameter's dtype/device. Cross-backend scalar
+promotion and fused-operation rounding are separate from epsilon placement.
+In the tested reference, default Python betas can have different effective
+precision in the power bases and moment coefficients. Strict float64 comparisons
+therefore use explicitly typed beta tensors in TensorFlow and identical numeric
+values in the native optimizer; merely transferring the rounded power bases
+does not also match the default moment coefficients. Float32 scientific fits
+retain the original Python beta values and match both operation conventions.
+Bitwise agreement on controlled short traces does not imply identical long
+cross-framework training trajectories.
+
+The optimizer supports parameter groups, closures, dense real floating tensors,
+AMSGrad, and `state_dict` restoration (including a shared optimizer iteration).
+Individual missing gradients leave parameters and slots unchanged; the global
+iteration advances when at least one parameter has a gradient tensor. A real
+all-zero gradient tensor counts as an update. If every gradient is `None` after
+closure evaluation, `step()` raises `ValueError` before changing the iteration,
+parameters or slots. Step coefficients are cached only within the current call
+and parameter group, keyed by actual device and dtype; schedules and subsequent
+steps recompute them. Sparse gradients are rejected. Epsilon must
+be positive and finite. No weight decay or clipping is implied; notebook
+regularizers remain in the loss. These ReferenceAdam rules do not apply to
+AdaBelief, Lion or L4Adam. AdaBelief's separate corrections are documented in
+[parameter-dtype arithmetic](PYTORCH_ADABELIEF_DTYPE_CORRECTION.md),
+[moment coefficients](PYTORCH_ADABELIEF_MOMENT_CORRECTION.md) and
+[empty-gradient handling](PYTORCH_ADABELIEF_BOUNDARY_SUCCESSION.md).
+
+
 ## Native optimizers and streaming data
 
 Pass `model.parameters()` or native parameter groups to `AdaBeliefOptimizer`,
@@ -91,7 +136,11 @@ superresolution in `[parameter, coordinate]` order. Tutorial 8 uses
 `physical_u = normalized_u * scale_u + mean_u` and derivative chain rules, so
 predictions and analytic references are compared in the same physical units.
 Tutorial 7 uses native pruning masks and native int8 operators, and validates
-restored/exported artifacts by evaluating predictions. PyTorch state dictionaries
+restored/exported artifacts by evaluating predictions. Its pruning controller
+supports the eager tutorial workflow of one forward followed by its backward per
+optimizer update. Multiple pending forward graphs followed by one combined
+backward with coordinate gradients are unsupported: preforward masking changes
+the kernel in place. Strip pruning controls before tracing/export. PyTorch state dictionaries
 are the checkpoint format; historical Keras checkpoints are not supported.
 
 Tutorial 7 reports relative mean-square error as the sum of squared differences

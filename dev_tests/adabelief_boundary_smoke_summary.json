@@ -1,0 +1,36 @@
+[
+  {
+    "notebook": "1_simple_1d_wave_pytorch.ipynb",
+    "mode": "smoke",
+    "device": "cpu",
+    "source_sha256": "9c64c3de750de791df2b8f4c7f74a93e5eb4fee618ffe63236d1ddf6ec91a438",
+    "status": "passed",
+    "executed_code_cells": 18,
+    "metrics": {
+      "mode": "smoke",
+      "adabelief_epochs": 2,
+      "lbfgs_rounds": 1,
+      "lbfgs_max_iter": 2,
+      "final_mse": 0.9995570182800293
+    },
+    "seconds": 6.010814850000315
+  },
+  {
+    "notebook": "3_multi_scale_linear_NIF_pytorch.ipynb",
+    "mode": "smoke",
+    "device": "cpu",
+    "source_sha256": "ab7533c64635dce6faf3b8c931b191b1a7fdb3a34427c46702a9ace69b5a23bc",
+    "status": "passed",
+    "executed_code_cells": 12,
+    "metrics": {
+      "mode": "smoke",
+      "epochs": 2,
+      "training_rows": 4096,
+      "all_rows": 191775,
+      "weighted_mse": 0.07029975175927881,
+      "physical_u_mse": 1.602237302101234,
+      "physical_v_mse": 2.483214487536651
+    },
+    "seconds": 6.3664276640001844
+  }
+]

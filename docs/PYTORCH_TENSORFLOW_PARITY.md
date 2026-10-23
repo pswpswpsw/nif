@@ -267,9 +267,49 @@ actual TensorFlow gradients and pre-update state through the native optimizer
 passes all 912 numerical checks; all 608 moment arrays are byte-identical.
 Of 304 parameter arrays, 92 differ in storage bytes, with maximum difference
 2.98e-8, within the original numerical limits. Same-framework restore and
-observer controls pass. These CPU results do not establish GPU optimizer
-agreement or identify the cause of long-training divergence; the corresponding
-GPU diagnostic remains pending.
+observer controls pass. These are CPU-only results.
+
+The corresponding same-GPU diagnostic has now completed all 16 cases. All
+32 restore/observer control sets, 1,600 actual forward/backward/update checks
+and 912 shared-TensorFlow-gradient native-update checks pass their original
+numerical gates. In the shared-gradient replay, all 304 first-moment and 304
+second-moment arrays are byte-identical; 215 of 304 parameter arrays are
+byte-identical. The other 89 parameter arrays differ by at most 1.49e-8, within
+the original numerical limits. No case has a wholly byte-identical poststate.
+One representative canary also observes original forward, backpropagation,
+GC and update execution on the GPU; all 164 captured arrays per framework
+match between profiled and unprofiled observer-enabled controls. This is not
+exhaustive kernel attribution for every operation or case. These local results
+do not establish identical updates, explain the long-training divergence or
+replace the twelve failed full-training field/Jacobian criteria.
+
+A subsequent fixed three-arm diagnostic starts from the original TensorFlow
+seed-42 epoch-25 checkpoint. Each arm executes the same next 25 epochs,
+4,700 updates and 4,794,375 row visits, ending at global optimizer counter
+9,400. The reference arm assigns its own exact first-update poststate through
+the same import machinery. It reproduces the original TensorFlow epoch-50 complete
+57-array parameter/moment state, ten raw optimizer controls, and all four
+full-domain field/Jacobian arrays in typed storage bytes. After the first
+actual update, the intervention arm directly imports the measured native
+57-array poststate into the same TensorFlow variables, then continues with
+the same TensorFlow updates and batches. The native arm independently reaches
+that identical poststate with its own first update, then continues natively;
+later backend evolution is recorded separately.
+
+| Reference versus intervention | Immediately after import | After 4,699 further TF updates | Ratio |
+|---|---:|---:|---:|
+| Normalized output RMS difference | 3.91504e-8 | 8.20652e-6 | 209.6 |
+| Normalized input-Jacobian RMS difference | 3.32497e-7 | 1.17495e-4 | 353.4 |
+
+An independent CPU readback recomputes all 366 raw-array comparisons. This
+demonstrates amplification of this one measured combined parameter/moment
+perturbation during this interval. Its endpoint differences remain small;
+it does not explain all 600-epoch divergence, identify a particular operation
+as its cause, or exclude another port defect. The nonlinear contrasts between
+the three arms are not an additive decomposition. The twelve original final
+field/Jacobian failures remain unchanged. The retained diagnostic metrics'
+legacy `completed_epochs` label contains global counters 4,701 and 9,400;
+the actual interval is the first update after epoch 25 through epoch 50.
 
 Tutorial 5's first full paired initialization and tutorial 4's derivative-only
 result are recorded below. The remaining full paired-training acceptance is

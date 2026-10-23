@@ -376,7 +376,7 @@ still fails the original acceptance criteria. These results do not establish
 the cause of the remaining divergence. The earlier candidate 014 failures
 remain recorded separately above.
 
-### Tutorial 1: first complete AdaBelief pair
+### Tutorial 1: first paired initialization through both optimizers
 
 Native candidate 016 and TensorFlow seed 42 complete the original 5,000 epochs,
 20,000 updates and ten million row visits each. All ten actual initial tensors
@@ -397,12 +397,34 @@ calculations reproduce the metrics and verify all 20,000 actual batch and
 effective-learning-rate records. Original Ada-stage postprocessing, checkpoint
 reload and continuation checks pass; the actual native figures are inspected.
 
-The TensorFlow Ada stage also repeats exactly at its saved observations:
-2,856 array pairs agree in dtype, shape and storage bytes, and the batch/LR
-record files agree. This does not assert state identity after every update.
-Own-framework L-BFGS refinement, the combined full-tutorial repeat and the
-remaining initializations are still required; this is not whole-tutorial
-acceptance.
+Both frameworks then execute the original 200 fresh L-BFGS calls from their
+own AdaBelief endpoints, with at most 1,000 iterations per call. All nine
+original final-quality gates pass; there are no L-BFGS prefix gates.
+
+| Grid after L-BFGS | TensorFlow physical MSE | PyTorch physical MSE | Paired field RMS / truth std |
+|---|---:|---:|---:|
+| Training, 2,000 points | 2.30915509e-9 | 2.47991383e-9 | 0.00236302 |
+| Original-time refined, 8,000 points | 2.30868356e-9 | 2.48073410e-9 | 0.00236681 |
+| Dense space/time, 36,000 points | 7.50207275e-8 | 3.57095241e-8 | 0.03095228 |
+
+Independent saved-array calculations reproduce the paired field and diagnostic
+Jacobian distances. The complete TensorFlow reference repeat, including both
+optimizer stages and their postprocessing, passes all four declared roles:
+5,085 exported array pairs in 325 NPZ files match in dtype, shape and C-order
+storage bytes. Nine scientific JSON records agree after typed parsing; their
+floating-point byte checks reconstruct binary64 values from JSON and do not
+establish identity of original runtime buffers. This does not assert identical
+state after every update or checkpoint-container byte identity.
+
+Execution and final-quality passes do not establish optimizer convergence.
+In TensorFlow's primary and repeat runs, TFP reports `failed=true` in all 200 calls and
+`converged=true` in none, with 226 total reported iterations and 6,740 function
+evaluations per repeat. Native L-BFGS reports 241 iterations and 1,056 function
+evaluations; its public state does not distinguish the stopping condition, so
+neither convergence nor failure is inferred. The original budgets are limits,
+not a requirement to perform 200,000 iterations. These reference limitations
+remain recorded. The remaining initializations and shared-start diagnostics
+are still required; this is not whole-tutorial acceptance.
 
 ### Tutorial 4 derivative deliverables
 

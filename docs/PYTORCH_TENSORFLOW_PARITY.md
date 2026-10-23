@@ -382,9 +382,12 @@ The close paired results verify the stream-training comparison; they do not
 establish predictive accuracy on a physical problem.
 
 The original ordinary end cells, checkpoint reload and fresh optimizer
-continuation pass. Each clone advances from update 15,800 to 15,801 and agrees
-byte-for-byte with its same-framework in-memory continuation, while the primary
-checkpoint remains unchanged. The actual native loss figure was opened and
+continuation pass. Each clone advances from update 15,800 to 15,801. Its
+parameter and moment arrays agree with its same-framework in-memory
+continuation under the original `np.array_equal` checks. These equality flags
+alone do not establish dtype or storage-byte identity. The original model's
+numeric state remains unchanged under the original comparisons. The actual
+native loss figure was opened and
 inspected: its 200-visit curve and axis labels are readable. The notebook's
 streamed training-aggregate MSE, approximately 0.09213144, is distinct from
 the final checkpoint MSE in the table.

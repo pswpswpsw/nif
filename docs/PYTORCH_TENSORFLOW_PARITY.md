@@ -4,6 +4,20 @@ Status: in progress, 2026-10-23. Start with tutorial 3, then cover tutorials
 1, 2, 4, 5, 6, 7 and 8. The existing full-execution acceptance remains useful
 but is not evidence of matched cross-framework training.
 
+| Tutorial | Current local controlled-comparison result |
+|---|---|
+| 1 | First initialization passes all nine quality gates after each optimizer; remaining initializations and shared-start diagnostics are pending. TFP reports failure in every L-BFGS call; endpoint quality does not prove convergence. |
+| 2 | First complete pair passes for Swish and fails the two SIREN paired-field gates. Remaining initializations are running. |
+| 3 | Three corrected complete pairs pass all nine MSE gates and fail all twelve paired-field/Jacobian gates. |
+| 4 | Original derivative deliverables pass; the reference has no training workload. |
+| 5 | Three complete pairs, exact declared-state reference repeat and original end-cell checks pass the local protocol. |
+| 6 | Short controls remain incomplete; the full nine-fit matrix is pending. |
+| 7 | Finite pruning/restore controls pass; full pruning and export acceptance are pending. |
+| 8 | Short CPU controls pass; mandatory GPU controls and full training remain pending. |
+
+These results use preprovisioned environments. They do not establish a fresh
+installation or hosted-Colab run of every cell.
+
 ## Independence and source preservation
 
 Agent A owns implementation fixes and public development regressions. The
@@ -597,7 +611,7 @@ Neither completes the remaining paired initializations or full acceptance.
 
 | Tutorial | Current finite evidence | Still required |
 |---|---|---|
-| 1 | First full candidate-016 AdaBelief pair passes all 992 prefix and nine quality checks; actual postprocessing and checkpoint checks pass; TensorFlow Ada-stage repeat agrees at 2,856 saved arrays | Each framework's own L-BFGS refinement, combined full-tutorial repeat and remaining initializations |
+| 1 | First complete candidate-016 paired initialization passes 992 AdaBelief prefix checks and nine quality checks after each optimizer; original postprocessing passes; combined TensorFlow repeat matches 5,085 exported arrays across four roles | Remaining initializations and shared-start diagnostics; solver-convergence limitations remain recorded |
 | 2 | First full pair completed: Swish passes, NIFMultiScale fails two original paired-field criteria; complete TF repeat agrees exactly at its recorded observations; all six disk-continuation cases pass; final-weight diagnostics retain nine SIREN pointwise failures | Remaining initializations and final acceptance |
 | 6 | All nine regularization cases' actual raw/used gradients pass; fresh disk restoration and two updates pass 1,782 strict storage-byte checks | Four small post-momentum discrepancies remain recorded, plus three inherited pre-momentum differences; full nine-case fits and final aggregate/gallery cells remain pending |
 | 7 | Actual TF/native baseline short comparisons and native OFF/ON 8,004-step boundary controls pass, including four actual two-update fresh-disk routes; prior TF-only 8,000-step controls also pass | Own-baseline/full-pruning fits, remaining initializations and real export/quantization quality remain pending |

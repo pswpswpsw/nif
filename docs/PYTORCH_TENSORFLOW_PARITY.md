@@ -7,7 +7,7 @@ but is not evidence of matched cross-framework training.
 | Tutorial | Current local controlled-comparison result |
 |---|---|
 | 1 | Candidate 017 retains AdaBelief's 19/27 result and passes 21/27 quality checks after repaired L-BFGS. All paired-field checks pass; six L-BFGS MSE records still fail. Complete own-state and shared-start comparisons are recorded below; full quality acceptance has not passed. |
-| 2 | Three complete pairs pass for Swish and fail all six SIREN paired-field gates. Supplementary disk-continuation checks are still incomplete. |
+| 2 | Three complete pairs pass for Swish and fail all six SIREN paired-field gates. All fourteen declared-state disk-continuation cases and their observer controls pass; full quality acceptance still fails. |
 | 3 | Three corrected complete pairs pass all nine MSE gates and fail all twelve paired-field/Jacobian gates. |
 | 4 | Original derivative deliverables pass; the reference has no training workload. |
 | 5 | Three complete pairs, exact declared-state reference repeat and original end-cell checks pass the local protocol. |
@@ -749,14 +749,14 @@ acceptance gate. Independent raw-array calculations reproduce all 40 paired
 metric scalars and verify all 40,000 paired update records against the frozen
 fit-specific batch orders.
 
-Actual disk continuation now passes for all six full-fit cases: TensorFlow
+Seed-42 disk continuation passes for six full-fit cases: TensorFlow
 primary and repeat, and PyTorch primary, each for Swish and NIFMultiScale.
 Twenty-four fresh workers each perform two updates, for 48 clone updates
 and 24,576 row visits; the accepted parent runs receive no further updates.
 All 660 original scientific checks and 1,200 observer/restore checks pass,
 including dtype, shape and C-order storage-byte equality. This verifies
-checkpoint continuation under the original controls. The remaining paired
-initializations and the failed cross-framework field criteria remain open.
+checkpoint continuation under the original controls. These first-seed checks
+do not resolve the failed cross-framework field criteria.
 
 Eight fresh final-weight restoration/transfer cases have completed with zero
 optimizer updates. All four own-framework restores reproduce their 24 saved
@@ -809,10 +809,42 @@ all six original paired-field criteria fail:
 The original paired-field limit remains 0.05. Derivative comparisons remain
 unsupervised diagnostics. Actual figures for both added initializations are
 inspected, with exact-hash reuse of unchanged initialization images recorded
-separately. These numerical and visual results do not close tutorial 2:
-additional seed-142/242 fresh-disk continuation cases remain in progress. The
-earlier six seed-42 disk cases and nine SIREN final-weight pointwise failures
-remain recorded separately.
+separately. The six original SIREN paired-field failures and nine SIREN
+final-weight pointwise failures remain recorded separately from the completed
+disk-continuation controls below.
+
+### Tutorial 2: declared-state disk controls complete
+
+All fourteen original disk cases and all fourteen observer-neutrality
+comparisons pass. Their original predicates check dtype, shape and logical
+C-order storage bytes, including signed zero: 1,536 scientific/state checks
+and 2,792 neutrality checks pass. Fifty-six completed fresh workers report
+two updates and 1,024 row visits each, totaling 112 clone updates and 57,344
+row visits. The accepted parent runs receive no extra updates. The optimizer
+counter advances from 20,000 to 20,002; TensorFlow's separate fit-local train
+counter starts at zero and advances to two, rather than being claimed restored.
+
+These are same-framework comparisons between independent reconstruction
+from accepted final NPZ state and restoration of the actual epoch-4,999 disk
+checkpoint. They establish continuation of the declared state, rather than
+continuation of the original live process with every callback and RNG state.
+Instrumented ON runs capture the actual input bytes; OFF controls retain no
+independent actual-consumption claim. All 140 retained comparison, neutrality,
+worker and lane JSON files have their current raw hashes verified.
+
+Fourteen original full fits are recorded across seven parent workers, with
+six genuine full-parent proofs. The original TF seed-42 primary parent retains
+its failed exit and absent full-parent/live-after proof. Its durable fit and
+checkpoint records, separately identified same-GPU zero-update postprocessing
+and successful full repeat remain distinct evidence. Four previously qualified
+process-lifetime AutoGraph cache files remain unavailable for rehashing. Repeat
+array equality and parsed numerical-log equality retain their separate scopes.
+
+The WSL interruption's start-without-end attempt remains unaccepted. Its
+unread-back update count is not declared zero. Previously completed cases are
+reused; only unfinished cases are recovered, with their successful attempt
+records retained separately. These completion counts and passed restore
+checks do not relabel any of the original cross-framework quality failures.
 
 ### Tutorial 7: complete baselines fail before primary pruning
 
@@ -851,7 +883,7 @@ and workloads. A completed comparison can retain failed acceptance criteria.
 | Tutorial | Current finite evidence | Still required |
 |---|---|---|
 | 1 | Candidate-017 complete own-state and shared-start matrices, fresh GPU/restore controls, public suite and independent CPU cases complete; repaired L-BFGS passes 21/27, with original records retained | Six L-BFGS MSE failures, eight unchanged AdaBelief MSE failures and initial-gradient/convergence limitations remain unresolved |
-| 2 | All three full pairs completed: Swish passes in each, SIREN fails all six paired-field criteria; complete TF repeat agrees at its recorded observations; six seed-42 disk cases and further seed-142 cases pass; nine SIREN final-weight pointwise failures remain | Finish outstanding fresh-disk continuation cases and final acceptance |
+| 2 | All full pairs, TF repeat, fourteen disk cases and fourteen observer controls complete with their stated evidence scopes | Six SIREN paired-field failures and nine final-weight pointwise failures remain unresolved; full quality acceptance has not passed |
 | 6 | All nine regularization cases' actual raw/used gradients pass; fresh disk restoration and two updates pass 1,782 strict storage-byte checks | Four small post-momentum discrepancies remain recorded, plus three inherited pre-momentum differences; full nine-case fits and final aggregate/gallery cells remain pending |
 | 7 | Seven complete baseline jobs and three failed paired comparisons; TensorFlow repeat passes its declared numerical checks; earlier finite pruning/restore controls remain recorded | Original primary pruning/export is blocked by baseline quality; explicit diagnostic continuations and real export/quantization results remain pending |
 | 8 | Both 32-update fits pass 3,584 numerical checks; disk continuation and observer controls pass; actual Colab postprocessing order reproduces all six prior common-metric arrays byte-for-byte | Same-GPU checks, both full fits, remaining initializations and final figures |

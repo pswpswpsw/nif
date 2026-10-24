@@ -15,11 +15,11 @@ but is not evidence of matched cross-framework training.
 | 7 | Three complete baseline pairs fail the original combined quality criteria. Baseline-dependent primary pruning/export acceptance is blocked; separately labeled diagnostic continuations are pending. |
 | 8 | Short CPU and mandatory same-GPU controls pass. Complete training, repeat comparisons and final quality acceptance remain pending. |
 
-These results use preprovisioned environments. They do not establish a fresh
+These local results use preprovisioned environments. They do not establish a fresh
 installation or hosted-Colab run of every cell.
 
-Tutorial 1 now has a separate hosted-Colab execution record, described below.
-It does not extend that claim to the other seven notebooks.
+Tutorials 1 and 4 now have separate hosted-Colab execution records, described
+below. They do not extend that claim to the other six notebooks.
 
 ## Independence and source preservation
 
@@ -849,6 +849,30 @@ reused; only unfinished cases are recovered, with their successful attempt
 records retained separately. These completion counts and passed restore
 checks do not relabel any of the original cross-framework quality failures.
 
+### Tutorial 2: descriptive variation across retained seeds
+
+A separate NumPy-only analysis compares the saved endpoints on identical
+coordinates and targets, using field RMS difference divided by each grid's
+fixed target standard deviation. All 42 input-file hashes remain unchanged;
+the saved physical fields and Jacobians reproduce the original inverse
+scaling exactly. This analysis performs no model evaluation or training.
+
+For SIREN, the three observed TensorFlow cross-seed pairs have larger field
+distances than the matched TensorFlow/PyTorch pairs on both refined grids:
+
+| Grid | Three TensorFlow cross-seed pairs: observed min–max | Matched TensorFlow/PyTorch seeds 42 / 142 / 242 |
+|---|---|---|
+| Original times, refined space | 0.502926–0.528424 | 0.173412 / 0.366311 / 0.177331 |
+| Dense space/time | 0.576652–0.612783 | 0.189834 / 0.392523 / 0.185519 |
+
+All six original paired-field failures remain failures under their frozen
+0.05 gate. The three dependent seed pairs provide descriptive background,
+not a population variability estimate or an equivalence test. Changing the
+seed also changes initialization and controlled order; this comparison does
+not isolate roundoff or exclude a port defect. Coordinate mapping is bound
+to the retained canonical data, capture hashes and evaluator source, rather
+than a new runtime trace. The original TF seed-42 proof limitations remain.
+
 ### Tutorial 7: complete baselines fail before primary pruning
 
 Three paired initializations and an independent TensorFlow seed-42 repeat
@@ -906,8 +930,10 @@ both CPU and GPU prefix failures. Its first TensorFlow fit completes all
 following zero-update saved-final evaluator stops on a proof-label mismatch:
 the source guard checks the exact frozen bytes successfully, but its returned
 record contains different descriptive labels before and after evaluation.
-That evaluator metadata error is being repaired with a regression; the
-completed fit and disk evidence are preserved. The remaining full fits,
+The versioned label-only evaluator repair passes a frozen source-only
+regression; its zero-update GPU re-evaluation remains queued after the active
+tutorial-8 work. The completed fit and disk evidence are preserved. The
+remaining full fits,
 shared-grid comparisons and figures are still required. No whole-tutorial
 acceptance follows from this partial execution.
 
@@ -983,7 +1009,27 @@ The final normalized training MSE is 9.54576e-6. The last L-BFGS round records
 instrumented in this hosted run. It uses its own native random initialization
 and batch sequence, so it is an execution check rather than a matched-weight
 TensorFlow comparison. It does not close the local parity failures above or
-establish hosted execution of tutorials 2–8.
+establish hosted execution of the other tutorials.
+
+### Hosted Colab tutorial 4: derivative notebook execution
+
+A separate fresh Colab CPU runtime installs public revision
+`35bcb4c2aee42cf95bd65a778b79ceedfb5bac7f` with Python 3.13.16 and PyTorch
+2.14.1+cu130. All ten original code sources match the repository exactly.
+The downloaded notebook retains execution counts 1–10 and no Python error
+outputs. Its analytic, selected-derivative, zero-higher-derivative,
+parameter-differentiation and checkpoint-restoration assertions complete.
+The maximum Jacobian and Hessian analytic errors are both 5.96046e-8.
+The native example's single supplemental Adam update is recorded separately
+from the TensorFlow reference's untrained derivative example.
+
+The same Colab output-JavaScript error occurs here. An additional evidence
+cell records versions and hashes and redisplays the original saved Jacobian
+PNG successfully, with no extra model or optimizer call. The original
+notebook, checkpoint, metrics, three output hashes and error/display
+screenshots are retained. This establishes the stated CPU execution and
+analytic checks; reliable rendering of every persisted browser output and
+hosted execution of tutorials 2, 3 and 5–8 remain unverified.
 
 ### Public regression portability
 

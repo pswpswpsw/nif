@@ -18,8 +18,8 @@ but is not evidence of matched cross-framework training.
 These local results use preprovisioned environments. They do not establish a fresh
 installation or hosted-Colab run of every cell.
 
-Tutorials 1 and 4 now have separate hosted-Colab execution records, described
-below. They do not extend that claim to the other six notebooks.
+Tutorials 1–5 now have separate hosted-Colab code-execution records,
+described below. They do not extend that claim to the other three notebooks.
 
 ## Independence and source preservation
 
@@ -1011,6 +1011,60 @@ and batch sequence, so it is an execution check rather than a matched-weight
 TensorFlow comparison. It does not close the local parity failures above or
 establish hosted execution of the other tutorials.
 
+### Hosted Colab tutorial 2: both complete fits
+
+A fresh Colab CPU session with Python 3.13.16 / PyTorch 2.14.1+cu130 installs
+public revision `c8fe5e5bf8bb1de2b11d3cc825250a7934f1a5bd`. All seven original
+code sources match the repository exactly. The downloaded notebook retains
+execution counts 1–7 and no Python error outputs. Swish and SIREN each finish
+5,000 epochs, 20,000 saved optimizer updates and ten million row visits.
+Both complete histories retain epoch indices 0–4,999, and their latest disk
+checkpoints record epoch 4,999. All eleven original output-file hashes match
+the downloaded archive.
+
+The original final normalized MSE on the 2,000-row training grid is
+0.0251962 for Swish and 1.12762e-6 for SIREN. This demonstrates the intended
+contrast between weak high-frequency fitting and the multiscale model in
+this run. It uses its own native initialization and batch sequence, so it
+does not replace the matched TensorFlow comparison, evaluate a new dense
+grid, or close any of the six paired-field failures above. Original loop
+counts are recorded without adding independent consumed-row-ID tracing.
+
+The browser again reports output-JavaScript errors. One appended evidence
+cell reads the saved state and redisplays the original Swish/SIREN PNGs;
+both figures are inspected in Chrome with no additional model or optimizer
+call. Both notebook exports and the original error screenshots are retained.
+
+### Hosted Colab tutorial 3: complete cylinder-flow workload
+
+A fresh Colab Tesla T4 runtime uses Python 3.13.16 / PyTorch 2.14.1+cu130
+and the same public revision as the hosted tutorial-2 record. All twelve
+original code cells execute with saved counts 1–12 and no Python errors.
+The complete history records 600 epochs, all 191,775 AMR rows each epoch,
+and 115,065,000 row visits. Saved optimizer group and parameter counters
+both record 112,800 updates; the latest checkpoint records epoch 599.
+All eight original output-file hashes match the downloaded archive.
+
+The original final weighted normalized training MSE is 0.00184355; physical
+u- and v-component training MSEs are 0.0346912 and 0.102301. These evaluate
+the original training rows. The saved reconstruction shows the first stored
+time slice; it does not supply a new dense-grid or Jacobian comparison.
+This hosted run uses its own native initialization and batch sequence, and
+does not close the twelve controlled paired-field/Jacobian failures above.
+
+Eleven original code sources are byte-exact. The final plotting cell loses
+eight trailing-whitespace bytes in the Colab export; its Python AST and
+comment text remain equal. The failed byte-exact source audit and raw diff
+are retained, with the execution and whitespace classification recorded
+separately. Both exported notebooks preserve the same original code prefix.
+No repository notebook is changed to remove the export difference.
+
+The browser again reports the output-JavaScript error. A single evidence
+cell reads saved checkpoints, counters and hashes, then redisplays the four
+original PNGs without training, another model/optimizer call or generating
+new plots. The original figures are inspected, including the true/predicted
+cylinder fields; existing title and axis-label clipping is retained.
+
 ### Hosted Colab tutorial 4: derivative notebook execution
 
 A separate fresh Colab CPU runtime installs public revision
@@ -1028,8 +1082,42 @@ cell records versions and hashes and redisplays the original saved Jacobian
 PNG successfully, with no extra model or optimizer call. The original
 notebook, checkpoint, metrics, three output hashes and error/display
 screenshots are retained. This establishes the stated CPU execution and
-analytic checks; reliable rendering of every persisted browser output and
-hosted execution of tutorials 2, 3 and 5–8 remain unverified.
+analytic checks; reliable rendering of every persisted browser output remains
+unverified.
+
+### Hosted Colab tutorial 5: complete streamed workload
+
+A separate fresh Colab CPU session uses the same Python/PyTorch versions and
+public revision as the hosted tutorial-2 record. All nine original code
+sources match exactly; its first export preserves execution counts 1–9 and
+has no Python error outputs. The original loop generates one million rows,
+writes 100 TFRecord files, records two million row visits across 200 shard
+visits, and reaches optimizer counter 15,800. The original restoration and
+row/shard-count assertions complete. The saved input NPZ is float64 with
+shape 1,000,000 by 7. All 104 original output-file hashes match the archive,
+which also retains all TFRecord shards and the runtime receipt.
+
+The original printed `mse=0.0897564` averages loss over the streamed training
+trajectory. It is not final-checkpoint full-data MSE and must not be compared
+as that quantity against the controlled final metrics above. The original
+loop counts supply execution evidence; no independent consumed-row-ID/byte
+trace is added in this hosted run. The data are the original random-data
+demonstration, so successful execution is not evidence of physical accuracy.
+
+An additional evidence cell records versions, counters and file hashes and
+redisplays the saved loss PNG in Chrome, without generating records again
+or calling the model or optimizer. The same original output-JavaScript
+error is retained separately. This hosted execution does not establish a
+new matched-weight TensorFlow comparison.
+
+Across hosted copies 1, 2, 4 and 5, original cell types and order are preserved,
+and all code text, including comments, matches exactly. Observed Markdown
+export differences are confined to line-trailing whitespace. The raw
+mismatches and their whitespace-only classification
+are retained separately; repository notebook sources are not changed to
+remove these differences. Tutorial 3's separate whitespace-only code-source
+difference is recorded above. Complete hosted execution of tutorials 6–8
+remains unverified.
 
 ### Public regression portability
 

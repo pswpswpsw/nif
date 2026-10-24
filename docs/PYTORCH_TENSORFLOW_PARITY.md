@@ -6,7 +6,7 @@ but is not evidence of matched cross-framework training.
 
 | Tutorial | Current local controlled-comparison result |
 |---|---|
-| 1 | First initialization passes all nine quality gates after each optimizer; one supplemental shared-start initial-gradient check fails. Remaining initializations are running. The seed-42 primary and repeat TFP runs report failure in every call; endpoint quality does not prove convergence. |
+| 1 | Three original own-stage pairs pass 19/27 quality checks after AdaBelief and 19/27 after L-BFGS. All paired-field checks pass, but eight MSE checks fail at each stage. Supplemental shared-start failures remain; the last crossed run is pending. Endpoint quality does not prove optimizer convergence. |
 | 2 | Three complete pairs pass for Swish and fail all six SIREN paired-field gates. Eight remaining disk-continuation cases are pending. |
 | 3 | Three corrected complete pairs pass all nine MSE gates and fail all twelve paired-field/Jacobian gates. |
 | 4 | Original derivative deliverables pass; the reference has no training workload. |
@@ -437,8 +437,8 @@ evaluations per repeat. Native L-BFGS reports 241 iterations and 1,056 function
 evaluations; its public state does not distinguish the stopping condition, so
 neither convergence nor failure is inferred. The original budgets are limits,
 not a requirement to perform 200,000 iterations. These reference limitations
-remain recorded. The remaining initializations and shared-start diagnostics
-are still required; this is not whole-tutorial acceptance.
+remain recorded. These seed-42 results form part of the three-initialization
+primary matrix below; they are not whole-tutorial acceptance.
 
 The seed-42 native solver diagnostic starting from the shared TensorFlow Ada
 endpoint passes all nine final-quality gates but fails one of eleven initial
@@ -447,7 +447,58 @@ The original failed criterion remains recorded; its cause is not established.
 The opposite diagnostic, using TFP from the shared native Ada endpoint, passes
 all eleven initial comparisons and all nine final-quality gates. These are
 supplemental crossed-start comparisons, separate from the primary own-stage
-results and the remaining initializations.
+results.
+
+### Tutorial 1: three original own-stage pairs
+
+Seeds 42, 142 and 242 each complete the original AdaBelief workload in both
+frameworks: 5,000 epochs, 20,000 updates and ten million row visits. All 2,976
+prefix comparisons pass. Actual initial tensors, consumed batch IDs and
+effective float32 learning rates match. Each framework then executes 200 fresh
+L-BFGS calls from its own AdaBelief endpoint, with at most 1,000 iterations per
+call. There are no L-BFGS prefix gates.
+
+At each stage, 19 of 27 original quality checks pass. All nine paired-field
+checks pass; eight MSE checks fail. Physical and normalized MSE are two units
+for the same underlying grid error, so these are not eight independent causes.
+The original criteria and failures remain unchanged.
+
+| Seed | Stage | Quality checks passed | Dense space/time TensorFlow MSE | Dense space/time PyTorch MSE | Original physical-MSE limit |
+|---|---|---:|---:|---:|---:|
+| 142 | AdaBelief | 7/9 | 9.64753381e-9 | 1.67622105e-8 | 1.07701878e-8 |
+| 142 | Own-stage L-BFGS | 3/9 | 6.63905973e-10 | 1.79475033e-8 | 8.88197217e-10 |
+| 242 | AdaBelief | 3/9 | 1.24593845e-8 | 1.86036171e-8 | 1.38632236e-8 |
+| 242 | Own-stage L-BFGS | 7/9 | 1.72363263e-9 | 3.00787527e-9 | 2.05389654e-9 |
+
+The seed-42 results are shown in the preceding tables. Seed 142 fails MSE on
+the dense space/time grid after AdaBelief and on all three grids after L-BFGS.
+Seed 242 fails MSE on all three grids after AdaBelief and on the dense
+space/time grid after L-BFGS. The L-BFGS contract investigation cannot erase
+or explain these earlier AdaBelief-stage failures.
+
+In the original TensorFlow own-stage L-BFGS runs, seeds 142 and 242 each report
+198 failed calls, two calls reaching the iteration limit, and no converged
+calls. Their totals are respectively 2,411 iterations / 12,633 evaluations
+and 2,232 / 12,511. Native reports 2,253 / 3,248 and 1,740 / 2,673, respectively;
+its remaining stop reasons are not distinguished by the recorded native
+state. These counters describe execution, not successful convergence.
+
+The seed-142 native diagnostic from the shared TensorFlow Ada endpoint passes
+all eleven initial comparisons but only three of nine final-quality checks;
+all six MSE checks fail. The opposite diagnostic passes all nine final-quality
+checks but fails two initial gradient comparisons. The seed-242 native
+diagnostic from the shared TensorFlow endpoint likewise passes all eleven
+initial comparisons and three of nine final-quality checks. The opposite
+seed-242 crossed run is still executing.
+
+The initial comparisons here evaluate eager normalized-MSE objectives and
+canonical trainable gradients. They are separate diagnostics and have not
+been proved identical to the solvers' internal evaluation graphs. Their
+failures do not establish a cause of the final-field differences. Crossed
+runs are supplemental; their original scope does not include final notebook
+postprocessing. Original own-stage postprocessing is recorded separately from
+these diagnostics. Seed 142 has actual saved-figure inspection; seed-242
+visual closure remains pending confirmation.
 
 ### Tutorial 4 derivative deliverables
 
@@ -641,12 +692,12 @@ remain recorded separately.
 
 ### Remaining learning tutorials: readiness, not full acceptance
 
-The following distinguishes finite controls from completed reference work.
-Neither completes the remaining paired initializations or full acceptance.
+The following distinguishes completed comparisons from remaining controls
+and workloads. A completed comparison can retain failed acceptance criteria.
 
 | Tutorial | Current finite evidence | Still required |
 |---|---|---|
-| 1 | First complete candidate-016 paired initialization passes 992 AdaBelief prefix checks and nine quality checks after each optimizer; original postprocessing passes; combined TensorFlow repeat matches 5,085 exported arrays across four roles | Remaining initializations and shared-start diagnostics; solver-convergence limitations remain recorded |
+| 1 | Three original candidate-016 own-stage pairs complete: 2,976 AdaBelief prefix checks pass; each optimizer stage passes 19/27 quality checks, with all paired-field checks passing and eight MSE failures retained; the combined seed-42 TensorFlow repeat matches 5,085 exported arrays across four roles | Failure investigation, last crossed run and seed-242 visual closure; solver-convergence limitations remain recorded |
 | 2 | All three full pairs completed: Swish passes in each, SIREN fails all six paired-field criteria; complete TF repeat agrees at its recorded observations; six seed-42 disk cases pass; nine SIREN final-weight pointwise failures remain | Eight remaining fresh-disk continuation cases and final acceptance |
 | 6 | All nine regularization cases' actual raw/used gradients pass; fresh disk restoration and two updates pass 1,782 strict storage-byte checks | Four small post-momentum discrepancies remain recorded, plus three inherited pre-momentum differences; full nine-case fits and final aggregate/gallery cells remain pending |
 | 7 | Actual TF/native baseline short comparisons and native OFF/ON 8,004-step boundary controls pass, including four actual two-update fresh-disk routes; prior TF-only 8,000-step controls also pass | Own-baseline/full-pruning fits, remaining initializations and real export/quantization quality remain pending |

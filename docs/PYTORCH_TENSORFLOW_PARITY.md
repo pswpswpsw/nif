@@ -350,7 +350,7 @@ field/Jacobian failures remain unchanged. The retained diagnostic metrics'
 legacy `completed_epochs` label contains global counters 4,701 and 9,400;
 the actual interval is the first update after epoch 25 through epoch 50.
 
-A separate descriptive reuse compares the six final checkpoints across the
+A separate descriptive reuse compares the six candidate-014 final checkpoints across the
 same rows and physical scaling. The following distances divide field RMS
 differences by one common target standard deviation per output. This differs
 from the original gate's TensorFlow-field-energy denominator.
@@ -390,6 +390,23 @@ pairs. The local optimizer regression passes, but complete tutorial 3 training
 still fails the original acceptance criteria. These results do not establish
 the cause of the remaining divergence. The earlier candidate 014 failures
 remain recorded separately above.
+
+Array-only descriptive recomputation for these six current candidate-016
+endpoints uses the same common physical target-standard-deviation scales as
+the earlier context, without evaluating a model or changing acceptance:
+
+| Common-scale field distance | Three observed TF seed pairs | Three matched TF/PT-016 pairs |
+|---|---:|---:|
+| u | 0.12912–0.13335 | 0.10268–0.12291 |
+| v | 0.13145–0.18006 | 0.07796–0.10071 |
+
+Each matched field distance is below the observed TF seed-pair minimum.
+For Jacobians, seed 2718's u_x, u_y and v_y distances exceed some observed
+TF seed-pair distances; u_x also exceeds their median. Every matched axis
+remains below its observed TF seed-pair maximum. These are three dependent
+seed-pair comparisons, not a population distribution, an equivalence test or
+a calibrated roundoff experiment. The original twelve failures remain;
+changing initialization does not isolate their cause or exclude a port defect.
 
 ### Tutorial 1: first paired initialization through both optimizers
 

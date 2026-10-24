@@ -1,6 +1,6 @@
 # Controlled TensorFlow/PyTorch tutorial comparison
 
-Status: in progress, 2026-10-23. Start with tutorial 3, then cover tutorials
+Status: in progress, 2026-10-24. Start with tutorial 3, then cover tutorials
 1, 2, 4, 5, 6, 7 and 8. The existing full-execution acceptance remains useful
 but is not evidence of matched cross-framework training.
 
@@ -11,12 +11,15 @@ but is not evidence of matched cross-framework training.
 | 3 | Three corrected complete pairs pass all nine MSE gates and fail all twelve paired-field/Jacobian gates. |
 | 4 | Original derivative deliverables pass; the reference has no training workload. |
 | 5 | Three complete pairs, exact declared-state reference repeat and original end-cell checks pass the local protocol. |
-| 6 | Short controls remain incomplete; the full nine-fit matrix is pending. |
+| 6 | Same-framework GPU observer and disk controls pass. Cross-framework GPU prefixes retain 24 numerical failures in two of nine configurations; a bounded same-state/gradient replay passes. The full matrix remains incomplete. |
 | 7 | Three complete baseline pairs fail the original combined quality criteria. Baseline-dependent primary pruning/export acceptance is blocked; separately labeled diagnostic continuations are pending. |
-| 8 | Short CPU controls pass; mandatory GPU controls and full training remain pending. |
+| 8 | Short CPU and mandatory same-GPU controls pass. Complete training, repeat comparisons and final quality acceptance remain pending. |
 
 These results use preprovisioned environments. They do not establish a fresh
 installation or hosted-Colab run of every cell.
+
+Tutorial 1 now has a separate hosted-Colab execution record, described below.
+It does not extend that claim to the other seven notebooks.
 
 ## Independence and source preservation
 
@@ -875,6 +878,59 @@ checks while explicitly recording the failed baseline dependency. It cannot
 produce primary pruning acceptance or whole-tutorial parity. The original
 baseline gates and blocked records remain unchanged.
 
+### Tutorial 6: GPU controls retain cross-framework failures
+
+All nine configurations pass the same-framework GPU observer controls in
+both frameworks: eighteen OFF/ON pairs. All 36 fresh disk-next controls also
+pass. The actual TensorFlow-GPU and PyTorch-GPU 32-update prefixes
+pass 20,532 of 20,556 numerical checks: seven configurations pass completely,
+while two retain 24 failures. These are separate from the seven earlier CPU
+prefix failures; neither set has been removed or accepted by changing a gate.
+
+A bounded diagnostic restores the saved pre-update state and actual used
+gradient for each of the 32 steps in those two configurations. It performs
+128 independent one-step clones, with no model forward calls or parent
+training updates. Native self-replay passes all 1,920 numerical checks and
+matches every compared array byte-for-byte. Starting instead from each saved
+TensorFlow state and gradient also passes all 1,920 numerical checks; all
+640 first-moment and 640 second-moment arrays match byte-for-byte. Parameters
+are byte-identical in 292 of 640 comparisons, with maximum absolute
+differences of 5.96e-8 and 1.49e-8 in the two configurations, within the
+original parameter gates. This diagnostic does not reproduce a direct
+moment-update defect. It does not prove the cause of the accumulated
+trajectory differences or establish full quality acceptance.
+
+The original-budget full matrix is authorized as a measurement that retains
+both CPU and GPU prefix failures. Its first TensorFlow fit completes all
+3,000 epochs and 12,000 updates, and its disk-next process completes. The
+following zero-update saved-final evaluator stops on a proof-label mismatch:
+the source guard checks the exact frozen bytes successfully, but its returned
+record contains different descriptive labels before and after evaluation.
+That evaluator metadata error is being repaired with a regression; the
+completed fit and disk evidence are preserved. The remaining full fits,
+shared-grid comparisons and figures are still required. No whole-tutorial
+acceptance follows from this partial execution.
+
+### Tutorial 8: mandatory GPU controls complete
+
+Four fresh TensorFlow/PyTorch GPU lanes, with observation on and off, complete
+both variants' eight epochs and 32 updates. Observation-ON lanes record
+16,000 actual consumed rows per variant. OFF lanes record controlled source
+delivery and actual update counts, linked to ON by strict observer-neutrality
+checks; direct consumption is not claimed for OFF. The original GPU numerical
+comparison passes 20/20 and 3,264/3,264 checks. The mandatory control certificate
+also passes with the original typed comparisons.
+
+An evaluator-local loop variable had overwritten the expected row count with
+the dense-grid size before checking the second variant. The actual retained
+counts were correct. The original failure is preserved; a three-name local
+variable rename passes the same actual-metadata regression, and the
+artifact-only comparison succeeds using the four completed lanes. Additional
+provenance metadata is kept in a separate sidecar so the canonical certificate
+retains its original schema. No training, metric or tolerance was changed.
+The complete learning fits, reference repeat and final acceptance remain
+separate pending work.
+
 ### Remaining learning tutorials: readiness, not full acceptance
 
 The following distinguishes completed comparisons from remaining controls
@@ -884,9 +940,9 @@ and workloads. A completed comparison can retain failed acceptance criteria.
 |---|---|---|
 | 1 | Candidate-017 complete own-state and shared-start matrices, fresh GPU/restore controls, public suite and independent CPU cases complete; repaired L-BFGS passes 21/27, with original records retained | Six L-BFGS MSE failures, eight unchanged AdaBelief MSE failures and initial-gradient/convergence limitations remain unresolved |
 | 2 | All full pairs, TF repeat, fourteen disk cases and fourteen observer controls complete with their stated evidence scopes | Six SIREN paired-field failures and nine final-weight pointwise failures remain unresolved; full quality acceptance has not passed |
-| 6 | All nine regularization cases' actual raw/used gradients pass; fresh disk restoration and two updates pass 1,782 strict storage-byte checks | Four small post-momentum discrepancies remain recorded, plus three inherited pre-momentum differences; full nine-case fits and final aggregate/gallery cells remain pending |
+| 6 | Nine same-framework GPU observer controls and 36 disk-next controls pass; actual cross-framework GPU prefixes retain 24 failed numerical checks, alongside seven earlier CPU failures; bounded same-state/gradient replay passes | The full matrix, original field criteria, final aggregate/gallery cells and the retained prefix failures remain unresolved |
 | 7 | Seven complete baseline jobs and three failed paired comparisons; TensorFlow repeat passes its declared numerical checks; earlier finite pruning/restore controls remain recorded | Original primary pruning/export is blocked by baseline quality; explicit diagnostic continuations and real export/quantization results remain pending |
-| 8 | Both 32-update fits pass 3,584 numerical checks; disk continuation and observer controls pass; actual Colab postprocessing order reproduces all six prior common-metric arrays byte-for-byte | Same-GPU checks, both full fits, remaining initializations and final figures |
+| 8 | CPU finite controls and the mandatory four-lane GPU controls pass; actual Colab postprocessing order reproduces all six prior common-metric arrays byte-for-byte | Both full fits, remaining initializations, reference repeat comparisons and final figures |
 
 The earlier tutorial 7 CPU observer failure remains recorded and is not an
 established product defect; its actual TensorFlow GPU controls now pass.
@@ -901,6 +957,33 @@ or tolerance change was needed. The specific kernel cause remains unknown.
 All earlier direct-first and cold-replay failures remain retained as
 execution-path controls. No full learning tutorial is marked accepted from
 the finite controls in this table.
+
+### Hosted Colab tutorial 1: full execution, separate from parity
+
+A Drive copy of the public tutorial runs on Colab Python 3.13.16 / Tesla T4
+with PyTorch 2.14.1+cu130. The installed Git revision is
+`6a7f151b42bf5661e234ba57796a6716aadcb6cf`. Its 18 original code cells match
+the repository sources exactly and finish without a saved Python error.
+The runtime receipt and downloaded training history confirm 5,000 AdaBelief
+epochs, 20,000 updates, 10,000,000 consumed rows and 200 L-BFGS outer rounds
+with the original 1,000-iteration per-round cap. All eleven output-file hashes
+match the downloaded archive. One additional metadata-only cell records
+versions, counts and hashes; the original code cells remain unchanged.
+
+This execution initially encounters Colab output-JavaScript errors. Rerunning
+only the final prediction/plot cell displays its figure successfully, but
+persisted output rendering after a reload remains unreliable. The failure
+screenshots and both notebook exports are retained. Colab exports null
+execution counts and no executionInfo here, so those metadata fields are not
+represented as execution proof; actual UI run markers, outputs, history and
+the separate runtime receipt supply the evidence.
+
+The final normalized training MSE is 9.54576e-6. The last L-BFGS round records
+`converged=false, failed=true`; no complete-round convergence summary was
+instrumented in this hosted run. It uses its own native random initialization
+and batch sequence, so it is an execution check rather than a matched-weight
+TensorFlow comparison. It does not close the local parity failures above or
+establish hosted execution of tutorials 2–8.
 
 ### Public regression portability
 

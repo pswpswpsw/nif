@@ -6,7 +6,7 @@ but is not evidence of matched cross-framework training.
 
 | Tutorial | Current local controlled-comparison result |
 |---|---|
-| 1 | Three original own-stage pairs pass 19/27 quality checks after AdaBelief and 19/27 after L-BFGS. All paired-field checks pass, but eight MSE checks fail at each stage. Supplemental shared-start failures remain; the last crossed run is pending. Endpoint quality does not prove optimizer convergence. |
+| 1 | Three original own-stage pairs pass 19/27 quality checks after AdaBelief and 19/27 after L-BFGS. All paired-field checks pass, but eight MSE checks fail at each stage. All six supplemental crossed runs are complete and retain failures. Endpoint quality does not prove optimizer convergence; repair is in progress. |
 | 2 | Three complete pairs pass for Swish and fail all six SIREN paired-field gates. Eight remaining disk-continuation cases are pending. |
 | 3 | Three corrected complete pairs pass all nine MSE gates and fail all twelve paired-field/Jacobian gates. |
 | 4 | Original derivative deliverables pass; the reference has no training workload. |
@@ -489,7 +489,11 @@ all six MSE checks fail. The opposite diagnostic passes all nine final-quality
 checks but fails two initial gradient comparisons. The seed-242 native
 diagnostic from the shared TensorFlow endpoint likewise passes all eleven
 initial comparisons and three of nine final-quality checks. The opposite
-seed-242 crossed run is still executing.
+seed-242 diagnostic, using TFP from the native endpoint, passes all eleven
+initial comparisons and seven of nine final-quality checks; dense space/time
+physical and normalized MSE fail. It reports 1,460 iterations and 9,643
+evaluations across 200 calls: 198 failed, one converged and one reaching the
+1,000-iteration limit. All six original crossed runs are now complete.
 
 The initial comparisons here evaluate eager normalized-MSE objectives and
 canonical trainable gradients. They are separate diagnostics and have not
@@ -497,8 +501,13 @@ been proved identical to the solvers' internal evaluation graphs. Their
 failures do not establish a cause of the final-field differences. Crossed
 runs are supplemental; their original scope does not include final notebook
 postprocessing. Original own-stage postprocessing is recorded separately from
-these diagnostics. Seed 142 has actual saved-figure inspection; seed-242
-visual closure remains pending confirmation.
+these diagnostics. For each of seeds 142 and 242, all fifteen saved PNG paths
+are accounted for and eleven distinct images are actually inspected. The four
+primary postprocessing roles complete; the crossed runs supply only their
+two actual loss plots. Existing clipping and color-scale limits remain
+recorded, and figure inspection does not convert failed numerical checks
+into passes. The original comparison matrix is complete; tutorial 1 has
+not passed its full quality criteria.
 
 ### Tutorial 4 derivative deliverables
 
@@ -697,7 +706,7 @@ and workloads. A completed comparison can retain failed acceptance criteria.
 
 | Tutorial | Current finite evidence | Still required |
 |---|---|---|
-| 1 | Three original candidate-016 own-stage pairs complete: 2,976 AdaBelief prefix checks pass; each optimizer stage passes 19/27 quality checks, with all paired-field checks passing and eight MSE failures retained; the combined seed-42 TensorFlow repeat matches 5,085 exported arrays across four roles | Failure investigation, last crossed run and seed-242 visual closure; solver-convergence limitations remain recorded |
+| 1 | Three original candidate-016 own-stage pairs and all six crossed diagnostics complete, with actual saved-figure checks; 2,976 AdaBelief prefix checks pass; each primary optimizer stage passes 19/27 quality checks, retaining eight MSE failures; the combined seed-42 TensorFlow repeat matches 5,085 exported arrays across four roles | Repair and independent revalidation of the demonstrated optimizer-contract difference; original quality failures and convergence limitations remain recorded |
 | 2 | All three full pairs completed: Swish passes in each, SIREN fails all six paired-field criteria; complete TF repeat agrees at its recorded observations; six seed-42 disk cases pass; nine SIREN final-weight pointwise failures remain | Eight remaining fresh-disk continuation cases and final acceptance |
 | 6 | All nine regularization cases' actual raw/used gradients pass; fresh disk restoration and two updates pass 1,782 strict storage-byte checks | Four small post-momentum discrepancies remain recorded, plus three inherited pre-momentum differences; full nine-case fits and final aggregate/gallery cells remain pending |
 | 7 | Actual TF/native baseline short comparisons and native OFF/ON 8,004-step boundary controls pass, including four actual two-update fresh-disk routes; prior TF-only 8,000-step controls also pass | Own-baseline/full-pruning fits, remaining initializations and real export/quantization quality remain pending |

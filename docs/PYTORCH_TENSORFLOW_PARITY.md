@@ -6,8 +6,8 @@ but is not evidence of matched cross-framework training.
 
 | Tutorial | Current local controlled-comparison result |
 |---|---|
-| 1 | Original candidate 016 passes 19/27 quality checks after each optimizer; all paired-field checks pass and eight MSE checks fail at each stage. All six crossed runs retain their recorded results. The reference L-BFGS repair passes public and independent CPU tests; complete training revalidation is pending. |
-| 2 | Three complete pairs pass for Swish and fail all six SIREN paired-field gates. Eight remaining disk-continuation cases are pending. |
+| 1 | Candidate 017 retains AdaBelief's 19/27 result and passes 21/27 quality checks after repaired L-BFGS. All paired-field checks pass; six L-BFGS MSE records still fail. Complete own-state and shared-start comparisons are recorded below; full quality acceptance has not passed. |
+| 2 | Three complete pairs pass for Swish and fail all six SIREN paired-field gates. Supplementary disk-continuation checks are still incomplete. |
 | 3 | Three corrected complete pairs pass all nine MSE gates and fail all twelve paired-field/Jacobian gates. |
 | 4 | Original derivative deliverables pass; the reference has no training workload. |
 | 5 | Three complete pairs, exact declared-state reference repeat and original end-cell checks pass the local protocol. |
@@ -558,9 +558,71 @@ attempts remain recorded separately and are not counted as valid cases.
 The complete public CPU suite passes 530 tests with four original skips,
 including the real Git/autocrlf checkout test. A read-only source review finds
 no material issue in the accepted numeric core. These checks establish the
-repair's tested CPU behavior. Complete tutorial-1 GPU revalidation still uses
-the original quality gates; the candidate-016 failures above remain part of
-the record. No hosted-Colab completion follows from these CPU results.
+repair's tested CPU behavior. The complete tutorial-1 GPU revalidation below
+retains the original quality gates and candidate-016 failures. No hosted-Colab
+completion follows from these CPU results.
+
+### Tutorial 1: repaired optimizer completes the matrix, with failures retained
+
+Candidate 017 passes all 1,312 original short-run numerical comparisons,
+2,981 declared-state dtype/shape/storage-byte checks and 32 counter checks
+across four fresh processes. Four fresh disk-continuation routes and the
+actual notebook's zero-update constructor/closure check also pass. These
+restore checks cover the declared weights, moments, hyperparameters, clock
+and mirror state; they do not establish preservation of every callback or RNG.
+
+Three native own-state runs then complete the original 200 fresh L-BFGS
+calls. Their unchanged AdaBelief checkpoints and the frozen TensorFlow
+reference results are reused with exact source/state binding. No original
+5,000-epoch AdaBelief training is silently replaced or rerun.
+
+| Seed | Training MSE, TF / native | Dense-45 MSE, TF / native | Original quality checks |
+|---|---|---|---:|
+| 42 | 2.30915509e-9 / 2.47897747e-9 | 7.50207275e-8 / 3.56939541e-8 | 9/9 |
+| 142 | 4.23194535e-10 / 1.07651044e-9 | 6.63905973e-10 / 1.60285844e-8 | 3/9 |
+| 242 | 6.82955692e-10 / 4.29789676e-10 | 1.72363263e-9 / 1.31109825e-9 | 9/9 |
+
+The repaired L-BFGS stage passes 21/27 checks, compared with candidate 016's
+19/27. Seed 242's two MSE failures close; seed 142 still fails the physical
+and normalized MSE criteria on all three grids. These six records represent
+the same three grid errors expressed in two units. All nine paired-field
+checks pass. Unchanged AdaBelief still passes 19/27 with eight MSE failures
+and all 2,976 prefix checks passing. The full tutorial remains unaccepted.
+
+The shared-start comparisons hand off **AdaBelief-end** weights. They do not
+start from refined L-BFGS endpoints. Both solvers then use the same handed
+weights and retain their original 200 fresh calls and limits:
+
+| Seed | Start from TF AdaBelief end: quality | Start from native AdaBelief end: quality |
+|---|---:|---:|
+| 42 | 7/9 | 9/9 |
+| 142 | 9/9 | 9/9 |
+| 242 | 3/9 | 9/9 |
+
+The actual handoff tensors match in their shared canonical layout, including
+dtype, shape and storage bytes. The initial comparisons retain one gradient failure for
+seed 42's TF start and two for seed 142's native start. These are not failed
+weight transfers; the gradient readbacks do not establish a discrepancy in
+TFP's internal traced solver gradient or identify the cause of the divergence.
+The shared-start outcomes do not replace the own-state primary failures.
+The reverse TF cross-runs remain immutable reused references because their
+native AdaBelief-end inputs and TF implementation are unchanged; they are
+compared with the new native L-BFGS outputs.
+
+Actual `ReferenceLBFGS.result` records report 231/1,259/2,318 iterations and
+6,780/9,557/12,509 objective evaluations for seeds 42/142/242. Each executes
+200 fresh calls; none reports convergence. Failed calls number 200/199/198;
+the remaining 0/1/2 calls reach the 1,000-iteration limit. The original TF
+flags and all candidate-016 records remain preserved. Completion of the
+training loop is distinct from reported convergence and quality acceptance.
+
+All twelve original comparison records complete: six pass and six fail when
+their initial and final checks are combined. Visual inspection individually
+covers twelve actual PNG paths, nine distinct images. Own-state reconstruction
+plots show normalized u on the 10-by-200 training grid with separate color
+scales and coherent residual definitions; this is not dense-grid visual
+coverage. Crossed-start inspection covers only the three actual loss PNGs.
+Readable, unclipped canvases do not replace the retained numerical failures.
 
 ### Tutorial 4 derivative deliverables
 
@@ -748,7 +810,7 @@ The original paired-field limit remains 0.05. Derivative comparisons remain
 unsupervised diagnostics. Actual figures for both added initializations are
 inspected, with exact-hash reuse of unchanged initialization images recorded
 separately. These numerical and visual results do not close tutorial 2:
-the eight remaining fresh-disk continuation cases are still pending. The
+additional seed-142/242 fresh-disk continuation cases remain in progress. The
 earlier six seed-42 disk cases and nine SIREN final-weight pointwise failures
 remain recorded separately.
 
@@ -788,8 +850,8 @@ and workloads. A completed comparison can retain failed acceptance criteria.
 
 | Tutorial | Current finite evidence | Still required |
 |---|---|---|
-| 1 | Original candidate-016 matrix complete with quality failures retained; reference L-BFGS repair passes the public suite and independent frozen CPU cases | Complete original-budget GPU revalidation of the repaired stage; original AdaBelief failures and convergence limitations remain recorded |
-| 2 | All three full pairs completed: Swish passes in each, SIREN fails all six paired-field criteria; complete TF repeat agrees at its recorded observations; six seed-42 disk cases pass; nine SIREN final-weight pointwise failures remain | Eight remaining fresh-disk continuation cases and final acceptance |
+| 1 | Candidate-017 complete own-state and shared-start matrices, fresh GPU/restore controls, public suite and independent CPU cases complete; repaired L-BFGS passes 21/27, with original records retained | Six L-BFGS MSE failures, eight unchanged AdaBelief MSE failures and initial-gradient/convergence limitations remain unresolved |
+| 2 | All three full pairs completed: Swish passes in each, SIREN fails all six paired-field criteria; complete TF repeat agrees at its recorded observations; six seed-42 disk cases and further seed-142 cases pass; nine SIREN final-weight pointwise failures remain | Finish outstanding fresh-disk continuation cases and final acceptance |
 | 6 | All nine regularization cases' actual raw/used gradients pass; fresh disk restoration and two updates pass 1,782 strict storage-byte checks | Four small post-momentum discrepancies remain recorded, plus three inherited pre-momentum differences; full nine-case fits and final aggregate/gallery cells remain pending |
 | 7 | Seven complete baseline jobs and three failed paired comparisons; TensorFlow repeat passes its declared numerical checks; earlier finite pruning/restore controls remain recorded | Original primary pruning/export is blocked by baseline quality; explicit diagnostic continuations and real export/quantization results remain pending |
 | 8 | Both 32-update fits pass 3,584 numerical checks; disk continuation and observer controls pass; actual Colab postprocessing order reproduces all six prior common-metric arrays byte-for-byte | Same-GPU checks, both full fits, remaining initializations and final figures |

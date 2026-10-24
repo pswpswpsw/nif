@@ -6,8 +6,8 @@ but is not evidence of matched cross-framework training.
 
 | Tutorial | Current local controlled-comparison result |
 |---|---|
-| 1 | First initialization passes all nine quality gates after each optimizer; remaining initializations and shared-start diagnostics are pending. TFP reports failure in every L-BFGS call; endpoint quality does not prove convergence. |
-| 2 | First complete pair passes for Swish and fails the two SIREN paired-field gates. Remaining initializations are running. |
+| 1 | First initialization passes all nine quality gates after each optimizer; one supplemental shared-start initial-gradient check fails. Remaining initializations are running. The seed-42 primary and repeat TFP runs report failure in every call; endpoint quality does not prove convergence. |
+| 2 | Three complete pairs pass for Swish and fail all six SIREN paired-field gates. Eight remaining disk-continuation cases are pending. |
 | 3 | Three corrected complete pairs pass all nine MSE gates and fail all twelve paired-field/Jacobian gates. |
 | 4 | Original derivative deliverables pass; the reference has no training workload. |
 | 5 | Three complete pairs, exact declared-state reference repeat and original end-cell checks pass the local protocol. |
@@ -440,6 +440,15 @@ not a requirement to perform 200,000 iterations. These reference limitations
 remain recorded. The remaining initializations and shared-start diagnostics
 are still required; this is not whole-tutorial acceptance.
 
+The seed-42 native solver diagnostic starting from the shared TensorFlow Ada
+endpoint passes all nine final-quality gates but fails one of eleven initial
+comparisons: the gradient's maximum absolute difference is 1.01448968e-5.
+The original failed criterion remains recorded; its cause is not established.
+The opposite diagnostic, using TFP from the shared native Ada endpoint, passes
+all eleven initial comparisons and all nine final-quality gates. These are
+supplemental crossed-start comparisons, separate from the primary own-stage
+results and the remaining initializations.
+
 ### Tutorial 4 derivative deliverables
 
 The archived tutorial 4 has no optimizer training workload. Its actual
@@ -604,6 +613,32 @@ scalars, verify finite field/derivative exports and confirm physical inverse
 scaling. These reference and repeat results do not establish
 TensorFlow/PyTorch parity.
 
+### Tutorial 2: all three complete paired initializations
+
+Seeds 142 and 242 also complete both original 5,000-epoch fits per framework,
+including their actual postprocessing. Each fit performs 20,000 updates and
+ten million row visits. All 9,984 prefix checks across the three paired
+initializations pass. Actual consumed row-ID streams match and recorded
+learning rates have zero difference in every pair.
+
+Swish passes the original full-workload criteria in all three pairs. SIREN
+passes the training-MSE and both grid-MSE allowances in all three pairs, but
+all six original paired-field criteria fail:
+
+| SIREN seed | TensorFlow training MSE | PyTorch training MSE | Original-time paired field RMS / truth std | Dense paired field RMS / truth std |
+|---|---:|---:|---:|---:|
+| 42 | 1.26055728e-6 | 1.25057260e-6 | 0.17341189 | 0.18983369 |
+| 142 | 1.56999709e-6 | 1.54508141e-6 | 0.36631112 | 0.39252327 |
+| 242 | 2.03971577e-6 | 2.05244025e-6 | 0.17733121 | 0.18551858 |
+
+The original paired-field limit remains 0.05. Derivative comparisons remain
+unsupervised diagnostics. Actual figures for both added initializations are
+inspected, with exact-hash reuse of unchanged initialization images recorded
+separately. These numerical and visual results do not close tutorial 2:
+the eight remaining fresh-disk continuation cases are still pending. The
+earlier six seed-42 disk cases and nine SIREN final-weight pointwise failures
+remain recorded separately.
+
 ### Remaining learning tutorials: readiness, not full acceptance
 
 The following distinguishes finite controls from completed reference work.
@@ -612,7 +647,7 @@ Neither completes the remaining paired initializations or full acceptance.
 | Tutorial | Current finite evidence | Still required |
 |---|---|---|
 | 1 | First complete candidate-016 paired initialization passes 992 AdaBelief prefix checks and nine quality checks after each optimizer; original postprocessing passes; combined TensorFlow repeat matches 5,085 exported arrays across four roles | Remaining initializations and shared-start diagnostics; solver-convergence limitations remain recorded |
-| 2 | First full pair completed: Swish passes, NIFMultiScale fails two original paired-field criteria; complete TF repeat agrees exactly at its recorded observations; all six disk-continuation cases pass; final-weight diagnostics retain nine SIREN pointwise failures | Remaining initializations and final acceptance |
+| 2 | All three full pairs completed: Swish passes in each, SIREN fails all six paired-field criteria; complete TF repeat agrees at its recorded observations; six seed-42 disk cases pass; nine SIREN final-weight pointwise failures remain | Eight remaining fresh-disk continuation cases and final acceptance |
 | 6 | All nine regularization cases' actual raw/used gradients pass; fresh disk restoration and two updates pass 1,782 strict storage-byte checks | Four small post-momentum discrepancies remain recorded, plus three inherited pre-momentum differences; full nine-case fits and final aggregate/gallery cells remain pending |
 | 7 | Actual TF/native baseline short comparisons and native OFF/ON 8,004-step boundary controls pass, including four actual two-update fresh-disk routes; prior TF-only 8,000-step controls also pass | Own-baseline/full-pruning fits, remaining initializations and real export/quantization quality remain pending |
 | 8 | Both 32-update fits pass 3,584 numerical checks; disk continuation and observer controls pass; actual Colab postprocessing order reproduces all six prior common-metric arrays byte-for-byte | Same-GPU checks, both full fits, remaining initializations and final figures |

@@ -19,7 +19,7 @@ def solver_cells(source):
         notebook = nbformat.read(ROOT / 'tutorial/1_simple_1d_wave_pytorch.ipynb', as_version=4)
         code = [cell.source for cell in notebook.cells if cell.cell_type == 'code']
         return (next(text for text in code if 'rounds, max_iter =' in text),
-                next(text for text in code if 'fine_tuner = torch.optim.LBFGS(' in text))
+                next(text for text in code if 'fine_tuner = ReferenceLBFGS(' in text))
     tree = ast.parse((ROOT / 'dev_tests/generate_native_notebooks.py').read_text(encoding='utf-8'))
     call = next(node for node in ast.walk(tree) if isinstance(node, ast.Call)
                 and isinstance(node.func, ast.Name) and node.func.id == 'emit'
@@ -46,12 +46,16 @@ def test_tutorial1_preserves_public_lbfgs_controls(source, smoke):
     exec(compile(ast.Module(body=[assignment], type_ignores=[]), source, 'exec'), scope)
     optimizer = scope['fine_tuner']
     options = optimizer.param_groups[0]
-    assert options['tolerance_grad'] == 1e-15, 'Public TFPLBFGS tolerance must be retained'
-    assert options['tolerance_change'] == 1e-15
-    assert options['history_size'] == 20, 'Public num_correction_pairs is 20, not native default 100'
+    from nif.optimizers import ReferenceLBFGS
+    assert isinstance(optimizer, ReferenceLBFGS)
+    assert options['tolerance'] == 1e-15, 'Public TFPLBFGS tolerance must be retained'
+    assert options['x_tolerance'] == 1e-15
+    assert options['f_relative_tolerance'] == 1e-15
+    assert options['f_absolute_tolerance'] == 0.
+    assert options['num_correction_pairs'] == 20, 'Public num_correction_pairs is 20'
     assert options['max_iter'] == scope['max_iter']
-    assert options['max_eval'] == 100 * scope['max_iter']
-    assert options['line_search_fn'] == 'strong_wolfe'
+    assert options['max_line_search_iterations'] == 100
+    assert not {'max_eval', 'tolerance_change', 'line_search_fn'} & options.keys()
     evaluations = []
 
     def closure():

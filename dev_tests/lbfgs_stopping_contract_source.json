@@ -1,0 +1,89 @@
+{
+  "status": "PUBLIC RED; no product fix authorized or implemented",
+  "objective": "f(x)=0.5*scale*x^2; x0=1; scales1 and1e-8; CPU float64",
+  "native": {
+    "notebook": "tutorial/1_simple_1d_wave_pytorch.ipynb",
+    "notebook_sha256": "ce69f3af6063be436cbf0652b2b7c661b970aaa8edf487e54277480020a44bde",
+    "settings_cell": 35,
+    "settings_sha256": "02ab19c46067a296b514cdea7c2558949654a2b422d4534e818697a48c482739",
+    "constructor_cell": 37,
+    "constructor_ast": "fine_tuner = torch.optim.LBFGS(new_model.parameters(), max_iter=max_iter, max_eval=max_iter * max_line_search_iterations, history_size=num_correction_pairs, tolerance_grad=tolerance, tolerance_change=max(x_tolerance, f_relative_tolerance), line_search_fn='strong_wolfe')",
+    "explicit_constructor_options": {
+      "max_iter": 1000,
+      "max_eval": 100000,
+      "history_size": 20,
+      "tolerance_grad": 1e-15,
+      "tolerance_change": 1e-15,
+      "line_search_fn": "strong_wolfe"
+    },
+    "default_lr_from_installed_source": 1,
+    "full_rounds": 200,
+    "tested_rounds": 1
+  },
+  "tfp_reference": {
+    "commit": "ad9113df14590189b12068b6b3fa7c8c8d9187d4",
+    "path": "nif/optimizers/lbfgs.py",
+    "sha256": "570d373d109bf1200fd34c73e82396c4ae9ecea6736447faa01eb31fdbefaa64",
+    "lines": "105-119",
+    "options_source": "Actual AST keyword expressions, with max_iter taken from the full native notebook settings; actual TFP execution recorded separately."
+  },
+  "installed_source": {
+    "torch_lbfgs": {
+      "path": "C:\\Users\\pswpe\\.cache\\nif-pytorch-evaluation\\env\\Lib\\site-packages\\torch\\optim\\lbfgs.py",
+      "sha256": "571de5e318cb9221a532da170a753a1a58017283cdbbaea6f7bf75c5b10eea41",
+      "bytes": 21141
+    },
+    "tfp_lbfgs": {
+      "path": "C:\\Users\\pswpe\\.cache\\nif-colab-qa\\colab-matched\\Lib\\site-packages\\tensorflow_probability\\python\\optimizer\\lbfgs.py",
+      "sha256": "f4beaee9cf30f9928de16550734462196145c4f35816a1c5da22dffcc6aecaa5",
+      "bytes": 22371
+    },
+    "tfp_bfgs_utils": {
+      "path": "C:\\Users\\pswpe\\.cache\\nif-colab-qa\\colab-matched\\Lib\\site-packages\\tensorflow_probability\\python\\optimizer\\bfgs_utils.py",
+      "sha256": "134f6b35ec243ad120016d35e050baa3013b9c62bc64289a2e586620d0f40d88",
+      "bytes": 17130
+    }
+  },
+  "source_contract": {
+    "torch": "lbfgs.py:374-375 first d=-g;438-442 g.dot(d)>-tolerance_change stops before line search. Here g=1e-8,d=-1e-8, gTd~-1e-16 > -1e-15.",
+    "tfp": "bfgs_utils.py:373-391 gradient infinity norm, actual displacement infinity norm, relative objective change, default zero absolute-f tolerance; no corresponding pre-line-search -tolerance_change directional-derivative stopping rule.",
+    "scope": "Different solver trajectories are allowed; this chosen reference case requires making progress with a nonstationary initial gradient, confirmed by actual TFP."
+  },
+  "public_files": {
+    "dev_tests/test_lbfgs_stopping_contract.py": {
+      "sha256": "16a203349aa115fef48785bd8af47f8e0a93962df9d4abf0d9c1c6ac74b8424c",
+      "bytes": 3598
+    },
+    "dev_tests/lbfgs_stopping_contract_oracle.json": {
+      "sha256": "c11f484201cd18e2cada11de0d7eb98096425b6741ec7a61c780854ae7067cad",
+      "bytes": 1598
+    },
+    "dev_tests/lbfgs_stopping_contract_red.log": {
+      "sha256": "32e81b651a171476d054cdd3ddd41d062c1859d30c0ed0e9d8293b49c58a39dc",
+      "bytes": 2308
+    },
+    "dev_tests/LBFGS_STOPPING_CONTRACT.md": {
+      "sha256": "210bf4e359eedfe362333db617a098d3c1634b266768221597f95f132e24ee8f",
+      "bytes": 3500
+    },
+    "dev_tests/fixtures/lbfgs_stopping_contract/tfp_oracle.py.txt": {
+      "sha256": "507c2200436be576a2d2d28ce3f43b27049014785845ee2728ce579d96c77538",
+      "bytes": 3464
+    }
+  },
+  "serialization_lineage": {
+    "public_red_log": "dev_tests/lbfgs_stopping_contract_red.log",
+    "raw_preserved": "D:\\nif\\dev_tests\\artifacts\\lbfgs-stopping-contract-95e81cf8875b\\native-red-original-crlf.log",
+    "raw_sha256": "774d379c62af10bb5039d953f504970410a54531d6e649fbb2edeebc0808e123",
+    "raw_bytes": 2345,
+    "crlf_pairs_replaced": 37,
+    "canonical_sha256": "32e81b651a171476d054cdd3ddd41d062c1859d30c0ed0e9d8293b49c58a39dc",
+    "canonical_bytes": 2308,
+    "only_crlf_to_lf": true
+  },
+  "limitations": [
+    "Only two public analytic cases, one fresh call each; not full T1 training or a GPU comparison.",
+    "No full scientific/public suite rerun: this newly requested test intentionally remains RED.",
+    "Original TFP source and current native constructor settings are recorded; no tuning to achieve agreement was attempted."
+  ]
+}

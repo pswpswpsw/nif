@@ -1,0 +1,30 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+________ test_actual_tutorial_constructor_is_explicit_reference_lbfgs _________
+
+    def test_actual_tutorial_constructor_is_explicit_reference_lbfgs():
+        notebook = json.loads((ROOT/'tutorial/1_simple_1d_wave_pytorch.ipynb').read_bytes())
+        code = [''.join(cell['source']) for cell in notebook['cells'] if cell['cell_type']=='code']
+        imports = [node for source in code for node in ast.walk(ast.parse(source))
+                   if isinstance(node, ast.ImportFrom) and node.module=='nif.optimizers']
+>       assert any(any(alias.name=='ReferenceLBFGS' for alias in node.names) for node in imports)
+E       assert False
+E        +  where False = any(<generator object test_actual_tutorial_constructor_is_explicit_reference_lbfgs.<locals>.<genexpr> at 0x0000023941C97CA0>)
+
+dev_tests\test_lbfgs_reference_integration.py:14: AssertionError
+_________________ test_exact_reference_scope_successor_exists _________________
+
+    def test_exact_reference_scope_successor_exists():
+        import importlib.util
+        path = ROOT/'dev_tests/lbfgs_reference_scope.py'
+>       assert path.is_file(), 'bounded ReferenceLBFGS public scope successor is required'
+E       AssertionError: bounded ReferenceLBFGS public scope successor is required
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = WindowsPath('D:/nif/dev_tests/lbfgs_reference_scope.py').is_file
+
+dev_tests\test_lbfgs_reference_integration.py:28: AssertionError
+=========================== short test summary info ===========================
+FAILED dev_tests/test_lbfgs_reference_integration.py::test_actual_tutorial_constructor_is_explicit_reference_lbfgs
+FAILED dev_tests/test_lbfgs_reference_integration.py::test_exact_reference_scope_successor_exists
+2 failed in 0.17s

@@ -1,0 +1,167 @@
+"""Public, independent CPU-only analytic oracle; no NIF model is imported."""
+import os
+for name, value in {
+    'CUDA_VISIBLE_DEVICES': '-1', 'TF_USE_LEGACY_KERAS': '1',
+    'OMP_NUM_THREADS': '1', 'MKL_NUM_THREADS': '1',
+    'TF_NUM_INTRAOP_THREADS': '1', 'TF_NUM_INTEROP_THREADS': '1',
+    'PYTHONDONTWRITEBYTECODE': '1',
+}.items():
+    os.environ[name] = value
+import ast
+import hashlib
+import json
+from pathlib import Path
+import platform
+import subprocess
+import sys
+
+ROOT = Path('D:/nif')
+REFERENCE = 'ad9113df14590189b12068b6b3fa7c8c8d9187d4'
+wrapper = subprocess.check_output(
+    ['git', 'show', REFERENCE + ':nif/optimizers/lbfgs.py'], cwd=ROOT)
+notebook = json.loads((ROOT / 'tutorial/1_simple_1d_wave_pytorch.ipynb').read_bytes())
+setup = next(''.join(c['source']) for c in notebook['cells']
+             if c['cell_type'] == 'code' and 'rounds, max_iter =' in ''.join(c['source']))
+settings = {'SMOKE': False}
+exec(setup, settings)
+call = next(n for n in ast.walk(ast.parse(wrapper.decode('utf-8')))
+            if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)
+            and n.func.id == 'lbfgs_minimize')
+options = {k.arg: eval(compile(ast.Expression(k.value), '<public option>', 'eval'),
+                       {'max_iter': settings['max_iter']})
+           for k in call.keywords
+           if k.arg not in ('value_and_gradients_function', 'initial_position')}
+
+import numpy as np
+import tensorflow as tf
+import tensorflow_probability as tfp
+from tensorflow_probability.python.optimizer import bfgs_utils
+
+tf.config.threading.set_intra_op_parallelism_threads(1)
+tf.config.threading.set_inter_op_parallelism_threads(1)
+assert not tf.config.list_physical_devices('GPU')
+assert not tf.config.list_logical_devices('GPU')
+
+def scalar(value):
+    value = value.item()
+    if isinstance(value, float) and not np.isfinite(value):
+        return 'nan' if np.isnan(value) else ('+inf' if value > 0 else '-inf')
+    return value
+
+def array(value):
+    value = value.numpy()
+    return {'shape': list(value.shape), 'values': [scalar(v) for v in value.reshape(-1)],
+            'raw_hex': value.tobytes().hex(), 'dtype': str(value.dtype)}
+
+def result_record(result):
+    return {
+        'position': array(result.position), 'objective_value': array(result.objective_value),
+        'objective_gradient': array(result.objective_gradient),
+        'converged': bool(result.converged.numpy()), 'failed': bool(result.failed.numpy()),
+        'num_iterations': int(result.num_iterations.numpy()),
+        'num_objective_evaluations': int(result.num_objective_evaluations.numpy()),
+        'position_deltas': array(result.position_deltas),
+        'gradient_deltas': array(result.gradient_deltas),
+    }
+
+records = []
+for dtype in (tf.float32, tf.float64):
+    def quadratic(scale, offset=0.):
+        scale, offset = tf.constant(scale, dtype), tf.constant(offset, dtype)
+        def objective(x):
+            return offset + .5 * scale * tf.reduce_sum(x * x), scale * x
+        return objective
+    def flat_quartic(x):
+        return tf.constant(2. ** 20, dtype) + .125 * tf.reduce_sum(x ** 4), .5 * x ** 3
+    for name, objective in (
+        ('unit_quadratic', quadratic(1.)),
+        ('small_quadratic', quadratic(1e-8)),
+        ('flat_offset_quadratic', quadratic(.125, 2. ** 20)),
+        ('flat_offset_quartic', flat_quartic),
+    ):
+        initial = tf.constant([1.], dtype)
+        initial_value, initial_gradient = objective(initial)
+        r = tfp.optimizer.lbfgs_minimize(objective, initial_position=initial, **options)
+        records.append({'case': name, 'dtype': dtype.name,
+                        'initial_value': array(initial_value),
+                        'initial_gradient': array(initial_gradient), 'result': result_record(r)})
+
+    diagonal = tf.constant([1., 10.], dtype)
+    def objective(x):
+        return .5 * tf.reduce_sum(diagonal * x * x), diagonal * x
+    first = tfp.optimizer.lbfgs_minimize(objective, initial_position=tf.constant([1., 1.], dtype),
+        **dict(options, max_iterations=1))
+    resumed = tfp.optimizer.lbfgs_minimize(objective, initial_position=None, previous_optimizer_results=first,
+        **dict(options, max_iterations=2))
+    fresh = tfp.optimizer.lbfgs_minimize(objective, initial_position=tf.constant([1., 1.], dtype),
+        **dict(options, max_iterations=2))
+    records.append({'case': 'cumulative_resume', 'dtype': dtype.name,
+                    'first': result_record(first), 'resumed': result_record(resumed),
+                    'fresh_two': result_record(fresh)})
+
+    for name, offset in (('positive_relative_stop', 100.), ('negative_relative_continues', -100.)):
+        def shifted(x):
+            value, gradient = objective(x)
+            return tf.constant(offset, dtype) + value, gradient
+        r = tfp.optimizer.lbfgs_minimize(shifted, initial_position=tf.constant([1., 1.], dtype),
+            **dict(options, max_iterations=1, tolerance=0., x_tolerance=0., f_relative_tolerance=.1))
+        records.append({'case': name, 'dtype': dtype.name, 'result': result_record(r),
+                        'overrides': {'max_iterations': 1, 'tolerance': 0., 'x_tolerance': 0., 'f_relative_tolerance': .1}})
+
+    def unbounded(x):
+        return tf.reduce_sum(x), tf.ones_like(x)
+    failed = tfp.optimizer.lbfgs_minimize(unbounded, initial_position=tf.constant([0.], dtype), **options)
+    records.append({'case': 'unbounded_linear', 'dtype': dtype.name, 'result': result_record(failed)})
+
+    for name, value, gradient in (
+        ('positive_infinity', float('inf'), 1.),
+        ('negative_infinity', -float('inf'), 1.),
+        ('nan_gradient', 1., float('nan')),
+    ):
+        def invalid(x):
+            return tf.constant(value, dtype), tf.fill(tf.shape(x), tf.constant(gradient, dtype))
+        r = tfp.optimizer.lbfgs_minimize(invalid, initial_position=tf.constant([0.], dtype), **options)
+        records.append({'case': name, 'dtype': dtype.name, 'result': result_record(r)})
+
+# Isolate signed-old-f relative tolerance and all four independent boundaries.
+boundaries = []
+for name, old_f, new_f, dx, g, gt, rt, xt, at in (
+    ('relative_positive', 8., 9., 1., 1., 0., .125, 0., 0.),
+    ('relative_negative', -8., -7., 1., 1., 0., .125, 0., 0.),
+    ('absolute_equality', -8., -8., 1., 1., 0., 0., 0., 0.),
+    ('gradient_boundary', 8., 9., 1., .125, .125, 0., 0., 0.),
+    ('position_boundary', 8., 9., .125, 1., 0., 0., .125, 0.),
+    ('absolute_boundary', -8., -7., 1., 1., 0., 0., 0., 1.),
+):
+    cast = lambda v: tf.constant(v, tf.float64)
+    yes = bfgs_utils._check_convergence(cast([0.]), cast([dx]), cast(old_f), cast(new_f),
+        cast([g]), cast(gt), cast(rt), cast(xt), cast(at))
+    boundaries.append({'case': name, 'old_f': old_f, 'new_f': new_f, 'dx': dx, 'gradient': g,
+        'gradient_tolerance': gt, 'relative_tolerance': rt, 'x_tolerance': xt,
+        'absolute_tolerance': at, 'converged': bool(yes.numpy())})
+
+base = Path(tfp.__file__).parent / 'python/optimizer'
+sources = {}
+for relative in ('lbfgs.py', 'bfgs_utils.py', 'linesearch/hager_zhang.py',
+                 'linesearch/internal/hager_zhang_lib.py'):
+    data = (base / relative).read_bytes()
+    sources[relative] = {'path': str(base / relative), 'sha256': hashlib.sha256(data).hexdigest(), 'bytes': len(data)}
+output = {
+    'purpose': 'PUBLIC analytic CPU oracle, not a training or bitwise acceptance gate',
+    'python': platform.python_version(), 'tensorflow': tf.__version__, 'tensorflow_probability': tfp.__version__,
+    'cuda_visible_devices': os.environ['CUDA_VISIBLE_DEVICES'], 'physical_gpus': [], 'logical_gpus': [],
+    'threads_intra': 1, 'threads_inter': 1,
+    'reference_commit': REFERENCE, 'wrapper_sha256': hashlib.sha256(wrapper).hexdigest(),
+    'options_read_from_original_wrapper': options,
+    'configured_outer_rounds': settings['rounds'], 'calls_per_simple_case': 1,
+    'metadata_clarification': 'Old one_call_of_original_rounds=200 denotes configured original rounds; each original case executed only one fresh call. Old files are unchanged.',
+    'resume_limits': [1, 2], 'resume_note': 'Analytic finite-limit test only; production budgets remain 200 fresh calls of max_iterations=1000.',
+    'sources': sources, 'cases': records, 'convergence_boundaries': boundaries,
+}
+Path(sys.argv[1]).write_text(json.dumps(output, indent=2, allow_nan=False) + '\n', encoding='utf-8', newline='\n')
+for case in records:
+    states = [case['result']] if 'result' in case else [case['first'], case['resumed'], case['fresh_two']]
+    print(case['dtype'], case['case'], [(s['position']['values'], s['objective_value']['values'],
+          s['objective_gradient']['values'], s['converged'], s['failed'], s['num_iterations'],
+          s['num_objective_evaluations']) for s in states])
+print('boundaries', [(b['case'], b['converged']) for b in boundaries])

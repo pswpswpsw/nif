@@ -1,0 +1,67 @@
+"""Tiny independent CPU oracle using settings read from the public TF wrapper."""
+import os
+os.environ['CUDA_VISIBLE_DEVICES']='-1'
+os.environ['TF_USE_LEGACY_KERAS']='1'
+os.environ['OMP_NUM_THREADS']='1'
+os.environ['TF_NUM_INTRAOP_THREADS']='1'
+os.environ['TF_NUM_INTEROP_THREADS']='1'
+os.environ['PYTHONDONTWRITEBYTECODE']='1'
+import ast
+import hashlib
+import json
+from pathlib import Path
+import platform
+import subprocess
+import sys
+
+root=Path('D:/nif')
+notebook=json.loads((root/'tutorial/1_simple_1d_wave_pytorch.ipynb').read_bytes())
+code=[''.join(c['source']) for c in notebook['cells'] if c['cell_type']=='code']
+setup=next(s for s in code if 'rounds, max_iter =' in s)
+scope={'SMOKE':False}
+exec(setup,scope)
+reference='ad9113df14590189b12068b6b3fa7c8c8d9187d4'
+wrapper=subprocess.check_output(['git','show',reference+':nif/optimizers/lbfgs.py'],cwd=root)
+tree=ast.parse(wrapper.decode('utf-8'))
+cls=next(n for n in tree.body if isinstance(n,ast.ClassDef) and n.name=='TFPLBFGS')
+method=next(n for n in cls.body if isinstance(n,ast.FunctionDef) and n.name=='minimize')
+call=next(n for n in ast.walk(method) if isinstance(n,ast.Call)
+          and isinstance(n.func,ast.Name) and n.func.id=='lbfgs_minimize')
+kwargs={k.arg:eval(compile(ast.Expression(k.value),'<public wrapper option>','eval'),
+                  {'max_iter':scope['max_iter']})
+        for k in call.keywords if k.arg not in ['value_and_gradients_function','initial_position']}
+
+import tensorflow as tf
+import tensorflow_probability as tfp
+tf.config.threading.set_intra_op_parallelism_threads(1)
+tf.config.threading.set_inter_op_parallelism_threads(1)
+gpus=tf.config.list_physical_devices('GPU')
+logical=tf.config.list_logical_devices('GPU')
+assert not gpus and not logical
+results={'python':platform.python_version(),'tensorflow':tf.__version__,
+         'tensorflow_probability':tfp.__version__,
+         'cuda_visible_devices':os.environ['CUDA_VISIBLE_DEVICES'],
+         'physical_gpus':[str(v) for v in gpus],'logical_gpus':[str(v) for v in logical],
+         'threads_intra':1,'threads_inter':1,'dtype':'float64',
+         'public_reference':reference,'public_wrapper':'nif/optimizers/lbfgs.py',
+         'public_wrapper_sha256':hashlib.sha256(wrapper).hexdigest(),
+         'options_read_from_wrapper':kwargs,'one_call_of_original_rounds':scope['rounds'],
+         'objective':'f(x)=0.5*scale*x^2; x0=1; analytic gradient=scale*x',
+         'cases':[]}
+for scale in [1.,1e-8]:
+    with tf.device('/CPU:0'):
+        coefficient=tf.constant(scale,dtype=tf.float64)
+        def objective(x):
+            return .5*coefficient*tf.reduce_sum(tf.square(x)),coefficient*x
+        result=tfp.optimizer.lbfgs_minimize(objective,
+            initial_position=tf.constant([1.],dtype=tf.float64),**kwargs)
+    results['cases'].append({'scale':scale,'initial_x':1.,'initial_loss':.5*scale,
+        'initial_gradient':scale,'final_x':float(result.position.numpy()[0]),
+        'final_loss':float(result.objective_value.numpy()),
+        'final_gradient':float(result.objective_gradient.numpy()[0]),
+        'converged':bool(result.converged.numpy()),'failed':bool(result.failed.numpy()),
+        'iterations':int(result.num_iterations.numpy()),
+        'objective_evaluations':int(result.num_objective_evaluations.numpy()),
+        'device':result.position.device})
+Path(sys.argv[1]).write_text(json.dumps(results,indent=2)+'\n',encoding='utf-8',newline='\n')
+print(json.dumps(results,indent=2))

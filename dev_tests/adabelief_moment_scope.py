@@ -9,6 +9,7 @@ Publication Windows v2 additionally verifies exact nonnumerical test-reader
 and scope successors before applying the unchanged scientific scope checks.
 """
 import hashlib
+from dev_tests.lbfgs_reference_scope import assert_reference_lbfgs_scope, historical_bytes
 import json
 from pathlib import Path
 
@@ -76,6 +77,7 @@ def expected_source(name,source):
 
 
 def assert_adabelief_phase_scope_v4():
+    assert_reference_lbfgs_scope(ROOT)
     from dev_tests.publication_windows_scope import assert_teaching_helper_source
     assert_teaching_helper_source(ROOT)
     from dev_tests.tutorial1_gc_scope import assert_teaching_markdown_scope
@@ -93,7 +95,7 @@ def assert_adabelief_phase_scope_v4():
         if name in portable:
             continue  # Already checked against the exact archived successor.
         source=(ROOT/archive[name]['archive']).read_text(encoding='utf-8')
-        assert (ROOT/name).read_text(encoding='utf-8')==expected_source(name,source),name
+        assert historical_bytes(ROOT, name, (ROOT/name).read_text(encoding='utf-8').encode('utf-8')).decode('utf-8')==expected_source(name,source),name
     before=json.loads((ROOT/'dev_tests/adabelief_moment_pre_fix_fingerprints.json').read_text(encoding='utf-8'))
     for name,digest in before.items():
         # Publication v1: generated local outputs are not public prerequisites.
@@ -104,14 +106,14 @@ def assert_adabelief_phase_scope_v4():
                 from dev_tests.publication_windows_scope import assert_checkout_attributes
                 assert_checkout_attributes(ROOT,digest)
             else:
-                assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,name
+                assert hashlib.sha256(historical_bytes(ROOT, name, (ROOT/name).read_bytes())).hexdigest()==digest,name
     # Freeze the new oracle at its BEFORE-fix hash. The native source entry in
     # that RED manifest identifies the original snapshot, not the new candidate.
     red=json.loads((ROOT/'dev_tests/adabelief_moment_red_fingerprints.json').read_text(encoding='utf-8'))
     for name,digest in red.items():
         if name=='nif/optimizers/external_optimizers.py':
             assert archive[name]['sha256']==digest
-        else:assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,name
+        else:assert hashlib.sha256(historical_bytes(ROOT, name, (ROOT/name).read_bytes())).hexdigest()==digest,name
     # The earlier caller also checks older hashes; these exact successors and
     # its previously authorized v3 source transformations supersede those only.
     from dev_tests.adabelief_phase_scope import TRANSITIONS as phase_v3

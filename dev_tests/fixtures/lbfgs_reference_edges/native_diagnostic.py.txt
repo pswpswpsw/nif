@@ -1,0 +1,103 @@
+"""CPU scalar diagnostic against the public measured TFP oracles; no bit gate."""
+import os
+for key in ('OMP_NUM_THREADS', 'MKL_NUM_THREADS'):
+    os.environ[key] = '1'
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+import json
+import math
+from pathlib import Path
+import platform
+import sys
+import torch
+from nif.optimizers.lbfgs_V2 import lbfgs_minimize
+
+torch.set_num_threads(1)
+torch.set_num_interop_threads(1)
+assert not torch.cuda.is_available()
+root = Path('D:/nif')
+reference = json.loads((root / 'dev_tests/fixtures/lbfgs_reference_phase0/oracle.json').read_bytes())
+options = dict(reference['options_read_from_original_wrapper'])
+options['f_absolute_tolerance'] = 0.
+
+def number(value):
+    value = float(value)
+    return value if math.isfinite(value) else ('nan' if math.isnan(value) else ('+inf' if value > 0 else '-inf'))
+
+def summarize(result):
+    return {key: value for key, value in {
+        'position': [number(v) for v in result.position],
+        'objective_value': number(result.objective_value),
+        'objective_gradient': [number(v) for v in result.objective_gradient],
+        'converged': bool(result.converged), 'failed': bool(result.failed),
+        'num_iterations': result.num_iterations,
+        'num_objective_evaluations': result.num_objective_evaluations}.items()}
+
+records = []
+for dtype in (torch.float32, torch.float64):
+    def quadratic(scale, offset=0.):
+        coefficient = torch.tensor(scale, dtype=dtype)
+        def objective(x):
+            return x.new_tensor(offset) + .5*coefficient*x.square().sum(), coefficient*x
+        return objective
+    def quartic(x):
+        return x.new_tensor(2. ** 20) + .125*(x**4).sum(), .5*x**3
+    def diagonal(x):
+        coefficients = x.new_tensor([1., 10.])
+        return .5*(coefficients*x*x).sum(), coefficients*x
+    for name, objective in (
+        ('unit_quadratic', quadratic(1.)), ('small_quadratic', quadratic(1e-8)),
+        ('flat_offset_quadratic', quadratic(.125, 2. ** 20)), ('flat_offset_quartic', quartic),
+    ):
+        result = lbfgs_minimize(objective, initial_position=torch.ones(1, dtype=dtype), **options)
+        records.append({'case': name, 'dtype': str(dtype).split('.')[-1], 'result': summarize(result)})
+    first = lbfgs_minimize(diagonal, initial_position=torch.ones(2, dtype=dtype), **dict(options, max_iterations=1))
+    resumed = lbfgs_minimize(diagonal, previous_optimizer_results=first, **dict(options, max_iterations=2))
+    records.append({'case': 'cumulative_resume', 'dtype': str(dtype).split('.')[-1],
+                    'first': summarize(first), 'result': summarize(resumed)})
+    for name, offset in (('positive_relative_stop', 100.), ('negative_relative_continues', -100.)):
+        def shifted(x):
+            value, gradient = diagonal(x)
+            return x.new_tensor(offset)+value, gradient
+        result = lbfgs_minimize(shifted, initial_position=torch.ones(2, dtype=dtype),
+            **dict(options, max_iterations=1, tolerance=0., x_tolerance=0., f_relative_tolerance=.1))
+        records.append({'case': name, 'dtype': str(dtype).split('.')[-1], 'result': summarize(result)})
+    for name, value, gradient in (('unbounded_linear', None, 1.),
+        ('positive_infinity', float('inf'), 1.), ('negative_infinity', -float('inf'), 1.),
+        ('nan_gradient', 1., float('nan'))):
+        def objective(x):
+            return (x.sum() if value is None else x.new_tensor(value)), torch.full_like(x, gradient)
+        result = lbfgs_minimize(objective, initial_position=torch.zeros(1, dtype=dtype), **options)
+        records.append({'case': name, 'dtype': str(dtype).split('.')[-1], 'result': summarize(result)})
+    def rosenbrock(x):
+        a, b = x[0], x[1]
+        residual = b-a*a
+        return (1-a)**2+100*residual**2, torch.stack([-2*(1-a)-400*a*residual, 200*residual])
+    result = lbfgs_minimize(rosenbrock, initial_position=torch.tensor([-1.2, 1.], dtype=dtype), **options)
+    records.append({'case': 'rosenbrock', 'dtype': str(dtype).split('.')[-1], 'result': summarize(result)})
+
+edges = json.loads((root / 'dev_tests/fixtures/lbfgs_reference_edges/oracle.json').read_bytes())
+comparisons = []
+for item in records:
+    candidates = reference['cases'] if item['case'] != 'rosenbrock' else edges['cases']
+    expected = next(v for v in candidates if v['case'] == item['case'] and v['dtype'] == item['dtype'])
+    expected = expected.get('result', expected.get('resumed', expected))
+    actual = item['result']
+    position = expected['position']
+    if isinstance(position, dict):
+        position = position['values']
+    differences = [abs(a-b) for a, b in zip(actual['position'], position)
+                   if not isinstance(a, str) and not isinstance(b, str)]
+    comparisons.append({'case': item['case'], 'dtype': item['dtype'],
+        'flags_match': actual['converged'] == expected['converged'] and actual['failed'] == expected['failed'],
+        'native_iterations': actual['num_iterations'],
+        'tfp_iterations': expected['num_iterations'],
+        'native_evaluations': actual['num_objective_evaluations'],
+        'tfp_evaluations': expected['num_objective_evaluations'],
+        'max_finite_position_absdiff': max(differences) if differences else None})
+output = {'python': platform.python_version(), 'torch': torch.__version__,
+    'cuda_available': torch.cuda.is_available(), 'cuda_visible_devices': '-1', 'threads': [1, 1],
+    'cases': records, 'comparisons': comparisons,
+    'limits': 'Measured scalar CPU diagnostics only; flags/counts/trajectories are reported, not a cross-backend bitwise gate or scientific training parity.'}
+Path(sys.argv[1]).write_text(json.dumps(output, indent=2, allow_nan=False)+'\n', encoding='utf-8', newline='\n')
+for row in comparisons:
+    print(json.dumps(row))

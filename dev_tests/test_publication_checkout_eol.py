@@ -1,5 +1,6 @@
 """Real Git-for-Windows checkout regression; original scientific gates stay intact."""
 import hashlib
+import json
 import os
 from pathlib import Path
 import shutil
@@ -41,7 +42,8 @@ def test_real_git_checkout_with_autocrlf_true_preserves_integrity(tmp_path):
     git('read-tree', 'HEAD', cwd=checkout)
     # Stage just the explicit candidate without commits or source-repo writes.
     # checkout-index then performs Git's actual index-to-worktree conversion.
-    for name in CANDIDATE_FILES:
+    reference=json.loads((ROOT/'dev_tests/lbfgs_reference_v1.json').read_bytes())
+    for name in (*CANDIDATE_FILES, *reference['checkout_files']):
         oid = git('hash-object', '-w', '--no-filters', '--stdin', cwd=checkout,
                   data=(ROOT/name).read_bytes())
         git('update-index', '--add', '--cacheinfo', '100644', oid, name, cwd=checkout)

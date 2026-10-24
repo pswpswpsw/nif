@@ -3,3 +3,5 @@ include LICENSE
 include MANIFEST.in
 include requirements.txt
 include nif/demo/dataset/*.npz
+include nif/optimizers/TFP_LICENSE.txt
+include nif/optimizers/TFP_NOTICE.txt

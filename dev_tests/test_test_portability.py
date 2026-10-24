@@ -17,7 +17,7 @@ def test_generator_source_read_uses_utf8_under_gbk_default(monkeypatch):
     monkeypatch.setattr(Path, 'read_text', locale_read)
     setup, training = solver_cells('generator')
     assert 'rounds, max_iter =' in setup
-    assert 'fine_tuner = torch.optim.LBFGS(' in training
+    assert 'fine_tuner = ReferenceLBFGS(' in training
 
 
 def test_linux_fingerprints_skip_on_windows_with_same_torch_version(monkeypatch):

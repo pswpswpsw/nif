@@ -1,0 +1,55 @@
+{
+  "python": "3.13.11",
+  "tensorflow": "2.21.0",
+  "tensorflow_probability": "0.25.0",
+  "cuda_visible_devices": "-1",
+  "physical_gpus": [],
+  "logical_gpus": [],
+  "threads_intra": 1,
+  "threads_inter": 1,
+  "dtype": "float64",
+  "public_reference": "ad9113df14590189b12068b6b3fa7c8c8d9187d4",
+  "public_wrapper": "nif/optimizers/lbfgs.py",
+  "public_wrapper_sha256": "570d373d109bf1200fd34c73e82396c4ae9ecea6736447faa01eb31fdbefaa64",
+  "options_read_from_wrapper": {
+    "num_correction_pairs": 20,
+    "tolerance": 1e-15,
+    "x_tolerance": 1e-15,
+    "f_relative_tolerance": 1e-15,
+    "parallel_iterations": 1,
+    "max_iterations": 1000,
+    "max_line_search_iterations": 100
+  },
+  "one_call_of_original_rounds": 200,
+  "objective": "f(x)=0.5*scale*x^2; x0=1; analytic gradient=scale*x",
+  "cases": [
+    {
+      "scale": 1.0,
+      "initial_x": 1.0,
+      "initial_loss": 0.5,
+      "initial_gradient": 1.0,
+      "final_x": 0.0,
+      "final_loss": 0.0,
+      "final_gradient": 0.0,
+      "converged": true,
+      "failed": false,
+      "iterations": 1,
+      "objective_evaluations": 3,
+      "device": "/job:localhost/replica:0/task:0/device:CPU:0"
+    },
+    {
+      "scale": 1e-08,
+      "initial_x": 1.0,
+      "initial_loss": 5e-09,
+      "initial_gradient": 1e-08,
+      "final_x": 1.1102230246251565e-16,
+      "final_loss": 6.162975822039155e-41,
+      "final_gradient": 1.1102230246251566e-24,
+      "converged": true,
+      "failed": false,
+      "iterations": 1,
+      "objective_evaluations": 15,
+      "device": "/job:localhost/replica:0/task:0/device:CPU:0"
+    }
+  ]
+}

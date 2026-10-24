@@ -5,6 +5,7 @@ This guard permits exactly the GC selector/call and corresponding teaching note;
 all notebook metadata, other cell sources, and generator source remain fixed.
 """
 import copy
+from dev_tests.lbfgs_reference_scope import historical_bytes
 import hashlib
 import json
 from pathlib import Path
@@ -55,14 +56,14 @@ def assert_tutorial1_gc_scope_v2():
         cell=expected['cells'][patch['cell']]
         assert cell['cell_type']=='markdown' and cell['source']==patch['before']
         cell['source']=patch['after']
-    current=json.loads((ROOT/'tutorial/1_simple_1d_wave_pytorch.ipynb').read_text(encoding='utf-8'))
+    current=json.loads(historical_bytes(ROOT, 'tutorial/1_simple_1d_wave_pytorch.ipynb', (ROOT/'tutorial/1_simple_1d_wave_pytorch.ipynb').read_bytes()))
     assert current==expected, 'Only tutorial1 GC selector/call and teaching note are authorized'
 
     generator=(ARCHIVE/'generator_before.py.txt').read_text(encoding='utf-8')
     assert generator.count(OPTIMIZER)==1 and generator.count(OLD_INTRO)==1
     expected_generator=(generator.replace(OPTIMIZER,NOTE+OPTIMIZER)
                         .replace(OLD_CALL,NEW_CALL,1).replace(OLD_INTRO,NEW_INTRO))
-    assert (ROOT/'dev_tests/generate_native_notebooks.py').read_text(encoding='utf-8')==expected_generator
+    assert historical_bytes(ROOT, 'dev_tests/generate_native_notebooks.py', (ROOT/'dev_tests/generate_native_notebooks.py').read_bytes()).decode('utf-8')==expected_generator
 
 
 def assert_teaching_markdown_scope(root=ROOT):
@@ -85,7 +86,7 @@ def assert_teaching_markdown_scope(root=ROOT):
             assert cell['cell_type']=='markdown',name
             assert cell['source']==patch['before'],name
             cell['source']=patch['after']
-        current=(root/name).read_bytes()
+        current=historical_bytes(root, name, (root/name).read_bytes())
         assert json.loads(current)==expected,name
         assert hashlib.sha256(current).hexdigest()==entry['after_sha256'],name
     return set(teaching['notebooks'])

@@ -191,7 +191,7 @@ def markdown(source):
        '2. output the real NIF model that needs to be trained, and compile this model\n  - note that here we take Adam optimizer, but it won\'t be used, it is just for compilation purpose.':'2. Reconstruct the native module from its saved configuration and load its state dictionary. Verify predictions after restoration; no compilation is needed.',
        'we first prune 10% then, train for 1000 epochs. We repeat 50 times of this process, each time we prune a bit more, until we hit the limit of 90% of included weights pruned.':'the cubic schedule starts at 10%, but its first mask refresh is before training step 4,000 (epoch 1,000), after 3,999 dense steps. It refreshes every 4,000 steps, for 50 refreshes, reaching 90% before step 200,000. We remask at every epoch end without an extra final refresh.',
        '`tfmot.sparsity.keras.PolynomialDecay`':'the native cubic magnitude-pruning schedule',
-       '`TFPLBFGS`':'native `torch.optim.LBFGS`',
+       '`TFPLBFGS`':'native `ReferenceLBFGS`',
        'given the `n_features = 3` and `n_target = 3`':'given the `n_feature = 4` and `n_target = 3`',
        'So we have 7 `Example` in this demo.':'Each shard has one `Example` containing seven column-vector features.',
        'keras.Model':'torch.nn.Module', 'Keras Model':'PyTorch module',
@@ -293,29 +293,24 @@ print(model_x_to_u_given_w)
 44:'''data_feature = tensor(train_data[:, :2])
 data_label = tensor(train_data[:, -1:])
 ''',
-46:'''# Native torch.optim.LBFGS uses a closure: recompute loss and gradients at every line search.
+46:'''# Reference L-BFGS uses a closure: recompute loss and gradients at every line search.
+from nif.optimizers import ReferenceLBFGS
 lbfgs_history = []
 rounds, max_iter = (1, 2) if SMOKE else (200, 1000)
-# Public TFPLBFGS scientific controls, retained in full AND smoke modes.
+# Original TFPLBFGS controls, retained independently in full and smoke modes.
 tolerance = x_tolerance = f_relative_tolerance = 1e-15
 num_correction_pairs = 20
 max_line_search_iterations = 100
-# Native convention (the same mapping as nif.optimizers.TFPLBFGS):
-# PyTorch uses strong-Wolfe line search and a per-round max_eval budget of
-# max_iter * max_line_search_iterations. Its internal trial accounting is not
-# TFP's separate limit of 100 iterations per individual line search.
-# tolerance_change applies to absolute step/objective changes (and the descent
-# directional derivative); it cannot express TFP's independent relative-objective
-# tolerance. Both original change thresholds are 1e-15 and map to that value.
-# Thus the controls are retained, but solver trajectories/stopping can differ.
+# Each round creates a fresh optimizer with up to max_iter additional iterations.
+# Hager-Zhang line search has its own per-search iteration limit.
 ''',
 48:'''for round_index in range(rounds):
-    fine_tuner = torch.optim.LBFGS(new_model.parameters(), max_iter=max_iter,
-                                 max_eval=max_iter * max_line_search_iterations,
-                                 history_size=num_correction_pairs,
-                                 tolerance_grad=tolerance,
-                                 tolerance_change=max(x_tolerance, f_relative_tolerance),
-                                 line_search_fn="strong_wolfe")
+    fine_tuner = ReferenceLBFGS(new_model.parameters(), max_iter=max_iter,
+                                num_correction_pairs=num_correction_pairs,
+                                tolerance=tolerance, x_tolerance=x_tolerance,
+                                f_relative_tolerance=f_relative_tolerance,
+                                f_absolute_tolerance=0.,
+                                max_line_search_iterations=max_line_search_iterations)
     def closure():
         fine_tuner.zero_grad(set_to_none=True)
         loss = (new_model(data_feature)-data_label).square().mean() + new_model.regularization_loss(data_feature)

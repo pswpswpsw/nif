@@ -1,5 +1,6 @@
 """Exact public final-update succession; historical numerical checks stay fixed."""
 import hashlib
+from dev_tests.lbfgs_reference_scope import historical_bytes
 import json
 from pathlib import Path
 
@@ -22,7 +23,7 @@ def record():
 @pytest.mark.parametrize('name', ['dev_tests/adabelief_moment_scope.py', 'dev_tests/publication_windows_scope.py', 'dev_tests/test_publication_checkout_successor.py'])
 def test_exact_final_update_source_successors_and_historical_test_bytes(name):
     frozen=record()
-    current=(ROOT/name).read_bytes()
+    current=historical_bytes(ROOT, name, (ROOT/name).read_bytes())
     teaching=json.loads((ROOT/'dev_tests/teaching_markdown_v1_sources.json').read_text(encoding='utf-8'))
     entries={key:teaching['ada_compatibility'][key] for key in ['dev_tests/adabelief_moment_scope.py', 'dev_tests/publication_windows_scope.py', 'dev_tests/test_publication_checkout_successor.py']}
     assert hashlib.sha256(json.dumps(entries,sort_keys=True).encode()).hexdigest()=='69a0b3c1bc6394c36b1f7d4be69fd789fdb931cc7c0e91d635fd74ac950135b9'

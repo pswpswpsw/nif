@@ -1,5 +1,6 @@
 """Authorized scope transition; no numerical expectations are changed."""
 import hashlib
+from dev_tests.lbfgs_reference_scope import historical_bytes
 import json
 from pathlib import Path
 from dev_tests.tutorial1_gc_scope import assert_tutorial1_gc_scope_v2
@@ -26,7 +27,7 @@ def test_other_notebooks_package_sources_and_frozen_expectations_phase_v4():
         if name in superseded:
             continue  # Already checked against the exact approved transformation.
         if name not in authorized and name.startswith(('tutorial/','nif/','dev_tests/','tests/')):
-            assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,name
+            assert hashlib.sha256(historical_bytes(ROOT, name, (ROOT/name).read_bytes())).hexdigest()==digest,name
 
 
 def test_phase_guard_v2_changes_only_authorized_historical_scope_assertion():

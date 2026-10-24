@@ -48,7 +48,7 @@ def function_factory(model, loss, train_x, train_y, display_epoch=1):
 
 
 class TFPLBFGS:
-    """Historical name; all optimization now executes through torch.optim.LBFGS."""
+    """Historical name; optimization uses the shared native ReferenceLBFGS core."""
     def __init__(self, model, loss_fun, inps, outs, display_epoch=1):
         self.func = function_factory(model, loss_fun, inps, outs, display_epoch)
         self.model = model

@@ -1,0 +1,36 @@
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1792808165.693532   49984 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1792808168.141175   49984 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING:tensorflow:From C:\Users\pswpe\.cache\nif-colab-qa\colab-matched\Lib\site-packages\tf_keras\src\losses.py:2976: The name tf.losses.sparse_softmax_cross_entropy is deprecated. Please use tf.compat.v1.losses.sparse_softmax_cross_entropy instead.
+
+WARNING:tensorflow:From C:\Users\pswpe\.cache\nif-colab-qa\colab-matched\Lib\site-packages\tensorflow_probability\python\internal\backend\numpy\_utils.py:48: The name tf.logging.TaskLevelStatusMessage is deprecated. Please use tf.compat.v1.logging.TaskLevelStatusMessage instead.
+
+WARNING:tensorflow:From C:\Users\pswpe\.cache\nif-colab-qa\colab-matched\Lib\site-packages\tensorflow_probability\python\internal\backend\numpy\_utils.py:48: The name tf.control_flow_v2_enabled is deprecated. Please use tf.compat.v1.control_flow_v2_enabled instead.
+
+WARNING:tensorflow:TensorFlow GPU support is not available on native Windows for TensorFlow >= 2.11. Even if CUDA/cuDNN are installed, GPU will not be used. Please use WSL2 or the TensorFlow-DirectML plugin.
+I0000 00:00:1792808173.929200   49984 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+float32 unit_quadratic [([0.0], [0.0], [0.0], True, False, 1, 3)]
+float32 small_quadratic [([5.960464477539063e-08], [1.7763568286044933e-23], [5.960464441314513e-16], True, False, 1, 15)]
+float32 flat_offset_quadratic [([0.0], [1048576.0], [0.0], True, False, 1, 5)]
+float32 flat_offset_quartic [([0.17226991057395935], [1048576.0], [0.002556220395490527], True, False, 2, 8)]
+float32 cumulative_resume [([0.8991008996963501, -0.008991003036499023], [0.40459540486335754], [0.8991008996963501, -0.08991003036499023], False, False, 1, 3), ([0.0, -6.51925802230835e-08], [2.1250362580715887e-14], [0.0, -6.51925802230835e-07], False, False, 2, 7), ([0.0, -6.51925802230835e-08], [2.1250362580715887e-14], [0.0, -6.51925802230835e-07], False, False, 2, 7)]
+float32 positive_relative_stop [([0.8991008996963501, -0.008991003036499023], [100.40459442138672], [0.8991008996963501, -0.08991003036499023], True, False, 1, 3)]
+float32 negative_relative_continues [([0.8991008996963501, -0.008991003036499023], [-99.59540557861328], [0.8991008996963501, -0.08991003036499023], False, False, 1, 3)]
+float32 unbounded_linear [(['-inf'], ['-inf'], [1.0], True, False, 1, 58)]
+float32 positive_infinity [([0.0], ['+inf'], [1.0], False, True, 1, 2)]
+float32 negative_infinity [([0.0], ['-inf'], [1.0], True, False, 1, 2)]
+float32 nan_gradient [([0.0], [1.0], ['nan'], False, True, 1, 2)]
+float64 unit_quadratic [([0.0], [0.0], [0.0], True, False, 1, 3)]
+float64 small_quadratic [([1.1102230246251565e-16], [6.162975822039155e-41], [1.1102230246251566e-24], True, False, 1, 15)]
+float64 flat_offset_quadratic [([0.0], [1048576.0], [0.0], True, False, 1, 5)]
+float64 flat_offset_quartic [([0.0021740687509912834], [1048576.0], [5.1379494316540454e-09], True, False, 7, 28)]
+float64 cumulative_resume [([0.8991008991008991, -0.00899100899100902], [0.4045954045954046], [0.8991008991008991, -0.0899100899100902], False, False, 1, 3), ([-2.220446049250313e-16, 2.5153490401663703e-16], [3.4100094298145063e-31], [-2.220446049250313e-16, 2.5153490401663703e-15], False, False, 2, 7), ([-2.220446049250313e-16, 2.5153490401663703e-16], [3.4100094298145063e-31], [-2.220446049250313e-16, 2.5153490401663703e-15], False, False, 2, 7)]
+float64 positive_relative_stop [([0.8991008991008991, -0.00899100899100902], [100.4045954045954], [0.8991008991008991, -0.0899100899100902], True, False, 1, 3)]
+float64 negative_relative_continues [([0.8991008991008991, -0.00899100899100902], [-99.5954045954046], [0.8991008991008991, -0.0899100899100902], False, False, 1, 3)]
+float64 unbounded_linear [(['nan'], [-7.888609052210121e+69], [1.0], False, True, 2, 156)]
+float64 positive_infinity [([0.0], ['+inf'], [1.0], False, True, 1, 2)]
+float64 negative_infinity [([0.0], ['-inf'], [1.0], True, False, 1, 2)]
+float64 nan_gradient [([0.0], [1.0], ['nan'], False, True, 1, 2)]
+boundaries [('relative_positive', True), ('relative_negative', False), ('absolute_equality', True), ('gradient_boundary', True), ('position_boundary', True), ('absolute_boundary', True)]

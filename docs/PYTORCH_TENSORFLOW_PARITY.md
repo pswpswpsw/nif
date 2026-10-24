@@ -6,13 +6,13 @@ but is not evidence of matched cross-framework training.
 
 | Tutorial | Current local controlled-comparison result |
 |---|---|
-| 1 | Three original own-stage pairs pass 19/27 quality checks after AdaBelief and 19/27 after L-BFGS. All paired-field checks pass, but eight MSE checks fail at each stage. All six supplemental crossed runs are complete and retain failures. Endpoint quality does not prove optimizer convergence; repair is in progress. |
+| 1 | Original candidate 016 passes 19/27 quality checks after each optimizer; all paired-field checks pass and eight MSE checks fail at each stage. All six crossed runs retain their recorded results. The reference L-BFGS repair passes public and independent CPU tests; complete training revalidation is pending. |
 | 2 | Three complete pairs pass for Swish and fail all six SIREN paired-field gates. Eight remaining disk-continuation cases are pending. |
 | 3 | Three corrected complete pairs pass all nine MSE gates and fail all twelve paired-field/Jacobian gates. |
 | 4 | Original derivative deliverables pass; the reference has no training workload. |
 | 5 | Three complete pairs, exact declared-state reference repeat and original end-cell checks pass the local protocol. |
 | 6 | Short controls remain incomplete; the full nine-fit matrix is pending. |
-| 7 | Finite pruning/restore controls pass; full pruning and export acceptance are pending. |
+| 7 | Three complete baseline pairs fail the original combined quality criteria. Baseline-dependent primary pruning/export acceptance is blocked; separately labeled diagnostic continuations are pending. |
 | 8 | Short CPU controls pass; mandatory GPU controls and full training remain pending. |
 
 These results use preprovisioned environments. They do not establish a fresh
@@ -32,11 +32,12 @@ requirements and sanitized failures reach A. The coordinator reviews evaluator
 changes and retains their provenance. The original TensorFlow notebooks, data
 and reference implementation remain preserved.
 
-Eight Markdown cells in native tutorials 1, 5 and 8 now correct inherited
-API, epoch-counting, TFRecord and coordinate explanations. All 44 code cells,
-their outputs, notebook metadata and cell order are unchanged. These are
-documentation changes to the public copies; the frozen scientific snapshots
-retain their original whole-file hashes.
+The earlier documentation phase corrected eight Markdown cells in native
+tutorials 1, 5 and 8. At that phase, all 44 code cells, outputs, notebook
+metadata and cell order stayed unchanged. The later tutorial-1 optimizer
+repair below changes only its two L-BFGS code cells and the necessary optimizer
+name in one teaching note. Original archives remain preserved; scientific
+snapshots retain their own whole-file hashes and identify their source phase.
 
 The TensorFlow reference is main at
 `f8f9d31f4aa331b6e7dbc48758302c801441bcce`, with its documented compatibility
@@ -509,6 +510,41 @@ recorded, and figure inspection does not convert failed numerical checks
 into passes. The original comparison matrix is complete; tutorial 1 has
 not passed its full quality criteria.
 
+### Tutorial 1: reference L-BFGS contract repair, CPU acceptance
+
+A public analytic regression demonstrates an optimizer-contract difference.
+On a small-scale quadratic with gradient above the original threshold,
+`torch.optim.LBFGS` stops before moving, while the original TFP solver makes
+progress. The same frozen actual-notebook-constructor test changes from one
+failure and one pass to two passes after the repair.
+
+The native notebook and generic `lbfgs_minimize` now share a pure-PyTorch
+`ReferenceLBFGS` core. It uses Hager-Zhang line search, independent gradient,
+actual-displacement, signed relative-objective and absolute-objective stopping
+conditions, and the reference history-update rules. The original 200 fresh
+calls, 1,000-iteration limit, twenty correction pairs and stated tolerances
+remain. Class `max_iter` is an additional per-call budget; the generic helper
+retains cumulative `max_iterations`. Stored state supports the notebook's
+`weights_only=True` loader and rejects incompatible legacy optimizer state.
+The two adapted modules retain their third-party attribution and license in
+both source and built distributions.
+
+Agent B's twelve valid, previously frozen CPU cases pass through both the
+class and generic APIs: each passes twelve numerical and twelve API-contract
+checks. The six old stopping failures close under both entry points, with
+actual flags/counters, disk state restoration and cumulative resume checked.
+The fixtures, tolerances and comparison predicates remain unchanged. This
+numeric-only acceptance does not include NIF model training or establish
+general finite-left-endpoint failure coverage. Invalid oracle-isolation
+attempts remain recorded separately and are not counted as valid cases.
+
+The complete public CPU suite passes 530 tests with four original skips,
+including the real Git/autocrlf checkout test. A read-only source review finds
+no material issue in the accepted numeric core. These checks establish the
+repair's tested CPU behavior. Complete tutorial-1 GPU revalidation still uses
+the original quality gates; the candidate-016 failures above remain part of
+the record. No hosted-Colab completion follows from these CPU results.
+
 ### Tutorial 4 derivative deliverables
 
 The archived tutorial 4 has no optimizer training workload. Its actual
@@ -699,6 +735,35 @@ the eight remaining fresh-disk continuation cases are still pending. The
 earlier six seed-42 disk cases and nine SIREN final-weight pointwise failures
 remain recorded separately.
 
+### Tutorial 7: complete baselines fail before primary pruning
+
+Three paired initializations and an independent TensorFlow seed-42 repeat
+complete all seven original baseline jobs: 5,000 epochs and 20,000 updates
+per job, totaling 140,000 updates and seventy million row visits. Actual
+initial tensors and consumed order match. All 5,091 paired prefix checks
+pass, but all three complete pairs fail the original combined criteria.
+
+| Seed | TensorFlow original-row MSE | PyTorch original-row MSE | Dense paired field RMS / target RMS |
+|---|---:|---:|---:|
+| 42 | 1.18771606e-6 | 1.34051812e-6 | 0.23943055 |
+| 142 | 9.68691838e-7 | 1.05610853e-6 | 0.44951899 |
+| 242 | 1.92301012e-5 | 3.07866421e-5 | 0.87533184 |
+
+The independent TensorFlow repeat passes its original numerical comparison:
+all 1,697 prefix comparisons have zero maximum absolute difference, the
+recorded MSE values agree, and paired field/Jacobian distances are zero.
+These are the original numerical comparisons, not a new dtype/storage-byte
+identity claim. Figure inspection covers seven actual loss-plot paths and
+six distinct images, with exact-file reuse for the unchanged repeat plot.
+The baseline outputs do not supply field, residual, Jacobian or pruning PNGs.
+
+No primary baseline-dependent 50,000-epoch pruning or export is released by
+these failed pairs. A separate diagnostic continuation from the original own
+baselines is authorized and pending; it retains the original workloads and
+checks while explicitly recording the failed baseline dependency. It cannot
+produce primary pruning acceptance or whole-tutorial parity. The original
+baseline gates and blocked records remain unchanged.
+
 ### Remaining learning tutorials: readiness, not full acceptance
 
 The following distinguishes completed comparisons from remaining controls
@@ -706,10 +771,10 @@ and workloads. A completed comparison can retain failed acceptance criteria.
 
 | Tutorial | Current finite evidence | Still required |
 |---|---|---|
-| 1 | Three original candidate-016 own-stage pairs and all six crossed diagnostics complete, with actual saved-figure checks; 2,976 AdaBelief prefix checks pass; each primary optimizer stage passes 19/27 quality checks, retaining eight MSE failures; the combined seed-42 TensorFlow repeat matches 5,085 exported arrays across four roles | Repair and independent revalidation of the demonstrated optimizer-contract difference; original quality failures and convergence limitations remain recorded |
+| 1 | Original candidate-016 matrix complete with quality failures retained; reference L-BFGS repair passes the public suite and independent frozen CPU cases | Complete original-budget GPU revalidation of the repaired stage; original AdaBelief failures and convergence limitations remain recorded |
 | 2 | All three full pairs completed: Swish passes in each, SIREN fails all six paired-field criteria; complete TF repeat agrees at its recorded observations; six seed-42 disk cases pass; nine SIREN final-weight pointwise failures remain | Eight remaining fresh-disk continuation cases and final acceptance |
 | 6 | All nine regularization cases' actual raw/used gradients pass; fresh disk restoration and two updates pass 1,782 strict storage-byte checks | Four small post-momentum discrepancies remain recorded, plus three inherited pre-momentum differences; full nine-case fits and final aggregate/gallery cells remain pending |
-| 7 | Actual TF/native baseline short comparisons and native OFF/ON 8,004-step boundary controls pass, including four actual two-update fresh-disk routes; prior TF-only 8,000-step controls also pass | Own-baseline/full-pruning fits, remaining initializations and real export/quantization quality remain pending |
+| 7 | Seven complete baseline jobs and three failed paired comparisons; TensorFlow repeat passes its declared numerical checks; earlier finite pruning/restore controls remain recorded | Original primary pruning/export is blocked by baseline quality; explicit diagnostic continuations and real export/quantization results remain pending |
 | 8 | Both 32-update fits pass 3,584 numerical checks; disk continuation and observer controls pass; actual Colab postprocessing order reproduces all six prior common-metric arrays byte-for-byte | Same-GPU checks, both full fits, remaining initializations and final figures |
 
 The earlier tutorial 7 CPU observer failure remains recorded and is not an

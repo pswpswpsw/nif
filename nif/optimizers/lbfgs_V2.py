@@ -7,6 +7,8 @@ from types import SimpleNamespace
 
 import torch
 
+from nif.optimizers.reference_lbfgs import ReferenceLBFGS
+
 
 def pack_tensors(tensors):
     tensors = list(tensors)
@@ -60,60 +62,56 @@ def create_value_and_gradient_function(loss_closure, trainable_variables, verbos
 
 def lbfgs_minimize(value_and_gradients_function, initial_position=None,
                    previous_optimizer_results=None, max_iterations=50,
-                   num_correction_pairs=10, tolerance=1e-8, x_tolerance=1e-12,
+                   num_correction_pairs=10, tolerance=1e-8, x_tolerance=0.,
                    f_relative_tolerance=0., max_line_search_iterations=50,
-                   parallel_iterations=1, **kwargs):
-    """Run native torch.optim.LBFGS with a packed value-and-gradient callable.
+                   parallel_iterations=1, f_absolute_tolerance=0., **kwargs):
+    """Run shared ReferenceLBFGS with a packed value-and-gradient callable.
 
     ``max_iterations`` is cumulative when resuming previous results, matching
-    the original wrapper. PyTorch's strong-Wolfe line search uses its own
-    internal trial limit; ``max_line_search_iterations`` bounds the total
-    objective-evaluation budget per iteration. ``parallel_iterations`` is
+    the original wrapper. Independent stopping tests and Hager--Zhang line
+    search follow the original unbatched reference contract. The search limit
+    counts bracket/secant iterations, not objective evaluations. ``parallel_iterations`` is
     retained as an inert compatibility option (the solver is sequential).
     """
     if kwargs:
         raise TypeError('Unknown L-BFGS options: ' + ', '.join(kwargs))
+    if isinstance(max_iterations, bool) or not isinstance(max_iterations, int) or max_iterations < 0:
+        raise ValueError('max_iterations must be a nonnegative integer')
+    if isinstance(parallel_iterations, bool) or not isinstance(parallel_iterations, int) or parallel_iterations < 1:
+        raise ValueError('parallel_iterations must be a positive integer')
     previous = previous_optimizer_results
     if initial_position is None:
         if previous is None:
             raise ValueError('Provide initial_position or previous_optimizer_results')
         initial_position = previous.position
+    if not isinstance(initial_position, torch.Tensor) or initial_position.ndim != 1:
+        raise ValueError('Unbatched initial_position must be a flat tensor')
     position = torch.nn.Parameter(initial_position.detach().clone())
     prior_iterations = 0 if previous is None else int(previous.num_iterations)
     iterations = max(0, int(max_iterations)-prior_iterations)
-    optimizer = torch.optim.LBFGS([position], max_iter=max(iterations, 1),
-                                  max_eval=max(iterations, 1)*int(max_line_search_iterations),
-                                  history_size=int(num_correction_pairs),
-                                  tolerance_grad=float(tolerance),
-                                  tolerance_change=max(float(x_tolerance), float(f_relative_tolerance)),
-                                  line_search_fn='strong_wolfe')
-    if previous is not None and hasattr(previous, '_native_state'):
+    options = dict(max_iter=iterations, num_correction_pairs=num_correction_pairs,
+                   tolerance=tolerance, x_tolerance=x_tolerance,
+                   f_relative_tolerance=f_relative_tolerance,
+                   f_absolute_tolerance=f_absolute_tolerance,
+                   max_line_search_iterations=max_line_search_iterations)
+    optimizer = ReferenceLBFGS([position], **options)
+    if previous is not None:
+        if not hasattr(previous, '_native_state'):
+            raise ValueError('Resume requires ReferenceLBFGS results; Torch LBFGS state is not migrated')
         optimizer.load_state_dict(previous._native_state)
-        optimizer.param_groups[0].update(max_iter=max(iterations, 1), max_eval=max(iterations, 1)*int(max_line_search_iterations))
-    evaluations = 0
+        optimizer.param_groups[0].update(options)
     def closure():
-        nonlocal evaluations
         optimizer.zero_grad()
         with torch.enable_grad():
             value, grad = value_and_gradients_function(position.detach())
         if grad.shape != position.shape:
             raise ValueError('Gradient shape does not match the packed parameters')
-        position.grad = grad.detach().to(position).clone()
-        evaluations += 1
+        if grad.dtype != position.dtype or grad.device != position.device or grad.layout != torch.strided:
+            raise ValueError('Gradient must be dense and match the packed dtype/device')
+        position.grad = grad.detach().clone()
         return value.detach()
-    if iterations:
-        optimizer.step(closure)
-    value = closure()
-    state = optimizer.state[position]
-    actual_iterations = int(state.get('n_iter', prior_iterations))
-    finite = bool(torch.isfinite(value) and torch.isfinite(position).all() and torch.isfinite(position.grad).all())
-    return SimpleNamespace(
-        position=position.detach().clone(), objective_value=value.detach().clone(),
-        objective_gradient=position.grad.detach().clone(),
-        num_iterations=actual_iterations,
-        num_objective_evaluations=evaluations + (0 if previous is None else previous.num_objective_evaluations),
-        converged=finite and bool(position.grad.abs().max() <= tolerance),
-        failed=not finite, _native_state=optimizer.state_dict())
+    optimizer.step(closure)
+    return SimpleNamespace(**vars(optimizer.result), _native_state=optimizer.state_dict())
 
 
 class LBFGSOptimizer:

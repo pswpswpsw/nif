@@ -5,6 +5,7 @@ POSIX fingerprint lookup, UTF-8 reading, structured missing-file identity and
 the necessary scope/projection wiring. No math assertion is changed.
 """
 import hashlib
+from dev_tests.lbfgs_reference_scope import historical_bytes
 import json
 from pathlib import Path
 
@@ -98,7 +99,7 @@ def assert_publication_windows_scope_v2(root=ROOT):
         # Tie each prior source to unchanged v1 provenance, not refreshed hashes.
         original_hash=phase1['public_file_sha256'][name] if name in phase1['public_file_sha256'] else before1[name]
         assert entry['sha256']==original_hash,name
-        assert (root/name).read_text(encoding='utf-8')==expected_source(name,original.decode('utf-8')),name
+        assert historical_bytes(root, name, (root/name).read_text(encoding='utf-8').encode('utf-8')).decode('utf-8')==expected_source(name,original.decode('utf-8')),name
     red=json.loads((root/'dev_tests/publication_windows_v2_red_fingerprints.json').read_text(encoding='utf-8'))
     for name,digest in red.items():
         if name in TRANSITIONS:
@@ -125,7 +126,7 @@ def assert_checkout_attributes(root,digest):
             b'/dev_tests/adabelief_moment_scope.diff -text -whitespace\n'
             b'/dev_tests/publication_v1_scope.diff -text -whitespace\n'
             b'/dev_tests/publication_windows_v2_scope.diff -text -whitespace\n')
-    current=(Path(root)/'.gitattributes').read_bytes()
+    current=historical_bytes(root, '.gitattributes', (Path(root)/'.gitattributes').read_bytes())
     assert current.endswith(suffix),'.gitattributes'
     assert hashlib.sha256(current[:-len(suffix)]).hexdigest()==digest,'.gitattributes'
 
@@ -137,7 +138,7 @@ def assert_teaching_helper_source(root=ROOT):
     """Freeze the exact JSON validator and require its public provenance."""
     root=Path(root)
     name='dev_tests/tutorial1_gc_scope.py'
-    assert hashlib.sha256((root/name).read_bytes()).hexdigest()=='97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32',name
+    assert hashlib.sha256(historical_bytes(root, name, (root/name).read_bytes())).hexdigest()=='97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32',name
     archive='dev_tests/fixtures/teaching_markdown_v1/tutorial1_gc_scope.py.before.txt'
     assert hashlib.sha256((root/archive).read_bytes()).hexdigest()=='29fa494900a56d2a4875d3970fa262f2acddfccae0f0ebdc538a6fd869c585bb',archive
     successors=json.loads((root/'dev_tests/teaching_markdown_v1_sources.json').read_text(encoding='utf-8'))

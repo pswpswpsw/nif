@@ -1,0 +1,39 @@
+Third-party attribution for reference_lbfgs.py and _hager_zhang.py only
+===================================================================
+
+These two files contain a compact scalar PyTorch adaptation of the public
+TensorFlow Probability 0.25.0 L-BFGS / Hager-Zhang control flow and predicates.
+They are not a clean-room implementation. Their upstream-derived portions
+retain the Apache License, Version 2.0; see TFP_LICENSE.txt. This notice does
+not change the repository's root LICENSE or relicense other NIF files.
+
+Copyright 2018 The TensorFlow Probability Authors.
+
+Upstream public project: https://github.com/tensorflow/probability/tree/v0.25.0
+Source paths below are relative to tensorflow_probability/python/optimizer/.
+Exact locally installed public source raw SHA256 values used for this adaptation:
+lbfgs.py
+  f4beaee9cf30f9928de16550734462196145c4f35816a1c5da22dffcc6aecaa5
+bfgs_utils.py
+  134f6b35ec243ad120016d35e050baa3013b9c62bc64289a2e586620d0f40d88
+linesearch/hager_zhang.py
+  76996a5773e4ce3e9857a4dfb9a3697d3a58650377f2aa4de8557fd11aaa5047
+linesearch/internal/hager_zhang_lib.py
+  b06f3b1bc2ff73b9a01b18454f3009874c6e84d5ba6716073c22dec5cb7d0881
+
+Modifications (2026): restricted to unbatched eager real f32/f64 scalar control
+flow; Torch tensor arithmetic and optimizer interface; explicit validation,
+safe checkpoint schema, per-step additional budget and cumulative counters;
+closure-exception parameter cleanup; no TensorFlow dependency, graph tracing,
+batching, meta-differentiation, or claim of backend bitwise equivalence.
+The upstream copyright/license headers are retained. This local attribution
+notice was added for these adaptations; it is not represented as an upstream
+NOTICE file. Preserve it and the full accompanying license in distributions.
+
+Mathematical references:
+W. W. Hager and H. Zhang, A new conjugate gradient method with guaranteed
+descent and an efficient line search, SIAM J. Optimization 16(1), 170-192
+(2005), DOI 10.1137/030601880.
+W. W. Hager and H. Zhang, Algorithm 851: CG_DESCENT, a conjugate gradient
+method with guaranteed descent, ACM TOMS 32(1), 113-137 (2006).
+These papers do not establish termination or bitwise identity with TFP.

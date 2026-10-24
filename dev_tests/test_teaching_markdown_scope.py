@@ -1,5 +1,6 @@
 """Eight published Markdown edits only; exact successors and substantive negatives."""
 import hashlib
+from dev_tests.lbfgs_reference_scope import historical_bytes
 import json
 from pathlib import Path
 import shutil
@@ -28,6 +29,8 @@ def frozen(name,digest):
 def teaching_root(tmp_path):
     record=frozen(RECORD,RECORD_HASH)
     names=[RECORD,*record['required_archives'],*record['notebooks']]
+    names += ['dev_tests/lbfgs_reference_v1.json',
+              'dev_tests/fixtures/lbfgs_reference_v1/tutorial__1_simple_1d_wave_pytorch.ipynb.txt']
     for name in names:
         target=tmp_path/name
         target.parent.mkdir(parents=True,exist_ok=True)
@@ -48,7 +51,7 @@ def test_published_eight_cells_and_all_exact_source_successors():
     assert record['before_commit']=='541c7feacd041b086c181d151076f443bd2d15d7'
     assert sum(len(item['changes']) for item in record['notebooks'].values())==8
     for name,patches in sources['exact_transforms'].items():
-        current=(ROOT/name).read_bytes()
+        current=historical_bytes(ROOT, name, (ROOT/name).read_bytes())
         assert hashlib.sha256(current).hexdigest()==sources['source_after_sha256'][name],name
         for patch in reversed(patches):
             old,new=patch['old'].encode(),patch['new'].encode()
@@ -142,6 +145,8 @@ def test_relaxed_json_guard_source_is_rejected(tmp_path):
     old=b'assert json.loads(current)==expected,name'
     assert data.count(old)==1
     path.write_bytes(data.replace(old,b'assert True',1))
+    shutil.copyfile(ROOT/'dev_tests/lbfgs_reference_v1.json',
+                    tmp_path/'dev_tests/lbfgs_reference_v1.json')
     function=getattr(windows_scope,'assert_teaching_helper_source',None)
     assert callable(function)
     with pytest.raises(AssertionError,match='dev_tests/tutorial1_gc_scope.py'):function(tmp_path)

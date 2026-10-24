@@ -1,0 +1,627 @@
+{
+  "status": "exact ReferenceLBFGS public successor, numeric v2, one-string portability successor",
+  "successors": {
+    ".gitattributes": {
+      "archive": "dev_tests/fixtures/lbfgs_reference_v1/gitattributes.txt",
+      "before_sha256": "281e29eb207cf48481c96b16a236192ce350eca94f2ea977ae7c25be9222086e",
+      "after_sha256": "72850fc8a4d4b8c7f4bd8fa2ac7f2c82f901b2333500db185a55111b944d88f5",
+      "text_hunks": [
+        {
+          "after_start": 793,
+          "after_end": 905,
+          "before": "",
+          "after": "/MANIFEST.in text eol=lf\n/nif/optimizers/TFP_LICENSE.txt text eol=lf\n/nif/optimizers/TFP_NOTICE.txt text eol=lf\n"
+        }
+      ]
+    },
+    "MANIFEST.in": {
+      "archive": "dev_tests/fixtures/lbfgs_reference_v1/MANIFEST.in.txt",
+      "before_sha256": "b74a71744b6c3a7fdd29c59c7c591dfa2a6a96b8abae35f6449b860adac1acec",
+      "after_sha256": "de5baa889b1a73311932cf8ec0fa769e61bd6af468ec115d9e9de0ab0b4205e6",
+      "text_hunks": [
+        {
+          "after_start": 110,
+          "after_end": 187,
+          "before": "",
+          "after": "include nif/optimizers/TFP_LICENSE.txt\ninclude nif/optimizers/TFP_NOTICE.txt\n"
+        }
+      ]
+    },
+    "dev_tests/adabelief_moment_scope.py": {
+      "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__adabelief_moment_scope.py.txt",
+      "before_sha256": "715fdc8e6a1667168017bc701504b7ffe511fa01d5e8abe88864856282b5f943",
+      "after_sha256": "1a07a50d8b2a46f44e1d9f85749a0c431c248e7a254a11b38620ae98031d3a94",
+      "text_hunks": [
+        {
+          "after_start": 624,
+          "after_end": 715,
+          "before": "",
+          "after": "from dev_tests.lbfgs_reference_scope import assert_reference_lbfgs_scope, historical_bytes\n"
+        },
+        {
+          "after_start": 4942,
+          "after_end": 4981,
+          "before": "",
+          "after": "    assert_reference_lbfgs_scope(ROOT)\n"
+        },
+        {
+          "after_start": 6092,
+          "after_end": 6244,
+          "before": "        assert (ROOT/name).read_text(encoding='utf-8')==expected_source(name,source),name\n",
+          "after": "        assert historical_bytes(ROOT, name, (ROOT/name).read_text(encoding='utf-8').encode('utf-8')).decode('utf-8')==expected_source(name,source),name\n"
+        },
+        {
+          "after_start": 6931,
+          "after_end": 7050,
+          "before": "                assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,name\n",
+          "after": "                assert hashlib.sha256(historical_bytes(ROOT, name, (ROOT/name).read_bytes())).hexdigest()==digest,name\n"
+        },
+        {
+          "after_start": 7461,
+          "after_end": 7577,
+          "before": "        else:assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,name\n",
+          "after": "        else:assert hashlib.sha256(historical_bytes(ROOT, name, (ROOT/name).read_bytes())).hexdigest()==digest,name\n"
+        }
+      ]
+    },
+    "dev_tests/generate_native_notebooks.py": {
+      "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__generate_native_notebooks.py.txt",
+      "before_sha256": "371c946f3fdf2105c0af50894a2fbad3d7ea74ae7b91886dc8967b6b0d66df20",
+      "after_sha256": "fd00a22450369e348bf3c2c868e36906c9d92eefc85b3278c4c0753559c4538a",
+      "text_hunks": [
+        {
+          "after_start": 10087,
+          "after_end": 10134,
+          "before": "       '`TFPLBFGS`':'native `torch.optim.LBFGS`',\n",
+          "after": "       '`TFPLBFGS`':'native `ReferenceLBFGS`',\n"
+        },
+        {
+          "after_start": 15597,
+          "after_end": 15731,
+          "before": "46:'''# Native torch.optim.LBFGS uses a closure: recompute loss and gradients at every line search.\n",
+          "after": "46:'''# Reference L-BFGS uses a closure: recompute loss and gradients at every line search.\nfrom nif.optimizers import ReferenceLBFGS\n"
+        },
+        {
+          "after_start": 15802,
+          "after_end": 15880,
+          "before": "# Public TFPLBFGS scientific controls, retained in full AND smoke modes.\n",
+          "after": "# Original TFPLBFGS controls, retained independently in full and smoke modes.\n"
+        },
+        {
+          "after_start": 15994,
+          "after_end": 16142,
+          "before": "# Native convention (the same mapping as nif.optimizers.TFPLBFGS):\n# PyTorch uses strong-Wolfe line search and a per-round max_eval budget of\n# max_iter * max_line_search_iterations. Its internal trial accounting is not\n# TFP's separate limit of 100 iterations per individual line search.\n# tolerance_change applies to absolute step/objective changes (and the descent\n# directional derivative); it cannot express TFP's independent relative-objective\n# tolerance. Both original change thresholds are 1e-15 and map to that value.\n# Thus the controls are retained, but solver trajectories/stopping can differ.\n",
+          "after": "# Each round creates a fresh optimizer with up to max_iter additional iterations.\n# Hager-Zhang line search has its own per-search iteration limit.\n"
+        },
+        {
+          "after_start": 16187,
+          "after_end": 16634,
+          "before": "    fine_tuner = torch.optim.LBFGS(new_model.parameters(), max_iter=max_iter,\n                                 max_eval=max_iter * max_line_search_iterations,\n                                 history_size=num_correction_pairs,\n                                 tolerance_grad=tolerance,\n                                 tolerance_change=max(x_tolerance, f_relative_tolerance),\n                                 line_search_fn=\"strong_wolfe\")\n",
+          "after": "    fine_tuner = ReferenceLBFGS(new_model.parameters(), max_iter=max_iter,\n                                num_correction_pairs=num_correction_pairs,\n                                tolerance=tolerance, x_tolerance=x_tolerance,\n                                f_relative_tolerance=f_relative_tolerance,\n                                f_absolute_tolerance=0.,\n                                max_line_search_iterations=max_line_search_iterations)\n"
+        }
+      ]
+    },
+    "dev_tests/publication_projection.py": {
+      "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__publication_projection.py.txt",
+      "before_sha256": "4e62161579cd668aac7ff669e4ef013736f3a79f2a5bf1c92a2b66aab8f2807c",
+      "after_sha256": "58db856c39c5f8aa40189bf6ffb191886b68b42ee50bab5d4d8e6e111ade6a47",
+      "text_hunks": [
+        {
+          "after_start": 570,
+          "after_end": 679,
+          "before": "        files=json.loads((source/'dev_tests/teaching_markdown_v1_inventory.json').read_text(encoding='utf-8'))\n",
+          "after": "        files=json.loads((source/'dev_tests/lbfgs_reference_v1_inventory.json').read_text(encoding='utf-8'))\n"
+        }
+      ]
+    },
+    "dev_tests/publication_windows_scope.py": {
+      "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__publication_windows_scope.py.txt",
+      "before_sha256": "368f1008d844d14b9f4854b2f8c125c69cebae286f3b007f6530f9a57f2bfa5f",
+      "after_sha256": "415bc1ccdf5b19eb770d2c0defd5bd2fbb2a936fa43d6a7bb3aefb61a5b037a3",
+      "text_hunks": [
+        {
+          "after_start": 316,
+          "after_end": 377,
+          "before": "",
+          "after": "from dev_tests.lbfgs_reference_scope import historical_bytes\n"
+        },
+        {
+          "after_start": 5953,
+          "after_end": 6123,
+          "before": "        assert (root/name).read_text(encoding='utf-8')==expected_source(name,original.decode('utf-8')),name\n",
+          "after": "        assert historical_bytes(root, name, (root/name).read_text(encoding='utf-8').encode('utf-8')).decode('utf-8')==expected_source(name,original.decode('utf-8')),name\n"
+        },
+        {
+          "after_start": 7515,
+          "after_end": 7612,
+          "before": "    current=(Path(root)/'.gitattributes').read_bytes()\n",
+          "after": "    current=historical_bytes(root, '.gitattributes', (Path(root)/'.gitattributes').read_bytes())\n"
+        },
+        {
+          "after_start": 9304,
+          "after_end": 9471,
+          "before": "    assert hashlib.sha256((root/name).read_bytes()).hexdigest()=='97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32',name\n",
+          "after": "    assert hashlib.sha256(historical_bytes(root, name, (root/name).read_bytes())).hexdigest()=='97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32',name\n"
+        }
+      ]
+    },
+    "dev_tests/test_adabelief_final_update_successor.py": {
+      "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_adabelief_final_update_successor.py.txt",
+      "before_sha256": "2f2f394770973896ed1e5ead279b9c6721528c88b75dae27718dee8d7e93ea23",
+      "after_sha256": "cf7ae40652c261d770e64f5085cee164153543cce888832d6e416f4c29cf39dd",
+      "text_hunks": [
+        {
+          "after_start": 99,
+          "after_end": 160,
+          "before": "",
+          "after": "from dev_tests.lbfgs_reference_scope import historical_bytes\n"
+        },
+        {
+          "after_start": 955,
+          "after_end": 1022,
+          "before": "    current=(ROOT/name).read_bytes()\n",
+          "after": "    current=historical_bytes(ROOT, name, (ROOT/name).read_bytes())\n"
+        }
+      ]
+    },
+    "dev_tests/test_publication_checkout_eol.py": {
+      "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_publication_checkout_eol.py.txt",
+      "before_sha256": "16fba47f7c12800fa2179818e25872afc480c7b3efcc176cd021f44e39d36860",
+      "after_sha256": "27b3de5ee2acd0cc37fd2144f0ed69e9c09784623d36a9eee5ee450deb4f45ad",
+      "text_hunks": [
+        {
+          "after_start": 102,
+          "after_end": 114,
+          "before": "",
+          "after": "import json\n"
+        },
+        {
+          "after_start": 1629,
+          "after_end": 1777,
+          "before": "    for name in CANDIDATE_FILES:\n",
+          "after": "    reference=json.loads((ROOT/'dev_tests/lbfgs_reference_v1.json').read_bytes())\n    for name in (*CANDIDATE_FILES, *reference['checkout_files']):\n"
+        }
+      ]
+    },
+    "dev_tests/test_publication_checkout_successor.py": {
+      "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_publication_checkout_successor.py.txt",
+      "before_sha256": "0e0a3bac364df2bb1e05217a475ac44dbc137842fe8a4882fcc4a420c36bfbc3",
+      "after_sha256": "e193c342d531dba4bb647f6bfb1dd94feb0505cd7ee790411e2efd85cdb5ba04",
+      "text_hunks": [
+        {
+          "after_start": 102,
+          "after_end": 163,
+          "before": "",
+          "after": "from dev_tests.lbfgs_reference_scope import historical_bytes\n"
+        },
+        {
+          "after_start": 492,
+          "after_end": 631,
+          "before": "    current=(ROOT/'dev_tests/publication_windows_scope.py').read_bytes()\n",
+          "after": "    current=historical_bytes(ROOT, 'dev_tests/publication_windows_scope.py', (ROOT/'dev_tests/publication_windows_scope.py').read_bytes())\n"
+        }
+      ]
+    },
+    "dev_tests/test_teaching_markdown_scope.py": {
+      "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_teaching_markdown_scope.py.txt",
+      "before_sha256": "bef39e74ef7e1cdbd663ee197ad07dbd3587f74e117306f24f2ca92ee8495561",
+      "after_sha256": "cf2a31534898baae7efed076ad3d32249a25e826a4ead6cbd70a6481a46d8ea2",
+      "text_hunks": [
+        {
+          "after_start": 102,
+          "after_end": 163,
+          "before": "",
+          "after": "from dev_tests.lbfgs_reference_scope import historical_bytes\n"
+        },
+        {
+          "after_start": 1062,
+          "after_end": 1213,
+          "before": "",
+          "after": "    names += ['dev_tests/lbfgs_reference_v1.json',\n              'dev_tests/fixtures/lbfgs_reference_v1/tutorial__1_simple_1d_wave_pytorch.ipynb.txt']\n"
+        },
+        {
+          "after_start": 2036,
+          "after_end": 2107,
+          "before": "        current=(ROOT/name).read_bytes()\n",
+          "after": "        current=historical_bytes(ROOT, name, (ROOT/name).read_bytes())\n"
+        },
+        {
+          "after_start": 7325,
+          "after_end": 7453,
+          "before": "",
+          "after": "    shutil.copyfile(ROOT/'dev_tests/lbfgs_reference_v1.json',\n                    tmp_path/'dev_tests/lbfgs_reference_v1.json')\n"
+        }
+      ]
+    },
+    "dev_tests/test_tutorial1_gc_scope.py": {
+      "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_tutorial1_gc_scope.py.txt",
+      "before_sha256": "441e664ddfd35f07f96fce6364ef1109d07202db0da381e675f9f21efd150eec",
+      "after_sha256": "db7a617b207641b330c9ffce89972643c5f5e4febaf8a69276d84af9116c0851",
+      "text_hunks": [
+        {
+          "after_start": 89,
+          "after_end": 150,
+          "before": "",
+          "after": "from dev_tests.lbfgs_reference_scope import historical_bytes\n"
+        },
+        {
+          "after_start": 1603,
+          "after_end": 1718,
+          "before": "            assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,name\n",
+          "after": "            assert hashlib.sha256(historical_bytes(ROOT, name, (ROOT/name).read_bytes())).hexdigest()==digest,name\n"
+        }
+      ]
+    },
+    "dev_tests/test_tutorial1_lbfgs.py": {
+      "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_tutorial1_lbfgs.py.txt",
+      "before_sha256": "e0d70b7d6acdfa79ceec5f06fcc13ae835871b2973b66d8d65a0cccc4933043a",
+      "after_sha256": "19a3de36717ce639a02eb8ca81df1ee1676b289adbb9e11da6e0b92b309baef3",
+      "text_hunks": [
+        {
+          "after_start": 732,
+          "after_end": 819,
+          "before": "                next(text for text in code if 'fine_tuner = torch.optim.LBFGS(' in text))\n",
+          "after": "                next(text for text in code if 'fine_tuner = ReferenceLBFGS(' in text))\n"
+        },
+        {
+          "after_start": 2373,
+          "after_end": 2785,
+          "before": "    assert options['tolerance_grad'] == 1e-15, 'Public TFPLBFGS tolerance must be retained'\n    assert options['tolerance_change'] == 1e-15\n    assert options['history_size'] == 20, 'Public num_correction_pairs is 20, not native default 100'\n",
+          "after": "    from nif.optimizers import ReferenceLBFGS\n    assert isinstance(optimizer, ReferenceLBFGS)\n    assert options['tolerance'] == 1e-15, 'Public TFPLBFGS tolerance must be retained'\n    assert options['x_tolerance'] == 1e-15\n    assert options['f_relative_tolerance'] == 1e-15\n    assert options['f_absolute_tolerance'] == 0.\n    assert options['num_correction_pairs'] == 20, 'Public num_correction_pairs is 20'\n"
+        },
+        {
+          "after_start": 2837,
+          "after_end": 2976,
+          "before": "    assert options['max_eval'] == 100 * scope['max_iter']\n    assert options['line_search_fn'] == 'strong_wolfe'\n",
+          "after": "    assert options['max_line_search_iterations'] == 100\n    assert not {'max_eval', 'tolerance_change', 'line_search_fn'} & options.keys()\n"
+        }
+      ]
+    },
+    "dev_tests/tutorial1_gc_scope.py": {
+      "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__tutorial1_gc_scope.py.txt",
+      "before_sha256": "97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32",
+      "after_sha256": "ff47fbda69666bb4fe590ed6599a6de0342d5ec3b8518e5cc0cb3d9b1cbbfb93",
+      "text_hunks": [
+        {
+          "after_start": 337,
+          "after_end": 398,
+          "before": "",
+          "after": "from dev_tests.lbfgs_reference_scope import historical_bytes\n"
+        },
+        {
+          "after_start": 3190,
+          "after_end": 3343,
+          "before": "    current=json.loads((ROOT/'tutorial/1_simple_1d_wave_pytorch.ipynb').read_text(encoding='utf-8'))\n",
+          "after": "    current=json.loads(historical_bytes(ROOT, 'tutorial/1_simple_1d_wave_pytorch.ipynb', (ROOT/'tutorial/1_simple_1d_wave_pytorch.ipynb').read_bytes()))\n"
+        },
+        {
+          "after_start": 3746,
+          "after_end": 3920,
+          "before": "    assert (ROOT/'dev_tests/generate_native_notebooks.py').read_text(encoding='utf-8')==expected_generator\n",
+          "after": "    assert historical_bytes(ROOT, 'dev_tests/generate_native_notebooks.py', (ROOT/'dev_tests/generate_native_notebooks.py').read_bytes()).decode('utf-8')==expected_generator\n"
+        },
+        {
+          "after_start": 5039,
+          "after_end": 5110,
+          "before": "        current=(root/name).read_bytes()\n",
+          "after": "        current=historical_bytes(root, name, (root/name).read_bytes())\n"
+        }
+      ]
+    },
+    "nif/optimizers/__init__.py": {
+      "archive": "dev_tests/fixtures/lbfgs_reference_v1/nif__optimizers____init__.py.txt",
+      "before_sha256": "536474b218d8afb8d93385efdebd98d3195a42f15161647ab35a701d5311e48c",
+      "after_sha256": "a45c6c9bed9f3edb1350ce3922aab7d05f4d1f6397454f42e4fd131764ba5bef"
+    },
+    "nif/optimizers/lbfgs.py": {
+      "archive": "dev_tests/fixtures/lbfgs_reference_v1/nif__optimizers__lbfgs.py.txt",
+      "before_sha256": "26636c2f9ed24f88b54f333e7ddc88388d5ad5e5d2cb823f74a5f573da5197ab",
+      "after_sha256": "7506f2196163df1882663742b0d4b413a8bc2edafc9ba07e885559629e4c72a1"
+    },
+    "nif/optimizers/lbfgs_V2.py": {
+      "archive": "dev_tests/fixtures/lbfgs_reference_v1/nif__optimizers__lbfgs_V2.py.txt",
+      "before_sha256": "ab8707b26f61034507cdf4adbcaeb1c07c53a9c5d553332885aee3a041e1fc8e",
+      "after_sha256": "e002a9777b80505c36b4eb271e0c8416e7ccaf62bba1e0f529f988fb75ae7bc8"
+    },
+    "tutorial/1_simple_1d_wave_pytorch.ipynb": {
+      "archive": "dev_tests/fixtures/lbfgs_reference_v1/tutorial__1_simple_1d_wave_pytorch.ipynb.txt",
+      "before_sha256": "ce69f3af6063be436cbf0652b2b7c661b970aaa8edf487e54277480020a44bde",
+      "after_sha256": "4052f348a67e185f4a3aa5d42553c7bed810537b5fd0686b0d5a942d8f41740a",
+      "notebook_patches": [
+        {
+          "cell": 35,
+          "before": [
+            "# Native torch.optim.LBFGS uses a closure: recompute loss and gradients at every line search.\n",
+            "lbfgs_history = []\n",
+            "rounds, max_iter = (1, 2) if SMOKE else (200, 1000)\n",
+            "# Public TFPLBFGS scientific controls, retained in full AND smoke modes.\n",
+            "tolerance = x_tolerance = f_relative_tolerance = 1e-15\n",
+            "num_correction_pairs = 20\n",
+            "max_line_search_iterations = 100\n",
+            "# Native convention (the same mapping as nif.optimizers.TFPLBFGS):\n",
+            "# PyTorch uses strong-Wolfe line search and a per-round max_eval budget of\n",
+            "# max_iter * max_line_search_iterations. Its internal trial accounting is not\n",
+            "# TFP's separate limit of 100 iterations per individual line search.\n",
+            "# tolerance_change applies to absolute step/objective changes (and the descent\n",
+            "# directional derivative); it cannot express TFP's independent relative-objective\n",
+            "# tolerance. Both original change thresholds are 1e-15 and map to that value.\n",
+            "# Thus the controls are retained, but solver trajectories/stopping can differ.\n"
+          ],
+          "after": [
+            "# Reference L-BFGS uses a closure: recompute loss and gradients at every line search.\n",
+            "from nif.optimizers import ReferenceLBFGS\n",
+            "lbfgs_history = []\n",
+            "rounds, max_iter = (1, 2) if SMOKE else (200, 1000)\n",
+            "# Original TFPLBFGS controls, retained independently in full and smoke modes.\n",
+            "tolerance = x_tolerance = f_relative_tolerance = 1e-15\n",
+            "num_correction_pairs = 20\n",
+            "max_line_search_iterations = 100\n",
+            "# Each round creates a fresh optimizer with up to max_iter additional iterations.\n",
+            "# Hager-Zhang line search has its own per-search iteration limit.\n"
+          ]
+        },
+        {
+          "cell": 37,
+          "before": [
+            "for round_index in range(rounds):\n",
+            "    fine_tuner = torch.optim.LBFGS(new_model.parameters(), max_iter=max_iter,\n",
+            "                                 max_eval=max_iter * max_line_search_iterations,\n",
+            "                                 history_size=num_correction_pairs,\n",
+            "                                 tolerance_grad=tolerance,\n",
+            "                                 tolerance_change=max(x_tolerance, f_relative_tolerance),\n",
+            "                                 line_search_fn=\"strong_wolfe\")\n",
+            "    def closure():\n",
+            "        fine_tuner.zero_grad(set_to_none=True)\n",
+            "        loss = (new_model(data_feature)-data_label).square().mean() + new_model.regularization_loss(data_feature)\n",
+            "        if not torch.isfinite(loss): raise FloatingPointError(\"non-finite LBFGS loss\")\n",
+            "        loss.backward(); lbfgs_history.append(float(loss.detach()))\n",
+            "        return loss\n",
+            "    fine_tuner.step(closure)\n",
+            "new_model = save_and_check(new_model, fine_tuner, \"fine_tuned\", train_data[:64,:2])\n",
+            "fig,ax=plt.subplots(figsize=(8,2)); ax.semilogy(lbfgs_history); ax.set(xlabel=\"closure evaluation\",ylabel=\"loss\")\n",
+            "fig.tight_layout(); fig.savefig(OUT / \"fine_tune_loss.png\"); plt.show(); plt.close(fig)\n"
+          ],
+          "after": [
+            "for round_index in range(rounds):\n",
+            "    fine_tuner = ReferenceLBFGS(new_model.parameters(), max_iter=max_iter,\n",
+            "                                num_correction_pairs=num_correction_pairs,\n",
+            "                                tolerance=tolerance, x_tolerance=x_tolerance,\n",
+            "                                f_relative_tolerance=f_relative_tolerance,\n",
+            "                                f_absolute_tolerance=0.,\n",
+            "                                max_line_search_iterations=max_line_search_iterations)\n",
+            "    def closure():\n",
+            "        fine_tuner.zero_grad(set_to_none=True)\n",
+            "        loss = (new_model(data_feature)-data_label).square().mean() + new_model.regularization_loss(data_feature)\n",
+            "        if not torch.isfinite(loss): raise FloatingPointError(\"non-finite LBFGS loss\")\n",
+            "        loss.backward(); lbfgs_history.append(float(loss.detach()))\n",
+            "        return loss\n",
+            "    fine_tuner.step(closure)\n",
+            "new_model = save_and_check(new_model, fine_tuner, \"fine_tuned\", train_data[:64,:2])\n",
+            "fig,ax=plt.subplots(figsize=(8,2)); ax.semilogy(lbfgs_history); ax.set(xlabel=\"closure evaluation\",ylabel=\"loss\")\n",
+            "fig.tight_layout(); fig.savefig(OUT / \"fine_tune_loss.png\"); plt.show(); plt.close(fig)\n"
+          ]
+        }
+      ],
+      "notebook_markdown_patch": {
+        "cell": 32,
+        "before": [
+          "- then we use native `torch.optim.LBFGS` to wrap around our model, get an instance that can further fine tune the model"
+        ],
+        "after": [
+          "- then we use native `ReferenceLBFGS` to wrap around our model, get an instance that can further fine tune the model"
+        ]
+      }
+    },
+    "dev_tests/test_test_portability.py": {
+      "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_test_portability.py.txt",
+      "before_sha256": "719f86d974718a7405c2b1faca77b9fdc339c67ec24b6037a4bb11c9ff574bc6",
+      "after_sha256": "7955d6f933a096fd746ee3da44f572573e48162d37f090307262d09f3f2ddef0",
+      "text_hunks": [
+        {
+          "after_start": 630,
+          "after_end": 684,
+          "before": "    assert 'fine_tuner = torch.optim.LBFGS(' in training\n",
+          "after": "    assert 'fine_tuner = ReferenceLBFGS(' in training\n"
+        }
+      ]
+    }
+  },
+  "required_sha256": {
+    "nif/optimizers/reference_lbfgs.py": "9b28a409ee8552ea5400b362cd52d818103607f844ec87f6fb31d5fe63a64e42",
+    "nif/optimizers/_hager_zhang.py": "6c6c6576d8a672a2e5555315311f683ce36b57d37dd6a20733689982e62ffae5",
+    "nif/optimizers/TFP_LICENSE.txt": "5c9817c129b98e7bb966bca028c43c19107102ef8e03fe799bffb4354f4ef015",
+    "nif/optimizers/TFP_NOTICE.txt": "a9a4f4f0b1a18937f511ece4ffad3f3c6b7253bb7eb89eabe2de560a028a8638",
+    "dev_tests/test_reference_lbfgs_contract.py": "2abbc4b93afdb8c2ae0fb4900c2f8091abe97d012379ebdc1de617b1cdc81917",
+    "dev_tests/test_reference_lbfgs_edges.py": "77025d636f333de8bc6659b76ad9685832035486201d08a703c40c58382b6906",
+    "dev_tests/test_reference_lbfgs_api.py": "d40ef3609ab795a998823fd3eb788a75bfa58016eaebbfdb3b39b856eb7d3538",
+    "dev_tests/fixtures/lbfgs_reference_edges/tfp_oracle.py.txt": "b68b8023541d00318610ebf6b88829e6867ad21d23bfe25ad39e2f87fe7d6550",
+    "dev_tests/fixtures/lbfgs_reference_edges/oracle.json": "dabfd228b62148183dbc2d2f31bd629f825022ce5279f62849ac6832f827ef09",
+    "dev_tests/fixtures/lbfgs_reference_edges/native_diagnostic.py.txt": "7e579e3a0031b8904539ed4e18f598d92b43ee29c57c3f99234448766384fa84",
+    "dev_tests/LBFGS_REFERENCE_IMPLEMENTATION.md": "10069ea83661e92b86d9762825f938040f18b3500561ef4089caa95479323774",
+    "dev_tests/lbfgs_reference_implementation.json": "b77058ddf7acfa1a806a358606366fff94e3db267e10083808af717c63a28703",
+    "dev_tests/lbfgs_reference_numeric_green.log": "3360e84315725fe2acfa0f491ffe229f2e8a344e80383752edf5d47d34ba6904",
+    "dev_tests/test_lbfgs_stopping_contract.py": "16a203349aa115fef48785bd8af47f8e0a93962df9d4abf0d9c1c6ac74b8424c",
+    "dev_tests/lbfgs_stopping_contract_oracle.json": "c11f484201cd18e2cada11de0d7eb98096425b6741ec7a61c780854ae7067cad",
+    "dev_tests/lbfgs_stopping_contract_red.log": "32e81b651a171476d054cdd3ddd41d062c1859d30c0ed0e9d8293b49c58a39dc",
+    "dev_tests/LBFGS_STOPPING_CONTRACT.md": "210bf4e359eedfe362333db617a098d3c1634b266768221597f95f132e24ee8f",
+    "dev_tests/fixtures/lbfgs_stopping_contract/tfp_oracle.py.txt": "507c2200436be576a2d2d28ce3f43b27049014785845ee2728ce579d96c77538",
+    "dev_tests/lbfgs_stopping_contract_source.json": "22ab2f0ab99747bfea546c51a43da9e90aed954c68d1b246c2fe9995030686a6",
+    "dev_tests/fixtures/lbfgs_reference_phase0/tfp_oracle.py.txt": "6b46fc766eea364db5dd280c52cf8999733448030c09bf2ad40d7ae0c70ca3bf",
+    "dev_tests/fixtures/lbfgs_reference_phase0/test_reference_lbfgs_contract.py.txt": "2abbc4b93afdb8c2ae0fb4900c2f8091abe97d012379ebdc1de617b1cdc81917",
+    "dev_tests/fixtures/lbfgs_reference_phase0/oracle.json": "f465bdc38dc88a5bc5daf84890786fc83bd078c1b79e916c7f4b9facf29b65d2",
+    "dev_tests/test_lbfgs_reference_phase0_records.py": "754f2fd614d6b7013189b2540be82a76d7e0c253409849d84480354e3f534423",
+    "dev_tests/LBFGS_REFERENCE_PHASE0.md": "1261ffe90fe6032df6436df887d2b6dda10fae138a59b864f872ad24d7cf6b67",
+    "dev_tests/lbfgs_reference_phase0_oracle.log": "126166d02d6516c54c11c414469ca159e67a8baf83029d6d6760e5d2d5446353",
+    "dev_tests/lbfgs_reference_phase0_records.log": "791c01838885fed908578f1931c01d2094232ec40ef29a1d69c80d387c082d45",
+    "dev_tests/fixtures/lbfgs_reference_phase0/provenance.json": "cb32980e30ae5b6b77270ba321efef4ea45519d5ab51860c5e955f8190497c7f",
+    "dev_tests/fixtures/lbfgs_reference_v1/tutorial__1_simple_1d_wave_pytorch.ipynb.txt": "ce69f3af6063be436cbf0652b2b7c661b970aaa8edf487e54277480020a44bde",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__generate_native_notebooks.py.txt": "371c946f3fdf2105c0af50894a2fbad3d7ea74ae7b91886dc8967b6b0d66df20",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_tutorial1_lbfgs.py.txt": "e0d70b7d6acdfa79ceec5f06fcc13ae835871b2973b66d8d65a0cccc4933043a",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__tutorial1_gc_scope.py.txt": "97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__publication_windows_scope.py.txt": "368f1008d844d14b9f4854b2f8c125c69cebae286f3b007f6530f9a57f2bfa5f",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__adabelief_moment_scope.py.txt": "715fdc8e6a1667168017bc701504b7ffe511fa01d5e8abe88864856282b5f943",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__publication_projection.py.txt": "4e62161579cd668aac7ff669e4ef013736f3a79f2a5bf1c92a2b66aab8f2807c",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_teaching_markdown_scope.py.txt": "bef39e74ef7e1cdbd663ee197ad07dbd3587f74e117306f24f2ca92ee8495561",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_adabelief_boundary_succession.py.txt": "848e8c8f1ea55a5fdf288b653d0f92a46e90ea163183c0312a2d1d3314925def",
+    "dev_tests/fixtures/lbfgs_reference_v1/nif__optimizers__lbfgs.py.txt": "26636c2f9ed24f88b54f333e7ddc88388d5ad5e5d2cb823f74a5f573da5197ab",
+    "dev_tests/fixtures/lbfgs_reference_v1/nif__optimizers__lbfgs_V2.py.txt": "ab8707b26f61034507cdf4adbcaeb1c07c53a9c5d553332885aee3a041e1fc8e",
+    "dev_tests/fixtures/lbfgs_reference_v1/nif__optimizers____init__.py.txt": "536474b218d8afb8d93385efdebd98d3195a42f15161647ab35a701d5311e48c",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_tutorial1_gc_scope.py.txt": "441e664ddfd35f07f96fce6364ef1109d07202db0da381e675f9f21efd150eec",
+    "dev_tests/fixtures/lbfgs_reference_v1/MANIFEST.in.txt": "b74a71744b6c3a7fdd29c59c7c591dfa2a6a96b8abae35f6449b860adac1acec",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_publication_checkout_successor.py.txt": "0e0a3bac364df2bb1e05217a475ac44dbc137842fe8a4882fcc4a420c36bfbc3",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_adabelief_final_update_successor.py.txt": "2f2f394770973896ed1e5ead279b9c6721528c88b75dae27718dee8d7e93ea23",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_publication_checkout_eol.py.txt": "16fba47f7c12800fa2179818e25872afc480c7b3efcc176cd021f44e39d36860",
+    "dev_tests/fixtures/lbfgs_reference_v1/gitattributes.txt": "281e29eb207cf48481c96b16a236192ce350eca94f2ea977ae7c25be9222086e",
+    "dev_tests/fixtures/lbfgs_reference_v1/before.json": "0aa6d43452a2857c5a630acf3a2f50ca8725645a139f6ee01b5c8529ff400ffd",
+    "dev_tests/fixtures/lbfgs_reference_v1/notebook_patches.json": "83b50e6d260c06b7616ee5a6f8030d2e24006829f6d0d412029fce5bff4e7ecf",
+    "dev_tests/test_lbfgs_reference_integration.py": "315986e0449a85116a2ec4e27a560a7e2f6e0083239eaddc08a019e9b2f2a691",
+    "dev_tests/lbfgs_reference_integration_red.log": "1cff59f47b183e72d39218feff33a6c17c0716f024066924b1b1bff08cd89a7e",
+    "dev_tests/lbfgs_reference_v1_inventory.json": "7906b7ddaa945310f518b136b45650d83384f00ab807a28170d8f91dda801a6d",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_test_portability.py.txt": "719f86d974718a7405c2b1faca77b9fdc339c67ec24b6037a4bb11c9ff574bc6"
+  },
+  "scope_source_template_sha256": "fa113516238e8acce18e666b2cf605f1b64529533385c0c648301cc9445a252e",
+  "added_public_files": [
+    "nif/optimizers/reference_lbfgs.py",
+    "nif/optimizers/_hager_zhang.py",
+    "nif/optimizers/TFP_LICENSE.txt",
+    "nif/optimizers/TFP_NOTICE.txt",
+    "dev_tests/test_reference_lbfgs_contract.py",
+    "dev_tests/test_reference_lbfgs_edges.py",
+    "dev_tests/test_reference_lbfgs_api.py",
+    "dev_tests/fixtures/lbfgs_reference_edges/tfp_oracle.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_edges/oracle.json",
+    "dev_tests/fixtures/lbfgs_reference_edges/native_diagnostic.py.txt",
+    "dev_tests/LBFGS_REFERENCE_IMPLEMENTATION.md",
+    "dev_tests/lbfgs_reference_implementation.json",
+    "dev_tests/lbfgs_reference_numeric_green.log",
+    "dev_tests/test_lbfgs_stopping_contract.py",
+    "dev_tests/lbfgs_stopping_contract_oracle.json",
+    "dev_tests/lbfgs_stopping_contract_red.log",
+    "dev_tests/LBFGS_STOPPING_CONTRACT.md",
+    "dev_tests/fixtures/lbfgs_stopping_contract/tfp_oracle.py.txt",
+    "dev_tests/lbfgs_stopping_contract_source.json",
+    "dev_tests/fixtures/lbfgs_reference_phase0/tfp_oracle.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_phase0/test_reference_lbfgs_contract.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_phase0/oracle.json",
+    "dev_tests/test_lbfgs_reference_phase0_records.py",
+    "dev_tests/LBFGS_REFERENCE_PHASE0.md",
+    "dev_tests/lbfgs_reference_phase0_oracle.log",
+    "dev_tests/lbfgs_reference_phase0_records.log",
+    "dev_tests/fixtures/lbfgs_reference_phase0/provenance.json",
+    "dev_tests/lbfgs_reference_scope.py",
+    "dev_tests/test_lbfgs_reference_integration.py",
+    "dev_tests/lbfgs_reference_integration_red.log",
+    "dev_tests/lbfgs_reference_v1.json",
+    "dev_tests/lbfgs_reference_v1_inventory.json",
+    "dev_tests/fixtures/lbfgs_reference_v1/tutorial__1_simple_1d_wave_pytorch.ipynb.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__generate_native_notebooks.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_tutorial1_lbfgs.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__tutorial1_gc_scope.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__publication_windows_scope.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__adabelief_moment_scope.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__publication_projection.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_teaching_markdown_scope.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_adabelief_boundary_succession.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/nif__optimizers__lbfgs.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/nif__optimizers__lbfgs_V2.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/nif__optimizers____init__.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_tutorial1_gc_scope.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/MANIFEST.in.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_publication_checkout_successor.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_adabelief_final_update_successor.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_publication_checkout_eol.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/gitattributes.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/before.json",
+    "dev_tests/fixtures/lbfgs_reference_v1/notebook_patches.json",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_test_portability.py.txt"
+  ],
+  "checkout_files": [
+    ".gitattributes",
+    "MANIFEST.in",
+    "dev_tests/adabelief_moment_scope.py",
+    "dev_tests/generate_native_notebooks.py",
+    "dev_tests/publication_projection.py",
+    "dev_tests/publication_windows_scope.py",
+    "dev_tests/test_adabelief_final_update_successor.py",
+    "dev_tests/test_publication_checkout_eol.py",
+    "dev_tests/test_publication_checkout_successor.py",
+    "dev_tests/test_teaching_markdown_scope.py",
+    "dev_tests/test_tutorial1_gc_scope.py",
+    "dev_tests/test_tutorial1_lbfgs.py",
+    "dev_tests/tutorial1_gc_scope.py",
+    "nif/optimizers/__init__.py",
+    "nif/optimizers/lbfgs.py",
+    "nif/optimizers/lbfgs_V2.py",
+    "tutorial/1_simple_1d_wave_pytorch.ipynb",
+    "nif/optimizers/reference_lbfgs.py",
+    "nif/optimizers/_hager_zhang.py",
+    "nif/optimizers/TFP_LICENSE.txt",
+    "nif/optimizers/TFP_NOTICE.txt",
+    "dev_tests/test_reference_lbfgs_contract.py",
+    "dev_tests/test_reference_lbfgs_edges.py",
+    "dev_tests/test_reference_lbfgs_api.py",
+    "dev_tests/fixtures/lbfgs_reference_edges/tfp_oracle.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_edges/oracle.json",
+    "dev_tests/fixtures/lbfgs_reference_edges/native_diagnostic.py.txt",
+    "dev_tests/LBFGS_REFERENCE_IMPLEMENTATION.md",
+    "dev_tests/lbfgs_reference_implementation.json",
+    "dev_tests/lbfgs_reference_numeric_green.log",
+    "dev_tests/test_lbfgs_stopping_contract.py",
+    "dev_tests/lbfgs_stopping_contract_oracle.json",
+    "dev_tests/lbfgs_stopping_contract_red.log",
+    "dev_tests/LBFGS_STOPPING_CONTRACT.md",
+    "dev_tests/fixtures/lbfgs_stopping_contract/tfp_oracle.py.txt",
+    "dev_tests/lbfgs_stopping_contract_source.json",
+    "dev_tests/fixtures/lbfgs_reference_phase0/tfp_oracle.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_phase0/test_reference_lbfgs_contract.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_phase0/oracle.json",
+    "dev_tests/test_lbfgs_reference_phase0_records.py",
+    "dev_tests/LBFGS_REFERENCE_PHASE0.md",
+    "dev_tests/lbfgs_reference_phase0_oracle.log",
+    "dev_tests/lbfgs_reference_phase0_records.log",
+    "dev_tests/fixtures/lbfgs_reference_phase0/provenance.json",
+    "dev_tests/lbfgs_reference_scope.py",
+    "dev_tests/test_lbfgs_reference_integration.py",
+    "dev_tests/lbfgs_reference_integration_red.log",
+    "dev_tests/lbfgs_reference_v1.json",
+    "dev_tests/lbfgs_reference_v1_inventory.json",
+    "dev_tests/fixtures/lbfgs_reference_v1/tutorial__1_simple_1d_wave_pytorch.ipynb.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__generate_native_notebooks.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_tutorial1_lbfgs.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__tutorial1_gc_scope.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__publication_windows_scope.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__adabelief_moment_scope.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__publication_projection.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_teaching_markdown_scope.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_adabelief_boundary_succession.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/nif__optimizers__lbfgs.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/nif__optimizers__lbfgs_V2.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/nif__optimizers____init__.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_tutorial1_gc_scope.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/MANIFEST.in.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_publication_checkout_successor.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_adabelief_final_update_successor.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_publication_checkout_eol.py.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/gitattributes.txt",
+    "dev_tests/fixtures/lbfgs_reference_v1/before.json",
+    "dev_tests/fixtures/lbfgs_reference_v1/notebook_patches.json",
+    "dev_tests/test_test_portability.py",
+    "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_test_portability.py.txt"
+  ],
+  "serialization_lineage": {
+    "dev_tests/lbfgs_reference_integration_red.log": {
+      "transformation": "CRLF to LF only under existing /dev_tests/*.log eol=lf rule",
+      "raw_sha256": "9cfffd8d03d036d9221e8fb0ab338ea1e17c1f45d59d6293f5eb60202dbec0e4",
+      "raw_bytes": 1971,
+      "canonical_lf_sha256": "1cff59f47b183e72d39218feff33a6c17c0716f024066924b1b1bff08cd89a7e",
+      "canonical_lf_bytes": 1941
+    },
+    "dev_tests/lbfgs_reference_integration_green.log": {
+      "transformation": "CRLF to LF only under existing /dev_tests/*.log eol=lf rule",
+      "raw_sha256": "6368ffb92177d0c814b2daa9956f0caf10b7bf9b09aac9b3b329da5285342610",
+      "raw_bytes": 184,
+      "canonical_lf_sha256": "8aed72c4693a5c5b2f583b6ea43657b7d65435d3db6e656497a4f777967d735e",
+      "canonical_lf_bytes": 181
+    }
+  }
+}

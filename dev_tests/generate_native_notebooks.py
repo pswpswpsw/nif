@@ -206,6 +206,32 @@ def markdown(source):
     for a,b in changes.items(): source=source.replace(a,b)
     return source
 
+T7_INFERENCE_HELPERS = r'''
+
+def save_inference_and_check(model, name, example, factory=None):
+    # Match include_optimizer=False: benchmark only model parameters/configuration.
+    # train() still writes separate *_latest.pt checkpoints with optimizer state.
+    path = OUT / (name + ".pt")
+    payload = {"model_state": {k: v.detach().cpu() for k,v in model.state_dict().items()},
+               "framework": "pytorch", "artifact_format": "pytorch_state_dict"}
+    if hasattr(model, "cfg_shape_net"):
+        payload.update(model_class=type(model).__name__, cfg_shape_net=model.cfg_shape_net,
+                       cfg_parameter_net=model.cfg_parameter_net, mixed_policy="float32")
+    torch.save(payload, path)
+    checkpoint = torch.load(path, map_location=device, weights_only=True)
+    if factory is None:
+        factory = lambda: type(model)(copy.deepcopy(model.cfg_shape_net),
+                                       copy.deepcopy(model.cfg_parameter_net), "float32")
+    restored = factory().to(device)
+    restored.load_state_dict(checkpoint["model_state"])
+    restored.eval(); model.eval()
+    with torch.no_grad():
+        torch.testing.assert_close(restored(tensor(example)), model(tensor(example)),
+                                   rtol=1e-5, atol=1e-6)
+    print("Inference predictions verified:", path)
+    return restored
+'''
+
 def emit(number, replacements, notes="", omitted_markdown=()):
     path=original(number); src=nb.read(path,as_version=4)
     cells=[nb.v4.new_markdown_cell(f"# Native PyTorch tutorial {number}\n\n"+notes+"\n\nRun all cells in order. Full scientific workloads are the default; `NIF_SMOKE=1` is a separate development run and does not establish full convergence. The original TensorFlow and `_colab` notebooks are preserved as legacy references."),
@@ -215,6 +241,7 @@ def emit(number, replacements, notes="", omitted_markdown=()):
                         '        if after_epoch is not None:\n            after_epoch(epoch)\n        row = {"epoch": epoch')
                .replace('v.detach().cpu() for k,v',
                         'v.detach().cpu() if isinstance(v, torch.Tensor) else v for k,v')
+               + T7_INFERENCE_HELPERS
                if number == 7 else HELPERS)]
     for i,c in enumerate(src.cells):
         if c.cell_type=='markdown' and i not in omitted_markdown:
@@ -606,7 +633,7 @@ history_baseline=train(model,train_dataset,optimizer,epochs(nepoch),"baseline",s
 x=np.linspace(-1,1,200,endpoint=True)
 tt,xx=np.meshgrid(t,x)
 input_feature=np.column_stack([tt.ravel(),xx.ravel()])
-model=save_and_check(model,optimizer,"original",input_feature[:64])
+model=save_inference_and_check(model,"original",input_feature[:64])
 y_pred_unpruned=predict(model,input_feature).reshape(200,10)
 ''',
 12:'''original_file=OUT / "original.pt"
@@ -662,7 +689,7 @@ print({"zero_weights":zero_count,"total_weights":weight_count,"sparsity":sparsit
 ''',
 34:'''# Strip the pruning controls: the native .pt contains the actual sparse tensor.
 pruning_controller.strip()
-model_for_export=save_and_check(model_for_pruning,optimizer_prune,"stripped",input_feature[:64])
+model_for_export=save_inference_and_check(model_for_pruning,"stripped",input_feature[:64])
 pruned_file=OUT / "stripped.pt"
 ''',
 36:'''model_for_export=model_for_export.cpu().eval()
@@ -677,8 +704,12 @@ with torch.no_grad():
                                model_for_export(torch.tensor(input_feature[:17],dtype=torch.float32)))
 ''',
 38:'''def get_gzipped_model_size(path):
-    import gzip
-    return len(gzip.compress(Path(path).read_bytes()))
+    # Preserve the reference helper's legacy name; its actual wrapper is ZIP.
+    import io, zipfile
+    archive = io.BytesIO()
+    with zipfile.ZipFile(archive,"w",compression=zipfile.ZIP_DEFLATED) as zipped:
+        zipped.write(path)
+    return len(archive.getvalue())
 ''',
 40:'''# A real native dynamic int8 kernel executes the generated-weight projection.
 # The nonlinear SIREN and per-example generated ShapeNet weights stay floating point.
@@ -712,22 +743,31 @@ print("Native packed int8 Linear kernels:",len(quantized_linears))
     torch.testing.assert_close(restored_quantized(quant_input),quantized_model(quant_input),rtol=0,atol=0)
 assert np.isfinite(y_pred_quant).all()
 ''',
-46:'''fig,axs=plt.subplots(3,2,figsize=(12,12))
-for column,compressed,label in ((0,y_pred,"pruned 90%"),(1,y_pred_quant,"pruned 90% + int8")):
-    for row,values,title in ((0,y_pred_unpruned,"unpruned"),(1,compressed,label),(2,compressed-y_pred_unpruned,"difference")):
-        im=axs[row,column].contourf(tt,xx,values,levels=50,cmap="seismic");fig.colorbar(im,ax=axs[row,column]);axs[row,column].set_title(title)
+46:'''fig,axs=plt.subplots(3,2,figsize=(16,16))
+for column,compressed,difference,label in (
+        (0,y_pred,y_pred-y_pred_unpruned,"pruned 90%"),
+        (1,y_pred_quant,y_pred-y_pred_quant,"pruned 90% + int8")):
+    for row,values,title in ((0,y_pred_unpruned,"unpruned"),(1,compressed,label),(2,difference,"difference")):
+        im=axs[row,column].contourf(tt,xx,values,levels=np.linspace(-1,1,50),cmap="seismic")
+        fig.colorbar(im,ax=axs[row,column]);axs[row,column].set(xlabel="t",ylabel="x",title=title)
 fig.tight_layout();fig.savefig(OUT / "compression_comparison.png");plt.show();plt.close(fig)
 ''',
-47:'''denominator=float(np.sum(y_pred_unpruned**2))
+47:'''# Legacy "relative MSE" is the squared matrix spectral-norm ratio (ord=2).
+denominator=float(np.linalg.norm(y_pred_unpruned,ord=2)**2)
 write_metrics({"baseline_epochs":epochs(nepoch),"pruning_epochs":run_pruning_epochs,
     "sparsity":sparsity,"zero_weights":zero_count,"total_weights":weight_count,
     "quantized_linear_count":len(quantized_linears),
-    "relative_mse_prune":float(np.sum((y_pred-y_pred_unpruned)**2)/denominator),
-    "relative_mse_prune_quant":float(np.sum((y_pred_quant-y_pred_unpruned)**2)/denominator),
+    "relative_mse_definition":"squared matrix spectral norm of prediction difference / squared matrix spectral norm of unpruned prediction (legacy relative MSE)",
+    "relative_mse_prune":float(np.linalg.norm(y_pred-y_pred_unpruned,ord=2)**2/denominator),
+    "relative_mse_prune_quant":float(np.linalg.norm(y_pred_quant-y_pred_unpruned,ord=2)**2/denominator),
     "quantization_mse_vs_pruned":float(np.mean((y_pred_quant-y_pred)**2)),
-    "gzip_bytes":{p.name:get_gzipped_model_size(p) for p in (original_file,pruned_file,exported_file,quantized_file)}})
+    "compression_method":"ZIP_DEFLATED",
+    "artifact_formats":{original_file.name:"PyTorch inference state_dict",
+        pruned_file.name:"PyTorch stripped inference state_dict",
+        exported_file.name:"TorchScript float inference",quantized_file.name:"TorchScript dynamic int8 inference"},
+    "zip_deflated_bytes":{p.name:get_gzipped_model_size(p) for p in (original_file,pruned_file,exported_file,quantized_file)}})
 '''
-},notes="Original 5,000-epoch baseline and 50,000-epoch pruning workload. Prune only the final ParameterNet kernel, increasing sparsity from 10% to 90% with the cubic schedule. Native checkpoints and TorchScript replace legacy HDF5/TFLite. CPU packed int8 Linear inference is run and validated after export; generated ShapeNet computation remains floating point.",omitted_markdown=(5,21,23,35))
+},notes="Original 5,000-epoch baseline and 50,000-epoch pruning workload. Prune only the final ParameterNet kernel, increasing sparsity from 10% to 90% with the cubic schedule. Size comparisons use inference-only PyTorch state_dict and TorchScript artifacts, wrapped in ZIP_DEFLATED as in the original helper; these backend formats differ from legacy HDF5/TFLite. Training checkpoints separately retain optimizer state. CPU packed int8 Linear inference is run and validated after export; generated ShapeNet computation remains floating point.",omitted_markdown=(5,21,23,35))
 
 src8=nb.read(original(8),as_version=4)
 emit(8,{

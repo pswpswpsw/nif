@@ -43,7 +43,8 @@ def test_real_git_checkout_with_autocrlf_true_preserves_integrity(tmp_path):
     # Stage just the explicit candidate without commits or source-repo writes.
     # checkout-index then performs Git's actual index-to-worktree conversion.
     reference=json.loads((ROOT/'dev_tests/lbfgs_reference_v1.json').read_bytes())
-    for name in (*CANDIDATE_FILES, *reference['checkout_files']):
+    tutorial7=json.loads((ROOT/'dev_tests/tutorial7_reference_v1.json').read_bytes())
+    for name in (*CANDIDATE_FILES, *reference['checkout_files'], *tutorial7['checkout_files']):
         oid = git('hash-object', '-w', '--no-filters', '--stdin', cwd=checkout,
                   data=(ROOT/name).read_bytes())
         git('update-index', '--add', '--cacheinfo', '100644', oid, name, cwd=checkout)

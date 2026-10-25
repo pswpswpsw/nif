@@ -6,6 +6,9 @@ archives, manifests and numerical assertions continue to check their old bytes.
 import hashlib
 import json
 from pathlib import Path
+from dev_tests.tutorial7_reference_scope import (
+    assert_tutorial7_reference_scope, historical_tutorial7_bytes,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 RECORD = 'dev_tests/lbfgs_reference_v1.json'
@@ -42,6 +45,7 @@ def transition_record(root=ROOT):
 
 def historical_bytes(root, name, current):
     """Undo only a frozen, exact named successor before an old guard compares it."""
+    current = historical_tutorial7_bytes(root, name, current)
     if name not in SUCCESSORS:
         return current
     root = Path(root)
@@ -81,8 +85,10 @@ def historical_bytes(root, name, current):
 
 def assert_reference_lbfgs_scope(root=ROOT):
     root = Path(root)
+    assert_tutorial7_reference_scope(root)
     record = transition_record(root)
-    source = (root/'dev_tests/lbfgs_reference_scope.py').read_bytes()
+    source = historical_tutorial7_bytes(root, 'dev_tests/lbfgs_reference_scope.py',
+                                       (root/'dev_tests/lbfgs_reference_scope.py').read_bytes())
     slot = ("RECORD_SHA256 = '" + RECORD_SHA256 + "'").encode('utf-8')
     assert source.count(slot) == 1, 'dev_tests/lbfgs_reference_scope.py'
     canonical = source.replace(slot, b"RECORD_SHA256 = '<transition-record-sha256>'", 1)

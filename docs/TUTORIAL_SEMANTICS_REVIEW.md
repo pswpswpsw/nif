@@ -4,6 +4,8 @@
 
 审计快照：当前 `pytorch` 源码为 `6a12ec8959b0cc2a9e3a2e3296e168f727b05adc`；报告本身及下方协调者复核是后加文档，不改变该源码快照。
 
+后续状态：用户要求按原始 TensorFlow 定义恢复 T7 的 A1/A2/A3，现已完成实现及独立验收，见 F 节。下文保留初审时的事实和范围，不把修复结果倒写为初审状态。
+
 ## 范围、基准与方法
 
 - 原始基准：`tutorial/1..8` 的原始 `.ipynb`（含内嵌历史输出），以及 Git commit `ad9113df14590189b12068b6b3fa7c8c8d9187d4` 的 TensorFlow 库源。已确认该 Git 对象存在。
@@ -208,3 +210,32 @@
 - 直接读取历史 Git 对象确认：提交 `f8f9d31`（2026-10-21，`Fix Colab compatibility for all eight tutorials`）中的 T7 `_colab` cells 44/47 已使用 `ord='fro'`；提交 `eac4524`（2026-10-22，`Port NIF and eight tutorials to native PyTorch`）中的 native cell 37 已使用平方元素和之比。A2 的差异在兼容版及初次移植中均已存在，不是本次看图时新增。Git 历史能确定改动阶段，不能据提交标题证明改动动机。
 - 协调者仅用 NumPy 做了一个合成矩阵算术检查：基准矩阵 `I₂`，误差 A=`diag(1,0)`、B=`0.8 I₂`。原谱范数比 A=1、B=0.64；native 平方元素和比 A=0.5、B=0.64，排序反转。这说明指标定义变化可能影响结论；它不是教程模型的实测误差，也未运行任何 ML 框架。
 - T7 A1/A3 及 T4 C3 的实际 notebook 表达式已由协调者再次直接读取确认。此次只记录审查结果，不实施修复。后续若修复，应先对原定义写出失败的复现，再验证最小修改，保留各类输出的含义和来源。
+
+## F. T7 三项原定义恢复及独立验收
+
+此后用户明确授权实施 T7 A1/A2/A3 修复，实施基线为 `789460a`。A 仅修改 T7 原生/兼容副本及其生成和公开回归；B 独立冻结私有 oracle、执行旧版本 RED 与候选 GREEN，未向 A 提供私有测试、fixture 或断言细节。
+
+1. **误差定义**：native cell 37 恢复二维矩阵 `norm(error, ord=2)**2 / norm(unpruned, ord=2)**2`。T7 `_colab` cells 44/47 同样恢复原表达式，builder 不再将 `ord=2` 改成 `fro`，兼容副本的 `modified_code_cells` 为 `[0]`。旧 `relative_mse_*` 字段名保留，并新增明确的谱范数定义说明。
+2. **六面板图**：左列为 U、P、P−U，右列为 U、Q、P−Q。使用原 normalized t/x 的 `(200,10)` 网格、`linspace(-1,1,50)` 和 `seismic`；Q 为剪枝后模型的量化结果。右下图重新隔离量化附加差异。
+3. **文件大小对象**：`original.pt`、`stripped.pt` 改为仅含模型权重及重建配置的推理工件；`baseline_latest.pt`、`pruning_latest.pt` 继续单独保存非空 optimizer 状态。四种 benchmark 工件均为推理工件，采用原 helper 实际使用的 `ZIP_DEFLATED`。输出字段改为 `zip_deflated_bytes`，另给 `compression_method` 和逐项 `artifact_formats`；旧 `gzip_bytes` 字段不再使用。PT/TorchScript 与 H5/TFLite 容器不同，绝对字节数和压缩收益不被声称跨后端相同。
+
+原始 TF notebook、另外七个教程及共用训练/model/loss/optimizer/pruning 实现未改。native generator 只为 T7 增加推理保存 helper，其他教程的共用 SETUP/HELPERS 原字符串保持一致。
+
+### 实际验证及范围
+
+| 验证层 | 实际结果 | 限定 |
+|---|---|---|
+| A 的冻结新公开回归 | 旧版 9 FAIL/1 PASS → 候选 10 PASS；测试 SHA256 始终为 `dc7aaa6448dbbcae68d787aafe8629f1a5a777138b786d21508dbea45664acce` | 实际执行输出/保存单元，小矩阵及小模型，不是训练收敛测试 |
+| A 的相关公开回归及真实 NIF 导出集成 | 相关 10 PASS、1 项 TF/TFLite 训练测试未选；另四工件集成 1 PASS | 检查真实 sparse state_dict、float/int8 TorchScript、重载预测和统计路径 |
+| B 的独立实际工件回归 | 同一冻结扩展回归：旧版 13 PASS/9 FAIL → 候选 22 PASS/0 FAIL，0 runtime errors | 含真实 payload、重载、packed-int8、ZIP 四值、谱范数和兼容副本定义 |
+| B 的全 notebook 顺序运行 | 21 个实际代码单元，CPU `NIF_SMOKE=1`，exit 0；16 次 optimizer step | baseline/pruning 各 2 epoch，属于开发路径，不是新跑 5,000/50,000 epoch |
+| B 的完整旧权重后处理 | 旧同 PT lane 的 5,000-epoch U 与 50,000-epoch P 分别恢复，Q 由 P 量化；22 PASS，0 train/optimizer step | 每个 donor 的 10 tensors/5,853 scalars 逐 dtype/shape/Cbytes 恢复并前后不变；原存档不覆盖 |
+| 六面板实际显示 | 原 TF cell 46 与候选 cell 36 的全部坐标、值、levels、cmap 捕获精确一致；实际 PNG 已查看 | normalized 原网格；固定色标下近白不等于误差为零 |
+
+B 的脱敏验收摘要 SHA256 为 `f68d3b624cc1f61d4768cd2d5343de71a2db74b57b30d7b2e34e05990e96b26d`。私有测试代码和数据保留在仓库之外。
+
+公开完整回归最初保留了 32 项历史源码范围失败及 1 项 Git/MSYS 权限失败。新增 T7 精确过渡记录保留全部旧 manifest/archive/golden，并将授权变更精确逆回历史字节供旧 guard 检查；旧 inventory 的 460 项顺序前缀保留，精确追加 14 项。只机械桥接三个公开测试基础设施文件，38 项新边界检查及原 32 项失败组共 70 PASS。B 另行只读审核这些源字节及边界，未发现绕过或阻断项；不把这项审核声称为 B 又执行了一遍公开测试。
+
+完整普通沙箱公共运行实际为 **578 PASS、4 SKIP、1 个 Git/MSYS 权限失败**；同一源码及断言的 Git checkout 测试在权限允许环境单独复验 **1 PASS**。两次运行合并覆盖 579 个通过项、4 个跳过项，不声称一次进程内全部为零失败。既有生成的历史 projection 输出不作为当前测试集收集；未删除旧产物或跳过真实断言。
+
+当前公开 `tests/test_tutorial_7.py` 的旧 Frobenius oracle 按用户要求明确改回谱范数，并有原文件 before 归档；不能笼统称作所有当前测试断言均未修改。冻结的新公开回归、B 私有 oracle 和历史数值记录均未为迁就候选而改动。此前全预算训练的 baseline/whole/parity 失败记录保持原样；本轮验收只覆盖三项 post/export 修复。

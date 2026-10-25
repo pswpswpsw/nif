@@ -15,6 +15,12 @@ presentation differences are listed in the independent
 [tutorial semantics review](TUTORIAL_SEMANTICS_REVIEW.md). Matching the repaired
 reference alone does not establish preservation of every original definition.
 
+The three tutorial-7 output/export differences identified by that review have
+now been restored to the archived TensorFlow definitions, with implementation
+and independent acceptance separated. See the repair record in
+[section F](TUTORIAL_SEMANTICS_REVIEW.md#f-t7-三项原定义恢复及独立验收).
+This scoped repair does not relabel the historical full-training failures.
+
 | Tutorial | Current local controlled-comparison result |
 |---|---|
 | 1 | User accepted the current L-BFGS test on 2026-10-25. Recorded automatic results remain AdaBelief 19/27 and repaired L-BFGS 21/27, with all paired-field checks passing and six L-BFGS MSE failures retained. Complete own-state and shared-start comparisons are recorded below. |

@@ -16,7 +16,7 @@ GENERATED_PREFIX='dev_tests/artifacts/'
 def project_public_files(source,destination,files=None):
     source,destination=Path(source),Path(destination)
     if files is None:
-        files=json.loads((source/'dev_tests/lbfgs_reference_v1_inventory.json').read_text(encoding='utf-8'))
+        files=json.loads((source/'dev_tests/tutorial7_reference_v1_inventory.json').read_text(encoding='utf-8'))
     for name in files:
         relative=Path(name)
         assert not relative.is_absolute() and '..' not in relative.parts,name

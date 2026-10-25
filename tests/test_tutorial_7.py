@@ -48,7 +48,7 @@ class Tutorial7(unittest.TestCase):
                     comments("".join(after["source"])),
                     index,
                 )
-                if index not in (0, 44, 47):
+                if index != 0:
                     self.assertEqual(before["source"], after["source"], index)
         self.assertEqual(
             "".join(repaired["cells"][0]["source"]),
@@ -63,7 +63,7 @@ class Tutorial7(unittest.TestCase):
             repaired["metadata"]["nif_colab_compatibility"]["original_sha256"],
         )
 
-    def test_relative_mse_uses_all_samples(self):
+    def test_relative_mse_preserves_reference_spectral_norm(self):
         import numpy as np
 
         selected = Path(
@@ -81,21 +81,19 @@ class Tutorial7(unittest.TestCase):
             "y_pred": pruned,
             "y_pred_quant": quantized,
         }
-        expected_quantized = np.mean((quantized - baseline) ** 2) / np.mean(
-            baseline**2
-        )
+        expected_quantized = np.linalg.norm(quantized - baseline, ord=2) ** 2 / np.linalg.norm(baseline, ord=2) ** 2
         reported = eval("".join(notebook["cells"][44]["source"]), namespace)
         self.assertAlmostEqual(
             float(reported),
             float(expected_quantized),
             places=12,
-            msg="Relative MSE must include every sample, not the matrix spectral norm",
+            msg="Preserve the original tutorial's squared matrix spectral-norm ratio",
         )
         output = io.StringIO()
         with contextlib.redirect_stdout(output):
             exec("".join(notebook["cells"][47]["source"]), namespace)
         rows = output.getvalue().splitlines()
-        expected_pruned = np.mean((pruned - baseline) ** 2) / np.mean(baseline**2)
+        expected_pruned = np.linalg.norm(pruned - baseline, ord=2) ** 2 / np.linalg.norm(baseline, ord=2) ** 2
         self.assertAlmostEqual(
             float(rows[0].split(" is ")[1]), float(expected_pruned), places=12
         )

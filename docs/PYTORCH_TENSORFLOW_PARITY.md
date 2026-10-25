@@ -18,8 +18,10 @@ but is not evidence of matched cross-framework training.
 These local results use preprovisioned environments. They do not establish a fresh
 installation or hosted-Colab run of every cell.
 
-Tutorials 1–5 now have separate hosted-Colab code-execution records,
-described below. They do not extend that claim to the other three notebooks.
+Tutorials 1–7 now have separate hosted-Colab code-execution records,
+described below. Tutorial 8's hosted full run is in progress. The records for
+tutorials 6 and 7 retain original notebook outputs; their complete raw runtime
+archives are unavailable. Their evidence limits are stated separately.
 
 ## Independence and source preservation
 
@@ -1110,14 +1112,76 @@ or calling the model or optimizer. The same original output-JavaScript
 error is retained separately. This hosted execution does not establish a
 new matched-weight TensorFlow comparison.
 
-Across hosted copies 1, 2, 4 and 5, original cell types and order are preserved,
+### Hosted Colab tutorial 6: all nine regularization fits
+
+The first downloaded notebook preserves all fifteen original code cells,
+execution counts 1–15 and no Python error outputs. Its bootstrap prints
+PyTorch 2.14.1+cu130, CPU and FULL mode. All code text and comments match
+the repository exactly. The original final metrics report nine 3,000-epoch
+fits and resolution 371. Each fit's sparse printed log reaches epoch 2,999;
+the 31 printed records per fit are not represented as complete histories.
+The original checkpoint-restoration assertions execute before the later
+completed cells. All twenty unique embedded PNGs are extracted, hashed and
+visually inspected without changing their bytes.
+
+The baseline's original final normalized training MSE is 0.000164249,
+and its physical superresolution MSE is 0.0328703. Strong L1 penalties
+produce nearly constant predictions: their training MSE is about 0.025196
+and superresolution MSE about 0.0198625. That lower superresolution MSE
+accompanies loss of the moving-wave structure. The full nine-fit metrics
+and figures are retained together, including weak fits and spurious waves.
+
+When a later evidence cell is attempted in the reconnected kernel, its
+first execution fails because the original training variables are absent.
+A separate standard-library probe also finds the default output directory
+absent. The first executed notebook and embedded outputs remain preserved,
+but complete history files, raw checkpoints, optimizer counters and a
+runtime receipt cannot be independently recovered from that directory.
+The later diagnostic failure is recorded separately from the original
+fifteen-cell execution. Only the added diagnostic cells are removed from
+the working copy after preservation; its next export is byte-identical
+to the first export. These execution records do not close the controlled
+GPU-prefix or final-quality failures above.
+
+### Hosted Colab tutorial 7: pruning and native int8 export
+
+The first export preserves all twenty-one original code cells, counts 1–21
+and no Python error outputs. The bootstrap prints the same CPU/FULL Torch
+build as tutorial 6. Code and comments match exactly. Sparse training logs
+reach baseline epoch 4,999 and pruning epoch 49,999, with 51 and 501 printed
+records respectively. They are not complete per-epoch histories. The
+original pruning-step/refresh-count, sparsity, checkpoint-restoration,
+floating TorchScript and restored native-int8 assertions execute before
+the completed final cell. All four unique embedded PNGs are extracted,
+hashed and visually inspected.
+
+The original result records 1,756 zero weights out of 1,951 in the selected
+kernel, or sparsity 0.900051, and three packed qint8 Linear kernels.
+Relative prediction MSE after pruning is 0.00100999; after pruning and
+int8 quantization it is 0.0105517. Both use the unpruned prediction energy
+as denominator, rather than independent ground truth. The original gzip
+sizes of floating and int8 TorchScript files are 32,232 and 36,506 bytes;
+the int8 export is larger in this small example. Figure residual panels
+have separate color scales, so colors alone do not compare error magnitude.
+
+A later standard-library recovery probe finds the original variables and
+default output directory absent. The original notebook evidence remains;
+raw history/checkpoint/archive hashes and independently recovered counters
+are unavailable. The prepared state-reading evidence cell is not executed
+in that empty kernel. After preserving the probe, only its added cell is
+removed; the working-copy export is byte-identical to the first export.
+This own-initialization hosted execution does not establish a new matched
+TensorFlow comparison or acceptance of the private baseline-dependent
+pruning protocol.
+
+Across hosted copies 1, 2, 4, 5, 6 and 7, original cell types and order are preserved,
 and all code text, including comments, matches exactly. Observed Markdown
 export differences are confined to line-trailing whitespace. The raw
 mismatches and their whitespace-only classification
 are retained separately; repository notebook sources are not changed to
 remove these differences. Tutorial 3's separate whitespace-only code-source
-difference is recorded above. Complete hosted execution of tutorials 6–8
-remains unverified.
+difference is recorded above. Complete hosted execution of tutorial 8
+remains unverified while its two original 50,000-epoch fits run.
 
 ### Public regression portability
 

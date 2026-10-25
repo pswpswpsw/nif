@@ -1,6 +1,6 @@
 # Controlled TensorFlow/PyTorch tutorial comparison
 
-Status: in progress, 2026-10-24. Start with tutorial 3, then cover tutorials
+Status: in progress, 2026-10-25. Start with tutorial 3, then cover tutorials
 1, 2, 4, 5, 6, 7 and 8. The existing full-execution acceptance remains useful
 but is not evidence of matched cross-framework training.
 
@@ -20,8 +20,8 @@ execution records for tutorials 1–8 appear below, including each notebook's
 artifact and rendering limits. Those hosted runs use their own initialization
 and batches; controlled cross-framework acceptance remains as reported above.
 
-Tutorials 1–7 now have separate hosted-Colab code-execution records,
-described below. Tutorial 8's hosted full run is in progress. The records for
+Tutorials 1–8 now have separate hosted-Colab code-execution records,
+described below. The records for
 tutorials 6 and 7 retain original notebook outputs; their complete raw runtime
 archives are unavailable. Their evidence limits are stated separately.
 
@@ -630,6 +630,110 @@ plots show normalized u on the 10-by-200 training grid with separate color
 scales and coherent residual definitions; this is not dense-grid visual
 coverage. Crossed-start inspection covers only the three actual loss PNGs.
 Readable, unclipped canvases do not replace the retained numerical failures.
+
+### Tutorial 1: official PyTorch L-BFGS quality comparison
+
+A separate practical comparison evaluates official `torch.optim.LBFGS`
+as an alternative when its reconstruction is similar or better. This does
+not change the original TensorFlow parity gates.
+The current custom solver's twelve valid independent CPU/TFP cases above
+still apply: all five integrated optimizer modules have the same raw bytes
+as that tested source. This reuses existing evidence; it is not a fresh
+analytic test run or a general correctness proof. Read-only review has not
+identified a finite-path port defect explaining tutorial 1's remaining errors.
+Nonfinite-objective and interface-lifecycle boundaries remain outside that
+conclusion.
+
+The following new comparison runs on the same CPU with one thread and
+float32 parameters. For each seed, both solvers receive exactly the same
+stored native AdaBelief-end weights: ten tensors and 5,853 scalars, with
+dtype, shape and C-order bytes checked. Neither AdaBelief nor the reference
+TensorFlow training is rerun. Both use the original full 2,000-row normalized
+MSE and normalization, with the original zero regularization term retained.
+
+Both solvers execute 200 fresh calls, each with `max_iter=1000`. Custom
+Hager-Zhang retains its original twenty correction pairs and independent
+stopping conditions. Official strong Wolfe uses `lr=1`, `history_size=20`,
+`tolerance_grad=tolerance_change=1e-15`, and `max_eval=1250` per call.
+These are explicit comparison settings; official stopping and line-search
+semantics remain different from TFP. See the
+[official PyTorch L-BFGS API](https://docs.pytorch.org/docs/2.14/generated/torch.optim.LBFGS.html).
+The earlier 50-call, 20-iteration screening runs cannot establish official
+precision limits: every seed's first call reached that smaller iteration cap.
+
+All six complete runs finish at returned optimizer boundaries. Final physical
+MSE is recomputed on the actual final parameters; the official `step()` return
+is the entry loss and is not used as the terminal loss.
+
+| Seed | Solver | Training MSE | Dense-10 MSE | Dense-45 MSE | Optimizer closure calls |
+|---|---|---:|---:|---:|---:|
+| 42 | Custom Hager-Zhang | 1.13484588e-9 | 1.13974530e-9 | 3.53085175e-8 | 11,914 |
+| 42 | Official strong Wolfe | 2.47829490e-9 | 2.47907297e-9 | 3.56737854e-8 | 1,079 |
+| 142 | Custom Hager-Zhang | 7.02273073e-10 | 7.02277318e-10 | 1.48484918e-8 | 13,026 |
+| 142 | Official strong Wolfe | 3.25480265e-9 | 3.25373811e-9 | 1.62317698e-8 | 1,027 |
+| 242 | Custom Hager-Zhang | 6.24668650e-10 | 6.25445897e-10 | 1.95675253e-9 | 9,929 |
+| 242 | Official strong Wolfe | 2.55827026e-9 | 2.56008230e-9 | 1.72092477e-8 | 1,046 |
+
+Official strong Wolfe uses fewer closures but has higher MSE on all nine
+whole-grid comparisons. Instrumented elapsed times for seeds 42/142/242 are
+588.83/565.31/475.25 seconds for custom and 112.32/108.02/107.50 for official.
+These include imports, guards, 201 full-grid evaluations, endpoint gradients,
+checkpoint writes and I/O; they are not isolated production optimizer timings.
+Neither solver is asserted to have converged merely because the calls finish.
+Custom reports `failed=True` on 198/200, 198/200 and 199/200 calls for seeds
+42/142/242, and reports zero converged calls. Those native flags remain
+recorded. Official exposes no corresponding convergence/failure result flag;
+no such status is inferred from its completed calls. These observations
+distinguish tested reference behavior from successful full-model convergence.
+
+The coordinator independently reads the saved artifacts without importing an
+ML framework or executing a model. All three initial canonical states and
+truth/coordinate arrays match exactly; all eighteen physical MSE values are
+reproduced exactly from saved arrays. Thirty input hashes remain unchanged.
+The seed-142 common-scale field/residual figure shows visually similar waves
+and residual differences, particularly beyond the last training time, t=90.
+That visual observation does not replace the numerical results.
+
+Seven official screening recipes cover fresh/persistent strong Wolfe,
+outer change tolerance zero, whole-objective scaling by 1e3/1e6, official
+defaults without line search, and a persistent no-line-search variant with
+`lr=0.1`, history twenty, change tolerance zero and objective scale 1e3.
+Only optimization values and gradients are scaled; all reported MSE and
+selection scores retain original units. Torch source is never patched.
+The last variant lowers seed-142 Dense-45 MSE to 1.36917072e-8 after 50 calls,
+but its training MSE is 2.31236852e-9. Its equal-weight three-grid normalized
+score is worse than complete custom, so the original frozen screening
+confirmation trigger remains false. Every one of those fifty calls used its
+twenty-iteration allowance. A separately frozen extension keeps the same
+recipe and script and increases only the maximum completed calls from fifty
+to 200 and the cumulative closure allowance from 2,000 to 4,000. Both time
+safeguards remain unchanged. It starts from the same AdaBelief-end weights
+and actually completes all 200 calls, with 4,000 optimizer closures and no
+budget overshoot or timeout; instrumented elapsed time is 252.43 seconds.
+
+| Official persistent no-line-search run, seed 142 | Training MSE | Dense-10 MSE | Dense-45 MSE |
+|---|---:|---:|---:|
+| 50 calls, 1,000 closures | 2.31236852e-9 | 2.31041506e-9 | 1.36917072e-8 |
+| 200 calls, 4,000 closures | 9.03217390e-10 | 9.02762060e-10 | 1.75601423e-8 |
+
+The longer run improves the training fit while worsening Dense-45, including
+its t>90 partition. At the declared terminal state, all three whole-grid MSE
+values exceed complete custom for seed 142. Its normalized equal-grid score
+is 4.08825306e-5 versus custom's 3.43107155e-5, so the separately declared
+extension confirmation trigger is also false. No additional target-seed
+confirmation or parameter search is run. The two frozen false triggers and
+the distinct fifty-call result are retained; a favorable intermediate point
+is not relabeled as the 200-call terminal result. The coordinator also
+checks exact starting weights, truth/coordinates and all final physical and
+normalized MSE from saved arrays for this extension, without a model call.
+
+The existing notebook and optimizer default remain unchanged. These CPU
+experiments do not replace the earlier GPU results, erase the six original
+L-BFGS MSE failures, prove a roundoff cause, or establish fresh Colab execution
+of an official-optimizer notebook. The nineteen CPU experiment jobs are
+complete; the tested official settings do not establish a consistent quality
+improvement over complete custom. Tutorials 6 and 7 retain their separate
+ongoing validation status.
 
 ### Tutorial 4 derivative deliverables
 

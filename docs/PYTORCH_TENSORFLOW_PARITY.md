@@ -13,10 +13,12 @@ but is not evidence of matched cross-framework training.
 | 5 | Three complete pairs, exact declared-state reference repeat and original end-cell checks pass the local protocol. |
 | 6 | Same-framework GPU observer and disk controls pass. Cross-framework GPU prefixes retain 24 numerical failures in two of nine configurations; a bounded same-state/gradient replay passes. The full matrix remains incomplete. |
 | 7 | Three complete baseline pairs fail the original combined quality criteria. Baseline-dependent primary pruning/export acceptance is blocked; separately labeled diagnostic continuations are pending. |
-| 8 | All seven original full lanes complete. Three complete pairs pass 36/60 quality criteria and fail 24; all 9,792 prefix checks pass. Strict TF-repeat retained-state/stream checks pass. The original aggregate fails its unchanged numeric gate; scoped final-function diagnostics remain pending. |
+| 8 | All seven original full lanes complete. Three complete pairs pass 36/60 quality criteria and fail 24; all 9,792 prefix checks pass. Strict TF-repeat retained-state/stream checks pass. The original aggregate and the scoped CPU final-function diagnostic retain failures. |
 
-These local results use preprovisioned environments. They do not establish a fresh
-installation or hosted-Colab run of every cell.
+These local results use preprovisioned environments. Separate hosted Colab
+execution records for tutorials 1–8 appear below, including each notebook's
+artifact and rendering limits. Those hosted runs use their own initialization
+and batches; controlled cross-framework acceptance remains as reported above.
 
 Tutorials 1–7 now have separate hosted-Colab code-execution records,
 described below. Tutorial 8's hosted full run is in progress. The records for
@@ -1002,9 +1004,29 @@ training times, 0, 10, ..., 90. The dense grid has 800 points at 45 times
 `100*k/45`: forty are new, and four exceed the largest training time.
 These test different temporal coverage. The original spatial-superresolution
 figures do not establish performance on that dense grid, and its failures
-are retained. A separately scoped, zero-update CPU comparison at identical
-final weights is pending to examine function/Jacobian agreement; it cannot
-by itself establish the cause of GPU training-trajectory differences.
+are retained.
+
+A separately frozen, zero-update CPU diagnostic assigns identical final
+weights to both backends: TensorFlow and PyTorch donors for each seed-42
+variant, four sets and eight fresh backend executions. All ten canonical
+tensors per set are assigned strictly; tracked owned scientific state and
+input/source hashes stay unchanged. Every normalized three-column grid
+matrix retains pointwise failures under the original prediction tolerance.
+Across 552,000 point-components, 12,908 fail: 32 field values, 747 time
+derivatives and 12,129 spatial derivatives. Maximum component relative RMS
+differences are 1.35e-6, 1.77e-6 and 1.25e-6 respectively. These descriptive
+RMS values do not replace the failed pointwise criteria. All four original
+seven-row objectives and scalar-loss input gradients pass; 38 of 40
+parameter-gradient arrays pass. The two failed arrays belong to the
+TensorFlow-donor Sobolev set. The comparison returns exit 1.
+
+This diagnostic uses ordered outer-direct CPU calls with the original
+internal TensorFlow `tf.function`, original backend-specific batch shapes,
+and a warm seven-row gradient probe after the grids. It does not reproduce
+the original eight-call predict-first path, compare identical batch shapes,
+or establish same-GPU training-gradient equivalence. It neither identifies
+a semantic port defect nor establishes the cause of the complete training
+differences. All original 24 quality failures remain unresolved.
 
 A descriptive analysis reads fourteen complete retained epoch histories,
 without a new model or framework evaluation. Input raw hashes stay unchanged.
@@ -1034,7 +1056,7 @@ and workloads. A completed comparison can retain failed acceptance criteria.
 | 2 | All full pairs, TF repeat, fourteen disk cases and fourteen observer controls complete with their stated evidence scopes | Six SIREN paired-field failures and nine final-weight pointwise failures remain unresolved; full quality acceptance has not passed |
 | 6 | Nine same-framework GPU observer controls and 36 disk-next controls pass; actual cross-framework GPU prefixes retain 24 failed numerical checks, alongside seven earlier CPU failures; bounded same-state/gradient replay passes | The full matrix, original field criteria, final aggregate/gallery cells and the retained prefix failures remain unresolved |
 | 7 | Seven complete baseline jobs and three failed paired comparisons; TensorFlow repeat passes its declared numerical checks; earlier finite pruning/restore controls remain recorded | Original primary pruning/export is blocked by baseline quality; explicit diagnostic continuations and real export/quantization results remain pending |
-| 8 | All seven full lanes, three comparisons, strict TF repeat, original aggregate attempt and original figure QA complete. Quality passes 36/60; all 9,792 prefix checks pass; aggregate fails the unchanged numeric gate | The 24 quality failures and scoped same-final-weight CPU diagnostics remain unresolved |
+| 8 | All seven full lanes, three comparisons, strict TF repeat, original aggregate attempt, original figure QA and scoped same-final-weight CPU diagnostic complete. Quality passes 36/60; all 9,792 prefix checks pass; aggregate and CPU pointwise contracts retain failures | The 24 quality failures and the cause of the complete training differences remain unresolved |
 
 The earlier tutorial 7 CPU observer failure remains recorded and is not an
 established product defect; its actual TensorFlow GPU controls now pass.
@@ -1244,8 +1266,60 @@ export differences are confined to line-trailing whitespace. The raw
 mismatches and their whitespace-only classification
 are retained separately; repository notebook sources are not changed to
 remove these differences. Tutorial 3's separate whitespace-only code-source
-difference is recorded above. Complete hosted execution of tutorial 8
-remains unverified while its two original 50,000-epoch fits run.
+difference is recorded above. Tutorial 8's separate whitespace-only
+code-source difference and complete execution are recorded below.
+
+### Hosted Colab tutorial 8: both complete Sobolev and baseline fits
+
+The reconnected Colab T4 session completes all seventeen original code
+cells, with execution counts 1–17 and no Python error outputs. An appended
+evidence cell completes as count 18. The actual eighteen-cell code export
+is preserved; no earlier full export without that evidence cell is claimed.
+All original Python ASTs and comment text match the repository. One analytic
+derivative cell loses two line-trailing spaces on export, so raw code-source
+equality remains false, with the exact difference preserved separately.
+
+The runtime receipt records Python 3.13.16, PyTorch 2.14.1+cu130, NumPy
+2.1.3 and Tesla T4, with installed public revision
+`fa167ae59bdbb8bf5779eac24b5af32c8dfb998a`. Both original fits finish
+50,000 epochs. Their complete histories contain exactly epochs 0–49,999,
+each with 2,000 rows: 100 million recorded row visits per fit. The evidence
+cell reads the actual saved checkpoints and asserts 200,000 optimizer
+updates per fit and latest epoch 49,999. Together they record 400,000
+updates and 200 million row visits. The local archive audit independently
+checks history contents and raw file hashes; checkpoint counters come from
+the hosted checkpoint-reading receipt. No independent consumed-row-ID
+trace is added.
+
+The original final physical metrics are:
+
+| Quantity | Baseline | Spatial Sobolev |
+|---|---|---|
+| Training-grid field MSE | 7.84638e-6 | 1.16323e-4 |
+| Training-grid time-derivative MSE | 0.117880 | 0.118920 |
+| Training-grid spatial-derivative MSE | 2948.94 | 1.46833 |
+| Spatial-superresolution field MSE | 0.00390429 | 9.79360e-5 |
+
+The superresolution grid uses 800 spatial points at the same ten training
+times. Spatial supervision has coefficient 1e-3 in the first fit only;
+time derivatives remain monitor-only. These final physical-grid metrics
+are separate from the printed last-epoch normalized training means.
+All fifteen original embedded figures are inspected without replotting.
+The baseline retains pronounced off-wave superresolution oscillations;
+spatial supervision suppresses them while retaining small residual spikes.
+Both time-derivative reconstructions remain poor, and the loss fluctuations
+are preserved.
+
+The original output-JavaScript error recurs. The evidence cell reads saved
+state, hashes twenty original output files and redisplays thirteen saved
+PNGs without another model, training or optimizer call. Its first archive
+is downloaded through the Colab Files panel because the automatic browser
+download does not arrive. The preserved ZIP contains twenty original
+outputs and the receipt; its CRC is clean and all twenty output hashes
+match. All thirteen saved PNGs are also inspected and match the evidence
+cell's embedded image bytes exactly. This own-initialization hosted execution does not
+close the matched-weight quality or CPU pointwise failures above, and
+reliable rendering of every persisted browser output remains unverified.
 
 ### Public regression portability
 

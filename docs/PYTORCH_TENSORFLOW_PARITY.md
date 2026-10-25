@@ -13,7 +13,7 @@ but is not evidence of matched cross-framework training.
 | 5 | Three complete pairs, exact declared-state reference repeat and original end-cell checks pass the local protocol. |
 | 6 | Same-framework GPU observer and disk controls pass. Cross-framework GPU prefixes retain 24 numerical failures in two of nine configurations; a bounded same-state/gradient replay passes. The full matrix remains incomplete. |
 | 7 | Three complete baseline pairs fail the original combined quality criteria. Baseline-dependent primary pruning/export acceptance is blocked; separately labeled diagnostic continuations are pending. |
-| 8 | Short CPU and mandatory same-GPU controls pass. Complete training, repeat comparisons and final quality acceptance remain pending. |
+| 8 | All seven original full lanes complete. Three complete pairs pass 36/60 quality criteria and fail 24; all 9,792 prefix checks pass. Strict TF-repeat retained-state/stream checks pass. The original aggregate fails its unchanged numeric gate; scoped final-function diagnostics remain pending. |
 
 These local results use preprovisioned environments. They do not establish a fresh
 installation or hosted-Colab run of every cell.
@@ -933,13 +933,15 @@ following zero-update saved-final evaluator stops on a proof-label mismatch:
 the source guard checks the exact frozen bytes successfully, but its returned
 record contains different descriptive labels before and after evaluation.
 The versioned label-only evaluator repair passes a frozen source-only
-regression; its zero-update GPU re-evaluation remains queued after the active
-tutorial-8 work. The completed fit and disk evidence are preserved. The
-remaining full fits,
-shared-grid comparisons and figures are still required. No whole-tutorial
+regression and then completes the same original zero-update GPU request.
+The restored counter remains 12,000, all eight profiled training/update call
+counts are zero, 66 owned arrays stay unchanged and eight saved/live field
+and Jacobian arrays match strictly. The original stop is retained. Completed
+fit and disk evidence are reused while the remaining full matrix continues.
+Shared-grid comparisons and figures are still required. No whole-tutorial
 acceptance follows from this partial execution.
 
-### Tutorial 8: mandatory GPU controls complete
+### Tutorial 8: controls and complete matched training
 
 Four fresh TensorFlow/PyTorch GPU lanes, with observation on and off, complete
 both variants' eight epochs and 32 updates. Observation-ON lanes record
@@ -956,8 +958,70 @@ variable rename passes the same actual-metadata regression, and the
 artifact-only comparison succeeds using the four completed lanes. Additional
 provenance metadata is kept in a separate sidecar so the canonical certificate
 retains its original schema. No training, metric or tolerance was changed.
-The complete learning fits, reference repeat and final acceptance remain
-separate pending work.
+All seven original full training lanes subsequently finish: three TensorFlow/
+PyTorch pairs and one TensorFlow seed-42 repeat. Each lane completes two
+50,000-epoch variants, 400,000 primary updates and 200 million actual row
+visits. Together they account for 2.8 million primary updates and 1.4 billion
+row visits. Independent checkpoint clones add 16 updates per lane, without
+updating the primary runs.
+
+| Paired seed | Full quality checks passed | Prefix checks passed |
+|---|---|---|
+| 42 | 10/20 | 3,264/3,264 |
+| 142 | 14/20 | 3,264/3,264 |
+| 242 | 12/20 | 3,264/3,264 |
+| Total | 36/60 | 9,792/9,792 |
+
+All three original reports verify the full workload. The original parent
+stops after the seed-42 quality failure; the remaining two original
+comparators run in a recorded CPU-only continuation against the completed
+lane artifacts. The original stop, sources and thresholds remain unchanged.
+The 24 failed checks include paired field/spatial-derivative differences
+and some terminal MSE/objective criteria. For seed 42, normalized paired
+field RMS is 0.05748 on the training grid, 0.05750 on spatial superresolution
+and 0.32896 on the dense grid. Dense paired spatial-derivative RMS is 0.26462.
+The original field/derivative bounds remain 0.05/0.10. Time derivatives are
+monitor-only. The original aggregate executes and returns `passed=false`
+and `full_learning_acceptance=false`, with the original numeric-gate/workload
+failure reason, `integrity_error=null` and `numeric_gates_changed=false`.
+The CPU continuation ends with exit 1 after completing its independent checks.
+
+The original strict TensorFlow seed-42 repeat passes: 9,162 retained state
+and output arrays match by dtype, shape and logical C-order bytes, and
+400,000 entries in each recorded host-metric and actual-consumption stream
+match. Full checkpoint/postprocessing proofs are rechecked. Intermediate
+per-update model/optimizer states were not retained, so that broader claim
+is not made. This repeat result does not establish cross-framework parity.
+Separate original-PNG inspection is complete for all seven lanes, using
+strictly byte-identical prior-view representatives for duplicates. The
+original postprocessing records are preserved; the additional image QA
+does not replace their stored fields or establish dense-grid accuracy.
+
+The spatial-superresolution grid has 800 spatial points at the same ten
+training times, 0, 10, ..., 90. The dense grid has 800 points at 45 times
+`100*k/45`: forty are new, and four exceed the largest training time.
+These test different temporal coverage. The original spatial-superresolution
+figures do not establish performance on that dense grid, and its failures
+are retained. A separately scoped, zero-update CPU comparison at identical
+final weights is pending to examine function/Jacobian agreement; it cannot
+by itself establish the cause of GPU training-trajectory differences.
+
+A descriptive analysis reads fourteen complete retained epoch histories,
+without a new model or framework evaluation. Input raw hashes stay unchanged.
+The ratio of PyTorch to TensorFlow mean training objective over the fixed
+last 2,000 epochs is:
+
+| Seed | Sobolev objective ratio | Baseline objective ratio |
+|---|---|---|
+| 42 | 1.06646 | 0.93855 |
+| 142 | 1.00613 | 1.09958 |
+| 242 | 1.05205 | 1.00846 |
+
+These are epoch-averaged normalized training quantities, not final-checkpoint
+physical-grid MSEs or replacement acceptance gates. The TF seed-42 repeat's
+parsed history scalars also match exactly, recorded separately from the
+strict retained-state result above. Similar loss histories do not prove
+field parity, a roundoff cause or absence of a port defect.
 
 ### Remaining learning tutorials: readiness, not full acceptance
 
@@ -970,7 +1034,7 @@ and workloads. A completed comparison can retain failed acceptance criteria.
 | 2 | All full pairs, TF repeat, fourteen disk cases and fourteen observer controls complete with their stated evidence scopes | Six SIREN paired-field failures and nine final-weight pointwise failures remain unresolved; full quality acceptance has not passed |
 | 6 | Nine same-framework GPU observer controls and 36 disk-next controls pass; actual cross-framework GPU prefixes retain 24 failed numerical checks, alongside seven earlier CPU failures; bounded same-state/gradient replay passes | The full matrix, original field criteria, final aggregate/gallery cells and the retained prefix failures remain unresolved |
 | 7 | Seven complete baseline jobs and three failed paired comparisons; TensorFlow repeat passes its declared numerical checks; earlier finite pruning/restore controls remain recorded | Original primary pruning/export is blocked by baseline quality; explicit diagnostic continuations and real export/quantization results remain pending |
-| 8 | CPU finite controls and the mandatory four-lane GPU controls pass; actual Colab postprocessing order reproduces all six prior common-metric arrays byte-for-byte | Both full fits, remaining initializations, reference repeat comparisons and final figures |
+| 8 | All seven full lanes, three comparisons, strict TF repeat, original aggregate attempt and original figure QA complete. Quality passes 36/60; all 9,792 prefix checks pass; aggregate fails the unchanged numeric gate | The 24 quality failures and scoped same-final-weight CPU diagnostics remain unresolved |
 
 The earlier tutorial 7 CPU observer failure remains recorded and is not an
 established product defect; its actual TensorFlow GPU controls now pass.

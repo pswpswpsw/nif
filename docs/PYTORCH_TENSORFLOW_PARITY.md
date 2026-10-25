@@ -1,8 +1,19 @@
 # Controlled TensorFlow/PyTorch tutorial comparison
 
-Status: in progress, 2026-10-25. Start with tutorial 3, then cover tutorials
-1, 2, 4, 5, 6, 7 and 8. The existing full-execution acceptance remains useful
-but is not evidence of matched cross-framework training.
+Status: execution queue closed, 2026-10-25; recorded numerical failures remain.
+The comparison started with tutorial 3, then covered tutorials 1, 2, 4, 5, 6,
+7 and 8. Hosted full execution and controlled numerical acceptance are
+separate evidence.
+
+Scope terminology: in the controlled-comparison sections, "original/frozen
+criteria" means the comparison protocol set during this migration, not tests
+shipped with the original TensorFlow notebooks. Refined grids, additional
+derivative checks and repeat/restore controls may extend the original teaching
+demonstration. The archived original, the repaired Colab reference and the
+native implementation are distinct baselines. Their confirmed semantic and
+presentation differences are listed in the independent
+[tutorial semantics review](TUTORIAL_SEMANTICS_REVIEW.md). Matching the repaired
+reference alone does not establish preservation of every original definition.
 
 | Tutorial | Current local controlled-comparison result |
 |---|---|
@@ -11,8 +22,8 @@ but is not evidence of matched cross-framework training.
 | 3 | Three corrected complete pairs pass all nine MSE gates and fail all twelve paired-field/Jacobian gates. |
 | 4 | Original derivative deliverables pass; the reference has no training workload. |
 | 5 | Three complete pairs, exact declared-state reference repeat and original end-cell checks pass the local protocol. |
-| 6 | Same-framework GPU observer and disk controls pass. Cross-framework GPU prefixes retain 24 numerical failures in two of nine configurations; a bounded same-state/gradient replay passes. The full matrix remains incomplete. |
-| 7 | Three complete baseline pairs fail the original combined quality criteria. Baseline-dependent primary pruning/export acceptance is blocked; separately labeled diagnostic continuations are pending. |
+| 6 | All 63 full fits, 63 disk controls and 63 saved-final evaluations complete. The full quality matrix passes 57/81 flags and retains 24 failures; earlier CPU/GPU prefix failures remain. TF repeat retained-array checks and 63 common-field figure inspections complete. |
+| 7 | Baseline quality remains insufficient for primary pruning acceptance. All eight separately labeled full diagnostic pruning runs and five comparisons complete; three own-baseline pairs and the common-start supplement retain numerical failures. Export execution and TF repeat do not grant whole-tutorial acceptance. |
 | 8 | All seven original full lanes complete. Three complete pairs pass 36/60 quality criteria and fail 24; all 9,792 prefix checks pass. Strict TF-repeat retained-state/stream checks pass. The original aggregate and the scoped CPU final-function diagnostic retain failures. |
 
 These local results use preprovisioned environments. Separate hosted Colab
@@ -86,13 +97,13 @@ must identify both immutable source snapshots and environment versions.
 | Tutorial | Required comparison |
 |---|---|
 | 1 | AdaBelief trajectory and complete L-BFGS refinement; document distinct native/TFP line searches and evaluate common fields and convergence |
-| 2 | Both tanh/Swish and SIREN complete fits with actual shared initial tensors |
+| 2 | Both Swish and SIREN complete fits with actual shared initial tensors |
 | 3 | Full last-layer-parameterized model, weighted cylinder loss, actual GC/AdaBelief, 600 epochs and all 191,775 rows |
 | 4 | Selected full Jacobian/Hessian tensors and their parameter differentiation, including zero/linear cases |
 | 5 | Actual common TFRecord shards and pass/shard/row order, target shapes, loss broadcasting, all one million rows and two passes |
 | 6 | All nine regularized fits; shared physical superresolution grid and correct parameter/coordinate order |
 | 7 | Baseline fit, exact pruning schedule/mask-update semantics and complete sparse fit; compare quantized quality and export/restoration separately |
-| 8 | Both complete fits, field/spatial/temporal derivative metrics, Sobolev objective, correct physical inverse scaling and superresolution |
+| 8 | Both complete fits; field plus spatial-derivative supervision, temporal derivative as monitor only; correct physical inverse scaling and superresolution |
 
 Cross-framework floating-point training need not follow bitwise-identical
 long trajectories. Numerical differences must be measured and explained;
@@ -737,8 +748,8 @@ experiments do not replace the earlier GPU results, erase the six original
 L-BFGS MSE failures, prove a roundoff cause, or establish fresh Colab execution
 of an official-optimizer notebook. The nineteen CPU experiment jobs are
 complete; the tested official settings do not establish a consistent quality
-improvement over complete custom. Tutorials 6 and 7 retain their separate
-ongoing validation status.
+improvement over complete custom. Tutorials 6 and 7 have since completed their
+separate execution queues with recorded numerical failures retained.
 
 ### Tutorial 4 derivative deliverables
 
@@ -1163,8 +1174,8 @@ and workloads. A completed comparison can retain failed acceptance criteria.
 |---|---|---|
 | 1 | Candidate-017 complete own-state and shared-start matrices, fresh GPU/restore controls, public suite and independent CPU cases complete; repaired L-BFGS passes 21/27, with original records retained | Six L-BFGS MSE failures, eight unchanged AdaBelief MSE failures and initial-gradient/convergence limitations remain unresolved |
 | 2 | All full pairs, TF repeat, fourteen disk cases and fourteen observer controls complete with their stated evidence scopes | Six SIREN paired-field failures and nine final-weight pointwise failures remain unresolved; full quality acceptance has not passed |
-| 6 | Nine same-framework GPU observer controls and 36 disk-next controls pass; actual cross-framework GPU prefixes retain 24 failed numerical checks, alongside seven earlier CPU failures; bounded same-state/gradient replay passes | The full matrix, original field criteria, final aggregate/gallery cells and the retained prefix failures remain unresolved |
-| 7 | Seven complete baseline jobs and three failed paired comparisons; TensorFlow repeat passes its declared numerical checks; earlier finite pruning/restore controls remain recorded | Original primary pruning/export is blocked by baseline quality; explicit diagnostic continuations and real export/quantization results remain pending |
+| 6 | All 63 full fits, 63 disk controls, 63 saved-final evaluations, original CPU postprocessing and 63 common-field PNG inspections complete; TF repeat checks 42,322 retained arrays strictly equal | Quality retains 24/81 failures, all three paired reports fail, and earlier seven CPU plus 24 GPU prefix failures remain unresolved |
+| 7 | All seven baselines, eight full diagnostic pruning runs, five comparisons and 16 PNG-path inspections complete; TF repeat checks 4,770 retained arrays strictly equal; real export/quantized execution is recorded | Primary acceptance remains blocked by baseline quality; three own-baseline pruning pairs and the common-start supplement fail their numerical criteria. T7's source-level metric, figure and artifact-size differences are separately documented in the semantic review |
 | 8 | All seven full lanes, three comparisons, strict TF repeat, original aggregate attempt, original figure QA and scoped same-final-weight CPU diagnostic complete. Quality passes 36/60; all 9,792 prefix checks pass; aggregate and CPU pointwise contracts retain failures | The 24 quality failures and the cause of the complete training differences remain unresolved |
 
 The earlier tutorial 7 CPU observer failure remains recorded and is not an

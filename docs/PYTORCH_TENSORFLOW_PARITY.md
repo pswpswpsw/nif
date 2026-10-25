@@ -6,7 +6,7 @@ but is not evidence of matched cross-framework training.
 
 | Tutorial | Current local controlled-comparison result |
 |---|---|
-| 1 | Candidate 017 retains AdaBelief's 19/27 result and passes 21/27 quality checks after repaired L-BFGS. All paired-field checks pass; six L-BFGS MSE records still fail. Complete own-state and shared-start comparisons are recorded below; full quality acceptance has not passed. |
+| 1 | User accepted the current L-BFGS test on 2026-10-25. Recorded automatic results remain AdaBelief 19/27 and repaired L-BFGS 21/27, with all paired-field checks passing and six L-BFGS MSE failures retained. Complete own-state and shared-start comparisons are recorded below. |
 | 2 | Three complete pairs pass for Swish and fail all six SIREN paired-field gates. All fourteen declared-state disk-continuation cases and their observer controls pass; full quality acceptance still fails. |
 | 3 | Three corrected complete pairs pass all nine MSE gates and fail all twelve paired-field/Jacobian gates. |
 | 4 | Original derivative deliverables pass; the reference has no training workload. |
@@ -632,6 +632,11 @@ coverage. Crossed-start inspection covers only the three actual loss PNGs.
 Readable, unclipped canvases do not replace the retained numerical failures.
 
 ### Tutorial 1: official PyTorch L-BFGS quality comparison
+
+Practical acceptance, 2026-10-25: the user accepts this tutorial-1 L-BFGS
+test and comparison. Keep the current `ReferenceLBFGS` default. This records
+the user's acceptance decision for this test; all original numerical results,
+failed automatic criteria and verification limits below remain recorded.
 
 A separate practical comparison evaluates official `torch.optim.LBFGS`
 as an alternative when its reconstruction is similar or better. This does

@@ -24,7 +24,7 @@ This scoped repair does not relabel the historical full-training failures.
 | Tutorial | Current local controlled-comparison result |
 |---|---|
 | 1 | User accepted the current L-BFGS test on 2026-10-25. Recorded automatic results remain AdaBelief 19/27 and repaired L-BFGS 21/27, with all paired-field checks passing and six L-BFGS MSE failures retained. Complete own-state and shared-start comparisons are recorded below. |
-| 2 | Three complete pairs pass for Swish and fail all six SIREN paired-field gates. All fourteen declared-state disk-continuation cases and their observer controls pass; full quality acceptance still fails. |
+| 2 | User accepted the current results on 2026-10-25 after reviewing absolute errors. Recorded automatic results remain 24/30 main quality checks, with six SIREN paired-field failures; the separate final-weight diagnostic retains nine failed check groups. All fourteen declared-state disk-continuation cases and their observer controls pass. |
 | 3 | Three corrected complete pairs pass all nine MSE gates and fail all twelve paired-field/Jacobian gates. |
 | 4 | Original derivative deliverables pass; the reference has no training workload. |
 | 5 | Three complete pairs, exact declared-state reference repeat and original end-cell checks pass the local protocol. |
@@ -851,6 +851,17 @@ declared local matched-training protocol for tutorial 5. Preprovisioned WSL
 GPU environments were used, so this is not a fresh installer or hosted-Colab
 execution claim.
 
+### Tutorial 2: user acceptance
+
+On 2026-10-25, the user accepted the current tutorial-2 results after reviewing
+the absolute TF/PyTorch prediction differences and instructed that these
+differences need no further investigation. Tutorial 2 is therefore accepted
+by the user. The numerical reports below retain their original results:
+24/30 main quality checks pass, six SIREN paired-field checks fail, and the
+separate same-final-weight diagnostic retains nine failed array/quantity
+check groups. This acceptance decision does not change the recorded gates
+or measurements.
+
 ### Tutorial 2: first complete pair fails the original field criterion
 
 Both reference fits, Swish and NIFMultiScale, have completed the original
@@ -1179,7 +1190,7 @@ and workloads. A completed comparison can retain failed acceptance criteria.
 | Tutorial | Current finite evidence | Still required |
 |---|---|---|
 | 1 | Candidate-017 complete own-state and shared-start matrices, fresh GPU/restore controls, public suite and independent CPU cases complete; repaired L-BFGS passes 21/27, with original records retained | Six L-BFGS MSE failures, eight unchanged AdaBelief MSE failures and initial-gradient/convergence limitations remain unresolved |
-| 2 | All full pairs, TF repeat, fourteen disk cases and fourteen observer controls complete with their stated evidence scopes | Six SIREN paired-field failures and nine final-weight pointwise failures remain unresolved; full quality acceptance has not passed |
+| 2 | All full pairs, TF repeat, fourteen disk cases and fourteen observer controls complete with their stated evidence scopes | User accepted the current results on 2026-10-25; no further investigation requested. Six automatic paired-field failures and nine separate final-weight check-group failures remain recorded. |
 | 6 | All 63 full fits, 63 disk controls, 63 saved-final evaluations, original CPU postprocessing and 63 common-field PNG inspections complete; TF repeat checks 42,322 retained arrays strictly equal | Quality retains 24/81 failures, all three paired reports fail, and earlier seven CPU plus 24 GPU prefix failures remain unresolved |
 | 7 | All seven baselines, eight full diagnostic pruning runs, five comparisons and 16 PNG-path inspections complete; TF repeat checks 4,770 retained arrays strictly equal; real export/quantized execution is recorded | Primary acceptance remains blocked by baseline quality; three own-baseline pruning pairs and the common-start supplement fail their numerical criteria. T7's source-level metric, figure and artifact-size differences are separately documented in the semantic review |
 | 8 | All seven full lanes, three comparisons, strict TF repeat, original aggregate attempt, original figure QA and scoped same-final-weight CPU diagnostic complete. Quality passes 36/60; all 9,792 prefix checks pass; aggregate and CPU pointwise contracts retain failures | The 24 quality failures and the cause of the complete training differences remain unresolved |

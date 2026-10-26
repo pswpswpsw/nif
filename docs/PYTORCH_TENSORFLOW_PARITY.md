@@ -1,6 +1,12 @@
 # Controlled TensorFlow/PyTorch tutorial comparison
 
 Status: execution queue closed, 2026-10-25; recorded numerical failures remain.
+User acceptance is separate from completed execution and automatic checks.
+The user accepted the tutorial-1 L-BFGS test and the current tutorial-2 and
+tutorial-3 results. Tutorials 4–8 still await user review. The three completed
+tutorial-7 semantic/output fixes do not constitute user acceptance of the
+whole tutorial.
+
 The comparison started with tutorial 3, then covered tutorials 1, 2, 4, 5, 6,
 7 and 8. Hosted full execution and controlled numerical acceptance are
 separate evidence.

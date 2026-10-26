@@ -3,8 +3,8 @@
 Status: execution queue closed, 2026-10-25; recorded numerical failures remain.
 User acceptance is separate from completed execution and automatic checks.
 The user accepted the tutorial-1 L-BFGS test and the current tutorial-2,
-tutorial-3 and tutorial-4 results. Tutorials 5–8 still await user review. The
-three completed tutorial-7 semantic/output fixes do not constitute user
+tutorial-3, tutorial-4 and tutorial-5 results. Tutorials 6–8 still await user
+review. The three completed tutorial-7 semantic/output fixes do not constitute user
 acceptance of the whole tutorial.
 
 The comparison started with tutorial 3, then covered tutorials 1, 2, 4, 5, 6,
@@ -33,7 +33,7 @@ This scoped repair does not relabel the historical full-training failures.
 | 2 | User accepted the current results on 2026-10-25 after reviewing absolute errors. Recorded automatic results remain 24/30 main quality checks, with six SIREN paired-field failures; the separate final-weight diagnostic retains nine failed check groups. All fourteen declared-state disk-continuation cases and their observer controls pass. |
 | 3 | User accepted the current candidate-016 results on 2026-10-25 after reviewing the TF/PT results, absolute errors and loss-curve learning-rate steps. Recorded automatic comparisons retain nine MSE passes and twelve paired-field/Jacobian failures. |
 | 4 | User accepted the current results on 2026-10-25 after reviewing saved TF/PT derivative tensors and absolute errors. The reference has no training workload; the six supplemental float64 optimizer-update discrepancies remain separately recorded. |
-| 5 | Three complete pairs, exact declared-state reference repeat and original end-cell checks pass the local protocol. |
+| 5 | User accepted the current results on 2026-10-26 after reviewing the full paired stream-training results, figures and absolute errors. Three complete pairs, the declared-state reference repeat and original end-cell checks pass the local protocol. |
 | 6 | All 63 full fits, 63 disk controls and 63 saved-final evaluations complete. The full quality matrix passes 57/81 flags and retains 24 failures; earlier CPU/GPU prefix failures remain. TF repeat retained-array checks and 63 common-field figure inspections complete. |
 | 7 | Baseline quality remains insufficient for primary pruning acceptance. All eight separately labeled full diagnostic pruning runs and five comparisons complete; three own-baseline pairs and the common-start supplement retain numerical failures. Export execution and TF repeat do not grant whole-tutorial acceptance. |
 | 8 | All seven original full lanes complete. Three complete pairs pass 36/60 quality criteria and fail 24; all 9,792 prefix checks pass. Strict TF-repeat retained-state/stream checks pass. The original aggregate and the scoped CPU final-function diagnostic retain failures. |
@@ -786,7 +786,7 @@ separate execution queues with recorded numerical failures retained.
 The user accepted tutorial 4 on 2026-10-25 after reviewing the saved derivative
 comparisons, absolute errors and the supplemental-update scope. This records
 user acceptance separately from the original automatic results below;
-tutorials 5–8 remain pending user review.
+tutorials 6–8 remain pending user review.
 
 The archived tutorial 4 has no optimizer training workload. Its actual
 derivative deliverables pass CPU float64 and same-GPU float32 comparisons with
@@ -803,6 +803,12 @@ separately and are not represented as derivative failures or as optimizer
 parity passes.
 
 ### Tutorial 5: three complete controlled pairs and reference repeat
+
+The user accepted tutorial 5 on 2026-10-26 after reviewing the three complete
+paired results, the saved stream-loss curves and absolute prediction errors.
+This user decision applies to tutorial 5; tutorials 6–8 remain pending user
+review. The random-data demonstration and the repaired TF target-shape
+reference retain their stated scopes below.
 
 The first paired initialization, seed 42, passes the original full-workload
 criteria. Each framework consumes the same 100 TFRecord shards, containing

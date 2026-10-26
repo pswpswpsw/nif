@@ -25,7 +25,7 @@ This scoped repair does not relabel the historical full-training failures.
 |---|---|
 | 1 | User accepted the current L-BFGS test on 2026-10-25. Recorded automatic results remain AdaBelief 19/27 and repaired L-BFGS 21/27, with all paired-field checks passing and six L-BFGS MSE failures retained. Complete own-state and shared-start comparisons are recorded below. |
 | 2 | User accepted the current results on 2026-10-25 after reviewing absolute errors. Recorded automatic results remain 24/30 main quality checks, with six SIREN paired-field failures; the separate final-weight diagnostic retains nine failed check groups. All fourteen declared-state disk-continuation cases and their observer controls pass. |
-| 3 | Three corrected complete pairs pass all nine MSE gates and fail all twelve paired-field/Jacobian gates. |
+| 3 | User accepted the current candidate-016 results on 2026-10-25 after reviewing the TF/PT results, absolute errors and loss-curve learning-rate steps. Recorded automatic comparisons retain nine MSE passes and twelve paired-field/Jacobian failures. |
 | 4 | Original derivative deliverables pass; the reference has no training workload. |
 | 5 | Three complete pairs, exact declared-state reference repeat and original end-cell checks pass the local protocol. |
 | 6 | All 63 full fits, 63 disk controls and 63 saved-final evaluations complete. The full quality matrix passes 57/81 flags and retains 24 failures; earlier CPU/GPU prefix failures remain. TF repeat retained-array checks and 63 common-field figure inspections complete. |
@@ -164,6 +164,24 @@ observed fit/update regression failed before the native default was corrected
 to inactive GC; the corrected eight-update CPU pilot passes all 248 checks.
 An active-GC reference is retained only as a separately labeled intended-GC
 diagnostic. Reference code will not be changed to make a candidate pass.
+
+### Tutorial 3: user acceptance
+
+On 2026-10-25, the user accepted the current candidate-016 tutorial-3 results
+after reviewing the complete TF/PyTorch runs, original figures and absolute
+errors, followed by an audit of the apparent loss-curve jumps. The two main
+steps align with the original learning-rate reductions at zero-based epochs
+200 and 400 in both frameworks. Parameters are updated every minibatch;
+the native every-100-epoch branch only prints and writes the history.
+The original TF figure samples six epochs, whereas the native figure uses
+all 600 epoch records; a saved-log comparison at equal sampling density
+confirmed that both frameworks exhibit the two scheduled steps.
+
+Tutorial 3 is accepted by the user. The historical measurements and automatic
+criteria below remain recorded: all nine MSE checks pass and twelve
+paired-field/Jacobian checks fail. The loss-step audit addresses the plotting
+concern and does not relabel those automatic results or establish the cause
+of the remaining cross-framework differences.
 
 ### First complete controlled tutorial 3 pair
 

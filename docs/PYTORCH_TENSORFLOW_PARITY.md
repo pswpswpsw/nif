@@ -2,10 +2,10 @@
 
 Status: execution queue closed, 2026-10-25; recorded numerical failures remain.
 User acceptance is separate from completed execution and automatic checks.
-The user accepted the tutorial-1 L-BFGS test and the current tutorial-2 and
-tutorial-3 results. Tutorials 4–8 still await user review. The three completed
-tutorial-7 semantic/output fixes do not constitute user acceptance of the
-whole tutorial.
+The user accepted the tutorial-1 L-BFGS test and the current tutorial-2,
+tutorial-3 and tutorial-4 results. Tutorials 5–8 still await user review. The
+three completed tutorial-7 semantic/output fixes do not constitute user
+acceptance of the whole tutorial.
 
 The comparison started with tutorial 3, then covered tutorials 1, 2, 4, 5, 6,
 7 and 8. Hosted full execution and controlled numerical acceptance are
@@ -32,7 +32,7 @@ This scoped repair does not relabel the historical full-training failures.
 | 1 | User accepted the current L-BFGS test on 2026-10-25. Recorded automatic results remain AdaBelief 19/27 and repaired L-BFGS 21/27, with all paired-field checks passing and six L-BFGS MSE failures retained. Complete own-state and shared-start comparisons are recorded below. |
 | 2 | User accepted the current results on 2026-10-25 after reviewing absolute errors. Recorded automatic results remain 24/30 main quality checks, with six SIREN paired-field failures; the separate final-weight diagnostic retains nine failed check groups. All fourteen declared-state disk-continuation cases and their observer controls pass. |
 | 3 | User accepted the current candidate-016 results on 2026-10-25 after reviewing the TF/PT results, absolute errors and loss-curve learning-rate steps. Recorded automatic comparisons retain nine MSE passes and twelve paired-field/Jacobian failures. |
-| 4 | Original derivative deliverables pass; the reference has no training workload. |
+| 4 | User accepted the current results on 2026-10-25 after reviewing saved TF/PT derivative tensors and absolute errors. The reference has no training workload; the six supplemental float64 optimizer-update discrepancies remain separately recorded. |
 | 5 | Three complete pairs, exact declared-state reference repeat and original end-cell checks pass the local protocol. |
 | 6 | All 63 full fits, 63 disk controls and 63 saved-final evaluations complete. The full quality matrix passes 57/81 flags and retains 24 failures; earlier CPU/GPU prefix failures remain. TF repeat retained-array checks and 63 common-field figure inspections complete. |
 | 7 | Baseline quality remains insufficient for primary pruning acceptance. All eight separately labeled full diagnostic pruning runs and five comparisons complete; three own-baseline pairs and the common-start supplement retain numerical failures. Export execution and TF repeat do not grant whole-tutorial acceptance. |
@@ -782,6 +782,11 @@ improvement over complete custom. Tutorials 6 and 7 have since completed their
 separate execution queues with recorded numerical failures retained.
 
 ### Tutorial 4 derivative deliverables
+
+The user accepted tutorial 4 on 2026-10-25 after reviewing the saved derivative
+comparisons, absolute errors and the supplemental-update scope. This records
+user acceptance separately from the original automatic results below;
+tutorials 5–8 remain pending user review.
 
 The archived tutorial 4 has no optimizer training workload. Its actual
 derivative deliverables pass CPU float64 and same-GPU float32 comparisons with

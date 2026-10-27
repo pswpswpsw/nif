@@ -3,7 +3,7 @@
 Status: execution queue closed, 2026-10-25; recorded numerical failures remain.
 User acceptance is separate from completed execution and automatic checks.
 The user accepted the tutorial-1 L-BFGS test and the current tutorial-2,
-tutorial-3, tutorial-4 and tutorial-5 results. Tutorials 6–8 still await user
+tutorial-3, tutorial-4, tutorial-5 and tutorial-6 results. Tutorials 7–8 still await user
 review. The three completed tutorial-7 semantic/output fixes do not constitute user
 acceptance of the whole tutorial.
 
@@ -34,7 +34,7 @@ This scoped repair does not relabel the historical full-training failures.
 | 3 | User accepted the current candidate-016 results on 2026-10-25 after reviewing the TF/PT results, absolute errors and loss-curve learning-rate steps. Recorded automatic comparisons retain nine MSE passes and twelve paired-field/Jacobian failures. |
 | 4 | User accepted the current results on 2026-10-25 after reviewing saved TF/PT derivative tensors and absolute errors. The reference has no training workload; the six supplemental float64 optimizer-update discrepancies remain separately recorded. |
 | 5 | User accepted the current results on 2026-10-26 after reviewing the full paired stream-training results, figures and absolute errors. Three complete pairs, the declared-state reference repeat and original end-cell checks pass the local protocol. |
-| 6 | All 63 full fits, 63 disk controls and 63 saved-final evaluations complete. The full quality matrix passes 57/81 flags and retains 24 failures; earlier CPU/GPU prefix failures remain. TF repeat retained-array checks and 63 common-field figure inspections complete. |
+| 6 | User accepted the current results on 2026-10-27 after reviewing saved TF/PT results, figures and absolute errors. All 63 full fits, 63 disk controls and 63 saved-final evaluations complete. The full quality matrix passes 57/81 flags and retains 24 failures; earlier CPU/GPU prefix failures remain. TF repeat retained-array checks and 63 common-field figure inspections complete. |
 | 7 | Baseline quality remains insufficient for primary pruning acceptance. All eight separately labeled full diagnostic pruning runs and five comparisons complete; three own-baseline pairs and the common-start supplement retain numerical failures. Export execution and TF repeat do not grant whole-tutorial acceptance. |
 | 8 | All seven original full lanes complete. Three complete pairs pass 36/60 quality criteria and fail 24; all 9,792 prefix checks pass. Strict TF-repeat retained-state/stream checks pass. The original aggregate and the scoped CPU final-function diagnostic retain failures. |
 
@@ -786,7 +786,7 @@ separate execution queues with recorded numerical failures retained.
 The user accepted tutorial 4 on 2026-10-25 after reviewing the saved derivative
 comparisons, absolute errors and the supplemental-update scope. This records
 user acceptance separately from the original automatic results below;
-tutorials 6–8 remain pending user review.
+tutorials 7–8 remain pending user review.
 
 The archived tutorial 4 has no optimizer training workload. Its actual
 derivative deliverables pass CPU float64 and same-GPU float32 comparisons with
@@ -806,7 +806,7 @@ parity passes.
 
 The user accepted tutorial 5 on 2026-10-26 after reviewing the three complete
 paired results, the saved stream-loss curves and absolute prediction errors.
-This user decision applies to tutorial 5; tutorials 6–8 remain pending user
+This user decision applies to tutorial 5; tutorials 7–8 remain pending user
 review. The random-data demonstration and the repaired TF target-shape
 reference retain their stated scopes below.
 
@@ -1080,6 +1080,12 @@ baseline gates and blocked records remain unchanged.
 
 ### Tutorial 6: GPU controls retain cross-framework failures
 
+The user accepted the current tutorial-6 results on 2026-10-27 after reviewing
+the saved TensorFlow/PyTorch fields, figures and absolute errors for the
+regularization cases. This records user acceptance separately from the
+original automatic results: the 24 full-quality failures and earlier CPU/GPU
+prefix failures remain recorded. Tutorials 7–8 remain pending user review.
+
 All nine configurations pass the same-framework GPU observer controls in
 both frameworks: eighteen OFF/ON pairs. All 36 fresh disk-next controls also
 pass. The actual TensorFlow-GPU and PyTorch-GPU 32-update prefixes
@@ -1226,7 +1232,7 @@ and workloads. A completed comparison can retain failed acceptance criteria.
 |---|---|---|
 | 1 | Candidate-017 complete own-state and shared-start matrices, fresh GPU/restore controls, public suite and independent CPU cases complete; repaired L-BFGS passes 21/27, with original records retained | Six L-BFGS MSE failures, eight unchanged AdaBelief MSE failures and initial-gradient/convergence limitations remain unresolved |
 | 2 | All full pairs, TF repeat, fourteen disk cases and fourteen observer controls complete with their stated evidence scopes | User accepted the current results on 2026-10-25; no further investigation requested. Six automatic paired-field failures and nine separate final-weight check-group failures remain recorded. |
-| 6 | All 63 full fits, 63 disk controls, 63 saved-final evaluations, original CPU postprocessing and 63 common-field PNG inspections complete; TF repeat checks 42,322 retained arrays strictly equal | Quality retains 24/81 failures, all three paired reports fail, and earlier seven CPU plus 24 GPU prefix failures remain unresolved |
+| 6 | All 63 full fits, 63 disk controls, 63 saved-final evaluations, original CPU postprocessing and 63 common-field PNG inspections complete; TF repeat checks 42,322 retained arrays strictly equal | User accepted the current results on 2026-10-27; no further investigation requested. Quality retains 24/81 failures, all three paired reports fail, and earlier seven CPU plus 24 GPU prefix failures remain recorded. |
 | 7 | All seven baselines, eight full diagnostic pruning runs, five comparisons and 16 PNG-path inspections complete; TF repeat checks 4,770 retained arrays strictly equal; real export/quantized execution is recorded | Primary acceptance remains blocked by baseline quality; three own-baseline pruning pairs and the common-start supplement fail their numerical criteria. T7's source-level metric, figure and artifact-size differences are separately documented in the semantic review |
 | 8 | All seven full lanes, three comparisons, strict TF repeat, original aggregate attempt, original figure QA and scoped same-final-weight CPU diagnostic complete. Quality passes 36/60; all 9,792 prefix checks pass; aggregate and CPU pointwise contracts retain failures | The 24 quality failures and the cause of the complete training differences remain unresolved |
 

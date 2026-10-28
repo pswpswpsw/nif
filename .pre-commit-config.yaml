@@ -11,23 +11,26 @@ repos:
     - id: check-merge-conflict
       exclude: ^(dev|docs)/
     - id: end-of-file-fixer
-      exclude: ^(tutorial|docs)/
+      # Preserve binary editor state and byte-exact historical test evidence.
+      exclude: >-
+        ^(?:(?:tutorial|docs)/|dev_tests/fixtures/|\.README\.md\.un~$|dev_tests/pruning_adam_(?:rounding_)?pre_fix_fingerprints\.json$)
 
 - repo: https://github.com/asottile/reorder_python_imports
   rev: v3.8.2
   hooks:
     - id: reorder-python-imports
-      exclude: ^(dev|docs)/
+      # This frozen implementation is an executable numerical reference fixture.
+      exclude: ^(?:(?:dev|docs)/|dev_tests/fixtures/reference_adam_guarded_uncached\.py$)
 
 - repo: https://github.com/psf/black
   rev: 22.6.0
   hooks:
     - id: black
-      exclude: ^(dev|docs)/
+      exclude: ^(?:(?:dev|docs)/|dev_tests/fixtures/reference_adam_guarded_uncached\.py$)
 
 - repo: https://github.com/PyCQA/flake8
   rev: 5.0.4
   hooks:
     - id: flake8
       args: ["--config=setup.cfg"]
-      exclude: ^docs/
+      exclude: ^(?:docs/|dev_tests/fixtures/reference_adam_guarded_uncached\.py$)

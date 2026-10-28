@@ -81,7 +81,10 @@ class Tutorial7(unittest.TestCase):
             "y_pred": pruned,
             "y_pred_quant": quantized,
         }
-        expected_quantized = np.linalg.norm(quantized - baseline, ord=2) ** 2 / np.linalg.norm(baseline, ord=2) ** 2
+        expected_quantized = (
+            np.linalg.norm(quantized - baseline, ord=2) ** 2
+            / np.linalg.norm(baseline, ord=2) ** 2
+        )
         reported = eval("".join(notebook["cells"][44]["source"]), namespace)
         self.assertAlmostEqual(
             float(reported),
@@ -93,7 +96,10 @@ class Tutorial7(unittest.TestCase):
         with contextlib.redirect_stdout(output):
             exec("".join(notebook["cells"][47]["source"]), namespace)
         rows = output.getvalue().splitlines()
-        expected_pruned = np.linalg.norm(pruned - baseline, ord=2) ** 2 / np.linalg.norm(baseline, ord=2) ** 2
+        expected_pruned = (
+            np.linalg.norm(pruned - baseline, ord=2) ** 2
+            / np.linalg.norm(baseline, ord=2) ** 2
+        )
         self.assertAlmostEqual(
             float(rows[0].split(" is ")[1]), float(expected_pruned), places=12
         )

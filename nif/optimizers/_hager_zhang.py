@@ -52,7 +52,9 @@ def _negative_inf(value):
 
 
 def _bad_nan(point):
-    return bool(torch.isnan(point.f) | (torch.isfinite(point.f) & torch.isnan(point.df)))
+    return bool(
+        torch.isnan(point.f) | (torch.isfinite(point.f) & torch.isnan(point.df))
+    )
 
 
 def _rising(point):
@@ -73,9 +75,9 @@ def _secant(a, b):
 
 
 def _wolfe(zero, point, limit):
-    curvature = point.df >= .9 * zero.df
-    exact = (.1 * zero.df >= divide_no_nan(point.f - zero.f, point.x)) & curvature
-    approximate = (point.f <= limit) & ((2 * .1 - 1) * zero.df >= point.df) & curvature
+    curvature = point.df >= 0.9 * zero.df
+    exact = (0.1 * zero.df >= divide_no_nan(point.f - zero.f, point.x)) & curvature
+    approximate = (point.f <= limit) & ((2 * 0.1 - 1) * zero.df >= point.df) & curvature
     return bool(exact | approximate)
 
 
@@ -85,7 +87,9 @@ def _bisect(evaluate, left, right, limit, result):
         mid = evaluate((left.x + right.x) / 2)
         result.evaluations += 1
         finished = _negative_inf(mid.f)
-        if not finished and (_bad_nan(mid) or bool(mid.x == left.x) or bool(mid.x == right.x)):
+        if not finished and (
+            _bad_nan(mid) or bool(mid.x == left.x) or bool(mid.x == right.x)
+        ):
             result.failed = True
             return left, right
         if finished:
@@ -157,9 +161,14 @@ def hager_zhang(evaluate, zero, max_iterations, *, inactive=False):
     caller distinguishes a line-search failure from a raised closure exception.
     """
     initial = evaluate(zero.x.new_ones(()))
-    result = SearchResult(zero, zero if inactive else initial, converged=inactive,
-                          evaluations=1)
-    valid = _finite(zero) and bool(zero.df < 0) and bool(torch.isfinite(initial.x) & (initial.x > 0))
+    result = SearchResult(
+        zero, zero if inactive else initial, converged=inactive, evaluations=1
+    )
+    valid = (
+        _finite(zero)
+        and bool(zero.df < 0)
+        and bool(torch.isfinite(initial.x) & (initial.x > 0))
+    )
     result.failed = not inactive and not valid
     if inactive or result.failed:
         return result
@@ -170,10 +179,14 @@ def hager_zhang(evaluate, zero, max_iterations, *, inactive=False):
         if _bad_nan(right):
             result.failed = True
             break
-        if (_negative_inf(right.f) or _rising(right) or _needs_bisect(right, limit)
-                or result.iterations >= max_iterations):
+        if (
+            _negative_inf(right.f)
+            or _rising(right)
+            or _needs_bisect(right, limit)
+            or result.iterations >= max_iterations
+        ):
             break
-        left, right = right, evaluate(5. * right.x)
+        left, right = right, evaluate(5.0 * right.x)
         result.evaluations += 1
         result.iterations += 1
     if _negative_inf(right.f):
@@ -188,15 +201,25 @@ def hager_zhang(evaluate, zero, max_iterations, *, inactive=False):
             left, right = _bisect(evaluate, left, right, limit, result)
     result.left, result.right = left, right
     result.converged = _close(left.x, right.x)
-    result.failed = result.failed or (not result.converged and result.iterations >= max_iterations)
+    result.failed = result.failed or (
+        not result.converged and result.iterations >= max_iterations
+    )
 
-    while not result.converged and not result.failed and result.iterations < max_iterations:
+    while (
+        not result.converged
+        and not result.failed
+        and result.iterations < max_iterations
+    ):
         old_left, old_right = result.left, result.right
         _secant_square(evaluate, zero, limit, result)
         result.iterations += 1
         if not result.converged and not result.failed:
-            shrunk = bool(result.right.x - result.left.x < .66 * (old_right.x - old_left.x))
-            flat = _close(old_left.f, old_right.f) and _close(result.left.f, result.right.f)
+            shrunk = bool(
+                result.right.x - result.left.x < 0.66 * (old_right.x - old_left.x)
+            )
+            flat = _close(old_left.f, old_right.f) and _close(
+                result.left.f, result.right.f
+            )
             if shrunk and flat:
                 result.converged = True
             elif not shrunk:
@@ -206,7 +229,8 @@ def hager_zhang(evaluate, zero, max_iterations, *, inactive=False):
                     result.failed = True
                 else:
                     result.left, result.right = _update(
-                        evaluate, result.left, result.right, mid, limit, result)
+                        evaluate, result.left, result.right, mid, limit, result
+                    )
         if not result.failed and _close(result.left.x, result.right.x):
             result.converged = True
     return result

@@ -11,7 +11,10 @@ OptimizerV2 behavior: clipvalue first, then a separate clipnorm per tensor (or
 an explicitly requested global_clipnorm).
 """
 import torch
-from nif.optimizers.external_optimizers import centralize_gradient, _norm_scale, L4Adam
+
+from nif.optimizers.external_optimizers import _norm_scale
+from nif.optimizers.external_optimizers import centralize_gradient
+from nif.optimizers.external_optimizers import L4Adam
 
 
 def get_centralized_gradients(optimizer, loss, params):
@@ -23,10 +26,12 @@ def get_centralized_gradients(optimizer, loss, params):
     params = list(params)
     grads = torch.autograd.grad(loss, params, create_graph=True, allow_unused=True)
     if any(grad is None for grad in grads):
-        raise ValueError('An operation has None for gradient; all parameters must participate in the loss')
+        raise ValueError(
+            "An operation has None for gradient; all parameters must participate in the loss"
+        )
     grads = [centralize_gradient(grad, p) for p, grad in zip(params, grads)]
-    clipnorm = getattr(optimizer, 'clipnorm', optimizer.defaults.get('clipnorm'))
-    clipvalue = getattr(optimizer, 'clipvalue', optimizer.defaults.get('clipvalue'))
+    clipnorm = getattr(optimizer, "clipnorm", optimizer.defaults.get("clipnorm"))
+    clipvalue = getattr(optimizer, "clipvalue", optimizer.defaults.get("clipvalue"))
     if clipnorm is not None and clipnorm > 0:
         norm = torch.sqrt(sum(grad.square().sum() for grad in grads))
         scale = _norm_scale(norm, clipnorm)
@@ -46,10 +51,11 @@ def centralized_gradients_for_optimizer(optimizer):
     For L4Adam loss-only closures, its automatic backward is completed inside
     the wrapper before centralization; closures doing backward still run once.
     """
+
     def centralize():
         with torch.no_grad():
             for group in optimizer.param_groups:
-                for p in group['params']:
+                for p in group["params"]:
                     if p.grad is not None:
                         grad = p.grad.to_dense() if p.grad.is_sparse else p.grad
                         p.grad = centralize_gradient(grad, p)
@@ -57,22 +63,26 @@ def centralized_gradients_for_optimizer(optimizer):
     def before_step(opt, args, kwargs):
         # Closures can create gradients inside step, so centralize after the
         # closure as well as the ordinary eager backward path.
-        closure = kwargs.get('closure')
+        closure = kwargs.get("closure")
         positional = len(args) > 1 and callable(args[1])
         if positional:
             closure = args[1]
         if closure is not None:
+
             def wrapped_closure():
                 result = closure()
                 # L4 accepts a loss-only closure and otherwise performs backward
                 # after this wrapper returns. Complete that same automatic step
                 # here so GC sees the gradients before moments are updated.
                 if isinstance(opt, L4Adam) and not any(
-                    p.grad is not None for group in opt.param_groups for p in group['params']
+                    p.grad is not None
+                    for group in opt.param_groups
+                    for p in group["params"]
                 ):
                     result.backward()
                 centralize()
                 return result
+
             if positional:
                 args = (args[0], wrapped_closure, *args[2:])
             else:
@@ -81,9 +91,12 @@ def centralized_gradients_for_optimizer(optimizer):
             centralize()
         return args, kwargs
 
-    if not hasattr(optimizer, '_nif_centralization_hook'):
-        optimizer._nif_centralization_hook = optimizer.register_step_pre_hook(before_step)
+    if not hasattr(optimizer, "_nif_centralization_hook"):
+        optimizer._nif_centralization_hook = optimizer.register_step_pre_hook(
+            before_step
+        )
 
     def gradients(loss, params):
         return get_centralized_gradients(optimizer, loss, params)
+
     return gradients

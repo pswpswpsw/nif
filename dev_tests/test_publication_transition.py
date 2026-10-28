@@ -3,31 +3,44 @@ import hashlib
 import json
 from pathlib import Path
 
-ROOT=Path(__file__).resolve().parents[1]
-SOURCE='dev_tests/adabelief_moment_scope.py'
-ARCHIVE='dev_tests/fixtures/publication_scope_v1/adabelief_moment_scope.py.txt'
+ROOT = Path(__file__).resolve().parents[1]
+SOURCE = "dev_tests/adabelief_moment_scope.py"
+ARCHIVE = "dev_tests/fixtures/publication_scope_v1/adabelief_moment_scope.py.txt"
 
 
 def expected_publication_source(before):
-    old='No expected tensor, tolerance, trajectory hash or scientific setting is changed.\n'
-    new=old+('Publication v1 makes only dev_tests/artifacts/ optional local history;\n'
-             'public source, fixtures and provenance remain mandatory.\n')
-    assert before.count(old)==1
-    before=before.replace(old,new,1)
-    old='    for name,digest in before.items():\n'
-    new=old+('        # Publication v1: generated local outputs are not public prerequisites.\n'
-             "        if name.startswith('dev_tests/artifacts/'):\n"
-             '            continue\n')
-    assert before.count(old)==1
-    return before.replace(old,new,1)
+    old = "No expected tensor, tolerance, trajectory hash or scientific setting is changed.\n"
+    new = old + (
+        "Publication v1 makes only dev_tests/artifacts/ optional local history;\n"
+        "public source, fixtures and provenance remain mandatory.\n"
+    )
+    assert before.count(old) == 1
+    before = before.replace(old, new, 1)
+    old = "    for name,digest in before.items():\n"
+    new = old + (
+        "        # Publication v1: generated local outputs are not public prerequisites.\n"
+        "        if name.startswith('dev_tests/artifacts/'):\n"
+        "            continue\n"
+    )
+    assert before.count(old) == 1
+    return before.replace(old, new, 1)
 
 
 def test_publication_v1_history_and_windows_v2_exact_successor():
-    archive=(ROOT/ARCHIVE).read_bytes()
-    manifest=json.loads((ROOT/'dev_tests/adabelief_moment_candidate_manifest.json').read_text(encoding='utf-8'))
-    assert hashlib.sha256(archive).hexdigest()==manifest['source_sha256'][SOURCE]
+    archive = (ROOT / ARCHIVE).read_bytes()
+    manifest = json.loads(
+        (ROOT / "dev_tests/adabelief_moment_candidate_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert hashlib.sha256(archive).hexdigest() == manifest["source_sha256"][SOURCE]
     # V1 remains checked verbatim; v2 checks the exact current successor.
-    historical=ROOT/'dev_tests/fixtures/publication_windows_v2/adabelief_moment_scope.py.txt'
-    assert historical.read_text(encoding='utf-8')==expected_publication_source(archive.decode('utf-8'))
+    historical = (
+        ROOT / "dev_tests/fixtures/publication_windows_v2/adabelief_moment_scope.py.txt"
+    )
+    assert historical.read_text(encoding="utf-8") == expected_publication_source(
+        archive.decode("utf-8")
+    )
     from dev_tests.publication_windows_scope import assert_publication_windows_scope_v2
+
     assert_publication_windows_scope_v2(ROOT)

@@ -1,5 +1,4 @@
 """Check that CI selects a Python supported by the package it validates."""
-
 import re
 from pathlib import Path
 
@@ -15,6 +14,6 @@ def test_ci_python_version_meets_package_minimum():
     assert selected and minimum, "CI Python and package minimum must both be explicit"
     ci_version = tuple(map(int, selected.groups()))
     package_minimum = tuple(map(int, minimum.groups()))
-    assert ci_version >= package_minimum, (
-        f"CI Python {ci_version} is older than package minimum {package_minimum}"
-    )
+    assert (
+        ci_version >= package_minimum
+    ), f"CI Python {ci_version} is older than package minimum {package_minimum}"

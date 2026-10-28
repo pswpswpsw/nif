@@ -1,0 +1,260 @@
+FFFFFF...                                                                [100%]
+=================================== FAILURES ===================================
+_________ test_actual_fingerprint_guard_accepts_windows_relative_paths _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7226c86f0e90>
+
+    def test_actual_fingerprint_guard_accepts_windows_relative_paths(monkeypatch):
+        original=Path.relative_to
+        def windows_relative(path,*args,**kwargs):
+            result=original(path,*args,**kwargs)
+            if path.name in ('3_multi_scale_linear_NIF_pytorch.ipynb','4_evaluate_derivatives_pytorch.ipynb') or path.name.startswith('4_'):
+                return PureWindowsPath(result.as_posix())
+            return result
+        monkeypatch.setattr(Path,'relative_to',windows_relative)
+>       pruning.test_red_test_fingerprints_unchanged_and_scientific_calls_migrated_v2()
+
+dev_tests/test_publication_windows.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def test_red_test_fingerprints_unchanged_and_scientific_calls_migrated_v2():
+        root=Path(__file__).resolve().parents[1]
+        fingerprints=json.loads((root/'dev_tests/pruning_adam_pre_fix_fingerprints.json').read_text())
+        for name in ('dev_tests/test_reference_adam.py','dev_tests/test_tutorial7_pruning.py'):
+            assert hashlib.sha256((root/name).read_bytes()).hexdigest()==fingerprints[name]
+        for number in (2,5,6,7,8):
+            nb=nbformat.read(next((root/'tutorial').glob(f'{number}_*_pytorch.ipynb')),as_version=4)
+            code='\n'.join(c.source for c in nb.cells if c.cell_type=='code')
+            assert 'torch.optim.Adam(' not in code
+            assert 'ReferenceAdam(' in code
+        # Scope v2: tutorial 1 has an authorized, exactly bounded GC default correction.
+        from dev_tests.tutorial1_gc_scope import assert_tutorial1_gc_scope_v2
+        assert_tutorial1_gc_scope_v2()
+        for number in (3,4):
+            path=next((root/'tutorial').glob(f'{number}_*_pytorch.ipynb'))
+>           assert hashlib.sha256(path.read_bytes()).hexdigest()==fingerprints[str(path.relative_to(root))]
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'tutorial\\3_multi_scale_linear_NIF_pytorch.ipynb'
+
+dev_tests/test_pruning_adam_state.py:195: KeyError
+______ test_generator_reader_is_utf8_for_both_consumers[primary_default] _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7226c4686fd0>
+explicit_gc = False
+
+    @pytest.mark.parametrize('explicit_gc',[False,True],ids=['primary_default','optional_gc'])
+    def test_generator_reader_is_utf8_for_both_consumers(monkeypatch,explicit_gc):
+        expected=behavior.sources('generator')
+        original=Path.read_text
+        def gbk_default(path,encoding=None,errors=None,**kwargs):
+            return original(path,encoding=encoding or 'gbk',errors=errors,**kwargs)
+        monkeypatch.setattr(Path,'read_text',gbk_default)
+>       actual=behavior.sources('generator')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_publication_windows.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_tutorial1_gc_behavior.py:33: in sources
+    tree=ast.parse((ROOT/'dev_tests/generate_native_notebooks.py').read_text())
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+dev_tests/test_publication_windows.py:40: in gbk_default
+    return original(path,encoding=encoding or 'gbk',errors=errors,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/pathlib/_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/dev_tests/generate_native_notebooks.py')
+encoding = 'gbk', errors = None, newline = None
+
+    def read_text(self, encoding=None, errors=None, newline=None):
+        """
+        Open the file in text mode, read it, and close the file.
+        """
+        with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+>           return f.read()
+                   ^^^^^^^^
+E           UnicodeDecodeError: 'gbk' codec can't decode byte 0x93 in position 261: illegal multibyte sequence
+
+/usr/local/lib/python3.13/pathlib/_abc.py:633: UnicodeDecodeError
+________ test_generator_reader_is_utf8_for_both_consumers[optional_gc] _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7226c45b5490>
+explicit_gc = True
+
+    @pytest.mark.parametrize('explicit_gc',[False,True],ids=['primary_default','optional_gc'])
+    def test_generator_reader_is_utf8_for_both_consumers(monkeypatch,explicit_gc):
+        expected=behavior.sources('generator')
+        original=Path.read_text
+        def gbk_default(path,encoding=None,errors=None,**kwargs):
+            return original(path,encoding=encoding or 'gbk',errors=errors,**kwargs)
+        monkeypatch.setattr(Path,'read_text',gbk_default)
+>       actual=behavior.sources('generator')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_publication_windows.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_tutorial1_gc_behavior.py:33: in sources
+    tree=ast.parse((ROOT/'dev_tests/generate_native_notebooks.py').read_text())
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+dev_tests/test_publication_windows.py:40: in gbk_default
+    return original(path,encoding=encoding or 'gbk',errors=errors,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/pathlib/_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/dev_tests/generate_native_notebooks.py')
+encoding = 'gbk', errors = None, newline = None
+
+    def read_text(self, encoding=None, errors=None, newline=None):
+        """
+        Open the file in text mode, read it, and close the file.
+        """
+        with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+>           return f.read()
+                   ^^^^^^^^
+E           UnicodeDecodeError: 'gbk' codec can't decode byte 0x93 in position 261: illegal multibyte sequence
+
+/usr/local/lib/python3.13/pathlib/_abc.py:633: UnicodeDecodeError
+_ test_missing_file_negative_uses_exact_windows_filename_identity[dev_tests/fixtures/adabelief_dtype/native_before.py.txt] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7226c46b7350>
+tmp_path = PosixPath('/workspace/dev_tests/artifacts/publication_windows_v2/red_tmp/test_missing_file_negative_use0')
+name = 'dev_tests/fixtures/adabelief_dtype/native_before.py.txt'
+
+    @pytest.mark.parametrize('name',NAMES)
+    def test_missing_file_negative_uses_exact_windows_filename_identity(monkeypatch,tmp_path,name):
+        path=tmp_path/name;path.parent.mkdir(parents=True);path.write_bytes(b'controlled public fixture')
+        windows_error_runner(monkeypatch,name)
+>       publication.test_missing_required_public_fixture_or_provenance_fails(tmp_path,name)
+
+dev_tests/test_publication_windows.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+public_root = PosixPath('/workspace/dev_tests/artifacts/publication_windows_v2/red_tmp/test_missing_file_negative_use0')
+name = 'dev_tests/fixtures/adabelief_dtype/native_before.py.txt'
+
+    @pytest.mark.parametrize('name',[
+        'dev_tests/fixtures/adabelief_dtype/native_before.py.txt',
+        'dev_tests/adabelief_dtype_red.log',
+        'dev_tests/adabelief_boundary_full.log',
+    ])
+    def test_missing_required_public_fixture_or_provenance_fails(public_root,name):
+        path=public_root/name;before=path.read_bytes()
+        try:
+            path.unlink()
+            result=scope_result(public_root)
+            assert result.get('error')=='FileNotFoundError',result
+>           assert name in result['detail'],result
+E           AssertionError: {'error': 'FileNotFoundError', 'detail': "[Errno 2] No such file or directory: 'C:\\\\publication\\\\dev_tests\\\\fixtures\\\\adabelief_dtype\\\
+E             ative_before.py.txt'"}
+E           assert 'dev_tests/fixtures/adabelief_dtype/native_before.py.txt' in "[Errno 2] No such file or directory: 'C:\\\\publication\\\\dev_tests\\\\fixtures\\\\adabelief_dtype\\\\native_before.py.txt'"
+
+dev_tests/test_publication_scope.py:65: AssertionError
+_ test_missing_file_negative_uses_exact_windows_filename_identity[dev_tests/adabelief_dtype_red.log] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7226c44b5550>
+tmp_path = PosixPath('/workspace/dev_tests/artifacts/publication_windows_v2/red_tmp/test_missing_file_negative_use1')
+name = 'dev_tests/adabelief_dtype_red.log'
+
+    @pytest.mark.parametrize('name',NAMES)
+    def test_missing_file_negative_uses_exact_windows_filename_identity(monkeypatch,tmp_path,name):
+        path=tmp_path/name;path.parent.mkdir(parents=True);path.write_bytes(b'controlled public fixture')
+        windows_error_runner(monkeypatch,name)
+>       publication.test_missing_required_public_fixture_or_provenance_fails(tmp_path,name)
+
+dev_tests/test_publication_windows.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+public_root = PosixPath('/workspace/dev_tests/artifacts/publication_windows_v2/red_tmp/test_missing_file_negative_use1')
+name = 'dev_tests/adabelief_dtype_red.log'
+
+    @pytest.mark.parametrize('name',[
+        'dev_tests/fixtures/adabelief_dtype/native_before.py.txt',
+        'dev_tests/adabelief_dtype_red.log',
+        'dev_tests/adabelief_boundary_full.log',
+    ])
+    def test_missing_required_public_fixture_or_provenance_fails(public_root,name):
+        path=public_root/name;before=path.read_bytes()
+        try:
+            path.unlink()
+            result=scope_result(public_root)
+            assert result.get('error')=='FileNotFoundError',result
+>           assert name in result['detail'],result
+E           AssertionError: {'error': 'FileNotFoundError', 'detail': "[Errno 2] No such file or directory: 'C:\\\\publication\\\\dev_tests\\\\adabelief_dtype_red.log'"}
+E           assert 'dev_tests/adabelief_dtype_red.log' in "[Errno 2] No such file or directory: 'C:\\\\publication\\\\dev_tests\\\\adabelief_dtype_red.log'"
+
+dev_tests/test_publication_scope.py:65: AssertionError
+_ test_missing_file_negative_uses_exact_windows_filename_identity[dev_tests/adabelief_boundary_full.log] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7226c44b08c0>
+tmp_path = PosixPath('/workspace/dev_tests/artifacts/publication_windows_v2/red_tmp/test_missing_file_negative_use2')
+name = 'dev_tests/adabelief_boundary_full.log'
+
+    @pytest.mark.parametrize('name',NAMES)
+    def test_missing_file_negative_uses_exact_windows_filename_identity(monkeypatch,tmp_path,name):
+        path=tmp_path/name;path.parent.mkdir(parents=True);path.write_bytes(b'controlled public fixture')
+        windows_error_runner(monkeypatch,name)
+>       publication.test_missing_required_public_fixture_or_provenance_fails(tmp_path,name)
+
+dev_tests/test_publication_windows.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+public_root = PosixPath('/workspace/dev_tests/artifacts/publication_windows_v2/red_tmp/test_missing_file_negative_use2')
+name = 'dev_tests/adabelief_boundary_full.log'
+
+    @pytest.mark.parametrize('name',[
+        'dev_tests/fixtures/adabelief_dtype/native_before.py.txt',
+        'dev_tests/adabelief_dtype_red.log',
+        'dev_tests/adabelief_boundary_full.log',
+    ])
+    def test_missing_required_public_fixture_or_provenance_fails(public_root,name):
+        path=public_root/name;before=path.read_bytes()
+        try:
+            path.unlink()
+            result=scope_result(public_root)
+            assert result.get('error')=='FileNotFoundError',result
+>           assert name in result['detail'],result
+E           AssertionError: {'error': 'FileNotFoundError', 'detail': "[Errno 2] No such file or directory: 'C:\\\\publication\\\\dev_tests\\\\adabelief_boundary_full.log'"}
+E           assert 'dev_tests/adabelief_boundary_full.log' in "[Errno 2] No such file or directory: 'C:\\\\publication\\\\dev_tests\\\\adabelief_boundary_full.log'"
+
+dev_tests/test_publication_scope.py:65: AssertionError
+=============================== warnings summary ===============================
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:64
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:64: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    prop = Group((name + Suppress("=") + comma_separated(value)) | oneOf(_CONSTANTS))
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:85
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:85
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:85
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:85
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:85
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:85
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:85: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+    parse = parser.parseString(pattern)
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:89
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:89
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:89
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:89
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:89
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:89
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:89: PyparsingDeprecationWarning: 'resetCache' deprecated - use 'reset_cache'
+    parser.resetCache()
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:45
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:45: PyparsingDeprecationWarning: 'enablePackrat' deprecated - use 'enable_packrat'
+    ParserElement.enablePackrat()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED dev_tests/test_publication_windows.py::test_actual_fingerprint_guard_accepts_windows_relative_paths
+FAILED dev_tests/test_publication_windows.py::test_generator_reader_is_utf8_for_both_consumers[primary_default]
+FAILED dev_tests/test_publication_windows.py::test_generator_reader_is_utf8_for_both_consumers[optional_gc]
+FAILED dev_tests/test_publication_windows.py::test_missing_file_negative_uses_exact_windows_filename_identity[dev_tests/fixtures/adabelief_dtype/native_before.py.txt]
+FAILED dev_tests/test_publication_windows.py::test_missing_file_negative_uses_exact_windows_filename_identity[dev_tests/adabelief_dtype_red.log]
+FAILED dev_tests/test_publication_windows.py::test_missing_file_negative_uses_exact_windows_filename_identity[dev_tests/adabelief_boundary_full.log]
+6 failed, 3 passed, 14 warnings in 2.62s

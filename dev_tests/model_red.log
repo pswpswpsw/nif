@@ -1,0 +1,18 @@
+
+==================================== ERRORS ====================================
+__________________ ERROR collecting dev_tests/test_models.py ___________________
+ImportError while importing test module '/workspace/dev_tests/test_models.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/local/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+dev_tests/test_models.py:6: in <module>
+    from nif import NIF, NIFMultiScale, NIFMultiScaleLastLayerParameterized
+nif/__init__.py:1: in <module>
+    import tensorflow as tf
+E   ModuleNotFoundError: No module named 'tensorflow'
+=========================== short test summary info ============================
+ERROR dev_tests/test_models.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 1.01s

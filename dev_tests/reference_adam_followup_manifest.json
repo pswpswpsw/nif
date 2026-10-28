@@ -1,0 +1,116 @@
+{
+  "environment": {
+    "python": "3.13.17",
+    "torch": "2.14.1+cpu",
+    "numpy": "2.1.3",
+    "device": "cpu"
+  },
+  "changed_file_sha256": {
+    "dev_tests/benchmark_reference_adam_cache.py": "02a05ab2516e08588212f5999f642f65e1315657a7de1d1f7ccf50529a0f2bd5",
+    "dev_tests/fixtures/reference_adam_guarded_uncached.py": "5b200d768dc963ff01ed0535285facd3efbead73131b308e997ca420fffd9e19",
+    "dev_tests/reference_adam_cache_before.log": "6a6db4bc860d4356700991c705998accb4ca672ee2f815d8587f32bf4915f529",
+    "dev_tests/reference_adam_cache_benchmark.json": "20a7167af7c954a816b45ed693a0536d6a231404e021b7fce5cfbbb9357b9953",
+    "dev_tests/reference_adam_cache_benchmark.log": "20a7167af7c954a816b45ed693a0536d6a231404e021b7fce5cfbbb9357b9953",
+    "dev_tests/reference_adam_cache_pre_fix_fingerprints.json": "3ed7061049f5b8fcb5881593893bc7ae9184949cbee8600a52172776821547df",
+    "dev_tests/reference_adam_empty_green.log": "85797cd1dff83ee90806d80347501b8144ef4989924ce5d46c1332cd8f70cc08",
+    "dev_tests/reference_adam_empty_red.log": "534848421dd52bba6f1742c55d5fd029257f56f4135113b55d552c4f48be90a7",
+    "dev_tests/reference_adam_followup_focused.log": "275e84a0d79899cb4fec4c9c90a70ad6c8ea1cd08d251e28638f46b7ea107e6d",
+    "dev_tests/reference_adam_followup_full.log": "df6b50424776f98f81d457cec966679a772ff2094150341033b7100db78c2d4b",
+    "dev_tests/reference_adam_followup_pre_fix_fingerprints.json": "57ad9aa665f3214838c0ad310f34e793f5be121b13c57c55915f8692c504ad2e",
+    "dev_tests/test_reference_adam_cache.py": "3f39fa69b7cf87551c35c6ac8531601bdbeb58689745a634ecc49cd4328475f5",
+    "dev_tests/test_reference_adam_empty_gradients.py": "2d5f271b4bb9fbb18e46c14b8ee4a6a9a01fc3641ae6a0e8f9817b191a2bd30f",
+    "docs/PYTORCH_API.md": "ed3f0b3a72997f46cf0e43ffa87cfa81c18a9cba28b02ca56239ff961dc86bb6",
+    "docs/PYTORCH_CANDIDATE_REPORT.md": "097fea102e22ab957a85ef92810defa2650495eda156be76286ef0a418a333fa",
+    "nif/optimizers/reference_adam.py": "cabfa26d9dbe7fc651459533357f4df80d983bfe270f5abcce0aab4dc31e77b7",
+    "nif/pruning.py": "aa2f4cb0268209230eb295b7fefd80e158b9f810dcc1012ba088abb88c1f32d0"
+  },
+  "checks": {
+    "empty_red": {
+      "failed": 5,
+      "passed": 3
+    },
+    "empty_green": {
+      "passed": 8
+    },
+    "cache_before": {
+      "passed": 2
+    },
+    "focused": {
+      "passed": 40,
+      "skipped": 1
+    },
+    "full_public": {
+      "passed": 249,
+      "skipped": 2
+    }
+  },
+  "preservation": {
+    "preexisting_changed": [
+      "docs/PYTORCH_API.md",
+      "docs/PYTORCH_CANDIDATE_REPORT.md",
+      "nif/optimizers/reference_adam.py",
+      "nif/pruning.py"
+    ],
+    "preexisting_unchanged_count": 221,
+    "previous_candidate_manifest_checked": true,
+    "pre_cache_fixture_and_test_unchanged": true
+  },
+  "benchmark": {
+    "python": "3.13.17",
+    "torch": "2.14.1+cpu",
+    "device": "cpu",
+    "threads": 1,
+    "note": "Local CPU microbenchmark, not GPU speed or full-training evidence.",
+    "results": [
+      {
+        "parameters": 64,
+        "scalars_per_parameter": 64,
+        "dtype": "float32",
+        "per_repeat_median_seconds": {
+          "uncached": [
+            0.0024774878000016543,
+            0.0023488024000016595,
+            0.0023202901999866297
+          ],
+          "cached": [
+            0.0011327643500067097,
+            0.0012473391999947125,
+            0.0011136980000173934
+          ]
+        },
+        "median_seconds": {
+          "uncached": 0.0023488024000016595,
+          "cached": 0.0011327643500067097
+        },
+        "uncached_over_cached": 2.0735137012281037
+      },
+      {
+        "parameters": 512,
+        "scalars_per_parameter": 4,
+        "dtype": "float32",
+        "per_repeat_median_seconds": {
+          "uncached": [
+            0.0192940769999268,
+            0.020433767999975316,
+            0.020109561499907613
+          ],
+          "cached": [
+            0.00914681499989456,
+            0.009544054499883714,
+            0.010292594500015184
+          ]
+        },
+        "median_seconds": {
+          "uncached": 0.020109561499907613,
+          "cached": 0.009544054499883714
+        },
+        "uncached_over_cached": 2.1070250070504764
+      }
+    ]
+  },
+  "limitations": [
+    "CPU only; no GPU speed claim",
+    "No repeat of preceding five notebook smoke runs",
+    "No independent acceptance claim"
+  ]
+}

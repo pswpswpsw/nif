@@ -14,12 +14,6 @@ bootstrap = (ROOT / "tutorial" / "colab_support" / "bootstrap_tutorials.py").rea
     encoding="utf-8"
 )
 notebook["cells"][0]["source"] = bootstrap.splitlines(keepends=True)
-for index in (44, 47):
-    notebook["cells"][index]["source"] = (
-        "".join(notebook["cells"][index]["source"])
-        .replace("ord=2", "ord='fro'")
-        .splitlines(keepends=True)
-    )
 for cell in notebook["cells"]:
     if cell["cell_type"] == "code":
         cell["execution_count"] = None
@@ -32,7 +26,7 @@ notebook["metadata"]["nif_colab_compatibility"] = {
     "original_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
     "original_training_epochs": 5000,
     "original_pruning_epochs": 50000,
-    "modified_code_cells": [0, 44, 47],
+    "modified_code_cells": [0],
 }
 clear_execution_metadata(notebook)
 output.write_text(

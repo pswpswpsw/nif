@@ -1,0 +1,9 @@
+CPU 2.14.1+cpu CVD -1 threads 1 1
+..............................................................           [100%]
+============================== warnings summary ===============================
+dev_tests/test_reference_lbfgs_contract.py::test_reject_complex_mixed_dtype_noncontiguous_and_sparse_gradient
+  D:\nif\dev_tests\test_reference_lbfgs_contract.py:203: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\Context.cpp:855.)
+    p.grad = torch.sparse_coo_tensor([[0]], [1.], size=(2,), dtype=p.dtype)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+62 passed, 1 warning in 6.91s

@@ -1,0 +1,137 @@
+{
+  "torch": "2.14.1+cpu",
+  "initializers": {
+    "torch.float32:zeros": {
+      "values": "ed02a689d8616afce681709a192fbb432e3c246c001759a89e60196b8f8bdeea",
+      "rng": "822da727b7b18bdd5039a0776134d30c5443bc932c8aabf737b9a45641334618"
+    },
+    "torch.float32:ones": {
+      "values": "c6b2d77fed1df3491c07a660029776f8bc893a455c34e1c9f2af5ea3bb789adc",
+      "rng": "822da727b7b18bdd5039a0776134d30c5443bc932c8aabf737b9a45641334618"
+    },
+    "torch.float32:glorot_uniform": {
+      "values": "6237b56e42253efaf8b705735b149d27347f77748611f93a385c8f13f0a53005",
+      "rng": "bba44ca983a74a06db2d965cdb183174cabaed88ffe6377314deae24bfa5aaa5"
+    },
+    "torch.float32:glorot_normal": {
+      "values": "6c993811b09a8b6df491e0c8f964b2ad081370d9c3f58619d3ae01c71fa52f69",
+      "rng": "68effcd75f3feb0848c511899c9d26c57214356b660628fd80a1ca880bf9ecaf"
+    },
+    "torch.float32:xavier_uniform": {
+      "values": "6237b56e42253efaf8b705735b149d27347f77748611f93a385c8f13f0a53005",
+      "rng": "bba44ca983a74a06db2d965cdb183174cabaed88ffe6377314deae24bfa5aaa5"
+    },
+    "torch.float32:xavier_normal": {
+      "values": "18a0fc7d4f593738ae30059c6c8d72e4414e172894eb33a108ccac50bc561430",
+      "rng": "e1861c0c6c8356d49a63a1994cbc0e54786c47ccdc256b834f327d86bf3bc3d6"
+    },
+    "torch.float32:random_normal": {
+      "values": "40c3e76f517f3765491e764066fb1d9fc013e570500fa7697d407a9f4c605511",
+      "rng": "e1861c0c6c8356d49a63a1994cbc0e54786c47ccdc256b834f327d86bf3bc3d6"
+    },
+    "torch.float32:random_uniform": {
+      "values": "45b26746d59e80ed6816c272204314fc7555b222b0a42049ec8a884a07034e86",
+      "rng": "bba44ca983a74a06db2d965cdb183174cabaed88ffe6377314deae24bfa5aaa5"
+    },
+    "torch.float32:truncated_normal": {
+      "values": "63d76ae79dcbf4cb4427476057d605afeaa45909c758d1720089c3e079e53921",
+      "rng": "68effcd75f3feb0848c511899c9d26c57214356b660628fd80a1ca880bf9ecaf"
+    },
+    "torch.float32:he_uniform": {
+      "values": "953100f957c348118f7b25ed1c349825d2d89479f4806039bc7dc5b41a0b1d87",
+      "rng": "bba44ca983a74a06db2d965cdb183174cabaed88ffe6377314deae24bfa5aaa5"
+    },
+    "torch.float32:he_normal": {
+      "values": "8e9f99bb973c271fd967671ae2fb5e82e487b6803c081374f34bcc839d1e08b0",
+      "rng": "68effcd75f3feb0848c511899c9d26c57214356b660628fd80a1ca880bf9ecaf"
+    },
+    "torch.float32:lecun_uniform": {
+      "values": "974894fa40d0245c32448a0fa4da9ca73dc8b0bab243a90865ed28e9e3346934",
+      "rng": "bba44ca983a74a06db2d965cdb183174cabaed88ffe6377314deae24bfa5aaa5"
+    },
+    "torch.float32:lecun_normal": {
+      "values": "1b57908c543afe67b5b0aaa6e588fcddf74d617412d5a6de7cfd50eda34d8cb4",
+      "rng": "68effcd75f3feb0848c511899c9d26c57214356b660628fd80a1ca880bf9ecaf"
+    },
+    "torch.float64:zeros": {
+      "values": "8ec80619c4e78fbddcae154346e04167073fc64373bcad92fcf26288dab0e756",
+      "rng": "822da727b7b18bdd5039a0776134d30c5443bc932c8aabf737b9a45641334618"
+    },
+    "torch.float64:ones": {
+      "values": "563158d66dc0845d4a3a96d219a2a577e48c2bdb14daaf5d5900edc1f8b65600",
+      "rng": "822da727b7b18bdd5039a0776134d30c5443bc932c8aabf737b9a45641334618"
+    },
+    "torch.float64:glorot_uniform": {
+      "values": "93e4d3b5f64d4539ae2f8b46c0628ba4789d61d6706245d0bbced81fa7001638",
+      "rng": "2cd3ab7b58f2a3d21ec08a7fc5a329e4d7995f6f183f812f0e920796d1e7178f"
+    },
+    "torch.float64:glorot_normal": {
+      "values": "ef79487e85b18c0a0ee2e87a10061e07e2f2dc921060a324eb0c4c3560422023",
+      "rng": "dd497d2996cde2caddb85fc246a3f60ad9a7a8ae40bb32728cca0a85fb98dd45"
+    },
+    "torch.float64:xavier_uniform": {
+      "values": "93e4d3b5f64d4539ae2f8b46c0628ba4789d61d6706245d0bbced81fa7001638",
+      "rng": "2cd3ab7b58f2a3d21ec08a7fc5a329e4d7995f6f183f812f0e920796d1e7178f"
+    },
+    "torch.float64:xavier_normal": {
+      "values": "f1f5397c11d7aa2f89a52e8568a45d6c638b4ac6c51fdbc234b0a39da0901b46",
+      "rng": "68effcd75f3feb0848c511899c9d26c57214356b660628fd80a1ca880bf9ecaf"
+    },
+    "torch.float64:random_normal": {
+      "values": "06e456695af888728ab53e3905761a582d28b4d46e2d122badb71e003272791e",
+      "rng": "68effcd75f3feb0848c511899c9d26c57214356b660628fd80a1ca880bf9ecaf"
+    },
+    "torch.float64:random_uniform": {
+      "values": "d8fdea214740bf9296ac0e15abc0863f69db0e44a3ca43966ae4b76eeb3d69a6",
+      "rng": "2cd3ab7b58f2a3d21ec08a7fc5a329e4d7995f6f183f812f0e920796d1e7178f"
+    },
+    "torch.float64:truncated_normal": {
+      "values": "9ef7a022949006ceaa6fe566b3faecfb636cc6d2a1f8806635dfa507d2d666a0",
+      "rng": "dd497d2996cde2caddb85fc246a3f60ad9a7a8ae40bb32728cca0a85fb98dd45"
+    },
+    "torch.float64:he_uniform": {
+      "values": "dc1ec009277a41e5b06ceb0964f3062a0f325574aecab7d3983df262f0cb7e83",
+      "rng": "2cd3ab7b58f2a3d21ec08a7fc5a329e4d7995f6f183f812f0e920796d1e7178f"
+    },
+    "torch.float64:he_normal": {
+      "values": "9162e5bbd22fdbc58c59c2b457b6c6b719490812caa045adbaf31c482ecd85f3",
+      "rng": "dd497d2996cde2caddb85fc246a3f60ad9a7a8ae40bb32728cca0a85fb98dd45"
+    },
+    "torch.float64:lecun_uniform": {
+      "values": "1ce05e9e0793782fa54ae2b9b60b3ebc534db20ecd273a312d1036e663b34459",
+      "rng": "2cd3ab7b58f2a3d21ec08a7fc5a329e4d7995f6f183f812f0e920796d1e7178f"
+    },
+    "torch.float64:lecun_normal": {
+      "values": "04e06b571f2e64eb82e667d508fa3596b1f1489c2db1557b2358900ec8b857a6",
+      "rng": "dd497d2996cde2caddb85fc246a3f60ad9a7a8ae40bb32728cca0a85fb98dd45"
+    }
+  },
+  "trajectories": {
+    "NIF": [
+      "3a0c0796980978654f830c4c8202e425a706d7e73392031859b42f0afca3bac9",
+      "e6cc0038165f4e2c8406addf15b12beb5e072c3d47527e8cf50248c6c38dc0e4",
+      "2f7a47dd052f1b6c87a2eff1b187b7ad2c66ae596fc354009a6118b7dbff1aa1",
+      "17e08aabd62ded996d3b0ba3eee9ab7c148d943ae8a3955528a29b095f163cf8"
+    ],
+    "NIFMultiScale": [
+      "df407394de240481129385346ca6e45d7e8fae8844e6ab9d3f9c8db707d19cab",
+      "e34678ceb679a1884360431ae2f7f5a7a336ef8a3d768d9687db10da5c029896",
+      "9480f0aba0c555ecd6cff430a986d51597cfaec33453983246a2b899c52960cd",
+      "838eaaada1c28bf656f00b06487c53d3f7008f6b3a3be1cd7a0d122ed7d7aa18"
+    ],
+    "NIFMultiScaleLastLayerParameterized": [
+      "297b5a755e1ac73e5dbd6754d7a20454e5a6e4633eb75235999cb8815e20a45a",
+      "ca81dc0904d6b58d07576ba2adbf3f56aa5ca76873d081fa5033d83f343d61d8",
+      "2ddb01dd4aed18bb63b85036cc19d33ca3b53bd60fdb6c2e126b0aa9b4917b2a",
+      "0245fb99a86d214be6e4d4a444d2ca3b14afe6e594da542c42ff1be58aedd58a"
+    ],
+    "MLP_ResNet": [
+      "65057524d431d7d50b9fe98e6e87c91a21418c70c9cc761ac3ea189f3dda2ff1",
+      "97a8f882f29f57f442cc1a31183d5cc22529b10c5b05795fc7d92a23221bbb41"
+    ],
+    "MLP_SimpleShortCut": [
+      "f631e04efb36b027969181b7938f2b5875366c590406de71eb1d731aa6949404",
+      "b20d60b7dad4159e3a08dcfb0765e220102f19d5b45ffaeb3f046365125a3dbb"
+    ]
+  }
+}

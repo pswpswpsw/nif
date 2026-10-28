@@ -1,0 +1,21 @@
+--- historical/adabelief_moment_scope.py
++++ public/adabelief_moment_scope.py
+@@ -3,6 +3,8 @@
+ The previous v3 guard and all its input archives remain verbatim. This successor
+ checks the entire protected pre-phase tree, allowing four exact transformations.
+ No expected tensor, tolerance, trajectory hash or scientific setting is changed.
++Publication v1 makes only dev_tests/artifacts/ optional local history;
++public source, fixtures and provenance remain mandatory.
+ """
+ import hashlib
+ import json
+@@ -82,6 +84,9 @@
+         assert (ROOT/name).read_text(encoding='utf-8')==expected_source(name,source),name
+     before=json.loads((ROOT/'dev_tests/adabelief_moment_pre_fix_fingerprints.json').read_text(encoding='utf-8'))
+     for name,digest in before.items():
++        # Publication v1: generated local outputs are not public prerequisites.
++        if name.startswith('dev_tests/artifacts/'):
++            continue
+         if name not in TRANSITIONS and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):
+             assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,name
+     # Freeze the new oracle at its BEFORE-fix hash. The native source entry in

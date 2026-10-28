@@ -1,0 +1,34 @@
+{
+  "phase": "adabelief-final-update-v5",
+  "scope": "Only staged last AdaBelief parameter subtraction; historical source guards have exact literal successors. No historical numerical assertion, archive, manifest, golden or projection/inventory is rewritten.",
+  "source_before_sha256": {
+    "dev_tests/adabelief_moment_scope.py": "1e1012bde296539af0b36fc88a7bbcee2d57ee2e2c9c2354e2dcc6df6098c466",
+    "dev_tests/publication_windows_scope.py": "5e056ad1626384b96d9dca4ffa67dc1d5ed3a6807a52944f633b873ea5cff431",
+    "dev_tests/test_publication_checkout_successor.py": "bd0d10b6172ce0f0f9acade7ff3a4de2c629a13b89cc34860d548b54b3826888"
+  },
+  "source_after_sha256": {
+    "dev_tests/adabelief_moment_scope.py": "5c62cff5d458bd43c2662ec57ffc4d2a888ba149aff1cef427810a047e11a28b",
+    "dev_tests/publication_windows_scope.py": "7ea130e215339a156311c6231c2766dc5ac22e65383e6673fc681bd4488077cb",
+    "dev_tests/test_publication_checkout_successor.py": "945c48e4c00e71243827c026f460f994067b42d3685df485558d2bf1fca03ec7"
+  },
+  "exact_transforms": {
+    "dev_tests/adabelief_moment_scope.py": {
+      "old": " 'nif/optimizers/external_optimizers.py':[\n",
+      "new": " 'nif/optimizers/external_optimizers.py':[\n  ('                p.add_(direction, alpha=-lr)\\n',\n   '                p.sub_(direction * lr)\\n',1),\n",
+      "count": 1
+    },
+    "dev_tests/publication_windows_scope.py": {
+      "old": "        source=expected_checkout_source(source)\n",
+      "new": "        source=expected_checkout_source(source)\n        # Final-update v5: authorize only the one staged parameter-update tuple.\n        old=\" 'nif/optimizers/external_optimizers.py':[\\n\"\n        new=old+\"  ('                p.add_(direction, alpha=-lr)\\\\n',\\n   '                p.sub_(direction * lr)\\\\n',1),\\n\"\n        assert source.count(old)==1\n        source=source.replace(old,new,1)\n",
+      "count": 1
+    },
+    "dev_tests/test_publication_checkout_successor.py": {
+      "old": "    assert hashlib.sha256((ROOT/'dev_tests/publication_windows_scope.py').read_bytes()).hexdigest() == (\n        '5e056ad1626384b96d9dca4ffa67dc1d5ed3a6807a52944f633b873ea5cff431')\n",
+      "new": "    current=(ROOT/'dev_tests/publication_windows_scope.py').read_bytes()\n    added=b'        # Final-update v5: authorize only the one staged parameter-update tuple.\\n        old=\" \\'nif/optimizers/external_optimizers.py\\':[\\\\n\"\\n        new=old+\"  (\\'                p.add_(direction, alpha=-lr)\\\\\\\\n\\',\\\\n   \\'                p.sub_(direction * lr)\\\\\\\\n\\',1),\\\\n\"\\n        assert source.count(old)==1\\n        source=source.replace(old,new,1)\\n'\n    assert current.count(added)==1\n    historical=current.replace(added,b'',1)\n    assert hashlib.sha256(historical).hexdigest() == (\n        '5e056ad1626384b96d9dca4ffa67dc1d5ed3a6807a52944f633b873ea5cff431')\n",
+      "count": 1
+    }
+  },
+  "historical_test_archive": "dev_tests/fixtures/adabelief_final_update_v5/test_publication_checkout_successor.py.txt",
+  "frozen_final_update_test_sha256": "f6f863a180a72377c262a18393506a4cd3dcc2f687a5f0a642cfd1cf38da28a6",
+  "optimizer_after_sha256": "956a2f80f6dfee6c5603a3ed981d5bc0e2d537e156cc6e1e95e8fba6519674a4"
+}

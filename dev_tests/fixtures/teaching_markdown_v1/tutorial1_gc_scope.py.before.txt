@@ -1,0 +1,58 @@
+"""Version-2 scope guard for the explicitly authorized tutorial-1 GC correction.
+
+Version 1 and its historical passing suite are retained as non-collected bytes.
+This guard permits exactly the GC selector/call and corresponding teaching note;
+all notebook metadata, other cell sources, and generator source remain fixed.
+"""
+import copy
+import hashlib
+import json
+from pathlib import Path
+
+ROOT=Path(__file__).resolve().parents[1]
+ARCHIVE=ROOT/'dev_tests/fixtures/tutorial1_gc_scope_v1'
+OLD_CALL='schedule=scheduler, centralization=True'
+NEW_CALL='schedule=scheduler, centralization=use_gradient_centralization'
+NOTE=('# Match actual current TensorFlow tutorial 1: its Colab fit does not activate GC.\n'
+      '# Set True to opt in to native GC; this changes that primary reference behavior.\n'
+      'use_gradient_centralization = False\n')
+OLD_INTRO='5,000 AdaBelief epochs with gradient centralization,'
+NEW_INTRO='5,000 AdaBelief epochs without gradient centralization by default,'
+OPTIMIZER='optimizer = AdaBeliefOptimizer(model_opt.parameters(), lr=lr)'
+
+
+def assert_tutorial1_gc_scope_v2():
+    archive_manifest=json.loads((ARCHIVE/'manifest.json').read_text(encoding='utf-8'))
+    for name,entry in archive_manifest.items():
+        assert hashlib.sha256((ARCHIVE/name).read_bytes()).hexdigest()==entry['sha256']
+    original_fingerprints=json.loads((ROOT/'dev_tests/pruning_adam_pre_fix_fingerprints.json').read_text(encoding='utf-8'))
+    before_bytes=(ARCHIVE/'tutorial1_before.ipynb.txt').read_bytes()
+    assert hashlib.sha256(before_bytes).hexdigest()==original_fingerprints['tutorial/1_simple_1d_wave_pytorch.ipynb']
+    historical_test_hash=json.loads((ROOT/'dev_tests/pruning_adam_rounding_pre_fix_fingerprints.json').read_text(encoding='utf-8'))
+    assert archive_manifest['test_pruning_adam_state.py.txt']['sha256']==historical_test_hash['dev_tests/test_pruning_adam_state.py']
+    assert '239 passed, 2 skipped' in (ARCHIVE/'historical_public_suite.log').read_text(encoding='utf-8')
+
+    before=json.loads(before_bytes)
+    expected=copy.deepcopy(before)
+    changed=[]
+    for i,cell in enumerate(expected['cells']):
+        source=''.join(cell['source'])
+        revised=source
+        if cell['cell_type']=='code' and OPTIMIZER in source:
+            assert source.count(OLD_CALL)==1
+            revised=source.replace(OPTIMIZER,NOTE+OPTIMIZER).replace(OLD_CALL,NEW_CALL)
+        elif i==0:
+            assert OLD_INTRO in source
+            revised=source.replace(OLD_INTRO,NEW_INTRO)
+        if revised!=source:
+            cell['source']=revised.splitlines(keepends=True)
+            changed.append(i)
+    assert len(changed)==2
+    current=json.loads((ROOT/'tutorial/1_simple_1d_wave_pytorch.ipynb').read_text(encoding='utf-8'))
+    assert current==expected, 'Only tutorial1 GC selector/call and teaching note are authorized'
+
+    generator=(ARCHIVE/'generator_before.py.txt').read_text(encoding='utf-8')
+    assert generator.count(OPTIMIZER)==1 and generator.count(OLD_INTRO)==1
+    expected_generator=(generator.replace(OPTIMIZER,NOTE+OPTIMIZER)
+                        .replace(OLD_CALL,NEW_CALL,1).replace(OLD_INTRO,NEW_INTRO))
+    assert (ROOT/'dev_tests/generate_native_notebooks.py').read_text(encoding='utf-8')==expected_generator

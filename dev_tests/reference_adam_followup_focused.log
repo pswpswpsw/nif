@@ -1,0 +1,24 @@
+.....................................s...                                [100%]
+=============================== warnings summary ===============================
+dev_tests/test_pruning_adam_state.py::test_checkpoint_resume_preserves_schedule_slots_and_strip
+  /usr/local/lib/python3.13/site-packages/torch/jit/_trace.py:1006: FutureWarning: `torch.jit.trace` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+dev_tests/test_pruning_adam_state.py::test_checkpoint_resume_preserves_schedule_slots_and_strip
+  /usr/local/lib/python3.13/site-packages/torch/jit/_trace.py:1145: FutureWarning: `torch.jit.trace_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+dev_tests/test_pruning_adam_state.py::test_checkpoint_resume_preserves_schedule_slots_and_strip
+  /usr/local/lib/python3.13/site-packages/torch/jit/_serialization.py:89: FutureWarning: `torch.jit.save` is deprecated. Please switch to `torch.export`.
+    warnings.warn(
+
+dev_tests/test_pruning_adam_state.py::test_checkpoint_resume_preserves_schedule_slots_and_strip
+  /usr/local/lib/python3.13/site-packages/torch/jit/_serialization.py:176: FutureWarning: `torch.jit.load` is deprecated. Please switch to `torch.export`.
+    warnings.warn(
+
+dev_tests/test_pruning_adam_state.py::test_sparse_optimizer_failure_is_atomic
+  /workspace/dev_tests/test_pruning_adam_state.py:159: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/Context.cpp:848.)
+    q.grad = torch.sparse_coo_tensor(torch.tensor([[0]]),torch.tensor([1.]),(2,))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+40 passed, 1 skipped, 5 warnings in 6.36s

@@ -1,0 +1,30 @@
+[IPKernelApp] WARNING | Kernel is running over TCP without encryption. All communication (including code and outputs) is sent in plain text and is susceptible to eavesdropping. Use IPC transport or launch with kernel manager-provisioned CurveZMQ keys to enable transport encryption.
+{
+  "notebook": "1_simple_1d_wave_pytorch.ipynb",
+  "mode": "smoke",
+  "device": "cpu",
+  "source_sha256": "9c64c3de750de791df2b8f4c7f74a93e5eb4fee618ffe63236d1ddf6ec91a438",
+  "status": "passed",
+  "executed_code_cells": 18,
+  "metrics": {
+    "mode": "smoke",
+    "adabelief_epochs": 2,
+    "lbfgs_rounds": 1,
+    "lbfgs_max_iter": 2,
+    "final_mse": 0.9995570778846741
+  },
+  "artifacts": [
+    "fine_tune_loss.png",
+    "fine_tuned.pt",
+    "fine_tuned_reconstruction.png",
+    "latent.png",
+    "metrics.json",
+    "parameter_to_latent.pt",
+    "traveling_wave.pt",
+    "traveling_wave_history.json",
+    "traveling_wave_latest.pt",
+    "traveling_wave_loss.png",
+    "traveling_wave_reconstruction.png"
+  ],
+  "seconds": 5.380893492999803
+}

@@ -1,0 +1,9 @@
+{
+  "dev_tests/test_publication_scope.py": "c988c5a5eb9d4445eb3d68baf095dc8f5ac7d13647056fa2cbf9bac4f50ca2f5",
+  "dev_tests/test_publication_transition.py": "8d538709057c9e745dd499490bc0768149d48847ba554f4ad7b2902b22ebab01",
+  "dev_tests/publication_projection.py": "86a52b9f07355290c2be157050340293f96dd89efce957fbd2fb78e0c94ec22f",
+  "dev_tests/publication_v1_inventory.json": "a85a5e16039beae8b7cb5f4b775a0f4fa03d0bc72df41d58e1d165e09c9c8bb4",
+  "dev_tests/publication_v1_scope_red.log": "696f3d03310663dc54531d3ba3d9f05f1731d3ad9efcc253190502899c784887",
+  "dev_tests/publication_v1_red.log": "2e7ae31e4d6ab0e729dc4efc809c31302b97bb56d767525605d143ac79e80eff",
+  "dev_tests/adabelief_moment_scope.py": "f479169deb264dd92a82b7aa9e7b8cade3dde474f6e0279491958998723927dc"
+}

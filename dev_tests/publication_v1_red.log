@@ -1,0 +1,325 @@
+EEEEEEEEEE                                                               [100%]
+==================================== ERRORS ====================================
+_ ERROR at setup of test_clean_public_scope_runs_without_git_or_generated_outputs _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/workspace/dev_tests/artifacts/publication_v1/red_tmp'), _trace=<pluggy._tracing.TagTracerSub object at 0x78ff92cba650>, _basetemp=None, _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def public_root(tmp_path_factory):
+>       return project_public_files(ROOT,tmp_path_factory.mktemp('public_projection'))
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_publication_scope.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:136: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:117: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:158: in getbasetemp
+    basetemp.mkdir(mode=0o700)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/dev_tests/artifacts/publication_v1/red_tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/workspace/dev_tests/artifacts/publication_v1/red_tmp'
+
+/usr/local/lib/python3.13/pathlib/_local.py:722: FileNotFoundError
+_ ERROR at setup of test_missing_required_public_fixture_or_provenance_fails[dev_tests/fixtures/adabelief_dtype/native_before.py.txt] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/workspace/dev_tests/artifacts/publication_v1/red_tmp'), _trace=<pluggy._tracing.TagTracerSub object at 0x78ff92cba650>, _basetemp=None, _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def public_root(tmp_path_factory):
+>       return project_public_files(ROOT,tmp_path_factory.mktemp('public_projection'))
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_publication_scope.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:136: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:117: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:158: in getbasetemp
+    basetemp.mkdir(mode=0o700)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/dev_tests/artifacts/publication_v1/red_tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/workspace/dev_tests/artifacts/publication_v1/red_tmp'
+
+/usr/local/lib/python3.13/pathlib/_local.py:722: FileNotFoundError
+_ ERROR at setup of test_missing_required_public_fixture_or_provenance_fails[dev_tests/adabelief_dtype_red.log] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/workspace/dev_tests/artifacts/publication_v1/red_tmp'), _trace=<pluggy._tracing.TagTracerSub object at 0x78ff92cba650>, _basetemp=None, _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def public_root(tmp_path_factory):
+>       return project_public_files(ROOT,tmp_path_factory.mktemp('public_projection'))
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_publication_scope.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:136: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:117: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:158: in getbasetemp
+    basetemp.mkdir(mode=0o700)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/dev_tests/artifacts/publication_v1/red_tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/workspace/dev_tests/artifacts/publication_v1/red_tmp'
+
+/usr/local/lib/python3.13/pathlib/_local.py:722: FileNotFoundError
+_ ERROR at setup of test_missing_required_public_fixture_or_provenance_fails[dev_tests/adabelief_boundary_full.log] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/workspace/dev_tests/artifacts/publication_v1/red_tmp'), _trace=<pluggy._tracing.TagTracerSub object at 0x78ff92cba650>, _basetemp=None, _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def public_root(tmp_path_factory):
+>       return project_public_files(ROOT,tmp_path_factory.mktemp('public_projection'))
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_publication_scope.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:136: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:117: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:158: in getbasetemp
+    basetemp.mkdir(mode=0o700)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/dev_tests/artifacts/publication_v1/red_tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/workspace/dev_tests/artifacts/publication_v1/red_tmp'
+
+/usr/local/lib/python3.13/pathlib/_local.py:722: FileNotFoundError
+_ ERROR at setup of test_changed_public_source_golden_or_archived_fixture_fails[nif/model.py] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/workspace/dev_tests/artifacts/publication_v1/red_tmp'), _trace=<pluggy._tracing.TagTracerSub object at 0x78ff92cba650>, _basetemp=None, _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def public_root(tmp_path_factory):
+>       return project_public_files(ROOT,tmp_path_factory.mktemp('public_projection'))
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_publication_scope.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:136: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:117: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:158: in getbasetemp
+    basetemp.mkdir(mode=0o700)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/dev_tests/artifacts/publication_v1/red_tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/workspace/dev_tests/artifacts/publication_v1/red_tmp'
+
+/usr/local/lib/python3.13/pathlib/_local.py:722: FileNotFoundError
+_ ERROR at setup of test_changed_public_source_golden_or_archived_fixture_fails[dev_tests/public_api_pre_fix_fingerprints.json] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/workspace/dev_tests/artifacts/publication_v1/red_tmp'), _trace=<pluggy._tracing.TagTracerSub object at 0x78ff92cba650>, _basetemp=None, _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def public_root(tmp_path_factory):
+>       return project_public_files(ROOT,tmp_path_factory.mktemp('public_projection'))
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_publication_scope.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:136: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:117: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:158: in getbasetemp
+    basetemp.mkdir(mode=0o700)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/dev_tests/artifacts/publication_v1/red_tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/workspace/dev_tests/artifacts/publication_v1/red_tmp'
+
+/usr/local/lib/python3.13/pathlib/_local.py:722: FileNotFoundError
+_ ERROR at setup of test_changed_public_source_golden_or_archived_fixture_fails[dev_tests/fixtures/adabelief_dtype/native_before.py.txt] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/workspace/dev_tests/artifacts/publication_v1/red_tmp'), _trace=<pluggy._tracing.TagTracerSub object at 0x78ff92cba650>, _basetemp=None, _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def public_root(tmp_path_factory):
+>       return project_public_files(ROOT,tmp_path_factory.mktemp('public_projection'))
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_publication_scope.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:136: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:117: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:158: in getbasetemp
+    basetemp.mkdir(mode=0o700)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/dev_tests/artifacts/publication_v1/red_tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/workspace/dev_tests/artifacts/publication_v1/red_tmp'
+
+/usr/local/lib/python3.13/pathlib/_local.py:722: FileNotFoundError
+_ ERROR at setup of test_changed_public_source_golden_or_archived_fixture_fails[dev_tests/fixtures/adabelief_moment_v4/external_optimizers.py.txt] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/workspace/dev_tests/artifacts/publication_v1/red_tmp'), _trace=<pluggy._tracing.TagTracerSub object at 0x78ff92cba650>, _basetemp=None, _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def public_root(tmp_path_factory):
+>       return project_public_files(ROOT,tmp_path_factory.mktemp('public_projection'))
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_publication_scope.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:136: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:117: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:158: in getbasetemp
+    basetemp.mkdir(mode=0o700)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/dev_tests/artifacts/publication_v1/red_tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/workspace/dev_tests/artifacts/publication_v1/red_tmp'
+
+/usr/local/lib/python3.13/pathlib/_local.py:722: FileNotFoundError
+_ ERROR at setup of test_optional_local_artifact_audit_reports_all_absent_in_projection _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/workspace/dev_tests/artifacts/publication_v1/red_tmp'), _trace=<pluggy._tracing.TagTracerSub object at 0x78ff92cba650>, _basetemp=None, _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def public_root(tmp_path_factory):
+>       return project_public_files(ROOT,tmp_path_factory.mktemp('public_projection'))
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_publication_scope.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:136: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:117: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/site-packages/_pytest/tmpdir.py:158: in getbasetemp
+    basetemp.mkdir(mode=0o700)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/dev_tests/artifacts/publication_v1/red_tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/workspace/dev_tests/artifacts/publication_v1/red_tmp'
+
+/usr/local/lib/python3.13/pathlib/_local.py:722: FileNotFoundError
+_ ERROR at setup of test_optional_audit_rejects_present_changed_historical_artifact _
+
+self = PosixPath('/workspace/dev_tests/artifacts/publication_v1/red_tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/workspace/dev_tests/artifacts/publication_v1/red_tmp'
+
+/usr/local/lib/python3.13/pathlib/_local.py:722: FileNotFoundError
+=========================== short test summary info ============================
+ERROR dev_tests/test_publication_scope.py::test_clean_public_scope_runs_without_git_or_generated_outputs
+ERROR dev_tests/test_publication_scope.py::test_missing_required_public_fixture_or_provenance_fails[dev_tests/fixtures/adabelief_dtype/native_before.py.txt]
+ERROR dev_tests/test_publication_scope.py::test_missing_required_public_fixture_or_provenance_fails[dev_tests/adabelief_dtype_red.log]
+ERROR dev_tests/test_publication_scope.py::test_missing_required_public_fixture_or_provenance_fails[dev_tests/adabelief_boundary_full.log]
+ERROR dev_tests/test_publication_scope.py::test_changed_public_source_golden_or_archived_fixture_fails[nif/model.py]
+ERROR dev_tests/test_publication_scope.py::test_changed_public_source_golden_or_archived_fixture_fails[dev_tests/public_api_pre_fix_fingerprints.json]
+ERROR dev_tests/test_publication_scope.py::test_changed_public_source_golden_or_archived_fixture_fails[dev_tests/fixtures/adabelief_dtype/native_before.py.txt]
+ERROR dev_tests/test_publication_scope.py::test_changed_public_source_golden_or_archived_fixture_fails[dev_tests/fixtures/adabelief_moment_v4/external_optimizers.py.txt]
+ERROR dev_tests/test_publication_scope.py::test_optional_local_artifact_audit_reports_all_absent_in_projection
+ERROR dev_tests/test_publication_scope.py::test_optional_audit_rejects_present_changed_historical_artifact
+10 errors in 0.66s

@@ -1,0 +1,118 @@
+"""V4 exact scope successor: dtype moments and explicitly historical assertions.
+
+The previous v3 guard and all its input archives remain verbatim. This successor
+checks the entire protected pre-phase tree, allowing four exact transformations.
+No expected tensor, tolerance, trajectory hash or scientific setting is changed.
+Publication v1 makes only dev_tests/artifacts/ optional local history;
+public source, fixtures and provenance remain mandatory.
+Publication Windows v2 additionally verifies exact nonnumerical test-reader
+and scope successors before applying the unchanged scientific scope checks.
+"""
+import hashlib
+import json
+from pathlib import Path
+
+ROOT=Path(__file__).resolve().parents[1]
+ARCHIVE=ROOT/'dev_tests/fixtures/adabelief_moment_v4'
+TRANSITIONS={
+ 'nif/optimizers/external_optimizers.py':[
+  ('                p.add_(direction, alpha=-lr)\n',
+   '                p.sub_(direction * lr)\n',1),
+  ('    the reference; identical scalars are cached only within a step and group.\n',
+   '    the reference; identical scalars are cached only within a step and group.\n'
+   '    Moment coefficients subtract from one after casting beta to parameter dtype;\n'
+   '    each product is evaluated before addition, using the updated m in variance.\n'
+   '    Native float64 parameters retain caller beta precision without a float32 cast.\n',1),
+  ('                    scalar_cache[key] = correction1, correction2, rectify, r\n'
+   '                correction1, correction2, rectify, r = scalar_cache[key]\n',
+   '                    scalar_cache[key] = beta1, beta2, 1 - beta1, 1 - beta2, correction1, correction2, rectify, r\n'
+   '                beta1, beta2, complement1, complement2, correction1, correction2, rectify, r = scalar_cache[key]\n',1),
+  ('                m.mul_(b1).add_(grad, alpha=1-b1)\n',
+   '                # The reference forms both products before their sum/assignment.\n'
+   '                m.mul_(beta1).add_(grad * complement1)\n',1),
+  ('                v.mul_(b2).add_(residual, alpha=1-b2).add_(eps)\n',
+   '                v.mul_(beta2).add_(residual * complement2).add_(eps)\n',1)],
+ 'dev_tests/test_adabelief_dtype_preservation.py':[
+  ('"""Preservation controls separate from the unchanged historical fingerprint gates."""',
+   '"""V4: historical PRE-moment slot replay; current module scope/model controls.\n\n'
+   'Current moments are checked by the RED-frozen test_adabelief_moment_dtype.py\n'
+   'source oracle. Every historical slot assertion below remains unchanged.\n"""',1),
+  ('from nif.optimizers import AdaBeliefOptimizer',
+   'from dev_tests.adabelief_moment_history import PreMomentAdaBelief as AdaBeliefOptimizer',1),
+  ('def test_moment_slots_bitwise_unchanged_with_clipping_schedules_and_sparse(',
+   'def test_historical_pre_moment_slots_unchanged_with_clipping_schedules_and_sparse_v4(',1)],
+ 'dev_tests/test_adabelief_boundary_succession.py':[
+  ('"""Current guard equivalence and bounded historical-to-current test succession."""',
+   '"""V4: historical atomic-phase equivalence; current bounded scope guards.\n\n'
+   'The PRE-moment optimizer actually replays every old trajectory/slot assertion.\n'
+   'Current checkpoint continuation and source moments have separate frozen tests.\n"""',1),
+  ('from nif.optimizers import AdaBeliefOptimizer',
+   'from dev_tests.adabelief_moment_history import PreMomentAdaBelief as AdaBeliefOptimizer',1),
+  ('from dev_tests.adabelief_phase_scope import ROOT,assert_adabelief_phase_scope_v3',
+   'from dev_tests.adabelief_moment_scope import ROOT,assert_adabelief_phase_scope_v4',1),
+  ('def test_actual_updates_bitwise_match_scalar_phase_including_resume(',
+   'def test_historical_pre_moment_updates_match_scalar_phase_including_resume_v4(',1),
+  ('scope_v3','scope_v4',-1),
+  ("        'dev_tests/test_adabelief_dtype_preservation.py'}",
+   "        'dev_tests/test_adabelief_dtype_preservation.py',\n"
+   "        'dev_tests/test_adabelief_boundary_succession.py'}",1),
+  ("source.replace('m.mul_(b1)','m.mul_(b2)')",
+   "source.replace('m.mul_(beta1)','m.mul_(beta2)')",1)],
+ 'dev_tests/test_tutorial1_gc_scope.py':[
+  ('phase_v3','phase_v4',1),
+  ('    # V3 authorizes only exact, archived source transforms; numerical goldens stay fixed.\n',
+   '    # V4 adds only dtype moments/historical replay; numerical goldens stay fixed.\n',1),
+  ('from dev_tests.adabelief_phase_scope import assert_adabelief_phase_scope_v3',
+   'from dev_tests.adabelief_moment_scope import assert_adabelief_phase_scope_v4',1),
+  ('superseded = assert_adabelief_phase_scope_v3()',
+   'superseded = assert_adabelief_phase_scope_v4()',1)]}
+
+
+def expected_source(name,source):
+    for old,new,count in TRANSITIONS[name]:
+        assert old in source,(name,old)
+        source=source.replace(old,new,count)
+    return source
+
+
+def assert_adabelief_phase_scope_v4():
+    from dev_tests.publication_windows_scope import assert_teaching_helper_source
+    assert_teaching_helper_source(ROOT)
+    from dev_tests.tutorial1_gc_scope import assert_teaching_markdown_scope
+    teaching=assert_teaching_markdown_scope(ROOT)|{'dev_tests/tutorial1_gc_scope.py'}
+    from dev_tests.publication_windows_scope import assert_publication_windows_scope_v2
+    portable = assert_publication_windows_scope_v2(ROOT)
+    archive=json.loads((ARCHIVE/'manifest.json').read_text(encoding='utf-8'))
+    previous=json.loads((ROOT/'dev_tests/adabelief_boundary_candidate_manifest.json').read_text(encoding='utf-8'))
+    for name,entry in archive.items():
+        data=(ROOT/entry['archive']).read_bytes()
+        assert hashlib.sha256(data).hexdigest()==entry['sha256'],name
+        if name in previous['source_sha256']:
+            assert entry['sha256']==previous['source_sha256'][name],name
+    for name in TRANSITIONS:
+        if name in portable:
+            continue  # Already checked against the exact archived successor.
+        source=(ROOT/archive[name]['archive']).read_text(encoding='utf-8')
+        assert (ROOT/name).read_text(encoding='utf-8')==expected_source(name,source),name
+    before=json.loads((ROOT/'dev_tests/adabelief_moment_pre_fix_fingerprints.json').read_text(encoding='utf-8'))
+    for name,digest in before.items():
+        # Publication v1: generated local outputs are not public prerequisites.
+        if name.startswith('dev_tests/artifacts/'):
+            continue
+        if name not in TRANSITIONS and name not in portable and name not in teaching and (name.startswith(('nif/','tutorial/','dev_tests/','tests/')) or name=='.gitattributes'):
+            if name=='.gitattributes':
+                from dev_tests.publication_windows_scope import assert_checkout_attributes
+                assert_checkout_attributes(ROOT,digest)
+            else:
+                assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,name
+    # Freeze the new oracle at its BEFORE-fix hash. The native source entry in
+    # that RED manifest identifies the original snapshot, not the new candidate.
+    red=json.loads((ROOT/'dev_tests/adabelief_moment_red_fingerprints.json').read_text(encoding='utf-8'))
+    for name,digest in red.items():
+        if name=='nif/optimizers/external_optimizers.py':
+            assert archive[name]['sha256']==digest
+        else:assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,name
+    # The earlier caller also checks older hashes; these exact successors and
+    # its previously authorized v3 source transformations supersede those only.
+    from dev_tests.adabelief_phase_scope import TRANSITIONS as phase_v3
+    return set(TRANSITIONS)|set(phase_v3)|portable

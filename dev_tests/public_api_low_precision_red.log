@@ -1,0 +1,130 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+___ test_new_orthogonal_initializer_retains_requested_low_precision[dtype0] ____
+
+dtype = torch.float16
+
+    @pytest.mark.parametrize('dtype', [torch.float16, torch.bfloat16])
+    def test_new_orthogonal_initializer_retains_requested_low_precision(dtype):
+        values = torch.empty(8, 5, dtype=dtype)
+>       initialize(values, 'orthogonal')
+
+dev_tests/test_public_api_regressions.py:209: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nif/layers/_common.py:115: in initialize
+    nn.init.orthogonal_(matrix)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tensor = tensor([[ 2.8160e+04,  6.5381e-01,  2.7664e+04,  0.0000e+00,  7.1875e+00],
+        [ 6.6846e-01,  2.7664e+04,  0.0000e...,  2.7664e+04],
+        [ 0.0000e+00,  5.3125e-01,  6.5332e-01,  2.7664e+04,  0.0000e+00]],
+       dtype=torch.float16)
+gain = 1, generator = None
+
+    def orthogonal_(
+        tensor: Tensor,
+        gain: float = 1,
+        generator: torch.Generator | None = None,
+    ) -> Tensor:
+        r"""Fill the input `Tensor` with a (semi) orthogonal matrix.
+    
+        Described in `Exact solutions to the nonlinear dynamics of learning in deep
+        linear neural networks` - Saxe, A. et al. (2013). The input tensor must have
+        at least 2 dimensions, and for tensors with more than 2 dimensions the
+        trailing dimensions are flattened.
+    
+        Args:
+            tensor: an n-dimensional `torch.Tensor`, where :math:`n \geq 2`
+            gain: optional scaling factor
+            generator: the torch Generator to sample from (default: None)
+    
+        Examples:
+            >>> # xdoctest: +REQUIRES(env:TORCH_DOCTEST_LAPACK)
+            >>> w = torch.empty(3, 5)
+            >>> nn.init.orthogonal_(w)
+        """
+        if tensor.ndimension() < 2:
+            raise ValueError("Only tensors with 2 or more dimensions are supported")
+    
+        if tensor.numel() == 0 or tensor.is_meta:
+            # no-op
+            return tensor
+        rows = tensor.size(0)
+        cols = tensor.numel() // rows
+        flattened = tensor.new_empty((rows, cols)).normal_(0, 1, generator=generator)
+    
+        if rows < cols:
+            flattened.t_()
+    
+        # Compute the qr factorization
+>       q, r = torch.linalg.qr(flattened)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       NotImplementedError: "geqrf_cpu" not implemented for 'Half'
+
+/usr/local/lib/python3.13/site-packages/torch/nn/init.py:708: NotImplementedError
+___ test_new_orthogonal_initializer_retains_requested_low_precision[dtype1] ____
+
+dtype = torch.bfloat16
+
+    @pytest.mark.parametrize('dtype', [torch.float16, torch.bfloat16])
+    def test_new_orthogonal_initializer_retains_requested_low_precision(dtype):
+        values = torch.empty(8, 5, dtype=dtype)
+>       initialize(values, 'orthogonal')
+
+dev_tests/test_public_api_regressions.py:209: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nif/layers/_common.py:115: in initialize
+    nn.init.orthogonal_(matrix)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tensor = tensor([[-3.3881e-21,  4.6092e+15,  1.9573e+33,  0.0000e+00, -3.3881e-21],
+        [ 4.6092e+15,  1.9573e+33,  0.0000e...  6.3772e+13],
+        [ 0.0000e+00,  8.9080e-39,  0.0000e+00,  1.8028e+28,  7.3841e+31]],
+       dtype=torch.bfloat16)
+gain = 1, generator = None
+
+    def orthogonal_(
+        tensor: Tensor,
+        gain: float = 1,
+        generator: torch.Generator | None = None,
+    ) -> Tensor:
+        r"""Fill the input `Tensor` with a (semi) orthogonal matrix.
+    
+        Described in `Exact solutions to the nonlinear dynamics of learning in deep
+        linear neural networks` - Saxe, A. et al. (2013). The input tensor must have
+        at least 2 dimensions, and for tensors with more than 2 dimensions the
+        trailing dimensions are flattened.
+    
+        Args:
+            tensor: an n-dimensional `torch.Tensor`, where :math:`n \geq 2`
+            gain: optional scaling factor
+            generator: the torch Generator to sample from (default: None)
+    
+        Examples:
+            >>> # xdoctest: +REQUIRES(env:TORCH_DOCTEST_LAPACK)
+            >>> w = torch.empty(3, 5)
+            >>> nn.init.orthogonal_(w)
+        """
+        if tensor.ndimension() < 2:
+            raise ValueError("Only tensors with 2 or more dimensions are supported")
+    
+        if tensor.numel() == 0 or tensor.is_meta:
+            # no-op
+            return tensor
+        rows = tensor.size(0)
+        cols = tensor.numel() // rows
+        flattened = tensor.new_empty((rows, cols)).normal_(0, 1, generator=generator)
+    
+        if rows < cols:
+            flattened.t_()
+    
+        # Compute the qr factorization
+>       q, r = torch.linalg.qr(flattened)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       NotImplementedError: "geqrf_cpu" not implemented for 'BFloat16'
+
+/usr/local/lib/python3.13/site-packages/torch/nn/init.py:708: NotImplementedError
+=========================== short test summary info ============================
+FAILED dev_tests/test_public_api_regressions.py::test_new_orthogonal_initializer_retains_requested_low_precision[dtype0]
+FAILED dev_tests/test_public_api_regressions.py::test_new_orthogonal_initializer_retains_requested_low_precision[dtype1]
+2 failed, 71 deselected in 2.15s

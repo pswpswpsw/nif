@@ -1,0 +1,17 @@
+{
+  "provenance": "Environment metadata added from the unchanged original Linux capture container. The pre-fix fingerprint file is preserved byte-for-byte; no expected tensor or RNG hash was regenerated.",
+  "fingerprints_sha256": "91f2bff6b6d7b63c25bf7e20a3dcbcc30d4559ad38161294b1ce56979db5ea85",
+  "environment": {
+    "system": "Linux",
+    "machine": "x86_64",
+    "byteorder": "little",
+    "pointer_bits": 64,
+    "python_implementation": "CPython",
+    "python_version": "3.13.17",
+    "python_compiler": "GCC 12.2.0",
+    "numpy_version": "2.1.3",
+    "torch_version": "2.14.1+cpu",
+    "torch_git_version": "5c4886908584029761b579af026dcfb627c84070",
+    "torch_build_config_sha256": "3c1440a866c0ec1ecdffb9c62da237523c25701ab893521410516ba91173c365"
+  }
+}

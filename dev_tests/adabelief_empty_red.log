@@ -1,0 +1,248 @@
+FFFFFFF.F.                                                               [100%]
+=================================== FAILURES ===================================
+__ test_empty_call_atomic_before_group_counters_slots_and_schedules[False-0] ___
+
+warmup = 0, closure_clears = False
+
+    @pytest.mark.parametrize('warmup',[0,3,6])
+    @pytest.mark.parametrize('closure_clears',[False,True])
+    def test_empty_call_atomic_before_group_counters_slots_and_schedules(warmup,closure_clears):
+        p=torch.nn.Parameter(torch.tensor([.1,-.2],dtype=torch.float32))
+        q=torch.nn.Parameter(torch.tensor([.3],dtype=torch.float64))
+        calls=[]
+        def lr(t):calls.append(('lr',t));return .001
+        def wd(t):calls.append(('wd',t));return .01
+        opt=AdaBeliefOptimizer([{'params':[p]},{'params':[q]}],lr=lr,weight_decay=wd,amsgrad=True)
+        for _ in range(warmup):
+            p.grad=torch.ones_like(p);q.grad=torch.zeros_like(q);opt.step()
+        opt.zero_grad(set_to_none=True)
+        before=copy.deepcopy(opt.state_dict());values=[p.detach().clone(),q.detach().clone()];schedule_calls=calls.copy()
+        seen=[]
+        def closure():
+            assert torch.is_grad_enabled()
+            opt.zero_grad(set_to_none=True);seen.append(True)
+            return p.square().sum()
+        if closure_clears:p.grad=torch.ones_like(p)
+>       with pytest.raises(ValueError,match='[Nn]o gradients'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+dev_tests/test_adabelief_empty_gradients.py:42: Failed
+__ test_empty_call_atomic_before_group_counters_slots_and_schedules[False-3] ___
+
+warmup = 3, closure_clears = False
+
+    @pytest.mark.parametrize('warmup',[0,3,6])
+    @pytest.mark.parametrize('closure_clears',[False,True])
+    def test_empty_call_atomic_before_group_counters_slots_and_schedules(warmup,closure_clears):
+        p=torch.nn.Parameter(torch.tensor([.1,-.2],dtype=torch.float32))
+        q=torch.nn.Parameter(torch.tensor([.3],dtype=torch.float64))
+        calls=[]
+        def lr(t):calls.append(('lr',t));return .001
+        def wd(t):calls.append(('wd',t));return .01
+        opt=AdaBeliefOptimizer([{'params':[p]},{'params':[q]}],lr=lr,weight_decay=wd,amsgrad=True)
+        for _ in range(warmup):
+            p.grad=torch.ones_like(p);q.grad=torch.zeros_like(q);opt.step()
+        opt.zero_grad(set_to_none=True)
+        before=copy.deepcopy(opt.state_dict());values=[p.detach().clone(),q.detach().clone()];schedule_calls=calls.copy()
+        seen=[]
+        def closure():
+            assert torch.is_grad_enabled()
+            opt.zero_grad(set_to_none=True);seen.append(True)
+            return p.square().sum()
+        if closure_clears:p.grad=torch.ones_like(p)
+>       with pytest.raises(ValueError,match='[Nn]o gradients'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+dev_tests/test_adabelief_empty_gradients.py:42: Failed
+__ test_empty_call_atomic_before_group_counters_slots_and_schedules[False-6] ___
+
+warmup = 6, closure_clears = False
+
+    @pytest.mark.parametrize('warmup',[0,3,6])
+    @pytest.mark.parametrize('closure_clears',[False,True])
+    def test_empty_call_atomic_before_group_counters_slots_and_schedules(warmup,closure_clears):
+        p=torch.nn.Parameter(torch.tensor([.1,-.2],dtype=torch.float32))
+        q=torch.nn.Parameter(torch.tensor([.3],dtype=torch.float64))
+        calls=[]
+        def lr(t):calls.append(('lr',t));return .001
+        def wd(t):calls.append(('wd',t));return .01
+        opt=AdaBeliefOptimizer([{'params':[p]},{'params':[q]}],lr=lr,weight_decay=wd,amsgrad=True)
+        for _ in range(warmup):
+            p.grad=torch.ones_like(p);q.grad=torch.zeros_like(q);opt.step()
+        opt.zero_grad(set_to_none=True)
+        before=copy.deepcopy(opt.state_dict());values=[p.detach().clone(),q.detach().clone()];schedule_calls=calls.copy()
+        seen=[]
+        def closure():
+            assert torch.is_grad_enabled()
+            opt.zero_grad(set_to_none=True);seen.append(True)
+            return p.square().sum()
+        if closure_clears:p.grad=torch.ones_like(p)
+>       with pytest.raises(ValueError,match='[Nn]o gradients'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+dev_tests/test_adabelief_empty_gradients.py:42: Failed
+___ test_empty_call_atomic_before_group_counters_slots_and_schedules[True-0] ___
+
+warmup = 0, closure_clears = True
+
+    @pytest.mark.parametrize('warmup',[0,3,6])
+    @pytest.mark.parametrize('closure_clears',[False,True])
+    def test_empty_call_atomic_before_group_counters_slots_and_schedules(warmup,closure_clears):
+        p=torch.nn.Parameter(torch.tensor([.1,-.2],dtype=torch.float32))
+        q=torch.nn.Parameter(torch.tensor([.3],dtype=torch.float64))
+        calls=[]
+        def lr(t):calls.append(('lr',t));return .001
+        def wd(t):calls.append(('wd',t));return .01
+        opt=AdaBeliefOptimizer([{'params':[p]},{'params':[q]}],lr=lr,weight_decay=wd,amsgrad=True)
+        for _ in range(warmup):
+            p.grad=torch.ones_like(p);q.grad=torch.zeros_like(q);opt.step()
+        opt.zero_grad(set_to_none=True)
+        before=copy.deepcopy(opt.state_dict());values=[p.detach().clone(),q.detach().clone()];schedule_calls=calls.copy()
+        seen=[]
+        def closure():
+            assert torch.is_grad_enabled()
+            opt.zero_grad(set_to_none=True);seen.append(True)
+            return p.square().sum()
+        if closure_clears:p.grad=torch.ones_like(p)
+>       with pytest.raises(ValueError,match='[Nn]o gradients'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+dev_tests/test_adabelief_empty_gradients.py:42: Failed
+___ test_empty_call_atomic_before_group_counters_slots_and_schedules[True-3] ___
+
+warmup = 3, closure_clears = True
+
+    @pytest.mark.parametrize('warmup',[0,3,6])
+    @pytest.mark.parametrize('closure_clears',[False,True])
+    def test_empty_call_atomic_before_group_counters_slots_and_schedules(warmup,closure_clears):
+        p=torch.nn.Parameter(torch.tensor([.1,-.2],dtype=torch.float32))
+        q=torch.nn.Parameter(torch.tensor([.3],dtype=torch.float64))
+        calls=[]
+        def lr(t):calls.append(('lr',t));return .001
+        def wd(t):calls.append(('wd',t));return .01
+        opt=AdaBeliefOptimizer([{'params':[p]},{'params':[q]}],lr=lr,weight_decay=wd,amsgrad=True)
+        for _ in range(warmup):
+            p.grad=torch.ones_like(p);q.grad=torch.zeros_like(q);opt.step()
+        opt.zero_grad(set_to_none=True)
+        before=copy.deepcopy(opt.state_dict());values=[p.detach().clone(),q.detach().clone()];schedule_calls=calls.copy()
+        seen=[]
+        def closure():
+            assert torch.is_grad_enabled()
+            opt.zero_grad(set_to_none=True);seen.append(True)
+            return p.square().sum()
+        if closure_clears:p.grad=torch.ones_like(p)
+>       with pytest.raises(ValueError,match='[Nn]o gradients'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+dev_tests/test_adabelief_empty_gradients.py:42: Failed
+___ test_empty_call_atomic_before_group_counters_slots_and_schedules[True-6] ___
+
+warmup = 6, closure_clears = True
+
+    @pytest.mark.parametrize('warmup',[0,3,6])
+    @pytest.mark.parametrize('closure_clears',[False,True])
+    def test_empty_call_atomic_before_group_counters_slots_and_schedules(warmup,closure_clears):
+        p=torch.nn.Parameter(torch.tensor([.1,-.2],dtype=torch.float32))
+        q=torch.nn.Parameter(torch.tensor([.3],dtype=torch.float64))
+        calls=[]
+        def lr(t):calls.append(('lr',t));return .001
+        def wd(t):calls.append(('wd',t));return .01
+        opt=AdaBeliefOptimizer([{'params':[p]},{'params':[q]}],lr=lr,weight_decay=wd,amsgrad=True)
+        for _ in range(warmup):
+            p.grad=torch.ones_like(p);q.grad=torch.zeros_like(q);opt.step()
+        opt.zero_grad(set_to_none=True)
+        before=copy.deepcopy(opt.state_dict());values=[p.detach().clone(),q.detach().clone()];schedule_calls=calls.copy()
+        seen=[]
+        def closure():
+            assert torch.is_grad_enabled()
+            opt.zero_grad(set_to_none=True);seen.append(True)
+            return p.square().sum()
+        if closure_clears:p.grad=torch.ones_like(p)
+>       with pytest.raises(ValueError,match='[Nn]o gradients'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+dev_tests/test_adabelief_empty_gradients.py:42: Failed
+___ test_empty_call_cannot_change_next_real_update_or_restored_continuation ____
+
+    def test_empty_call_cannot_change_next_real_update_or_restored_continuation():
+        p=torch.nn.Parameter(torch.zeros(2,dtype=torch.float32))
+        q=torch.nn.Parameter(p.detach().clone())
+        opt=AdaBeliefOptimizer([p]);control=AdaBeliefOptimizer([q])
+        for step in range(1,10):
+            if step==6:
+                opt.zero_grad(set_to_none=True)
+                try:opt.step()
+                except ValueError:pass
+                buffer=io.BytesIO();torch.save(opt.state_dict(),buffer);buffer.seek(0)
+                opt=AdaBeliefOptimizer([p]);opt.load_state_dict(torch.load(buffer,weights_only=True))
+            p.grad=q.grad=torch.tensor([1e-12,-.2])
+            opt.step();control.step()
+>           equal(p,q);equal(opt.state_dict(),control.state_dict())
+            ^^^^^^^^^^
+
+dev_tests/test_adabelief_empty_gradients.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+actual = Parameter containing:
+tensor([-1.0036e-11,  1.0444e-03], requires_grad=True)
+expected = Parameter containing:
+tensor([-8.1854e-12,  1.0362e-03], requires_grad=True)
+
+    def equal(actual,expected):
+        if isinstance(actual,torch.Tensor):
+            assert actual.dtype==expected.dtype and actual.device==expected.device
+>           assert torch.equal(actual.detach().reshape(-1).view(torch.uint8),expected.detach().reshape(-1).view(torch.uint8))
+E           assert False
+E            +  where False = <built-in method equal of type object at 0x7d4b87d801a0>(tensor([ 29, 144,  48, 173, 147, 229, 136,  58], dtype=torch.uint8), tensor([142, 255,  15, 173, 106, 210, 135,  58], dtype=torch.uint8))
+E            +    where <built-in method equal of type object at 0x7d4b87d801a0> = torch.equal
+E            +    and   tensor([ 29, 144,  48, 173, 147, 229, 136,  58], dtype=torch.uint8) = <built-in method view of Tensor object at 0x7d4b663ad860>(torch.uint8)
+E            +      where <built-in method view of Tensor object at 0x7d4b663ad860> = tensor([-1.0036e-11,  1.0444e-03]).view
+E            +        where tensor([-1.0036e-11,  1.0444e-03]) = <built-in method reshape of Tensor object at 0x7d4b6642e030>(-1)
+E            +          where <built-in method reshape of Tensor object at 0x7d4b6642e030> = tensor([-1.0036e-11,  1.0444e-03]).reshape
+E            +            where tensor([-1.0036e-11,  1.0444e-03]) = <built-in method detach of Parameter object at 0x7d4b692b84b0>()
+E            +              where <built-in method detach of Parameter object at 0x7d4b692b84b0> = Parameter containing:\ntensor([-1.0036e-11,  1.0444e-03], requires_grad=True).detach
+E            +      and   torch.uint8 = torch.uint8
+E            +    and   tensor([142, 255,  15, 173, 106, 210, 135,  58], dtype=torch.uint8) = <built-in method view of Tensor object at 0x7d4b6b5e49b0>(torch.uint8)
+E            +      where <built-in method view of Tensor object at 0x7d4b6b5e49b0> = tensor([-8.1854e-12,  1.0362e-03]).view
+E            +        where tensor([-8.1854e-12,  1.0362e-03]) = <built-in method reshape of Tensor object at 0x7d4b6b5e5400>(-1)
+E            +          where <built-in method reshape of Tensor object at 0x7d4b6b5e5400> = tensor([-8.1854e-12,  1.0362e-03]).reshape
+E            +            where tensor([-8.1854e-12,  1.0362e-03]) = <built-in method detach of Parameter object at 0x7d4b692b83c0>()
+E            +              where <built-in method detach of Parameter object at 0x7d4b692b83c0> = Parameter containing:\ntensor([-8.1854e-12,  1.0362e-03], requires_grad=True).detach
+E            +      and   torch.uint8 = torch.uint8
+
+dev_tests/test_adabelief_empty_gradients.py:13: AssertionError
+_________________ test_late_added_group_retains_its_own_clock __________________
+
+    def test_late_added_group_retains_its_own_clock():
+        p=torch.nn.Parameter(torch.zeros(1,dtype=torch.float64))
+        q=torch.nn.Parameter(torch.zeros(1,dtype=torch.float64))
+        opt=AdaBeliefOptimizer([p])
+        for _ in range(4):p.grad=torch.ones_like(p);opt.step()
+        opt.add_param_group({'params':[q]})
+        p.grad=None;q.grad=torch.ones_like(q);opt.step()
+        assert [g['step'] for g in opt.param_groups]==[5,1]
+        assert opt.state[q]['step']==1 and opt.state[p]['step']==4
+        equal(q,torch.tensor([-.001],dtype=q.dtype))
+        opt.zero_grad(set_to_none=True)
+        before=copy.deepcopy(opt.state_dict())
+>       with pytest.raises(ValueError,match='[Nn]o gradients'):opt.step()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+dev_tests/test_adabelief_empty_gradients.py:90: Failed
+=========================== short test summary info ============================
+FAILED dev_tests/test_adabelief_empty_gradients.py::test_empty_call_atomic_before_group_counters_slots_and_schedules[False-0]
+FAILED dev_tests/test_adabelief_empty_gradients.py::test_empty_call_atomic_before_group_counters_slots_and_schedules[False-3]
+FAILED dev_tests/test_adabelief_empty_gradients.py::test_empty_call_atomic_before_group_counters_slots_and_schedules[False-6]
+FAILED dev_tests/test_adabelief_empty_gradients.py::test_empty_call_atomic_before_group_counters_slots_and_schedules[True-0]
+FAILED dev_tests/test_adabelief_empty_gradients.py::test_empty_call_atomic_before_group_counters_slots_and_schedules[True-3]
+FAILED dev_tests/test_adabelief_empty_gradients.py::test_empty_call_atomic_before_group_counters_slots_and_schedules[True-6]
+FAILED dev_tests/test_adabelief_empty_gradients.py::test_empty_call_cannot_change_next_real_update_or_restored_continuation
+FAILED dev_tests/test_adabelief_empty_gradients.py::test_late_added_group_retains_its_own_clock
+8 failed, 2 passed in 2.87s

@@ -1,0 +1,37 @@
+F.                                                                       [100%]
+================================== FAILURES ===================================
+________ test_real_git_checkout_with_autocrlf_true_preserves_integrity ________
+
+tmp_path = WindowsPath('D:/nif/dev_tests/artifacts/checkout-eol-red-20261023-a/test_real_git_checkout_with_au0')
+
+    def test_real_git_checkout_with_autocrlf_true_preserves_integrity(tmp_path):
+        if not shutil.which('git') or not (ROOT/'.git').exists():
+            pytest.skip('integration requires a Git source checkout and installed Git')
+        checkout = tmp_path/'checkout'
+>       git('-c', 'core.autocrlf=true', 'clone', '--no-checkout', '--no-hardlinks',
+            str(ROOT), str(checkout))
+
+dev_tests\test_publication_checkout_eol.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+cwd = None, data = None
+args = ('-c', 'core.autocrlf=true', 'clone', '--no-checkout', '--no-hardlinks', 'D:\\nif', ...)
+
+    def git(*args, cwd=None, data=None):
+        result = subprocess.run([shutil.which('git'), *args], cwd=cwd, input=data,
+                                capture_output=True)
+>       assert result.returncode == 0, result.stderr.decode('utf-8', errors='replace')
+E       AssertionError: Cloning into 'D:\nif\dev_tests\artifacts\checkout-eol-red-20261023-a\test_real_git_checkout_with_au0\checkout'...
+E               0 [main] sh (75348) C:\Program Files\Git\usr\bin\sh.exe: *** fatal error - NtCreateDirectoryObject(\BaseNamedObjects\msys-2.0S5-1888ae32e00d56aa): 0xC0000022
+E         fatal: Could not read from remote repository.
+E         
+E         Please make sure you have the correct access rights
+E         and the repository exists.
+E         
+E       assert 128 == 0
+E        +  where 128 = CompletedProcess(args=['C:\\Program Files\\Git\\cmd\\git.EXE', '-c', 'core.autocrlf=true', 'clone', '--no-checkout', '...not read from remote repository.\n\nPlease make sure you have the correct access rights\nand the repository exists.\n").returncode
+
+dev_tests\test_publication_checkout_eol.py:30: AssertionError
+=========================== short test summary info ===========================
+FAILED dev_tests/test_publication_checkout_eol.py::test_real_git_checkout_with_autocrlf_true_preserves_integrity
+1 failed, 1 passed in 0.97s

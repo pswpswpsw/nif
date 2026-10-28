@@ -1,0 +1,6 @@
+{
+  "dev_tests/test_adabelief_moment_dtype.py": "429fc20394d4b729f0cf90ed68a568b60278dc7376e02d332dc35125b57c9272",
+  "dev_tests/adabelief_moment_red.log": "30fc7a0eb566047a3ce51b3613bd26a87b0505b43783c325fe2abb88a06b2999",
+  "nif/optimizers/external_optimizers.py": "918afd7ee94d2a8f197971d108afa9eb3a209d04a799ae234b4cd7aceb30bb62",
+  "dev_tests/fixtures/adabelief_dtype/tf_external_optimizers_ad9113d.py.txt": "016b79ec31e9e66418c39c4fc1e0ba174d054798bc6c59b6aef0ff7bed41352a"
+}

@@ -1,0 +1,53 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________ test_scope_test_source_reads_are_utf8_under_gbk_default ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7428c865fa80>
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-46/test_scope_test_source_reads_a0')
+
+    def test_scope_test_source_reads_are_utf8_under_gbk_default(monkeypatch,tmp_path):
+        # Add the same harmless Unicode comment to temporary source copies. This
+        # preserves the exact phase transform while testing decoding independently
+        # of whether today's particular test source happens to be all ASCII.
+        files=['dev_tests/fixtures/tutorial1_gc_scope_v1/test_pruning_adam_state.py.txt',
+               'dev_tests/test_pruning_adam_state.py']
+        for name in files:
+            target=tmp_path/name
+            target.parent.mkdir(parents=True,exist_ok=True)
+            target.write_bytes((scope_tests.ROOT/name).read_bytes()+'\n# Preserved UTF-8 scope – reader control\n'.encode('utf-8'))
+        monkeypatch.setattr(scope_tests,'ROOT',tmp_path)
+        original=Path.read_text
+        def gbk_default(path,encoding=None,errors=None,**kwargs):
+            return original(path,encoding=encoding or 'gbk',errors=errors,**kwargs)
+        monkeypatch.setattr(Path,'read_text',gbk_default)
+>       scope_tests.test_phase_guard_v2_changes_only_authorized_historical_scope_assertion()
+
+dev_tests/test_scope_helper_utf8_archives.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_tutorial1_gc_scope.py:26: in test_phase_guard_v2_changes_only_authorized_historical_scope_assertion
+    old=(ROOT/'dev_tests/fixtures/tutorial1_gc_scope_v1/test_pruning_adam_state.py.txt').read_text()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+dev_tests/test_scope_helper_utf8_archives.py:20: in gbk_default
+    return original(path,encoding=encoding or 'gbk',errors=errors,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/pathlib/_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/pytest-of-root/pytest-46/test_scope_test_source_reads_a0/dev_tests/fixtures/tutorial1_gc_scope_v1/test_pruning_adam_state.py.txt')
+encoding = 'gbk', errors = None, newline = None
+
+    def read_text(self, encoding=None, errors=None, newline=None):
+        """
+        Open the file in text mode, read it, and close the file.
+        """
+        with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+>           return f.read()
+                   ^^^^^^^^
+E           UnicodeDecodeError: 'gbk' codec can't decode byte 0x93 in position 9015: illegal multibyte sequence
+
+/usr/local/lib/python3.13/pathlib/_abc.py:633: UnicodeDecodeError
+=========================== short test summary info ============================
+FAILED dev_tests/test_scope_helper_utf8_archives.py::test_scope_test_source_reads_are_utf8_under_gbk_default
+1 failed in 0.50s

@@ -1,0 +1,83 @@
+{
+  "environment": {
+    "python": "3.13.17",
+    "torch": "2.14.1+cpu",
+    "numpy": "2.1.3",
+    "cuda_available": false
+  },
+  "source_sha256": {
+    "nif/optimizers/reference_adam.py": "d7a1666856d85298c9ad8250c72ea6e256448f417ae8e73acb3c49bceeabbd0e",
+    "nif/optimizers/__init__.py": "536474b218d8afb8d93385efdebd98d3195a42f15161647ab35a701d5311e48c",
+    "nif/pruning.py": "feb045ae52aaf0efc9ba3c4faf081da0262f26b53a736423f0c4e3443593f08c",
+    "dev_tests/generate_native_notebooks.py": "bc540c80ecd5bd9d111e895bbd6467187499b92be25bfa3ac3c1a32fde920102",
+    "dev_tests/test_reference_adam.py": "8c4ccebb63f75d048e28fcf05eec32301d9f34ab6b97104652b6d3d9c094b01c",
+    "dev_tests/test_tutorial7_pruning.py": "b4486dd3a4796386d4573a5c66a1d036d2a30ae96df348fea0ad2c8ad1a71dea",
+    "dev_tests/test_pruning_adam_state.py": "60e83c210615ca5a4d478a484d5ad08940a6e8841ac1d597780e44f13186c268",
+    "dev_tests/run_pruning_adam_smoke.py": "094f3b01d64bb5655351ea9693b1cdf454d7311e798408251a514ce50884d741",
+    "docs/PYTORCH_API.md": "7ea02bd663e26e96494e7dd24519e57336d4f6f2c2a4f5e6c3def1c61cfd80ba",
+    "tutorial/2_multi_scale_NIF_pytorch.ipynb": "bb036c0318f967ebdf72f639b5179c7c4787f5d4e696954041544a3e06b61189",
+    "tutorial/5_large_scale_training_on_tensorflow_record_data_pytorch.ipynb": "9cbc758bd3cc91e37aaf8828dbb1362804c14468fb1dc4ec89afafd041b57522",
+    "tutorial/6_revisit_multi_scale_NIF_with_L1_L2_regularization_pytorch.ipynb": "9cf508a572de5ed8db233e56c2fff2218fdb25c4a6752498dcc19837fc9843ce",
+    "tutorial/7_model_pruning_and_quantization_pytorch.ipynb": "a944e323fa003c7605d2f73433152b5f03d00fa94e1695242cd8a7592eb11014",
+    "tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb": "f37f38c30a2138426235eadf3c17b7940c7220a159034801719c838f492b71ed"
+  },
+  "public_suite": {
+    "passed": 239,
+    "skipped": 2
+  },
+  "smoke": [
+    {
+      "notebook": "2_multi_scale_NIF_pytorch.ipynb",
+      "mode": "smoke",
+      "source_sha256": "bb036c0318f967ebdf72f639b5179c7c4787f5d4e696954041544a3e06b61189",
+      "status": "passed",
+      "seconds": 4.771555433999993
+    },
+    {
+      "notebook": "5_large_scale_training_on_tensorflow_record_data_pytorch.ipynb",
+      "mode": "smoke",
+      "source_sha256": "9cbc758bd3cc91e37aaf8828dbb1362804c14468fb1dc4ec89afafd041b57522",
+      "status": "passed",
+      "seconds": 4.140443948999973
+    },
+    {
+      "notebook": "6_revisit_multi_scale_NIF_with_L1_L2_regularization_pytorch.ipynb",
+      "mode": "smoke",
+      "source_sha256": "9cf508a572de5ed8db233e56c2fff2218fdb25c4a6752498dcc19837fc9843ce",
+      "status": "passed",
+      "seconds": 8.937663736000104
+    },
+    {
+      "notebook": "7_model_pruning_and_quantization_pytorch.ipynb",
+      "mode": "smoke",
+      "source_sha256": "a944e323fa003c7605d2f73433152b5f03d00fa94e1695242cd8a7592eb11014",
+      "status": "passed",
+      "seconds": 5.14043351600003
+    },
+    {
+      "notebook": "8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb",
+      "mode": "smoke",
+      "source_sha256": "f37f38c30a2138426235eadf3c17b7940c7220a159034801719c838f492b71ed",
+      "status": "passed",
+      "seconds": 5.761850296000148
+    }
+  ],
+  "tutorial7_smoke_metrics": {
+    "mode": "smoke",
+    "baseline_epochs": 2,
+    "pruning_epochs": 2,
+    "sparsity": 0.9000512557662738,
+    "zero_weights": 1756,
+    "total_weights": 1951,
+    "quantized_linear_count": 3,
+    "relative_mse_prune": 1.7061890363693237,
+    "relative_mse_prune_quant": 1.7065060138702393,
+    "quantization_mse_vs_pruned": 3.1678646905675123e-07,
+    "gzip_bytes": {
+      "original.pt": 70070,
+      "stripped.pt": 64369,
+      "compressed.torchscript.pt": 32440,
+      "quantized_and_pruned.torchscript.pt": 35413
+    }
+  }
+}

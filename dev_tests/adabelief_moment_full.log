@@ -1,0 +1,128 @@
+........................................................................ [ 18%]
+...................................................................s.... [ 36%]
+........................................................................ [ 55%]
+.....................................s.................................. [ 73%]
+........................................................................ [ 91%]
+................................                                         [100%]
+=============================== warnings summary ===============================
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:64
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:64: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    prop = Group((name + Suppress("=") + comma_separated(value)) | oneOf(_CONSTANTS))
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:85: 6 warnings
+dev_tests/test_adabelief_moment_checkpoint.py: 25 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:85: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+    parse = parser.parseString(pattern)
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:89: 6 warnings
+dev_tests/test_adabelief_moment_checkpoint.py: 25 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:89: PyparsingDeprecationWarning: 'resetCache' deprecated - use 'reset_cache'
+    parser.resetCache()
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:45
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:45: PyparsingDeprecationWarning: 'enablePackrat' deprecated - use 'enable_packrat'
+    ParserElement.enablePackrat()
+
+dev_tests/test_adabelief_dtype_preservation.py::test_historical_pre_moment_slots_unchanged_with_clipping_schedules_and_sparse_v4[True-False-dtype0]
+  /workspace/dev_tests/test_adabelief_dtype_preservation.py:35: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/Context.cpp:848.)
+    g=torch.sparse_coo_tensor(torch.tensor([[t%3]]),torch.tensor([[.1*t,-.2]],dtype=dtype),p.shape)
+
+dev_tests/test_adabelief_moment_checkpoint.py::test_actual_tutorial_helpers_resume_real_gradients_bitwise_on_cpu[1]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2010: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.space          = oneOf(self._space_widths)("space")
+
+dev_tests/test_adabelief_moment_checkpoint.py::test_actual_tutorial_helpers_resume_real_gradients_bitwise_on_cpu[1]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2012: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.style_literal  = oneOf(
+
+dev_tests/test_adabelief_moment_checkpoint.py::test_actual_tutorial_helpers_resume_real_gradients_bitwise_on_cpu[1]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2020: PyparsingDeprecationWarning: 'leaveWhitespace' deprecated - use 'leave_whitespace'
+    )("sym").leaveWhitespace()
+
+dev_tests/test_adabelief_moment_checkpoint.py::test_actual_tutorial_helpers_resume_real_gradients_bitwise_on_cpu[1]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2024: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.start_group    = Optional(r"\math" + oneOf(self._fontnames)("font")) + "{"
+
+dev_tests/test_adabelief_moment_checkpoint.py::test_actual_tutorial_helpers_resume_real_gradients_bitwise_on_cpu[1]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2027: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.delim          = oneOf(self._delims)
+
+dev_tests/test_adabelief_moment_checkpoint.py: 47 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:1984: PyparsingDeprecationWarning: 'setName' deprecated - use 'set_name'
+    val.setName(key)
+
+dev_tests/test_adabelief_moment_checkpoint.py: 44 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:1987: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    val.setParseAction(getattr(self, key))
+
+dev_tests/test_adabelief_moment_checkpoint.py: 16 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:1748: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    return Empty().setParseAction(raise_error)
+
+dev_tests/test_adabelief_moment_checkpoint.py::test_actual_tutorial_helpers_resume_real_gradients_bitwise_on_cpu[1]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2088: PyparsingDeprecationWarning: 'endQuoteChar' argument is deprecated, use 'end_quote_char'
+    p.text = cmd(r"\text", QuotedString('{', '\\', endQuoteChar="}"))
+
+dev_tests/test_adabelief_moment_checkpoint.py::test_actual_tutorial_helpers_resume_real_gradients_bitwise_on_cpu[1]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2097: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    + OneOrMore(oneOf(["_", "^"]) - p.placeable)("subsuper")
+
+dev_tests/test_adabelief_moment_checkpoint.py::test_actual_tutorial_helpers_resume_real_gradients_bitwise_on_cpu[1]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2146: PyparsingDeprecationWarning: 'unquoteResults' argument is deprecated, use 'unquote_results'
+    p.math_string   = QuotedString('$', '\\', unquoteResults=False)
+
+dev_tests/test_adabelief_moment_checkpoint.py::test_actual_tutorial_helpers_resume_real_gradients_bitwise_on_cpu[1]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2147: PyparsingDeprecationWarning: 'leaveWhitespace' deprecated - use 'leave_whitespace'
+    p.non_math      = Regex(r"(?:(?:\\[$])|[^$])*").leaveWhitespace()
+
+dev_tests/test_adabelief_moment_checkpoint.py: 38 warnings
+dev_tests/test_notebook_displays.py: 48 warnings
+dev_tests/test_tutorial1_gc_behavior.py: 8 warnings
+dev_tests/test_tutorial7_pruning.py: 2 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2170: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+    result = self._expression.parseString(s)
+
+dev_tests/test_adabelief_moment_checkpoint.py: 38 warnings
+dev_tests/test_notebook_displays.py: 48 warnings
+dev_tests/test_tutorial1_gc_behavior.py: 8 warnings
+dev_tests/test_tutorial7_pruning.py: 2 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2197: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+    return self._math_expression.parseString(toks[0][1:-1], parseAll=True)
+
+dev_tests/test_adabelief_moment_checkpoint.py: 38 warnings
+dev_tests/test_notebook_displays.py: 48 warnings
+dev_tests/test_tutorial1_gc_behavior.py: 8 warnings
+dev_tests/test_tutorial7_pruning.py: 2 warnings
+  /usr/local/lib/python3.13/site-packages/pyparsing/util.py:466: PyparsingDeprecationWarning: 'parseAll' argument is deprecated, use 'parse_all'
+    return fn(self, *args, **kwargs)
+
+dev_tests/test_adabelief_moment_checkpoint.py: 38 warnings
+dev_tests/test_notebook_displays.py: 48 warnings
+dev_tests/test_tutorial1_gc_behavior.py: 8 warnings
+dev_tests/test_tutorial7_pruning.py: 2 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2178: PyparsingDeprecationWarning: 'resetCache' deprecated - use 'reset_cache'
+    ParserElement.resetCache()
+
+dev_tests/test_optimizers_data.py::test_tfrecord_external_reader_and_multiworker_epochs
+dev_tests/test_optimizers_data.py::test_tfrecord_external_reader_and_multiworker_epochs
+  /usr/local/lib/python3.13/multiprocessing/popen_fork.py:73: DeprecationWarning: This process (pid=3484) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    self.pid = os.fork()
+
+dev_tests/test_pruning_adam_state.py::test_checkpoint_resume_preserves_schedule_slots_and_strip
+  /usr/local/lib/python3.13/site-packages/torch/jit/_trace.py:1006: FutureWarning: `torch.jit.trace` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+dev_tests/test_pruning_adam_state.py::test_checkpoint_resume_preserves_schedule_slots_and_strip
+  /usr/local/lib/python3.13/site-packages/torch/jit/_trace.py:1145: FutureWarning: `torch.jit.trace_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+dev_tests/test_pruning_adam_state.py::test_checkpoint_resume_preserves_schedule_slots_and_strip
+  /usr/local/lib/python3.13/site-packages/torch/jit/_serialization.py:89: FutureWarning: `torch.jit.save` is deprecated. Please switch to `torch.export`.
+    warnings.warn(
+
+dev_tests/test_pruning_adam_state.py::test_checkpoint_resume_preserves_schedule_slots_and_strip
+  /usr/local/lib/python3.13/site-packages/torch/jit/_serialization.py:176: FutureWarning: `torch.jit.load` is deprecated. Please switch to `torch.export`.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+390 passed, 2 skipped, 571 warnings in 30.95s

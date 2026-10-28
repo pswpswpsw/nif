@@ -1,0 +1,78 @@
+{
+  "tutorial/1_simple_1d_wave_pytorch.ipynb": {
+    "archive": "dev_tests/fixtures/lbfgs_reference_v1/tutorial__1_simple_1d_wave_pytorch.ipynb.txt",
+    "before_sha256": "ce69f3af6063be436cbf0652b2b7c661b970aaa8edf487e54277480020a44bde"
+  },
+  "dev_tests/generate_native_notebooks.py": {
+    "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__generate_native_notebooks.py.txt",
+    "before_sha256": "371c946f3fdf2105c0af50894a2fbad3d7ea74ae7b91886dc8967b6b0d66df20"
+  },
+  "dev_tests/test_tutorial1_lbfgs.py": {
+    "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_tutorial1_lbfgs.py.txt",
+    "before_sha256": "e0d70b7d6acdfa79ceec5f06fcc13ae835871b2973b66d8d65a0cccc4933043a"
+  },
+  "dev_tests/tutorial1_gc_scope.py": {
+    "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__tutorial1_gc_scope.py.txt",
+    "before_sha256": "97b11dda02bcce8e088659bcedede1e66b7c62ce8362a09b768a5c13f005fd32"
+  },
+  "dev_tests/publication_windows_scope.py": {
+    "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__publication_windows_scope.py.txt",
+    "before_sha256": "368f1008d844d14b9f4854b2f8c125c69cebae286f3b007f6530f9a57f2bfa5f"
+  },
+  "dev_tests/adabelief_moment_scope.py": {
+    "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__adabelief_moment_scope.py.txt",
+    "before_sha256": "715fdc8e6a1667168017bc701504b7ffe511fa01d5e8abe88864856282b5f943"
+  },
+  "dev_tests/publication_projection.py": {
+    "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__publication_projection.py.txt",
+    "before_sha256": "4e62161579cd668aac7ff669e4ef013736f3a79f2a5bf1c92a2b66aab8f2807c"
+  },
+  "dev_tests/test_teaching_markdown_scope.py": {
+    "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_teaching_markdown_scope.py.txt",
+    "before_sha256": "bef39e74ef7e1cdbd663ee197ad07dbd3587f74e117306f24f2ca92ee8495561"
+  },
+  "dev_tests/test_adabelief_boundary_succession.py": {
+    "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_adabelief_boundary_succession.py.txt",
+    "before_sha256": "848e8c8f1ea55a5fdf288b653d0f92a46e90ea163183c0312a2d1d3314925def"
+  },
+  "nif/optimizers/lbfgs.py": {
+    "archive": "dev_tests/fixtures/lbfgs_reference_v1/nif__optimizers__lbfgs.py.txt",
+    "before_sha256": "26636c2f9ed24f88b54f333e7ddc88388d5ad5e5d2cb823f74a5f573da5197ab"
+  },
+  "nif/optimizers/lbfgs_V2.py": {
+    "archive": "dev_tests/fixtures/lbfgs_reference_v1/nif__optimizers__lbfgs_V2.py.txt",
+    "before_sha256": "ab8707b26f61034507cdf4adbcaeb1c07c53a9c5d553332885aee3a041e1fc8e"
+  },
+  "nif/optimizers/__init__.py": {
+    "archive": "dev_tests/fixtures/lbfgs_reference_v1/nif__optimizers____init__.py.txt",
+    "before_sha256": "536474b218d8afb8d93385efdebd98d3195a42f15161647ab35a701d5311e48c"
+  },
+  "dev_tests/test_tutorial1_gc_scope.py": {
+    "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_tutorial1_gc_scope.py.txt",
+    "before_sha256": "441e664ddfd35f07f96fce6364ef1109d07202db0da381e675f9f21efd150eec"
+  },
+  "MANIFEST.in": {
+    "archive": "dev_tests/fixtures/lbfgs_reference_v1/MANIFEST.in.txt",
+    "before_sha256": "b74a71744b6c3a7fdd29c59c7c591dfa2a6a96b8abae35f6449b860adac1acec"
+  },
+  "dev_tests/test_publication_checkout_successor.py": {
+    "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_publication_checkout_successor.py.txt",
+    "before_sha256": "0e0a3bac364df2bb1e05217a475ac44dbc137842fe8a4882fcc4a420c36bfbc3"
+  },
+  "dev_tests/test_adabelief_final_update_successor.py": {
+    "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_adabelief_final_update_successor.py.txt",
+    "before_sha256": "2f2f394770973896ed1e5ead279b9c6721528c88b75dae27718dee8d7e93ea23"
+  },
+  "dev_tests/test_publication_checkout_eol.py": {
+    "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_publication_checkout_eol.py.txt",
+    "before_sha256": "16fba47f7c12800fa2179818e25872afc480c7b3efcc176cd021f44e39d36860"
+  },
+  ".gitattributes": {
+    "archive": "dev_tests/fixtures/lbfgs_reference_v1/gitattributes.txt",
+    "before_sha256": "281e29eb207cf48481c96b16a236192ce350eca94f2ea977ae7c25be9222086e"
+  },
+  "dev_tests/test_test_portability.py": {
+    "archive": "dev_tests/fixtures/lbfgs_reference_v1/dev_tests__test_test_portability.py.txt",
+    "before_sha256": "719f86d974718a7405c2b1faca77b9fdc339c67ec24b6037a4bb11c9ff574bc6"
+  }
+}

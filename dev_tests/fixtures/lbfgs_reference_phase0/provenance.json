@@ -1,0 +1,160 @@
+{
+  "phase": "0 PUBLIC CPU analytic oracle and frozen uncollected future recipe only; no product edits",
+  "demonstrated_bug": "Original actual-constructor 16a203 test RED only. No missing future import is a bug reproduction.",
+  "preserved_inputs": {
+    "dev_tests/test_lbfgs_stopping_contract.py": {
+      "sha256": "16a203349aa115fef48785bd8af47f8e0a93962df9d4abf0d9c1c6ac74b8424c",
+      "bytes": 3598
+    },
+    "dev_tests/lbfgs_stopping_contract_oracle.json": {
+      "sha256": "c11f484201cd18e2cada11de0d7eb98096425b6741ec7a61c780854ae7067cad",
+      "bytes": 1598
+    },
+    "dev_tests/lbfgs_stopping_contract_red.log": {
+      "sha256": "32e81b651a171476d054cdd3ddd41d062c1859d30c0ed0e9d8293b49c58a39dc",
+      "bytes": 2308
+    },
+    "dev_tests/LBFGS_STOPPING_CONTRACT.md": {
+      "sha256": "210bf4e359eedfe362333db617a098d3c1634b266768221597f95f132e24ee8f",
+      "bytes": 3500
+    },
+    "dev_tests/fixtures/lbfgs_stopping_contract/tfp_oracle.py.txt": {
+      "sha256": "507c2200436be576a2d2d28ce3f43b27049014785845ee2728ce579d96c77538",
+      "bytes": 3464
+    },
+    "dev_tests/lbfgs_stopping_contract_source.json": {
+      "sha256": "22ab2f0ab99747bfea546c51a43da9e90aed954c68d1b246c2fe9995030686a6",
+      "bytes": 4601
+    }
+  },
+  "execution_sources_at_phase0": {
+    "nif/optimizers/lbfgs.py": {
+      "sha256": "26636c2f9ed24f88b54f333e7ddc88388d5ad5e5d2cb823f74a5f573da5197ab",
+      "bytes": 3197
+    },
+    "nif/optimizers/lbfgs_V2.py": {
+      "sha256": "ab8707b26f61034507cdf4adbcaeb1c07c53a9c5d553332885aee3a041e1fc8e",
+      "bytes": 6470
+    },
+    "nif/optimizers/__init__.py": {
+      "sha256": "536474b218d8afb8d93385efdebd98d3195a42f15161647ab35a701d5311e48c",
+      "bytes": 842
+    },
+    "nif/optimizers/external_optimizers.py": {
+      "sha256": "956a2f80f6dfee6c5603a3ed981d5bc0e2d537e156cc6e1e95e8fba6519674a4",
+      "bytes": 19132
+    },
+    "tutorial/1_simple_1d_wave_pytorch.ipynb": {
+      "sha256": "ce69f3af6063be436cbf0652b2b7c661b970aaa8edf487e54277480020a44bde",
+      "bytes": 25898
+    }
+  },
+  "frozen_phase0_inputs": {
+    "dev_tests/fixtures/lbfgs_reference_phase0/tfp_oracle.py.txt": {
+      "sha256": "6b46fc766eea364db5dd280c52cf8999733448030c09bf2ad40d7ae0c70ca3bf",
+      "bytes": 8854
+    },
+    "dev_tests/fixtures/lbfgs_reference_phase0/test_reference_lbfgs_contract.py.txt": {
+      "sha256": "2abbc4b93afdb8c2ae0fb4900c2f8091abe97d012379ebdc1de617b1cdc81917",
+      "bytes": 9288
+    },
+    "dev_tests/fixtures/lbfgs_reference_phase0/oracle.json": {
+      "sha256": "f465bdc38dc88a5bc5daf84890786fc83bd078c1b79e916c7f4b9facf29b65d2",
+      "bytes": 82594
+    },
+    "dev_tests/test_lbfgs_reference_phase0_records.py": {
+      "sha256": "754f2fd614d6b7013189b2540be82a76d7e0c253409849d84480354e3f534423",
+      "bytes": 5100
+    },
+    "dev_tests/LBFGS_REFERENCE_PHASE0.md": {
+      "sha256": "1261ffe90fe6032df6436df887d2b6dda10fae138a59b864f872ad24d7cf6b67",
+      "bytes": 5431
+    },
+    "dev_tests/lbfgs_reference_phase0_oracle.log": {
+      "sha256": "126166d02d6516c54c11c414469ca159e67a8baf83029d6d6760e5d2d5446353",
+      "bytes": 5100
+    },
+    "dev_tests/lbfgs_reference_phase0_records.log": {
+      "sha256": "791c01838885fed908578f1931c01d2094232ec40ef29a1d69c80d387c082d45",
+      "bytes": 132
+    }
+  },
+  "native_environment": {
+    "python": "3.13.11",
+    "torch": "2.14.1+cpu",
+    "cuda_available": false,
+    "cuda_visible_devices": "-1",
+    "num_threads": 1,
+    "num_interop_threads": 1
+  },
+  "serialization_lineage": {
+    "raw": "D:\\nif\\dev_tests\\artifacts\\lbfgs-reference-phase0-5d81e6b3b011\\oracle-freeze-raw.log",
+    "raw_sha256": "5a8633de1a914afce2cb9d94edb2a9971fbfdf57c26efa362995ab988a3e88a7",
+    "raw_bytes": 5136,
+    "canonical": "dev_tests/lbfgs_reference_phase0_oracle.log",
+    "canonical_sha256": "126166d02d6516c54c11c414469ca159e67a8baf83029d6d6760e5d2d5446353",
+    "canonical_bytes": 5100,
+    "crlf_pairs_replaced": 36,
+    "only_crlf_to_lf": true
+  },
+  "development_evidence": {
+    "tfp_oracle.py": {
+      "sha256": "b4ab29084aec67f6ee419a6a84ebf06d85f08dcc0979e9295a3a5c0fd396357b",
+      "bytes": 8028
+    },
+    "oracle-raw.log": {
+      "sha256": "0c4bccdf339ce2a9f85c8d87e80dee5b1920b1a571fd02fadb62e3bcb7ba55e4",
+      "bytes": 2445
+    },
+    "tfp_oracle-final.py": {
+      "sha256": "4ab1b079ead7a603ec25a756365cf55cb30d6a95e7928abb012cfcdff29dcb43",
+      "bytes": 8051
+    },
+    "oracle-final-raw.log": {
+      "sha256": "754e2180a157de89c2ed82890322e9c161c1caf4ddcd78d284c25b0ea7a9c4a8",
+      "bytes": 4243
+    },
+    "oracle-first-complete.json": {
+      "sha256": "fd993ea3210196165ef4107341a480f5efa1743332820d3df9711d04fe8127e1",
+      "bytes": 61508
+    },
+    "tfp_oracle-complete.py": {
+      "sha256": "2134768893a95788d40883d7d0793947b374237b56da9627c466ec8805b1e093",
+      "bytes": 8211
+    },
+    "oracle-complete-raw.log": {
+      "sha256": "2a27fae74ba3ed260d8391c8d01e6591a4c54606a2bb18f69ff2bd0ee626e82c",
+      "bytes": 4470
+    },
+    "oracle-quartic-complete.json": {
+      "sha256": "e43a7d68cb2e76f38a9899772572037b9d04deb40c27a5201f3b813f561bf61a",
+      "bytes": 67253
+    },
+    "tfp_oracle-freeze.py": {
+      "sha256": "6b46fc766eea364db5dd280c52cf8999733448030c09bf2ad40d7ae0c70ca3bf",
+      "bytes": 8854
+    },
+    "oracle-freeze-raw.log": {
+      "sha256": "5a8633de1a914afce2cb9d94edb2a9971fbfdf57c26efa362995ab988a3e88a7",
+      "bytes": 5136
+    }
+  },
+  "future_recipe_activation": "Copy exact bytes to dev_tests/test_reference_lbfgs_contract.py only after product implementation authorization; no skip/xfail now.",
+  "class_budget": "max_iter additional iterations per step; cumulative counters",
+  "generic_budget": "max_iterations cumulative; map to remaining iterations",
+  "record_checks": {
+    "command": "native Python -B; CUDA_VISIBLE_DEVICES=-1; Torch threads1/1; pytest dev_tests/test_lbfgs_reference_phase0_records.py -q -p no:cacheprovider",
+    "actual_result": "9 passed in 0.07s; no skips/xfails",
+    "raw_path": "D:\\nif\\dev_tests\\artifacts\\lbfgs-reference-phase0-5d81e6b3b011\\records-check-raw.log",
+    "raw": {
+      "sha256": "0707e9cc9156ea2af9279efd60d3f3435b3d2376a69e00844bae81e373ef137a",
+      "bytes": 135
+    },
+    "canonical_path": "dev_tests/lbfgs_reference_phase0_records.log",
+    "canonical": {
+      "sha256": "791c01838885fed908578f1931c01d2094232ec40ef29a1d69c80d387c082d45",
+      "bytes": 132
+    },
+    "only_crlf_to_lf": true
+  }
+}

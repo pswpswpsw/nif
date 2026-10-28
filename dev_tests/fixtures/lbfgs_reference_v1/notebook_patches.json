@@ -1,0 +1,75 @@
+[
+  {
+    "cell": 35,
+    "before": [
+      "# Native torch.optim.LBFGS uses a closure: recompute loss and gradients at every line search.\n",
+      "lbfgs_history = []\n",
+      "rounds, max_iter = (1, 2) if SMOKE else (200, 1000)\n",
+      "# Public TFPLBFGS scientific controls, retained in full AND smoke modes.\n",
+      "tolerance = x_tolerance = f_relative_tolerance = 1e-15\n",
+      "num_correction_pairs = 20\n",
+      "max_line_search_iterations = 100\n",
+      "# Native convention (the same mapping as nif.optimizers.TFPLBFGS):\n",
+      "# PyTorch uses strong-Wolfe line search and a per-round max_eval budget of\n",
+      "# max_iter * max_line_search_iterations. Its internal trial accounting is not\n",
+      "# TFP's separate limit of 100 iterations per individual line search.\n",
+      "# tolerance_change applies to absolute step/objective changes (and the descent\n",
+      "# directional derivative); it cannot express TFP's independent relative-objective\n",
+      "# tolerance. Both original change thresholds are 1e-15 and map to that value.\n",
+      "# Thus the controls are retained, but solver trajectories/stopping can differ.\n"
+    ],
+    "after": [
+      "# Reference L-BFGS uses a closure: recompute loss and gradients at every line search.\n",
+      "from nif.optimizers import ReferenceLBFGS\n",
+      "lbfgs_history = []\n",
+      "rounds, max_iter = (1, 2) if SMOKE else (200, 1000)\n",
+      "# Original TFPLBFGS controls, retained independently in full and smoke modes.\n",
+      "tolerance = x_tolerance = f_relative_tolerance = 1e-15\n",
+      "num_correction_pairs = 20\n",
+      "max_line_search_iterations = 100\n",
+      "# Each round creates a fresh optimizer with up to max_iter additional iterations.\n",
+      "# Hager-Zhang line search has its own per-search iteration limit.\n"
+    ]
+  },
+  {
+    "cell": 37,
+    "before": [
+      "for round_index in range(rounds):\n",
+      "    fine_tuner = torch.optim.LBFGS(new_model.parameters(), max_iter=max_iter,\n",
+      "                                 max_eval=max_iter * max_line_search_iterations,\n",
+      "                                 history_size=num_correction_pairs,\n",
+      "                                 tolerance_grad=tolerance,\n",
+      "                                 tolerance_change=max(x_tolerance, f_relative_tolerance),\n",
+      "                                 line_search_fn=\"strong_wolfe\")\n",
+      "    def closure():\n",
+      "        fine_tuner.zero_grad(set_to_none=True)\n",
+      "        loss = (new_model(data_feature)-data_label).square().mean() + new_model.regularization_loss(data_feature)\n",
+      "        if not torch.isfinite(loss): raise FloatingPointError(\"non-finite LBFGS loss\")\n",
+      "        loss.backward(); lbfgs_history.append(float(loss.detach()))\n",
+      "        return loss\n",
+      "    fine_tuner.step(closure)\n",
+      "new_model = save_and_check(new_model, fine_tuner, \"fine_tuned\", train_data[:64,:2])\n",
+      "fig,ax=plt.subplots(figsize=(8,2)); ax.semilogy(lbfgs_history); ax.set(xlabel=\"closure evaluation\",ylabel=\"loss\")\n",
+      "fig.tight_layout(); fig.savefig(OUT / \"fine_tune_loss.png\"); plt.show(); plt.close(fig)\n"
+    ],
+    "after": [
+      "for round_index in range(rounds):\n",
+      "    fine_tuner = ReferenceLBFGS(new_model.parameters(), max_iter=max_iter,\n",
+      "                                num_correction_pairs=num_correction_pairs,\n",
+      "                                tolerance=tolerance, x_tolerance=x_tolerance,\n",
+      "                                f_relative_tolerance=f_relative_tolerance,\n",
+      "                                f_absolute_tolerance=0.,\n",
+      "                                max_line_search_iterations=max_line_search_iterations)\n",
+      "    def closure():\n",
+      "        fine_tuner.zero_grad(set_to_none=True)\n",
+      "        loss = (new_model(data_feature)-data_label).square().mean() + new_model.regularization_loss(data_feature)\n",
+      "        if not torch.isfinite(loss): raise FloatingPointError(\"non-finite LBFGS loss\")\n",
+      "        loss.backward(); lbfgs_history.append(float(loss.detach()))\n",
+      "        return loss\n",
+      "    fine_tuner.step(closure)\n",
+      "new_model = save_and_check(new_model, fine_tuner, \"fine_tuned\", train_data[:64,:2])\n",
+      "fig,ax=plt.subplots(figsize=(8,2)); ax.semilogy(lbfgs_history); ax.set(xlabel=\"closure evaluation\",ylabel=\"loss\")\n",
+      "fig.tight_layout(); fig.savefig(OUT / \"fine_tune_loss.png\"); plt.show(); plt.close(fig)\n"
+    ]
+  }
+]

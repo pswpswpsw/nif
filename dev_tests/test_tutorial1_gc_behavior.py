@@ -1,0 +1,100 @@
+"""Actual tutorial-1 native training path versus a controlled raw-gradient update.
+
+The primary reference behavior (GC inactive in current Colab1 fit) is supplied
+by the public contract. No TensorFlow runtime or private fixtures are used.
+"""
+import ast
+import copy
+import json
+from pathlib import Path
+import time
+
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib import pyplot as plt
+import nbformat
+import numpy as np
+import pytest
+import torch
+import nif
+from nif.optimizers import AdaBeliefOptimizer
+
+ROOT=Path(__file__).resolve().parents[1]
+
+
+def sources(kind):
+    if kind=='notebook':
+        notebook=nbformat.read(ROOT/'tutorial/1_simple_1d_wave_pytorch.ipynb',as_version=4)
+        code=[c.source for c in notebook.cells if c.cell_type=='code']
+        return (notebook.cells[2].source,
+                next(s for s in code if s.startswith('cfg_shape_net =')),
+                next(s for s in code if s.startswith('def scheduler(')),
+                next(s for s in code if s.startswith('from nif.optimizers import AdaBeliefOptimizer')))
+    tree=ast.parse((ROOT/'dev_tests/generate_native_notebooks.py').read_text(encoding='utf-8'))
+    constants={node.targets[0].id:node.value for node in tree.body
+               if isinstance(node,ast.Assign) and isinstance(node.targets[0],ast.Name)}
+    emit=next(node for node in ast.walk(tree) if isinstance(node,ast.Call)
+              and isinstance(node.func,ast.Name) and node.func.id=='emit'
+              and isinstance(node.args[0],ast.Constant) and node.args[0].value==1)
+    cells={ast.literal_eval(k):v for k,v in zip(emit.args[1].keys,emit.args[1].values)}
+    return tuple(ast.literal_eval(v) for v in
+                 (constants['HELPERS'],constants['SWISH'],cells[19],cells[23]))
+
+
+@pytest.mark.parametrize('kind',['notebook','generator'])
+@pytest.mark.parametrize('explicit_gc',[False,True],ids=['primary_default','optional_gc'])
+def test_training_consumes_raw_temporal_gradient_by_default(kind,explicit_gc,tmp_path):
+    helper,config,scheduler,training=sources(kind)
+    scope=dict(torch=torch,nn=torch.nn,nif=nif,np=np,copy=copy,json=json,time=time,
+               plt=plt,device=torch.device('cpu'),OUT=tmp_path,SMOKE=False,
+               mixed_policy='float32',lr=5e-3,nepoch=5000)
+    exec(helper,scope);exec(config,scope);exec(scheduler,scope)
+    # Run the actual training cell up to its history assignment, retaining its
+    # model, optimizer, scheduler and GC selection. One controlled batch/epoch
+    # substitutes only the workload for this local behavioral regression.
+    tree=ast.parse(training)
+    index=next(i for i,node in enumerate(tree.body) if isinstance(node,ast.Assign)
+               and any(isinstance(t,ast.Name) and t.id=='history' for t in node.targets))
+    exec(compile(ast.Module(body=tree.body[:index],type_ignores=[]),'<tutorial setup>','exec'),scope)
+    model,optimizer=scope['model_opt'],scope['optimizer']
+    with torch.no_grad():
+        for p in model.parameters():p.fill_(.02)
+    x=torch.tensor([[.2,.1],[.7,.4],[.9,.8]])
+    y=torch.tensor([[-.2],[.1],[.3]])
+    scope.update(train_dataset=[(x,y)],epochs=lambda full:1)
+    if explicit_gc:
+        scope['use_gradient_centralization']=True
+    oracle=copy.deepcopy(model)
+    raw_loss=(oracle(x)-y).square().mean()+oracle.regularization_loss(x)
+    raw_loss.backward()
+    name='pnet_list.0.linear.weight'
+    initial=dict(model.named_parameters())[name].detach().clone()
+    raw_gradient=dict(oracle.named_parameters())[name].grad.detach().clone()
+    assert raw_gradient.abs().min()>1e-6, 'control must expose a nonzero temporal gradient'
+    if explicit_gc:
+        scope['centralize_gradients'](oracle)
+    expected_gradient=dict(oracle.named_parameters())[name].grad.detach().clone()
+    reference_optimizer=AdaBeliefOptimizer(oracle.parameters(),lr=5e-3)
+    reference_optimizer.step()
+    consumed=[]
+    def capture(opt,args,kwargs):
+        consumed.append(dict(model.named_parameters())[name].grad.detach().clone())
+    handle=optimizer.register_step_pre_hook(capture)
+    try:
+        exec(compile(ast.Module(body=[tree.body[index]],type_ignores=[]),'<tutorial training>','exec'),scope)
+    finally:
+        handle.remove();plt.close('all')
+    assert len(consumed)==1
+    torch.testing.assert_close(consumed[0],expected_gradient,rtol=0,atol=0)
+    temporal=dict(model.named_parameters())[name]
+    if explicit_gc:
+        assert torch.count_nonzero(consumed[0])==0
+        torch.testing.assert_close(temporal,initial,rtol=0,atol=0)
+    else:
+        assert not torch.equal(temporal,initial), 'primary no-GC update must move temporal kernel'
+    for p,q in zip(model.parameters(),oracle.parameters()):
+        torch.testing.assert_close(p,q,rtol=0,atol=0)
+        for slot,value in reference_optimizer.state[q].items():
+            actual=optimizer.state[p][slot]
+            if isinstance(value,torch.Tensor):torch.testing.assert_close(actual,value,rtol=0,atol=0)
+            else:assert actual==value

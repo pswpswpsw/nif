@@ -1,0 +1,57 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+____________ test_generator_source_read_uses_utf8_under_gbk_default ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7abe8745a3f0>
+
+    def test_generator_source_read_uses_utf8_under_gbk_default(monkeypatch):
+        original = Path.read_text
+    
+        def locale_read(path, encoding=None, errors=None, **kwargs):
+            return original(path, encoding=encoding or 'gbk', errors=errors, **kwargs)
+    
+        monkeypatch.setattr(Path, 'read_text', locale_read)
+>       setup, training = solver_cells('generator')
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_test_portability.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+dev_tests/test_tutorial1_lbfgs.py:23: in solver_cells
+    tree = ast.parse((ROOT / 'dev_tests/generate_native_notebooks.py').read_text())
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+dev_tests/test_test_portability.py:15: in locale_read
+    return original(path, encoding=encoding or 'gbk', errors=errors, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/pathlib/_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/workspace/dev_tests/generate_native_notebooks.py')
+encoding = 'gbk', errors = None, newline = None
+
+    def read_text(self, encoding=None, errors=None, newline=None):
+        """
+        Open the file in text mode, read it, and close the file.
+        """
+        with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+>           return f.read()
+                   ^^^^^^^^
+E           UnicodeDecodeError: 'gbk' codec can't decode byte 0x93 in position 261: illegal multibyte sequence
+
+/usr/local/lib/python3.13/pathlib/_abc.py:633: UnicodeDecodeError
+_______ test_linux_fingerprints_skip_on_windows_with_same_torch_version ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7abe8a28e3f0>
+
+    def test_linux_fingerprints_skip_on_windows_with_same_torch_version(monkeypatch):
+        monkeypatch.setattr(platform, 'system', lambda: 'Windows')
+>       with pytest.raises(pytest.skip.Exception, match='recorded.*build'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE Skipped
+
+dev_tests/test_test_portability.py:25: Failed
+=========================== short test summary info ============================
+FAILED dev_tests/test_test_portability.py::test_generator_source_read_uses_utf8_under_gbk_default
+FAILED dev_tests/test_test_portability.py::test_linux_fingerprints_skip_on_windows_with_same_torch_version
+2 failed in 3.28s

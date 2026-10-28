@@ -1,0 +1,2090 @@
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF.FF..                           [100%]
+=================================== FAILURES ===================================
+____ test_public_float32_complement_values_and_default_constructor_step_one ____
+
+    def test_public_float32_complement_values_and_default_constructor_step_one():
+        b1,b2=map(np.float32,NOMINAL)
+        assert float(np.float32(1)-b1)==.10000002384185791
+        assert float(np.float32(1)-b2)==.0009999871253967285
+        assert float(np.float32(1-.9))==.10000000149011612
+        assert float(np.float32(1-.999))==.0010000000474974513
+        p=torch.nn.Parameter(torch.zeros(4))
+        opt=AdaBeliefOptimizer([p])  # literal public defaults, NO beta overrides
+        g=np.array([1.,-.375,0.,1e-12],dtype=np.float32)
+        m,v=source_moments(np.zeros_like(g),np.zeros_like(g),g)
+        p.grad=torch.from_numpy(g);opt.step()
+>       exact(opt.state[p]['exp_avg'],m)
+
+dev_tests/test_adabelief_moment_dtype.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([ 1.0000e-01, -3.7500e-02,  0.0000e+00,  1.0000e-13])
+b = array([ 1.00000024e-01, -3.75000089e-02,  0.00000000e+00,  1.00000025e-13],
+      dtype=float32)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 2.2351741790771484e-08 at index (0,)
+E       Greatest relative difference: 2.7105048161502054e-07 at index (3,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_product_then_add_is_distinct_from_alpha_fusion[nominal-native-dtype0] _
+
+dtype = torch.float32, betas = (0.9, 0.999)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_product_then_add_is_distinct_from_alpha_fusion(dtype,betas):
+        # Independent generated operands expose add_(alpha=...) fusion rounding.
+        # TF source explicitly multiplies each operand before the sum/assignment.
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        rng=np.random.default_rng(4721)
+        m=rng.normal(size=256).astype(scalar)
+        g=rng.normal(size=256).astype(scalar)
+        v=np.abs(rng.normal(size=256)).astype(scalar)
+        expected_m,expected_v=source_moments(m,v,g,betas)
+        b1=scalar(betas[0]);c1=scalar(1)-b1
+        fused=torch.from_numpy(m.copy()).mul_(float(b1)).add_(torch.from_numpy(g),alpha=float(c1))
+        assert not torch.equal(fused,torch.from_numpy(expected_m)), 'control must discriminate operation order'
+        p=torch.nn.Parameter(torch.zeros(256,dtype=dtype))
+        opt=AdaBeliefOptimizer([p],betas=betas)
+        opt.state[p].update(exp_avg=torch.from_numpy(m.copy()),exp_avg_var=torch.from_numpy(v.copy()),step=0)
+        p.grad=torch.from_numpy(g);opt.step()
+>       exact(opt.state[p]['exp_avg'],expected_m)
+
+dev_tests/test_adabelief_moment_dtype.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([-1.2325, -0.1436, -1.1984,  0.7373, -0.3934,  1.1820, -1.2281,  1.3044,
+        -0.3442,  0.1366, -0.9233,  1....1,  1.1629, -0.7418,  0.6602, -0.3231,
+         0.5251, -1.2883, -0.4907,  0.1896, -0.0910, -0.6735,  0.7570,  0.7744])
+b = array([-1.2324957 , -0.14364006, -1.1983889 ,  0.7372552 , -0.3933863 ,
+        1.1820326 , -1.2280891 ,  1.3043613 , ...1.2883025 ,
+       -0.4906759 ,  0.1896496 , -0.0909962 , -0.67354494,  0.75704706,
+        0.7744283 ], dtype=float32)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 108 / 256 (42.2%)
+E       Greatest absolute difference: 2.384185791015625e-07 at index (13,)
+E       Greatest relative difference: 1.0515501344343647e-05 at index (146,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_product_then_add_is_distinct_from_alpha_fusion[nominal-native-dtype1] _
+
+dtype = torch.float64, betas = (0.9, 0.999)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_product_then_add_is_distinct_from_alpha_fusion(dtype,betas):
+        # Independent generated operands expose add_(alpha=...) fusion rounding.
+        # TF source explicitly multiplies each operand before the sum/assignment.
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        rng=np.random.default_rng(4721)
+        m=rng.normal(size=256).astype(scalar)
+        g=rng.normal(size=256).astype(scalar)
+        v=np.abs(rng.normal(size=256)).astype(scalar)
+        expected_m,expected_v=source_moments(m,v,g,betas)
+        b1=scalar(betas[0]);c1=scalar(1)-b1
+        fused=torch.from_numpy(m.copy()).mul_(float(b1)).add_(torch.from_numpy(g),alpha=float(c1))
+        assert not torch.equal(fused,torch.from_numpy(expected_m)), 'control must discriminate operation order'
+        p=torch.nn.Parameter(torch.zeros(256,dtype=dtype))
+        opt=AdaBeliefOptimizer([p],betas=betas)
+        opt.state[p].update(exp_avg=torch.from_numpy(m.copy()),exp_avg_var=torch.from_numpy(v.copy()),step=0)
+        p.grad=torch.from_numpy(g);opt.step()
+>       exact(opt.state[p]['exp_avg'],expected_m)
+
+dev_tests/test_adabelief_moment_dtype.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([-1.2325, -0.1436, -1.1984,  0.7373, -0.3934,  1.1820, -1.2281,  1.3044,
+        -0.3442,  0.1366, -0.9233,  1...., -0.3231,
+         0.5251, -1.2883, -0.4907,  0.1896, -0.0910, -0.6735,  0.7570,  0.7744],
+       dtype=torch.float64)
+b = array([-1.23249574, -0.1436401 , -1.19838904,  0.73725522, -0.39338635,
+        1.18203265, -1.22808928,  1.30436143, ...  0.52514126, -1.28830247,
+       -0.49067587,  0.18964958, -0.09099622, -0.67354499,  0.757047  ,
+        0.77442831])
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 19 / 256 (7.4%)
+E       Greatest absolute difference: 1.1102230246251565e-16 at index (194,)
+E       Greatest relative difference: 4.303055672756807e-15 at index (146,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_product_then_add_is_distinct_from_alpha_fusion[explicit-legacy-f32-dtype0] _
+
+dtype = torch.float32, betas = (0.8999999761581421, 0.9990000128746033)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_product_then_add_is_distinct_from_alpha_fusion(dtype,betas):
+        # Independent generated operands expose add_(alpha=...) fusion rounding.
+        # TF source explicitly multiplies each operand before the sum/assignment.
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        rng=np.random.default_rng(4721)
+        m=rng.normal(size=256).astype(scalar)
+        g=rng.normal(size=256).astype(scalar)
+        v=np.abs(rng.normal(size=256)).astype(scalar)
+        expected_m,expected_v=source_moments(m,v,g,betas)
+        b1=scalar(betas[0]);c1=scalar(1)-b1
+        fused=torch.from_numpy(m.copy()).mul_(float(b1)).add_(torch.from_numpy(g),alpha=float(c1))
+        assert not torch.equal(fused,torch.from_numpy(expected_m)), 'control must discriminate operation order'
+        p=torch.nn.Parameter(torch.zeros(256,dtype=dtype))
+        opt=AdaBeliefOptimizer([p],betas=betas)
+        opt.state[p].update(exp_avg=torch.from_numpy(m.copy()),exp_avg_var=torch.from_numpy(v.copy()),step=0)
+        p.grad=torch.from_numpy(g);opt.step()
+>       exact(opt.state[p]['exp_avg'],expected_m)
+
+dev_tests/test_adabelief_moment_dtype.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([-1.2325, -0.1436, -1.1984,  0.7373, -0.3934,  1.1820, -1.2281,  1.3044,
+        -0.3442,  0.1366, -0.9233,  1....1,  1.1629, -0.7418,  0.6602, -0.3231,
+         0.5251, -1.2883, -0.4907,  0.1896, -0.0910, -0.6735,  0.7570,  0.7744])
+b = array([-1.2324957 , -0.14364006, -1.1983889 ,  0.7372552 , -0.3933863 ,
+        1.1820326 , -1.2280891 ,  1.3043613 , ...1.2883025 ,
+       -0.4906759 ,  0.1896496 , -0.0909962 , -0.67354494,  0.75704706,
+        0.7744283 ], dtype=float32)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 27 / 256 (10.5%)
+E       Greatest absolute difference: 1.1920928955078125e-07 at index (6,)
+E       Greatest relative difference: 5.576402486440202e-07 at index (146,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_product_then_add_is_distinct_from_alpha_fusion[explicit-legacy-f32-dtype1] _
+
+dtype = torch.float64, betas = (0.8999999761581421, 0.9990000128746033)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_product_then_add_is_distinct_from_alpha_fusion(dtype,betas):
+        # Independent generated operands expose add_(alpha=...) fusion rounding.
+        # TF source explicitly multiplies each operand before the sum/assignment.
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        rng=np.random.default_rng(4721)
+        m=rng.normal(size=256).astype(scalar)
+        g=rng.normal(size=256).astype(scalar)
+        v=np.abs(rng.normal(size=256)).astype(scalar)
+        expected_m,expected_v=source_moments(m,v,g,betas)
+        b1=scalar(betas[0]);c1=scalar(1)-b1
+        fused=torch.from_numpy(m.copy()).mul_(float(b1)).add_(torch.from_numpy(g),alpha=float(c1))
+        assert not torch.equal(fused,torch.from_numpy(expected_m)), 'control must discriminate operation order'
+        p=torch.nn.Parameter(torch.zeros(256,dtype=dtype))
+        opt=AdaBeliefOptimizer([p],betas=betas)
+        opt.state[p].update(exp_avg=torch.from_numpy(m.copy()),exp_avg_var=torch.from_numpy(v.copy()),step=0)
+        p.grad=torch.from_numpy(g);opt.step()
+>       exact(opt.state[p]['exp_avg'],expected_m)
+
+dev_tests/test_adabelief_moment_dtype.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([-1.2325, -0.1436, -1.1984,  0.7373, -0.3934,  1.1820, -1.2281,  1.3044,
+        -0.3442,  0.1366, -0.9233,  1...., -0.3231,
+         0.5251, -1.2883, -0.4907,  0.1896, -0.0910, -0.6735,  0.7570,  0.7744],
+       dtype=torch.float64)
+b = array([-1.23249568, -0.14364007, -1.19838898,  0.73725519, -0.3933863 ,
+        1.18203265, -1.22808921,  1.30436144, ...  0.52514123, -1.28830247,
+       -0.49067588,  0.1896496 , -0.0909962 , -0.67354493,  0.75704704,
+        0.77442829])
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 34 / 256 (13.3%)
+E       Greatest absolute difference: 1.1102230246251565e-16 at index (28,)
+E       Greatest relative difference: 4.599878425959849e-15 at index (146,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.0-False-False-dtype0] _
+
+dtype = torch.float32, rectify = False, amsgrad = False, initial = 0.0
+betas = (0.9, 0.999)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([ 0.0000e+00,  1.0000e-13, -1.2500e-02,  3.7500e-02, -1.2500e-01])
+b = array([ 0.00000000e+00,  1.00000025e-13, -1.25000030e-02,  3.75000089e-02,
+       -1.25000030e-01], dtype=float32)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 4 / 5 (80.0%)
+E       Greatest absolute difference: 2.9802322387695312e-08 at index (4,)
+E       Greatest relative difference: 2.7105048161502054e-07 at index (1,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.0-False-False-dtype1] _
+
+dtype = torch.float64, rectify = False, amsgrad = False, initial = 0.0
+betas = (0.9, 0.999)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([1.9990e-14, 1.9990e-14, 2.7958e-05, 1.5037e-04, 2.2895e-03],
+       dtype=torch.float64)
+b = array([1.99900000e-14, 1.99900000e-14, 2.79576563e-05, 1.50368906e-04,
+       2.28951563e-03])
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 4.336808689942018e-19 at index (4,)
+E       Greatest relative difference: 1.8942035784989012e-16 at index (4,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.0-False-True-dtype0] _
+
+dtype = torch.float32, rectify = True, amsgrad = False, initial = 0.0
+betas = (0.9, 0.999)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([ 0.0000e+00,  1.0000e-13, -1.2500e-02,  3.7500e-02, -1.2500e-01])
+b = array([ 0.00000000e+00,  1.00000025e-13, -1.25000030e-02,  3.75000089e-02,
+       -1.25000030e-01], dtype=float32)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 4 / 5 (80.0%)
+E       Greatest absolute difference: 2.9802322387695312e-08 at index (4,)
+E       Greatest relative difference: 2.7105048161502054e-07 at index (1,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.0-False-True-dtype1] _
+
+dtype = torch.float64, rectify = True, amsgrad = False, initial = 0.0
+betas = (0.9, 0.999)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([1.9990e-14, 1.9990e-14, 2.7958e-05, 1.5037e-04, 2.2895e-03],
+       dtype=torch.float64)
+b = array([1.99900000e-14, 1.99900000e-14, 2.79576563e-05, 1.50368906e-04,
+       2.28951563e-03])
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 4.336808689942018e-19 at index (4,)
+E       Greatest relative difference: 1.8942035784989012e-16 at index (4,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.0-True-False-dtype0] _
+
+dtype = torch.float32, rectify = False, amsgrad = True, initial = 0.0
+betas = (0.9, 0.999)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([ 0.0000e+00,  1.0000e-13, -1.2500e-02,  3.7500e-02, -1.2500e-01])
+b = array([ 0.00000000e+00,  1.00000025e-13, -1.25000030e-02,  3.75000089e-02,
+       -1.25000030e-01], dtype=float32)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 4 / 5 (80.0%)
+E       Greatest absolute difference: 2.9802322387695312e-08 at index (4,)
+E       Greatest relative difference: 2.7105048161502054e-07 at index (1,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.0-True-False-dtype1] _
+
+dtype = torch.float64, rectify = False, amsgrad = True, initial = 0.0
+betas = (0.9, 0.999)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([1.9990e-14, 1.9990e-14, 2.7958e-05, 1.5037e-04, 2.2895e-03],
+       dtype=torch.float64)
+b = array([1.99900000e-14, 1.99900000e-14, 2.79576563e-05, 1.50368906e-04,
+       2.28951563e-03])
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 4.336808689942018e-19 at index (4,)
+E       Greatest relative difference: 1.8942035784989012e-16 at index (4,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.0-True-True-dtype0] _
+
+dtype = torch.float32, rectify = True, amsgrad = True, initial = 0.0
+betas = (0.9, 0.999)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([ 0.0000e+00,  1.0000e-13, -1.2500e-02,  3.7500e-02, -1.2500e-01])
+b = array([ 0.00000000e+00,  1.00000025e-13, -1.25000030e-02,  3.75000089e-02,
+       -1.25000030e-01], dtype=float32)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 4 / 5 (80.0%)
+E       Greatest absolute difference: 2.9802322387695312e-08 at index (4,)
+E       Greatest relative difference: 2.7105048161502054e-07 at index (1,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.0-True-True-dtype1] _
+
+dtype = torch.float64, rectify = True, amsgrad = True, initial = 0.0
+betas = (0.9, 0.999)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([1.9990e-14, 1.9990e-14, 2.7958e-05, 1.5037e-04, 2.2895e-03],
+       dtype=torch.float64)
+b = array([1.99900000e-14, 1.99900000e-14, 2.79576563e-05, 1.50368906e-04,
+       2.28951563e-03])
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 4.336808689942018e-19 at index (4,)
+E       Greatest relative difference: 1.8942035784989012e-16 at index (4,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.25-False-False-dtype0] _
+
+dtype = torch.float32, rectify = False, amsgrad = False, initial = 0.25
+betas = (0.9, 0.999)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([ 0.0000e+00,  1.0000e-13, -1.2500e-02,  3.7500e-02, -1.2500e-01])
+b = array([ 0.00000000e+00,  1.00000025e-13, -1.25000030e-02,  3.75000089e-02,
+       -1.25000030e-01], dtype=float32)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 4 / 5 (80.0%)
+E       Greatest absolute difference: 2.9802322387695312e-08 at index (4,)
+E       Greatest relative difference: 2.7105048161502054e-07 at index (1,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.25-False-False-dtype1] _
+
+dtype = torch.float64, rectify = False, amsgrad = False, initial = 0.25
+betas = (0.9, 0.999)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([1.9990e-14, 1.9990e-14, 2.7958e-05, 1.5037e-04, 2.2895e-03],
+       dtype=torch.float64)
+b = array([1.99900000e-14, 1.99900000e-14, 2.79576563e-05, 1.50368906e-04,
+       2.28951563e-03])
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 4.336808689942018e-19 at index (4,)
+E       Greatest relative difference: 1.8942035784989012e-16 at index (4,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.25-False-True-dtype0] _
+
+dtype = torch.float32, rectify = True, amsgrad = False, initial = 0.25
+betas = (0.9, 0.999)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([ 0.0000e+00,  1.0000e-13, -1.2500e-02,  3.7500e-02, -1.2500e-01])
+b = array([ 0.00000000e+00,  1.00000025e-13, -1.25000030e-02,  3.75000089e-02,
+       -1.25000030e-01], dtype=float32)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 4 / 5 (80.0%)
+E       Greatest absolute difference: 2.9802322387695312e-08 at index (4,)
+E       Greatest relative difference: 2.7105048161502054e-07 at index (1,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.25-False-True-dtype1] _
+
+dtype = torch.float64, rectify = True, amsgrad = False, initial = 0.25
+betas = (0.9, 0.999)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([1.9990e-14, 1.9990e-14, 2.7958e-05, 1.5037e-04, 2.2895e-03],
+       dtype=torch.float64)
+b = array([1.99900000e-14, 1.99900000e-14, 2.79576563e-05, 1.50368906e-04,
+       2.28951563e-03])
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 4.336808689942018e-19 at index (4,)
+E       Greatest relative difference: 1.8942035784989012e-16 at index (4,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.25-True-False-dtype0] _
+
+dtype = torch.float32, rectify = False, amsgrad = True, initial = 0.25
+betas = (0.9, 0.999)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([ 0.0000e+00,  1.0000e-13, -1.2500e-02,  3.7500e-02, -1.2500e-01])
+b = array([ 0.00000000e+00,  1.00000025e-13, -1.25000030e-02,  3.75000089e-02,
+       -1.25000030e-01], dtype=float32)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 4 / 5 (80.0%)
+E       Greatest absolute difference: 2.9802322387695312e-08 at index (4,)
+E       Greatest relative difference: 2.7105048161502054e-07 at index (1,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.25-True-False-dtype1] _
+
+dtype = torch.float64, rectify = False, amsgrad = True, initial = 0.25
+betas = (0.9, 0.999)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([1.9990e-14, 1.9990e-14, 2.7958e-05, 1.5037e-04, 2.2895e-03],
+       dtype=torch.float64)
+b = array([1.99900000e-14, 1.99900000e-14, 2.79576563e-05, 1.50368906e-04,
+       2.28951563e-03])
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 4.336808689942018e-19 at index (4,)
+E       Greatest relative difference: 1.8942035784989012e-16 at index (4,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.25-True-True-dtype0] _
+
+dtype = torch.float32, rectify = True, amsgrad = True, initial = 0.25
+betas = (0.9, 0.999)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([ 0.0000e+00,  1.0000e-13, -1.2500e-02,  3.7500e-02, -1.2500e-01])
+b = array([ 0.00000000e+00,  1.00000025e-13, -1.25000030e-02,  3.75000089e-02,
+       -1.25000030e-01], dtype=float32)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 4 / 5 (80.0%)
+E       Greatest absolute difference: 2.9802322387695312e-08 at index (4,)
+E       Greatest relative difference: 2.7105048161502054e-07 at index (1,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.25-True-True-dtype1] _
+
+dtype = torch.float64, rectify = True, amsgrad = True, initial = 0.25
+betas = (0.9, 0.999)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([1.9990e-14, 1.9990e-14, 2.7958e-05, 1.5037e-04, 2.2895e-03],
+       dtype=torch.float64)
+b = array([1.99900000e-14, 1.99900000e-14, 2.79576563e-05, 1.50368906e-04,
+       2.28951563e-03])
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 4.336808689942018e-19 at index (4,)
+E       Greatest relative difference: 1.8942035784989012e-16 at index (4,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.0-False-False-dtype0] _
+
+dtype = torch.float32, rectify = False, amsgrad = False, initial = 0.0
+betas = (0.8999999761581421, 0.9990000128746033)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([1.4895e-13, 1.4895e-13, 2.0818e-04, 1.7165e-04, 6.3127e-03])
+b = array([1.4895455e-13, 1.4895455e-13, 2.0817979e-04, 1.7164936e-04,
+       6.3127307e-03], dtype=float32)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 1.4551915228366852e-11 at index (2,)
+E       Greatest relative difference: 6.990071454993085e-08 at index (2,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.0-False-False-dtype1] _
+
+dtype = torch.float64, rectify = False, amsgrad = False, initial = 0.0
+betas = (0.8999999761581421, 0.9990000128746033)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([ 0.0000e+00,  1.9000e-13,  1.2500e-03,  5.8750e-02, -2.3750e-01],
+       dtype=torch.float64)
+b = array([ 0.00000000e+00,  1.90000043e-13,  1.25000060e-03,  5.87500131e-02,
+       -2.37500054e-01])
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 2.524354896707238e-29 at index (1,)
+E       Greatest relative difference: 1.3286075402793398e-16 at index (1,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.0-False-True-dtype0] _
+
+dtype = torch.float32, rectify = True, amsgrad = False, initial = 0.0
+betas = (0.8999999761581421, 0.9990000128746033)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([1.4895e-13, 1.4895e-13, 2.0818e-04, 1.7165e-04, 6.3127e-03])
+b = array([1.4895455e-13, 1.4895455e-13, 2.0817979e-04, 1.7164936e-04,
+       6.3127307e-03], dtype=float32)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 1.4551915228366852e-11 at index (2,)
+E       Greatest relative difference: 6.990071454993085e-08 at index (2,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.0-False-True-dtype1] _
+
+dtype = torch.float64, rectify = True, amsgrad = False, initial = 0.0
+betas = (0.8999999761581421, 0.9990000128746033)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([ 0.0000e+00,  1.9000e-13,  1.2500e-03,  5.8750e-02, -2.3750e-01],
+       dtype=torch.float64)
+b = array([ 0.00000000e+00,  1.90000043e-13,  1.25000060e-03,  5.87500131e-02,
+       -2.37500054e-01])
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 2.524354896707238e-29 at index (1,)
+E       Greatest relative difference: 1.3286075402793398e-16 at index (1,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.0-True-False-dtype0] _
+
+dtype = torch.float32, rectify = False, amsgrad = True, initial = 0.0
+betas = (0.8999999761581421, 0.9990000128746033)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([1.4895e-13, 1.4895e-13, 2.0818e-04, 1.7165e-04, 6.3127e-03])
+b = array([1.4895455e-13, 1.4895455e-13, 2.0817979e-04, 1.7164936e-04,
+       6.3127307e-03], dtype=float32)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 1.4551915228366852e-11 at index (2,)
+E       Greatest relative difference: 6.990071454993085e-08 at index (2,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.0-True-False-dtype1] _
+
+dtype = torch.float64, rectify = False, amsgrad = True, initial = 0.0
+betas = (0.8999999761581421, 0.9990000128746033)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([ 0.0000e+00,  1.9000e-13,  1.2500e-03,  5.8750e-02, -2.3750e-01],
+       dtype=torch.float64)
+b = array([ 0.00000000e+00,  1.90000043e-13,  1.25000060e-03,  5.87500131e-02,
+       -2.37500054e-01])
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 2.524354896707238e-29 at index (1,)
+E       Greatest relative difference: 1.3286075402793398e-16 at index (1,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.0-True-True-dtype0] _
+
+dtype = torch.float32, rectify = True, amsgrad = True, initial = 0.0
+betas = (0.8999999761581421, 0.9990000128746033)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([1.4895e-13, 1.4895e-13, 2.0818e-04, 1.7165e-04, 6.3127e-03])
+b = array([1.4895455e-13, 1.4895455e-13, 2.0817979e-04, 1.7164936e-04,
+       6.3127307e-03], dtype=float32)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 1.4551915228366852e-11 at index (2,)
+E       Greatest relative difference: 6.990071454993085e-08 at index (2,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.0-True-True-dtype1] _
+
+dtype = torch.float64, rectify = True, amsgrad = True, initial = 0.0
+betas = (0.8999999761581421, 0.9990000128746033)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([ 0.0000e+00,  1.9000e-13,  1.2500e-03,  5.8750e-02, -2.3750e-01],
+       dtype=torch.float64)
+b = array([ 0.00000000e+00,  1.90000043e-13,  1.25000060e-03,  5.87500131e-02,
+       -2.37500054e-01])
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 2.524354896707238e-29 at index (1,)
+E       Greatest relative difference: 1.3286075402793398e-16 at index (1,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.25-False-False-dtype0] _
+
+dtype = torch.float32, rectify = False, amsgrad = False, initial = 0.25
+betas = (0.8999999761581421, 0.9990000128746033)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([1.4895e-13, 1.4895e-13, 2.0818e-04, 1.7165e-04, 6.3127e-03])
+b = array([1.4895455e-13, 1.4895455e-13, 2.0817979e-04, 1.7164936e-04,
+       6.3127307e-03], dtype=float32)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 1.4551915228366852e-11 at index (2,)
+E       Greatest relative difference: 6.990071454993085e-08 at index (2,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.25-False-False-dtype1] _
+
+dtype = torch.float64, rectify = False, amsgrad = False, initial = 0.25
+betas = (0.8999999761581421, 0.9990000128746033)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([ 0.0000e+00,  1.9000e-13,  1.2500e-03,  5.8750e-02, -2.3750e-01],
+       dtype=torch.float64)
+b = array([ 0.00000000e+00,  1.90000043e-13,  1.25000060e-03,  5.87500131e-02,
+       -2.37500054e-01])
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 2.524354896707238e-29 at index (1,)
+E       Greatest relative difference: 1.3286075402793398e-16 at index (1,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.25-False-True-dtype0] _
+
+dtype = torch.float32, rectify = True, amsgrad = False, initial = 0.25
+betas = (0.8999999761581421, 0.9990000128746033)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([1.4895e-13, 1.4895e-13, 2.0818e-04, 1.7165e-04, 6.3127e-03])
+b = array([1.4895455e-13, 1.4895455e-13, 2.0817979e-04, 1.7164936e-04,
+       6.3127307e-03], dtype=float32)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 1.4551915228366852e-11 at index (2,)
+E       Greatest relative difference: 6.990071454993085e-08 at index (2,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.25-False-True-dtype1] _
+
+dtype = torch.float64, rectify = True, amsgrad = False, initial = 0.25
+betas = (0.8999999761581421, 0.9990000128746033)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([ 0.0000e+00,  1.9000e-13,  1.2500e-03,  5.8750e-02, -2.3750e-01],
+       dtype=torch.float64)
+b = array([ 0.00000000e+00,  1.90000043e-13,  1.25000060e-03,  5.87500131e-02,
+       -2.37500054e-01])
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 2.524354896707238e-29 at index (1,)
+E       Greatest relative difference: 1.3286075402793398e-16 at index (1,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.25-True-False-dtype0] _
+
+dtype = torch.float32, rectify = False, amsgrad = True, initial = 0.25
+betas = (0.8999999761581421, 0.9990000128746033)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([1.4895e-13, 1.4895e-13, 2.0818e-04, 1.7165e-04, 6.3127e-03])
+b = array([1.4895455e-13, 1.4895455e-13, 2.0817979e-04, 1.7164936e-04,
+       6.3127307e-03], dtype=float32)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 1.4551915228366852e-11 at index (2,)
+E       Greatest relative difference: 6.990071454993085e-08 at index (2,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.25-True-False-dtype1] _
+
+dtype = torch.float64, rectify = False, amsgrad = True, initial = 0.25
+betas = (0.8999999761581421, 0.9990000128746033)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([ 0.0000e+00,  1.9000e-13,  1.2500e-03,  5.8750e-02, -2.3750e-01],
+       dtype=torch.float64)
+b = array([ 0.00000000e+00,  1.90000043e-13,  1.25000060e-03,  5.87500131e-02,
+       -2.37500054e-01])
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 2.524354896707238e-29 at index (1,)
+E       Greatest relative difference: 1.3286075402793398e-16 at index (1,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.25-True-True-dtype0] _
+
+dtype = torch.float32, rectify = True, amsgrad = True, initial = 0.25
+betas = (0.8999999761581421, 0.9990000128746033)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([1.4895e-13, 1.4895e-13, 2.0818e-04, 1.7165e-04, 6.3127e-03])
+b = array([1.4895455e-13, 1.4895455e-13, 2.0817979e-04, 1.7164936e-04,
+       6.3127307e-03], dtype=float32)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 1.4551915228366852e-11 at index (2,)
+E       Greatest relative difference: 6.990071454993085e-08 at index (2,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.25-True-True-dtype1] _
+
+dtype = torch.float64, rectify = True, amsgrad = True, initial = 0.25
+betas = (0.8999999761581421, 0.9990000128746033)
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    @pytest.mark.parametrize('initial',[0.,.25])
+    @pytest.mark.parametrize('betas',[NOMINAL,LEGACY_F32],ids=['nominal-native','explicit-legacy-f32'])
+    def test_source_moments_maximum_updated_residual_and_short_trajectory(dtype,rectify,amsgrad,initial,betas):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.full((5,),initial,dtype=dtype))
+        opts=dict(rectify=rectify,amsgrad=amsgrad)
+        if betas!=NOMINAL:opts['betas']=betas
+        opt=AdaBeliefOptimizer([p],**opts)
+        m=np.zeros(5,dtype=scalar);v=m.copy();maximum=m.copy()
+        expected=p.detach().clone()
+        for step in range(1,25):
+            g=np.array([0.,1e-12,.125*(-1)**step,.75/(step+1),-1.25],dtype=scalar)
+            old_m=m.copy()
+            m,v=source_moments(m,v,g,betas)
+            if step==1:
+                b2=scalar(betas[1])
+                wrong=(scalar(1)-b2)*np.square(g-old_m)+scalar(1e-14)
+                assert not np.array_equal(v,wrong), 'updated-m residual must be discriminating'
+            maximum=np.maximum(maximum,v)
+            update=direction(torch.from_numpy(m.copy()),torch.from_numpy((maximum if amsgrad else v).copy()),dtype,step,rectify,betas)
+            expected=expected-.001*update
+            p.grad=torch.from_numpy(g);opt.step()
+            state=opt.state[p]
+>           exact(state['exp_avg'],m);exact(state['exp_avg_var'],v)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([ 0.0000e+00,  1.9000e-13,  1.2500e-03,  5.8750e-02, -2.3750e-01],
+       dtype=torch.float64)
+b = array([ 0.00000000e+00,  1.90000043e-13,  1.25000060e-03,  5.87500131e-02,
+       -2.37500054e-01])
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 5 (20.0%)
+E       Greatest absolute difference: 2.524354896707238e-29 at index (1,)
+E       Greatest relative difference: 1.3286075402793398e-16 at index (1,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_float32_nominal_and_dtype_materialized_groups_are_bitwise_equal[False-False] _
+
+rectify = False, amsgrad = False
+
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    def test_float32_nominal_and_dtype_materialized_groups_are_bitwise_equal(rectify,amsgrad):
+        p=torch.nn.Parameter(torch.zeros(4));q=torch.nn.Parameter(torch.zeros(4))
+        opt=AdaBeliefOptimizer([{'params':[p]},{'params':[q],'betas':LEGACY_F32}],rectify=rectify,amsgrad=amsgrad)
+        for step in range(1,25):
+            p.grad=q.grad=torch.tensor([0.,1e-12,.1*(-1)**step,.5])
+>           opt.step();exact(p,q)
+                       ^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = Parameter containing:
+tensor([ 0.0000e+00, -3.1623e-10,  1.1111e-03, -1.1111e-03],
+       requires_grad=True)
+b = Parameter containing:
+tensor([ 0.0000e+00, -3.1623e-10,  1.1111e-03, -1.1111e-03],
+       requires_grad=True)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 7.566995918750763e-09 at index (3,)
+E       Greatest relative difference: 6.810295417380985e-06 at index (3,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_float32_nominal_and_dtype_materialized_groups_are_bitwise_equal[False-True] _
+
+rectify = True, amsgrad = False
+
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    def test_float32_nominal_and_dtype_materialized_groups_are_bitwise_equal(rectify,amsgrad):
+        p=torch.nn.Parameter(torch.zeros(4));q=torch.nn.Parameter(torch.zeros(4))
+        opt=AdaBeliefOptimizer([{'params':[p]},{'params':[q],'betas':LEGACY_F32}],rectify=rectify,amsgrad=amsgrad)
+        for step in range(1,25):
+            p.grad=q.grad=torch.tensor([0.,1e-12,.1*(-1)**step,.5])
+>           opt.step();exact(p,q)
+                       ^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = Parameter containing:
+tensor([ 0.0000e+00, -1.0000e-15,  1.0000e-04, -5.0000e-04],
+       requires_grad=True)
+b = Parameter containing:
+tensor([ 0.0000e+00, -1.0000e-15,  1.0000e-04, -5.0000e-04],
+       requires_grad=True)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 1.1641532182693481e-10 at index (3,)
+E       Greatest relative difference: 2.3283062944301491e-07 at index (3,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_float32_nominal_and_dtype_materialized_groups_are_bitwise_equal[True-False] _
+
+rectify = False, amsgrad = True
+
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    def test_float32_nominal_and_dtype_materialized_groups_are_bitwise_equal(rectify,amsgrad):
+        p=torch.nn.Parameter(torch.zeros(4));q=torch.nn.Parameter(torch.zeros(4))
+        opt=AdaBeliefOptimizer([{'params':[p]},{'params':[q],'betas':LEGACY_F32}],rectify=rectify,amsgrad=amsgrad)
+        for step in range(1,25):
+            p.grad=q.grad=torch.tensor([0.,1e-12,.1*(-1)**step,.5])
+>           opt.step();exact(p,q)
+                       ^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = Parameter containing:
+tensor([ 0.0000e+00, -3.1623e-10,  1.1111e-03, -1.1111e-03],
+       requires_grad=True)
+b = Parameter containing:
+tensor([ 0.0000e+00, -3.1623e-10,  1.1111e-03, -1.1111e-03],
+       requires_grad=True)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 7.566995918750763e-09 at index (3,)
+E       Greatest relative difference: 6.810295417380985e-06 at index (3,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+_ test_float32_nominal_and_dtype_materialized_groups_are_bitwise_equal[True-True] _
+
+rectify = True, amsgrad = True
+
+    @pytest.mark.parametrize('rectify',[False,True])
+    @pytest.mark.parametrize('amsgrad',[False,True])
+    def test_float32_nominal_and_dtype_materialized_groups_are_bitwise_equal(rectify,amsgrad):
+        p=torch.nn.Parameter(torch.zeros(4));q=torch.nn.Parameter(torch.zeros(4))
+        opt=AdaBeliefOptimizer([{'params':[p]},{'params':[q],'betas':LEGACY_F32}],rectify=rectify,amsgrad=amsgrad)
+        for step in range(1,25):
+            p.grad=q.grad=torch.tensor([0.,1e-12,.1*(-1)**step,.5])
+>           opt.step();exact(p,q)
+                       ^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = Parameter containing:
+tensor([ 0.0000e+00, -1.0000e-15,  1.0000e-04, -5.0000e-04],
+       requires_grad=True)
+b = Parameter containing:
+tensor([ 0.0000e+00, -1.0000e-15,  1.0000e-04, -5.0000e-04],
+       requires_grad=True)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 3 / 4 (75.0%)
+E       Greatest absolute difference: 1.1641532182693481e-10 at index (3,)
+E       Greatest relative difference: 2.3283062944301491e-07 at index (3,)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+__ test_nominal_sparse_observed_rows_keep_dense_momentum_and_epsilon[dtype0] ___
+
+dtype = torch.float32
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    def test_nominal_sparse_observed_rows_keep_dense_momentum_and_epsilon(dtype):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.ones(3,2,dtype=dtype))
+        opt=AdaBeliefOptimizer([p],amsgrad=True)
+        m=np.zeros((3,2),dtype=scalar);v=m.copy();maximum=m.copy()
+        for step in range(1,15):
+            row=step%2
+            g=np.zeros_like(m);g[row]=[.25,-.1*step]
+            observed=np.zeros_like(m,dtype=bool);observed[row]=True
+            m,v=source_moments(m,v,g,observed=observed);maximum=np.maximum(maximum,v)
+            before=p.detach().clone()
+            p.grad=torch.sparse_coo_tensor(torch.tensor([[row]]),torch.from_numpy(g[row:row+1]),p.shape)
+            opt.step()
+>           exact(opt.state[p]['exp_avg'],m);exact(opt.state[p]['exp_avg_var'],v)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([[ 0.0000,  0.0000],
+        [ 0.0250, -0.0100],
+        [ 0.0000,  0.0000]])
+b = array([[ 0.        ,  0.        ],
+       [ 0.02500001, -0.01      ],
+       [ 0.        ,  0.        ]], dtype=float32)
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 2 / 6 (33.3%)
+E       Greatest absolute difference: 5.587935447692871e-09 at index (1, 0)
+E       Greatest relative difference: 2.2351736106429598e-07 at index (1, 0)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+__ test_nominal_sparse_observed_rows_keep_dense_momentum_and_epsilon[dtype1] ___
+
+dtype = torch.float64
+
+    @pytest.mark.parametrize('dtype',[torch.float32,torch.float64])
+    def test_nominal_sparse_observed_rows_keep_dense_momentum_and_epsilon(dtype):
+        scalar=np.float32 if dtype==torch.float32 else np.float64
+        p=torch.nn.Parameter(torch.ones(3,2,dtype=dtype))
+        opt=AdaBeliefOptimizer([p],amsgrad=True)
+        m=np.zeros((3,2),dtype=scalar);v=m.copy();maximum=m.copy()
+        for step in range(1,15):
+            row=step%2
+            g=np.zeros_like(m);g[row]=[.25,-.1*step]
+            observed=np.zeros_like(m,dtype=bool);observed[row]=True
+            m,v=source_moments(m,v,g,observed=observed);maximum=np.maximum(maximum,v)
+            before=p.detach().clone()
+            p.grad=torch.sparse_coo_tensor(torch.tensor([[row]]),torch.from_numpy(g[row:row+1]),p.shape)
+            opt.step()
+>           exact(opt.state[p]['exp_avg'],m);exact(opt.state[p]['exp_avg_var'],v)
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dev_tests/test_adabelief_moment_dtype.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = tensor([[5.0625e-05, 3.2400e-05],
+        [5.0574e-05, 8.0919e-06],
+        [1.9990e-14, 1.9990e-14]], dtype=torch.float64)
+b = array([[5.06250000e-05, 3.24000000e-05],
+       [5.05743750e-05, 8.09190002e-06],
+       [1.99900000e-14, 1.99900000e-14]])
+
+    def exact(a,b):
+>       torch.testing.assert_close(a,torch.as_tensor(b,dtype=a.dtype),rtol=0,atol=0)
+E       AssertionError: Tensor-likes are not equal!
+E       
+E       Mismatched elements: 1 / 6 (16.7%)
+E       Greatest absolute difference: 6.776263578034403e-21 at index (0, 0)
+E       Greatest relative difference: 1.3385212000708526e-16 at index (0, 0)
+
+dev_tests/test_adabelief_moment_dtype.py:35: AssertionError
+=============================== warnings summary ===============================
+dev_tests/test_adabelief_moment_dtype.py::test_nominal_sparse_observed_rows_keep_dense_momentum_and_epsilon[dtype0]
+  /workspace/dev_tests/test_adabelief_moment_dtype.py:146: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/Context.cpp:848.)
+    p.grad=torch.sparse_coo_tensor(torch.tensor([[row]]),torch.from_numpy(g[row:row+1]),p.shape)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_public_float32_complement_values_and_default_constructor_step_one
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_product_then_add_is_distinct_from_alpha_fusion[nominal-native-dtype0]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_product_then_add_is_distinct_from_alpha_fusion[nominal-native-dtype1]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_product_then_add_is_distinct_from_alpha_fusion[explicit-legacy-f32-dtype0]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_product_then_add_is_distinct_from_alpha_fusion[explicit-legacy-f32-dtype1]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.0-False-False-dtype0]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.0-False-False-dtype1]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.0-False-True-dtype0]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.0-False-True-dtype1]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.0-True-False-dtype0]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.0-True-False-dtype1]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.0-True-True-dtype0]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.0-True-True-dtype1]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.25-False-False-dtype0]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.25-False-False-dtype1]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.25-False-True-dtype0]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.25-False-True-dtype1]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.25-True-False-dtype0]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.25-True-False-dtype1]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.25-True-True-dtype0]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[nominal-native-0.25-True-True-dtype1]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.0-False-False-dtype0]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.0-False-False-dtype1]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.0-False-True-dtype0]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.0-False-True-dtype1]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.0-True-False-dtype0]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.0-True-False-dtype1]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.0-True-True-dtype0]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.0-True-True-dtype1]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.25-False-False-dtype0]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.25-False-False-dtype1]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.25-False-True-dtype0]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.25-False-True-dtype1]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.25-True-False-dtype0]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.25-True-False-dtype1]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.25-True-True-dtype0]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_source_moments_maximum_updated_residual_and_short_trajectory[explicit-legacy-f32-0.25-True-True-dtype1]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_float32_nominal_and_dtype_materialized_groups_are_bitwise_equal[False-False]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_float32_nominal_and_dtype_materialized_groups_are_bitwise_equal[False-True]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_float32_nominal_and_dtype_materialized_groups_are_bitwise_equal[True-False]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_float32_nominal_and_dtype_materialized_groups_are_bitwise_equal[True-True]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_nominal_sparse_observed_rows_keep_dense_momentum_and_epsilon[dtype0]
+FAILED dev_tests/test_adabelief_moment_dtype.py::test_nominal_sparse_observed_rows_keep_dense_momentum_and_epsilon[dtype1]
+43 failed, 3 passed, 1 warning in 4.32s

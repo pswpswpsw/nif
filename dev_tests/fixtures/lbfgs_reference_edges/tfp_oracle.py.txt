@@ -1,0 +1,64 @@
+"""Small public CPU oracle for failed-LEFT and strict-initial-boundary edges."""
+import os
+for key, value in {'CUDA_VISIBLE_DEVICES': '-1', 'TF_USE_LEGACY_KERAS': '1',
+    'OMP_NUM_THREADS': '1', 'MKL_NUM_THREADS': '1', 'TF_NUM_INTRAOP_THREADS': '1',
+    'TF_NUM_INTEROP_THREADS': '1', 'PYTHONDONTWRITEBYTECODE': '1'}.items():
+    os.environ[key] = value
+import json
+from pathlib import Path
+import sys
+import tensorflow as tf
+import tensorflow_probability as tfp
+from tensorflow_probability.python.optimizer import bfgs_utils
+from tensorflow_probability.python.optimizer.linesearch.hager_zhang import hager_zhang
+
+tf.config.threading.set_intra_op_parallelism_threads(1)
+tf.config.threading.set_inter_op_parallelism_threads(1)
+assert not tf.config.list_physical_devices('GPU') and not tf.config.list_logical_devices('GPU')
+source = Path('D:/nif/dev_tests/fixtures/lbfgs_reference_phase0/oracle.json')
+options = json.loads(source.read_bytes())['options_read_from_original_wrapper']
+records = []
+searches = []
+for dtype in (tf.float32, tf.float64):
+    coefficient = tf.constant(1e-8, dtype)
+    def small(x):
+        return .5 * coefficient * tf.reduce_sum(x*x), coefficient * x
+    def unit(x):
+        return .5 * tf.reduce_sum(x*x), tf.identity(x)
+    def rosenbrock(x):
+        a, b = x[0], x[1]
+        residual = b-a*a
+        return (1-a)**2 + 100*residual**2, tf.stack([-2*(1-a)-400*a*residual, 200*residual])
+    def line(step):
+        position = tf.ones([1], dtype) - step * coefficient
+        value, gradient = small(position)
+        return bfgs_utils.ValueAndGradient(step, value,
+            tf.reduce_sum(gradient * -coefficient), gradient)
+    search = hager_zhang(line, initial_step_size=tf.constant(1., dtype),
+                        value_at_zero=line(tf.constant(0., dtype)), max_iterations=1)
+    searches.append({'dtype': dtype.name, 'converged': bool(search.converged.numpy()),
+        'failed': bool(search.failed.numpy()), 'iterations': int(search.iterations.numpy()),
+        'evaluations': int(search.func_evals.numpy()),
+        'left': search.left.x.numpy().item(), 'right': search.right.x.numpy().item()})
+    for name, objective, initial, overrides in (
+        ('failed_left', small, [1.], {'max_line_search_iterations': 1}),
+        ('limited_first_call', small, [1.], {'max_line_search_iterations': 1, 'max_iterations': 1}),
+        ('strict_initial_boundary', unit, [1.], {'max_iterations': 0, 'tolerance': 1.}),
+        ('inside_initial_boundary', unit, [.5], {'max_iterations': 0, 'tolerance': 1.}),
+        ('rosenbrock', rosenbrock, [-1.2, 1.], {}),
+    ):
+        result = tfp.optimizer.lbfgs_minimize(objective,
+            initial_position=tf.constant(initial, dtype), **dict(options, **overrides))
+        records.append({'case': name, 'dtype': dtype.name, 'overrides': overrides,
+            'position': result.position.numpy().tolist(), 'objective_value': result.objective_value.numpy().item(),
+            'objective_gradient': result.objective_gradient.numpy().tolist(),
+            'converged': bool(result.converged.numpy()), 'failed': bool(result.failed.numpy()),
+            'num_iterations': int(result.num_iterations.numpy()),
+            'num_objective_evaluations': int(result.num_objective_evaluations.numpy())})
+output = {'tensorflow': tf.__version__, 'tensorflow_probability': tfp.__version__,
+    'cuda_visible_devices': '-1', 'physical_gpus': [], 'logical_gpus': [],
+    'threads': [1, 1], 'options': options,
+    'source_provenance': 'dev_tests/fixtures/lbfgs_reference_phase0/oracle.json',
+    'cases': records, 'exhausted_bracket_searches': searches}
+Path(sys.argv[1]).write_text(json.dumps(output, indent=2, allow_nan=False)+'\n', encoding='utf-8', newline='\n')
+print(json.dumps(output, indent=2, allow_nan=False))

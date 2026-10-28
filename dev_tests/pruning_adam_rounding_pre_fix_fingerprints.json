@@ -1,0 +1,4 @@
+{
+  "dev_tests/test_pruning_adam_state.py": "60e83c210615ca5a4d478a484d5ad08940a6e8841ac1d597780e44f13186c268",
+  "nif/optimizers/reference_adam.py": "6087bd50d11a1f3ca7610e13e2983213c6bb88eab9675259b0597c82837be39f"
+}

@@ -1,0 +1,693 @@
+{
+  "status": "Exact authorized T7 spectral diagnostics, six-panel comparison, and inference artifact successor",
+  "before_commit": "789460acb58c4bcecee874055d30a4486ca8fae7",
+  "transitions": {
+    "dev_tests/generate_native_notebooks.py": {
+      "archive": "dev_tests/fixtures/tutorial7_reference_v1/dev_tests__generate_native_notebooks.py.txt",
+      "before_sha256": "fd00a22450369e348bf3c2c868e36906c9d92eefc85b3278c4c0753559c4538a",
+      "after_sha256_by_eol": {
+        "lf": "feda08dba1aa05e5096f5bf289765c4cdb1c9242dc1819125eee64c9b9ffea42"
+      },
+      "text_hunks": [
+        {
+          "after_start": 11084,
+          "after_end": 12433,
+          "before": "",
+          "after": "T7_INFERENCE_HELPERS = r'''\n\ndef save_inference_and_check(model, name, example, factory=None):\n    # Match include_optimizer=False: benchmark only model parameters/configuration.\n    # train() still writes separate *_latest.pt checkpoints with optimizer state.\n    path = OUT / (name + \".pt\")\n    payload = {\"model_state\": {k: v.detach().cpu() for k,v in model.state_dict().items()},\n               \"framework\": \"pytorch\", \"artifact_format\": \"pytorch_state_dict\"}\n    if hasattr(model, \"cfg_shape_net\"):\n        payload.update(model_class=type(model).__name__, cfg_shape_net=model.cfg_shape_net,\n                       cfg_parameter_net=model.cfg_parameter_net, mixed_policy=\"float32\")\n    torch.save(payload, path)\n    checkpoint = torch.load(path, map_location=device, weights_only=True)\n    if factory is None:\n        factory = lambda: type(model)(copy.deepcopy(model.cfg_shape_net),\n                                       copy.deepcopy(model.cfg_parameter_net), \"float32\")\n    restored = factory().to(device)\n    restored.load_state_dict(checkpoint[\"model_state\"])\n    restored.eval(); model.eval()\n    with torch.no_grad():\n        torch.testing.assert_close(restored(tensor(example)), model(tensor(example)),\n                                   rtol=1e-5, atol=1e-6)\n    print(\"Inference predictions verified:\", path)\n    return restored\n'''\n\n"
+        },
+        {
+          "after_start": 13491,
+          "after_end": 13529,
+          "before": "",
+          "after": "               + T7_INFERENCE_HELPERS\n"
+        },
+        {
+          "after_start": 33241,
+          "after_end": 33309,
+          "before": "model=save_and_check(model,optimizer,\"original\",input_feature[:64])\n",
+          "after": "model=save_inference_and_check(model,\"original\",input_feature[:64])\n"
+        },
+        {
+          "after_start": 36153,
+          "after_end": 36244,
+          "before": "model_for_export=save_and_check(model_for_pruning,optimizer_prune,\"stripped\",input_feature[:64])\n",
+          "after": "model_for_export=save_inference_and_check(model_for_pruning,\"stripped\",input_feature[:64])\n"
+        },
+        {
+          "after_start": 36928,
+          "after_end": 37200,
+          "before": "    import gzip\n    return len(gzip.compress(Path(path).read_bytes()))\n",
+          "after": "    # Preserve the reference helper's legacy name; its actual wrapper is ZIP.\n    import io, zipfile\n    archive = io.BytesIO()\n    with zipfile.ZipFile(archive,\"w\",compression=zipfile.ZIP_DEFLATED) as zipped:\n        zipped.write(path)\n    return len(archive.getvalue())\n"
+        },
+        {
+          "after_start": 39280,
+          "after_end": 39798,
+          "before": "46:'''fig,axs=plt.subplots(3,2,figsize=(12,12))\nfor column,compressed,label in ((0,y_pred,\"pruned 90%\"),(1,y_pred_quant,\"pruned 90% + int8\")):\n    for row,values,title in ((0,y_pred_unpruned,\"unpruned\"),(1,compressed,label),(2,compressed-y_pred_unpruned,\"difference\")):\n        im=axs[row,column].contourf(tt,xx,values,levels=50,cmap=\"seismic\");fig.colorbar(im,ax=axs[row,column]);axs[row,column].set_title(title)\n",
+          "after": "46:'''fig,axs=plt.subplots(3,2,figsize=(16,16))\nfor column,compressed,difference,label in (\n        (0,y_pred,y_pred-y_pred_unpruned,\"pruned 90%\"),\n        (1,y_pred_quant,y_pred-y_pred_quant,\"pruned 90% + int8\")):\n    for row,values,title in ((0,y_pred_unpruned,\"unpruned\"),(1,compressed,label),(2,difference,\"difference\")):\n        im=axs[row,column].contourf(tt,xx,values,levels=np.linspace(-1,1,50),cmap=\"seismic\")\n        fig.colorbar(im,ax=axs[row,column]);axs[row,column].set(xlabel=\"t\",ylabel=\"x\",title=title)\n"
+        },
+        {
+          "after_start": 39896,
+          "after_end": 40037,
+          "before": "47:'''denominator=float(np.sum(y_pred_unpruned**2))\n",
+          "after": "47:'''# Legacy \"relative MSE\" is the squared matrix spectral-norm ratio (ord=2).\ndenominator=float(np.linalg.norm(y_pred_unpruned,ord=2)**2)\n"
+        },
+        {
+          "after_start": 40255,
+          "after_end": 40616,
+          "before": "    \"relative_mse_prune\":float(np.sum((y_pred-y_pred_unpruned)**2)/denominator),\n    \"relative_mse_prune_quant\":float(np.sum((y_pred_quant-y_pred_unpruned)**2)/denominator),\n",
+          "after": "    \"relative_mse_definition\":\"squared matrix spectral norm of prediction difference / squared matrix spectral norm of unpruned prediction (legacy relative MSE)\",\n    \"relative_mse_prune\":float(np.linalg.norm(y_pred-y_pred_unpruned,ord=2)**2/denominator),\n    \"relative_mse_prune_quant\":float(np.linalg.norm(y_pred_quant-y_pred_unpruned,ord=2)**2/denominator),\n"
+        },
+        {
+          "after_start": 40691,
+          "after_end": 41117,
+          "before": "    \"gzip_bytes\":{p.name:get_gzipped_model_size(p) for p in (original_file,pruned_file,exported_file,quantized_file)}})\n",
+          "after": "    \"compression_method\":\"ZIP_DEFLATED\",\n    \"artifact_formats\":{original_file.name:\"PyTorch inference state_dict\",\n        pruned_file.name:\"PyTorch stripped inference state_dict\",\n        exported_file.name:\"TorchScript float inference\",quantized_file.name:\"TorchScript dynamic int8 inference\"},\n    \"zip_deflated_bytes\":{p.name:get_gzipped_model_size(p) for p in (original_file,pruned_file,exported_file,quantized_file)}})\n"
+        },
+        {
+          "after_start": 41121,
+          "after_end": 41696,
+          "before": "},notes=\"Original 5,000-epoch baseline and 50,000-epoch pruning workload. Prune only the final ParameterNet kernel, increasing sparsity from 10% to 90% with the cubic schedule. Native checkpoints and TorchScript replace legacy HDF5/TFLite. CPU packed int8 Linear inference is run and validated after export; generated ShapeNet computation remains floating point.\",omitted_markdown=(5,21,23,35))\n",
+          "after": "},notes=\"Original 5,000-epoch baseline and 50,000-epoch pruning workload. Prune only the final ParameterNet kernel, increasing sparsity from 10% to 90% with the cubic schedule. Size comparisons use inference-only PyTorch state_dict and TorchScript artifacts, wrapped in ZIP_DEFLATED as in the original helper; these backend formats differ from legacy HDF5/TFLite. Training checkpoints separately retain optimizer state. CPU packed int8 Linear inference is run and validated after export; generated ShapeNet computation remains floating point.\",omitted_markdown=(5,21,23,35))\n"
+        }
+      ]
+    },
+    "tutorial/7_model_pruning_and_quantization_pytorch.ipynb": {
+      "archive": "dev_tests/fixtures/tutorial7_reference_v1/tutorial__7_model_pruning_and_quantization_pytorch.ipynb.txt",
+      "before_sha256": "a944e323fa003c7605d2f73433152b5f03d00fa94e1695242cd8a7592eb11014",
+      "after_sha256_by_eol": {
+        "lf": "ebbd9360a6c31e466446f43b23b939c1450ebbec5a1665f9edc9f1fe7e4b8bfb",
+        "crlf": "d073198570c1791075fa64efaee44bd34549f1ee56757a218e15ff81fda76521"
+      },
+      "notebook_patches": [
+        {
+          "cell": 0,
+          "cell_type": "markdown",
+          "before": [
+            "# Native PyTorch tutorial 7\n",
+            "\n",
+            "Original 5,000-epoch baseline and 50,000-epoch pruning workload. Prune only the final ParameterNet kernel, increasing sparsity from 10% to 90% with the cubic schedule. Native checkpoints and TorchScript replace legacy HDF5/TFLite. CPU packed int8 Linear inference is run and validated after export; generated ShapeNet computation remains floating point.\n",
+            "\n",
+            "Run all cells in order. Full scientific workloads are the default; `NIF_SMOKE=1` is a separate development run and does not establish full convergence. The original TensorFlow and `_colab` notebooks are preserved as legacy references."
+          ],
+          "after": [
+            "# Native PyTorch tutorial 7\n",
+            "\n",
+            "Original 5,000-epoch baseline and 50,000-epoch pruning workload. Prune only the final ParameterNet kernel, increasing sparsity from 10% to 90% with the cubic schedule. Size comparisons use inference-only PyTorch state_dict and TorchScript artifacts, wrapped in ZIP_DEFLATED as in the original helper; these backend formats differ from legacy HDF5/TFLite. Training checkpoints separately retain optimizer state. CPU packed int8 Linear inference is run and validated after export; generated ShapeNet computation remains floating point.\n",
+            "\n",
+            "Run all cells in order. Full scientific workloads are the default; `NIF_SMOKE=1` is a separate development run and does not establish full convergence. The original TensorFlow and `_colab` notebooks are preserved as legacy references."
+          ]
+        },
+        {
+          "cell": 2,
+          "cell_type": "code",
+          "before": [
+            "# Explicit native loops replace compile/fit/callbacks. The loss reduction is per row,\n",
+            "# then the mean over the batch; area weights multiply each row's MSE (not weight-normalized).\n",
+            "def dense_tanh(inputs, outputs):\n",
+            "    # Preserve the original Dense default: Glorot uniform kernel and zero bias.\n",
+            "    layer = nn.Linear(inputs, outputs)\n",
+            "    nn.init.xavier_uniform_(layer.weight)\n",
+            "    nn.init.zeros_(layer.bias)\n",
+            "    return nn.Sequential(layer, nn.Tanh())\n",
+            "\n",
+            "def epochs(full):\n",
+            "    return 2 if SMOKE else full\n",
+            "\n",
+            "def tensor(array, on_device=device):\n",
+            "    return torch.as_tensor(array, dtype=torch.float32, device=on_device)\n",
+            "\n",
+            "def loader(features, target, batch_size, weight=None):\n",
+            "    arrays = [tensor(features, \"cpu\"), tensor(target, \"cpu\")]\n",
+            "    if weight is not None:\n",
+            "        arrays.append(tensor(weight, \"cpu\").reshape(-1))\n",
+            "    return DataLoader(TensorDataset(*arrays), batch_size=batch_size, shuffle=True,\n",
+            "                      drop_last=False, pin_memory=device.type == \"cuda\")\n",
+            "\n",
+            "def predict(model, features, batch_size=1024):\n",
+            "    model.eval()\n",
+            "    result = []\n",
+            "    with torch.no_grad():\n",
+            "        for xb in torch.as_tensor(features, dtype=torch.float32).split(batch_size):\n",
+            "            result.append(model(xb.to(next(model.parameters()).device)).detach().cpu())\n",
+            "    return torch.cat(result).numpy()\n",
+            "\n",
+            "def centralize_gradients(model):\n",
+            "    # TF kernels are [input,output]; native Linear stores [output,input].\n",
+            "    # Centralize along the input axes, preserving the original mathematical operation.\n",
+            "    for module in model.modules():\n",
+            "        for name, parameter in module.named_parameters(recurse=False):\n",
+            "            if parameter.grad is not None and parameter.ndim > 1:\n",
+            "                axes = tuple(range(1, parameter.ndim)) if isinstance(module, nn.Linear) else tuple(range(parameter.ndim-1))\n",
+            "                parameter.grad.sub_(parameter.grad.mean(dim=axes, keepdim=True))\n",
+            "\n",
+            "def save_checkpoint(model, optimizer, path, epoch):\n",
+            "    payload = {\"model_state\": {k: v.detach().cpu() if isinstance(v, torch.Tensor) else v for k,v in model.state_dict().items()},\n",
+            "               \"optimizer_state\": optimizer.state_dict(), \"epoch\": epoch,\n",
+            "               \"framework\": \"pytorch\", \"smoke\": SMOKE}\n",
+            "    if hasattr(model, \"cfg_shape_net\"):\n",
+            "        payload.update(model_class=type(model).__name__, cfg_shape_net=model.cfg_shape_net,\n",
+            "                       cfg_parameter_net=model.cfg_parameter_net, mixed_policy=\"float32\")\n",
+            "    torch.save(payload, path)\n",
+            "\n",
+            "def save_and_check(model, optimizer, name, example, factory=None):\n",
+            "    path = OUT / (name + \".pt\")\n",
+            "    save_checkpoint(model, optimizer, path, -1)\n",
+            "    checkpoint = torch.load(path, map_location=device, weights_only=True)\n",
+            "    if factory is None:\n",
+            "        factory = lambda: type(model)(copy.deepcopy(model.cfg_shape_net),\n",
+            "                                       copy.deepcopy(model.cfg_parameter_net), \"float32\")\n",
+            "    restored = factory().to(device)\n",
+            "    restored.load_state_dict(checkpoint[\"model_state\"])\n",
+            "    restored.eval(); model.eval()\n",
+            "    with torch.no_grad():\n",
+            "        expected, actual = model(tensor(example)), restored(tensor(example))\n",
+            "    torch.testing.assert_close(actual, expected, rtol=1e-5, atol=1e-6)\n",
+            "    print(\"Checkpoint predictions verified:\", path)\n",
+            "    return restored\n",
+            "\n",
+            "def train(model, batches, optimizer, nepoch, name, schedule=None,\n",
+            "          centralization=False, loss_function=None, before_epoch=None, after_epoch=None):\n",
+            "    history = []\n",
+            "    start = time.monotonic()\n",
+            "    for epoch in range(nepoch):\n",
+            "        model.train()\n",
+            "        if schedule is not None:\n",
+            "            for group in optimizer.param_groups:\n",
+            "                group[\"lr\"] = schedule(epoch, group[\"lr\"])\n",
+            "        if before_epoch is not None:\n",
+            "            before_epoch(epoch)\n",
+            "        summed, seen = {}, 0\n",
+            "        for batch in batches:\n",
+            "            xb, yb = (item.to(device) for item in batch[:2])\n",
+            "            optimizer.zero_grad(set_to_none=True)\n",
+            "            if loss_function is None:\n",
+            "                per_row = (model(xb) - yb).square().mean(dim=-1)\n",
+            "                if len(batch) == 3:\n",
+            "                    per_row = per_row * batch[2].to(device).reshape(-1)\n",
+            "                data_loss = per_row.mean()\n",
+            "                values = {\"mse\": data_loss}\n",
+            "            else:\n",
+            "                data_loss, values = loss_function(model, xb, yb)\n",
+            "            regularization = model.regularization_loss(xb) if hasattr(model, \"regularization_loss\") else xb.new_zeros(())\n",
+            "            loss = data_loss + regularization\n",
+            "            if not torch.isfinite(loss):\n",
+            "                raise FloatingPointError(f\"Non-finite loss in {name}, epoch {epoch}\")\n",
+            "            loss.backward()\n",
+            "            if centralization:\n",
+            "                centralize_gradients(model)\n",
+            "            optimizer.step()\n",
+            "            for key, value in {**values, \"regularization\": regularization, \"loss\": loss}.items():\n",
+            "                summed[key] = summed.get(key, 0.0) + float(value.detach()) * len(xb)\n",
+            "            seen += len(xb)\n",
+            "        if after_epoch is not None:\n",
+            "            after_epoch(epoch)\n",
+            "        row = {\"epoch\": epoch, \"rows\": seen, **{key: value / seen for key,value in summed.items()}}\n",
+            "        history.append(row)\n",
+            "        if epoch % 100 == 0 or epoch == nepoch - 1:\n",
+            "            print(name, row, \"elapsed_seconds\", round(time.monotonic()-start, 2))\n",
+            "            (OUT / (name + \"_history.json\")).write_text(json.dumps(history, indent=2))\n",
+            "        if epoch % 1000 == 0 or epoch == nepoch - 1:\n",
+            "            save_checkpoint(model, optimizer, OUT / (name + \"_latest.pt\"), epoch)\n",
+            "    fig, ax = plt.subplots(figsize=(7, 3))\n",
+            "    ax.semilogy([row[\"loss\"] for row in history]); ax.set(xlabel=\"epoch\", ylabel=\"loss\", title=name)\n",
+            "    fig.tight_layout(); fig.savefig(OUT / (name + \"_loss.png\")); plt.show(); plt.close(fig)\n",
+            "    return history\n",
+            "\n",
+            "def wave_figure(truth, prediction, name):\n",
+            "    fig, axs = plt.subplots(1,3,figsize=(15,3))\n",
+            "    for ax, values, title in zip(axs, (truth,prediction,prediction-truth), (\"true\",\"pred\",\"error\")):\n",
+            "        im=ax.contourf(tt,xx,values.reshape(10,200),levels=50,cmap=\"seismic\")\n",
+            "        fig.colorbar(im,ax=ax); ax.set(xlabel=\"t\",ylabel=\"x\",title=title)\n",
+            "    fig.tight_layout(); fig.savefig(OUT / (name+\"_reconstruction.png\")); plt.show(); plt.close(fig)\n",
+            "\n",
+            "def write_metrics(values):\n",
+            "    print(json.dumps(values, indent=2))\n",
+            "    (OUT / \"metrics.json\").write_text(json.dumps({\"mode\": \"smoke\" if SMOKE else \"full\", **values}, indent=2))\n"
+          ],
+          "after": [
+            "# Explicit native loops replace compile/fit/callbacks. The loss reduction is per row,\n",
+            "# then the mean over the batch; area weights multiply each row's MSE (not weight-normalized).\n",
+            "def dense_tanh(inputs, outputs):\n",
+            "    # Preserve the original Dense default: Glorot uniform kernel and zero bias.\n",
+            "    layer = nn.Linear(inputs, outputs)\n",
+            "    nn.init.xavier_uniform_(layer.weight)\n",
+            "    nn.init.zeros_(layer.bias)\n",
+            "    return nn.Sequential(layer, nn.Tanh())\n",
+            "\n",
+            "def epochs(full):\n",
+            "    return 2 if SMOKE else full\n",
+            "\n",
+            "def tensor(array, on_device=device):\n",
+            "    return torch.as_tensor(array, dtype=torch.float32, device=on_device)\n",
+            "\n",
+            "def loader(features, target, batch_size, weight=None):\n",
+            "    arrays = [tensor(features, \"cpu\"), tensor(target, \"cpu\")]\n",
+            "    if weight is not None:\n",
+            "        arrays.append(tensor(weight, \"cpu\").reshape(-1))\n",
+            "    return DataLoader(TensorDataset(*arrays), batch_size=batch_size, shuffle=True,\n",
+            "                      drop_last=False, pin_memory=device.type == \"cuda\")\n",
+            "\n",
+            "def predict(model, features, batch_size=1024):\n",
+            "    model.eval()\n",
+            "    result = []\n",
+            "    with torch.no_grad():\n",
+            "        for xb in torch.as_tensor(features, dtype=torch.float32).split(batch_size):\n",
+            "            result.append(model(xb.to(next(model.parameters()).device)).detach().cpu())\n",
+            "    return torch.cat(result).numpy()\n",
+            "\n",
+            "def centralize_gradients(model):\n",
+            "    # TF kernels are [input,output]; native Linear stores [output,input].\n",
+            "    # Centralize along the input axes, preserving the original mathematical operation.\n",
+            "    for module in model.modules():\n",
+            "        for name, parameter in module.named_parameters(recurse=False):\n",
+            "            if parameter.grad is not None and parameter.ndim > 1:\n",
+            "                axes = tuple(range(1, parameter.ndim)) if isinstance(module, nn.Linear) else tuple(range(parameter.ndim-1))\n",
+            "                parameter.grad.sub_(parameter.grad.mean(dim=axes, keepdim=True))\n",
+            "\n",
+            "def save_checkpoint(model, optimizer, path, epoch):\n",
+            "    payload = {\"model_state\": {k: v.detach().cpu() if isinstance(v, torch.Tensor) else v for k,v in model.state_dict().items()},\n",
+            "               \"optimizer_state\": optimizer.state_dict(), \"epoch\": epoch,\n",
+            "               \"framework\": \"pytorch\", \"smoke\": SMOKE}\n",
+            "    if hasattr(model, \"cfg_shape_net\"):\n",
+            "        payload.update(model_class=type(model).__name__, cfg_shape_net=model.cfg_shape_net,\n",
+            "                       cfg_parameter_net=model.cfg_parameter_net, mixed_policy=\"float32\")\n",
+            "    torch.save(payload, path)\n",
+            "\n",
+            "def save_and_check(model, optimizer, name, example, factory=None):\n",
+            "    path = OUT / (name + \".pt\")\n",
+            "    save_checkpoint(model, optimizer, path, -1)\n",
+            "    checkpoint = torch.load(path, map_location=device, weights_only=True)\n",
+            "    if factory is None:\n",
+            "        factory = lambda: type(model)(copy.deepcopy(model.cfg_shape_net),\n",
+            "                                       copy.deepcopy(model.cfg_parameter_net), \"float32\")\n",
+            "    restored = factory().to(device)\n",
+            "    restored.load_state_dict(checkpoint[\"model_state\"])\n",
+            "    restored.eval(); model.eval()\n",
+            "    with torch.no_grad():\n",
+            "        expected, actual = model(tensor(example)), restored(tensor(example))\n",
+            "    torch.testing.assert_close(actual, expected, rtol=1e-5, atol=1e-6)\n",
+            "    print(\"Checkpoint predictions verified:\", path)\n",
+            "    return restored\n",
+            "\n",
+            "def train(model, batches, optimizer, nepoch, name, schedule=None,\n",
+            "          centralization=False, loss_function=None, before_epoch=None, after_epoch=None):\n",
+            "    history = []\n",
+            "    start = time.monotonic()\n",
+            "    for epoch in range(nepoch):\n",
+            "        model.train()\n",
+            "        if schedule is not None:\n",
+            "            for group in optimizer.param_groups:\n",
+            "                group[\"lr\"] = schedule(epoch, group[\"lr\"])\n",
+            "        if before_epoch is not None:\n",
+            "            before_epoch(epoch)\n",
+            "        summed, seen = {}, 0\n",
+            "        for batch in batches:\n",
+            "            xb, yb = (item.to(device) for item in batch[:2])\n",
+            "            optimizer.zero_grad(set_to_none=True)\n",
+            "            if loss_function is None:\n",
+            "                per_row = (model(xb) - yb).square().mean(dim=-1)\n",
+            "                if len(batch) == 3:\n",
+            "                    per_row = per_row * batch[2].to(device).reshape(-1)\n",
+            "                data_loss = per_row.mean()\n",
+            "                values = {\"mse\": data_loss}\n",
+            "            else:\n",
+            "                data_loss, values = loss_function(model, xb, yb)\n",
+            "            regularization = model.regularization_loss(xb) if hasattr(model, \"regularization_loss\") else xb.new_zeros(())\n",
+            "            loss = data_loss + regularization\n",
+            "            if not torch.isfinite(loss):\n",
+            "                raise FloatingPointError(f\"Non-finite loss in {name}, epoch {epoch}\")\n",
+            "            loss.backward()\n",
+            "            if centralization:\n",
+            "                centralize_gradients(model)\n",
+            "            optimizer.step()\n",
+            "            for key, value in {**values, \"regularization\": regularization, \"loss\": loss}.items():\n",
+            "                summed[key] = summed.get(key, 0.0) + float(value.detach()) * len(xb)\n",
+            "            seen += len(xb)\n",
+            "        if after_epoch is not None:\n",
+            "            after_epoch(epoch)\n",
+            "        row = {\"epoch\": epoch, \"rows\": seen, **{key: value / seen for key,value in summed.items()}}\n",
+            "        history.append(row)\n",
+            "        if epoch % 100 == 0 or epoch == nepoch - 1:\n",
+            "            print(name, row, \"elapsed_seconds\", round(time.monotonic()-start, 2))\n",
+            "            (OUT / (name + \"_history.json\")).write_text(json.dumps(history, indent=2))\n",
+            "        if epoch % 1000 == 0 or epoch == nepoch - 1:\n",
+            "            save_checkpoint(model, optimizer, OUT / (name + \"_latest.pt\"), epoch)\n",
+            "    fig, ax = plt.subplots(figsize=(7, 3))\n",
+            "    ax.semilogy([row[\"loss\"] for row in history]); ax.set(xlabel=\"epoch\", ylabel=\"loss\", title=name)\n",
+            "    fig.tight_layout(); fig.savefig(OUT / (name + \"_loss.png\")); plt.show(); plt.close(fig)\n",
+            "    return history\n",
+            "\n",
+            "def wave_figure(truth, prediction, name):\n",
+            "    fig, axs = plt.subplots(1,3,figsize=(15,3))\n",
+            "    for ax, values, title in zip(axs, (truth,prediction,prediction-truth), (\"true\",\"pred\",\"error\")):\n",
+            "        im=ax.contourf(tt,xx,values.reshape(10,200),levels=50,cmap=\"seismic\")\n",
+            "        fig.colorbar(im,ax=ax); ax.set(xlabel=\"t\",ylabel=\"x\",title=title)\n",
+            "    fig.tight_layout(); fig.savefig(OUT / (name+\"_reconstruction.png\")); plt.show(); plt.close(fig)\n",
+            "\n",
+            "def write_metrics(values):\n",
+            "    print(json.dumps(values, indent=2))\n",
+            "    (OUT / \"metrics.json\").write_text(json.dumps({\"mode\": \"smoke\" if SMOKE else \"full\", **values}, indent=2))\n",
+            "\n",
+            "\n",
+            "def save_inference_and_check(model, name, example, factory=None):\n",
+            "    # Match include_optimizer=False: benchmark only model parameters/configuration.\n",
+            "    # train() still writes separate *_latest.pt checkpoints with optimizer state.\n",
+            "    path = OUT / (name + \".pt\")\n",
+            "    payload = {\"model_state\": {k: v.detach().cpu() for k,v in model.state_dict().items()},\n",
+            "               \"framework\": \"pytorch\", \"artifact_format\": \"pytorch_state_dict\"}\n",
+            "    if hasattr(model, \"cfg_shape_net\"):\n",
+            "        payload.update(model_class=type(model).__name__, cfg_shape_net=model.cfg_shape_net,\n",
+            "                       cfg_parameter_net=model.cfg_parameter_net, mixed_policy=\"float32\")\n",
+            "    torch.save(payload, path)\n",
+            "    checkpoint = torch.load(path, map_location=device, weights_only=True)\n",
+            "    if factory is None:\n",
+            "        factory = lambda: type(model)(copy.deepcopy(model.cfg_shape_net),\n",
+            "                                       copy.deepcopy(model.cfg_parameter_net), \"float32\")\n",
+            "    restored = factory().to(device)\n",
+            "    restored.load_state_dict(checkpoint[\"model_state\"])\n",
+            "    restored.eval(); model.eval()\n",
+            "    with torch.no_grad():\n",
+            "        torch.testing.assert_close(restored(tensor(example)), model(tensor(example)),\n",
+            "                                   rtol=1e-5, atol=1e-6)\n",
+            "    print(\"Inference predictions verified:\", path)\n",
+            "    return restored\n"
+          ]
+        },
+        {
+          "cell": 8,
+          "cell_type": "code",
+          "before": [
+            "t=np.linspace(-1,1,10,endpoint=True)\n",
+            "x=np.linspace(-1,1,200,endpoint=True)\n",
+            "tt,xx=np.meshgrid(t,x)\n",
+            "input_feature=np.column_stack([tt.ravel(),xx.ravel()])\n",
+            "model=save_and_check(model,optimizer,\"original\",input_feature[:64])\n",
+            "y_pred_unpruned=predict(model,input_feature).reshape(200,10)\n"
+          ],
+          "after": [
+            "t=np.linspace(-1,1,10,endpoint=True)\n",
+            "x=np.linspace(-1,1,200,endpoint=True)\n",
+            "tt,xx=np.meshgrid(t,x)\n",
+            "input_feature=np.column_stack([tt.ravel(),xx.ravel()])\n",
+            "model=save_inference_and_check(model,\"original\",input_feature[:64])\n",
+            "y_pred_unpruned=predict(model,input_feature).reshape(200,10)\n"
+          ]
+        },
+        {
+          "cell": 28,
+          "cell_type": "code",
+          "before": [
+            "# Strip the pruning controls: the native .pt contains the actual sparse tensor.\n",
+            "pruning_controller.strip()\n",
+            "model_for_export=save_and_check(model_for_pruning,optimizer_prune,\"stripped\",input_feature[:64])\n",
+            "pruned_file=OUT / \"stripped.pt\"\n"
+          ],
+          "after": [
+            "# Strip the pruning controls: the native .pt contains the actual sparse tensor.\n",
+            "pruning_controller.strip()\n",
+            "model_for_export=save_inference_and_check(model_for_pruning,\"stripped\",input_feature[:64])\n",
+            "pruned_file=OUT / \"stripped.pt\"\n"
+          ]
+        },
+        {
+          "cell": 31,
+          "cell_type": "code",
+          "before": [
+            "def get_gzipped_model_size(path):\n",
+            "    import gzip\n",
+            "    return len(gzip.compress(Path(path).read_bytes()))\n"
+          ],
+          "after": [
+            "def get_gzipped_model_size(path):\n",
+            "    # Preserve the reference helper's legacy name; its actual wrapper is ZIP.\n",
+            "    import io, zipfile\n",
+            "    archive = io.BytesIO()\n",
+            "    with zipfile.ZipFile(archive,\"w\",compression=zipfile.ZIP_DEFLATED) as zipped:\n",
+            "        zipped.write(path)\n",
+            "    return len(archive.getvalue())\n"
+          ]
+        },
+        {
+          "cell": 36,
+          "cell_type": "code",
+          "before": [
+            "fig,axs=plt.subplots(3,2,figsize=(12,12))\n",
+            "for column,compressed,label in ((0,y_pred,\"pruned 90%\"),(1,y_pred_quant,\"pruned 90% + int8\")):\n",
+            "    for row,values,title in ((0,y_pred_unpruned,\"unpruned\"),(1,compressed,label),(2,compressed-y_pred_unpruned,\"difference\")):\n",
+            "        im=axs[row,column].contourf(tt,xx,values,levels=50,cmap=\"seismic\");fig.colorbar(im,ax=axs[row,column]);axs[row,column].set_title(title)\n",
+            "fig.tight_layout();fig.savefig(OUT / \"compression_comparison.png\");plt.show();plt.close(fig)\n"
+          ],
+          "after": [
+            "fig,axs=plt.subplots(3,2,figsize=(16,16))\n",
+            "for column,compressed,difference,label in (\n",
+            "        (0,y_pred,y_pred-y_pred_unpruned,\"pruned 90%\"),\n",
+            "        (1,y_pred_quant,y_pred-y_pred_quant,\"pruned 90% + int8\")):\n",
+            "    for row,values,title in ((0,y_pred_unpruned,\"unpruned\"),(1,compressed,label),(2,difference,\"difference\")):\n",
+            "        im=axs[row,column].contourf(tt,xx,values,levels=np.linspace(-1,1,50),cmap=\"seismic\")\n",
+            "        fig.colorbar(im,ax=axs[row,column]);axs[row,column].set(xlabel=\"t\",ylabel=\"x\",title=title)\n",
+            "fig.tight_layout();fig.savefig(OUT / \"compression_comparison.png\");plt.show();plt.close(fig)\n"
+          ]
+        },
+        {
+          "cell": 37,
+          "cell_type": "code",
+          "before": [
+            "denominator=float(np.sum(y_pred_unpruned**2))\n",
+            "write_metrics({\"baseline_epochs\":epochs(nepoch),\"pruning_epochs\":run_pruning_epochs,\n",
+            "    \"sparsity\":sparsity,\"zero_weights\":zero_count,\"total_weights\":weight_count,\n",
+            "    \"quantized_linear_count\":len(quantized_linears),\n",
+            "    \"relative_mse_prune\":float(np.sum((y_pred-y_pred_unpruned)**2)/denominator),\n",
+            "    \"relative_mse_prune_quant\":float(np.sum((y_pred_quant-y_pred_unpruned)**2)/denominator),\n",
+            "    \"quantization_mse_vs_pruned\":float(np.mean((y_pred_quant-y_pred)**2)),\n",
+            "    \"gzip_bytes\":{p.name:get_gzipped_model_size(p) for p in (original_file,pruned_file,exported_file,quantized_file)}})\n"
+          ],
+          "after": [
+            "# Legacy \"relative MSE\" is the squared matrix spectral-norm ratio (ord=2).\n",
+            "denominator=float(np.linalg.norm(y_pred_unpruned,ord=2)**2)\n",
+            "write_metrics({\"baseline_epochs\":epochs(nepoch),\"pruning_epochs\":run_pruning_epochs,\n",
+            "    \"sparsity\":sparsity,\"zero_weights\":zero_count,\"total_weights\":weight_count,\n",
+            "    \"quantized_linear_count\":len(quantized_linears),\n",
+            "    \"relative_mse_definition\":\"squared matrix spectral norm of prediction difference / squared matrix spectral norm of unpruned prediction (legacy relative MSE)\",\n",
+            "    \"relative_mse_prune\":float(np.linalg.norm(y_pred-y_pred_unpruned,ord=2)**2/denominator),\n",
+            "    \"relative_mse_prune_quant\":float(np.linalg.norm(y_pred_quant-y_pred_unpruned,ord=2)**2/denominator),\n",
+            "    \"quantization_mse_vs_pruned\":float(np.mean((y_pred_quant-y_pred)**2)),\n",
+            "    \"compression_method\":\"ZIP_DEFLATED\",\n",
+            "    \"artifact_formats\":{original_file.name:\"PyTorch inference state_dict\",\n",
+            "        pruned_file.name:\"PyTorch stripped inference state_dict\",\n",
+            "        exported_file.name:\"TorchScript float inference\",quantized_file.name:\"TorchScript dynamic int8 inference\"},\n",
+            "    \"zip_deflated_bytes\":{p.name:get_gzipped_model_size(p) for p in (original_file,pruned_file,exported_file,quantized_file)}})\n"
+          ]
+        }
+      ]
+    },
+    "tutorial/7_model_pruning_and_quantization_colab.ipynb": {
+      "archive": "dev_tests/fixtures/tutorial7_reference_v1/tutorial__7_model_pruning_and_quantization_colab.ipynb.txt",
+      "before_sha256": "23b29a02c51162962e757b9b33a785376fa344b3b51da04bbe30864f6e54bec9",
+      "after_sha256_by_eol": {
+        "lf": "8412e6643f89c246f33a61fc51f92a55324ccdef02ffd013f0f4ad369754c3cf",
+        "crlf": "9c58a10bf036e21cde7c1718defb7cc776d947b7843fb88336eccc319ad9c2f8"
+      },
+      "notebook_patches": [
+        {
+          "cell": 44,
+          "cell_type": "code",
+          "before": [
+            "np.linalg.norm(y_pred_quant-y_pred_unpruned,ord='fro')**2/np.linalg.norm(y_pred_unpruned,ord='fro')**2"
+          ],
+          "after": [
+            "np.linalg.norm(y_pred_quant-y_pred_unpruned,ord=2)**2/np.linalg.norm(y_pred_unpruned,ord=2)**2"
+          ]
+        },
+        {
+          "cell": 47,
+          "cell_type": "code",
+          "before": [
+            "print(\"relative MSE - prune is {}\".format(np.linalg.norm(y_pred-y_pred_unpruned,ord='fro')**2/np.linalg.norm(y_pred_unpruned,ord='fro')**2))\n",
+            "print(\"relative MSE - prune+quant is {}\".format(np.linalg.norm(y_pred_quant-y_pred_unpruned,ord='fro')**2/np.linalg.norm(y_pred_unpruned,ord='fro')**2))"
+          ],
+          "after": [
+            "print(\"relative MSE - prune is {}\".format(np.linalg.norm(y_pred-y_pred_unpruned,ord=2)**2/np.linalg.norm(y_pred_unpruned,ord=2)**2))\n",
+            "print(\"relative MSE - prune+quant is {}\".format(np.linalg.norm(y_pred_quant-y_pred_unpruned,ord=2)**2/np.linalg.norm(y_pred_unpruned,ord=2)**2))"
+          ]
+        }
+      ]
+    },
+    "tests/build_tutorial_7.py": {
+      "archive": "dev_tests/fixtures/tutorial7_reference_v1/tests__build_tutorial_7.py.txt",
+      "before_sha256": "511b8d60756ca091da53e19ab0e2c84f2cedf6a99cfa546632186c8cedd1e021",
+      "after_sha256_by_eol": {
+        "lf": "ee77538ff4d319ab863853ce74d9bc91c1c2d718b6214ef2c0fff0a67c064b94"
+      },
+      "text_hunks": [
+        {
+          "after_start": 627,
+          "after_end": 627,
+          "before": "for index in (44, 47):\n    notebook[\"cells\"][index][\"source\"] = (\n        \"\".join(notebook[\"cells\"][index][\"source\"])\n        .replace(\"ord=2\", \"ord='fro'\")\n        .splitlines(keepends=True)\n    )\n",
+          "after": ""
+        },
+        {
+          "after_start": 1180,
+          "after_end": 1212,
+          "before": "    \"modified_code_cells\": [0, 44, 47],\n",
+          "after": "    \"modified_code_cells\": [0],\n"
+        }
+      ]
+    },
+    "tests/test_tutorial_7.py": {
+      "archive": "dev_tests/fixtures/tutorial7_reference_v1/tests__test_tutorial_7.py.txt",
+      "before_sha256": "218ae6353cbd32d8684b937cebee58e27a8b467c69fac02bd0dd3657a2419324",
+      "after_sha256_by_eol": {
+        "lf": "8fa0ce2584ff84c9ce585646c86390db5809bb19f5d49dac5eeaf044a082f10b"
+      },
+      "text_hunks": [
+        {
+          "after_start": 1771,
+          "after_end": 1802,
+          "before": "                if index not in (0, 44, 47):\n",
+          "after": "                if index != 0:\n"
+        },
+        {
+          "after_start": 2448,
+          "after_end": 2515,
+          "before": "    def test_relative_mse_uses_all_samples(self):\n",
+          "after": "    def test_relative_mse_preserves_reference_spectral_norm(self):\n"
+        },
+        {
+          "after_start": 3092,
+          "after_end": 3209,
+          "before": "        expected_quantized = np.mean((quantized - baseline) ** 2) / np.mean(\n            baseline**2\n        )\n",
+          "after": "        expected_quantized = np.linalg.norm(quantized - baseline, ord=2) ** 2 / np.linalg.norm(baseline, ord=2) ** 2\n"
+        },
+        {
+          "after_start": 3409,
+          "after_end": 3496,
+          "before": "            msg=\"Relative MSE must include every sample, not the matrix spectral norm\",\n",
+          "after": "            msg=\"Preserve the original tutorial's squared matrix spectral-norm ratio\",\n"
+        },
+        {
+          "after_start": 3702,
+          "after_end": 3813,
+          "before": "        expected_pruned = np.mean((pruned - baseline) ** 2) / np.mean(baseline**2)\n",
+          "after": "        expected_pruned = np.linalg.norm(pruned - baseline, ord=2) ** 2 / np.linalg.norm(baseline, ord=2) ** 2\n"
+        }
+      ]
+    },
+    "dev_tests/lbfgs_reference_scope.py": {
+      "archive": "dev_tests/fixtures/tutorial7_reference_v1/dev_tests__lbfgs_reference_scope.py.txt",
+      "before_sha256": "00ca5c8472fdeb7ae08f005af171db61ac43a2f77ed02c2dbe7d9c4c268ac27c",
+      "after_sha256_by_eol": {
+        "lf": "a52d22fedaedcfa042ccc02be9c3ecdae9c1c3e9e03464d7cfed78c09221194b"
+      },
+      "text_hunks": [
+        {
+          "after_start": 298,
+          "after_end": 416,
+          "before": "",
+          "after": "from dev_tests.tutorial7_reference_scope import (\n    assert_tutorial7_reference_scope, historical_tutorial7_bytes,\n)\n"
+        },
+        {
+          "after_start": 1743,
+          "after_end": 1805,
+          "before": "",
+          "after": "    current = historical_tutorial7_bytes(root, name, current)\n"
+        },
+        {
+          "after_start": 3755,
+          "after_end": 3798,
+          "before": "",
+          "after": "    assert_tutorial7_reference_scope(root)\n"
+        },
+        {
+          "after_start": 3835,
+          "after_end": 4016,
+          "before": "    source = (root/'dev_tests/lbfgs_reference_scope.py').read_bytes()\n",
+          "after": "    source = historical_tutorial7_bytes(root, 'dev_tests/lbfgs_reference_scope.py',\n                                       (root/'dev_tests/lbfgs_reference_scope.py').read_bytes())\n"
+        }
+      ]
+    },
+    "dev_tests/publication_projection.py": {
+      "archive": "dev_tests/fixtures/tutorial7_reference_v1/dev_tests__publication_projection.py.txt",
+      "before_sha256": "58db856c39c5f8aa40189bf6ffb191886b68b42ee50bab5d4d8e6e111ade6a47",
+      "after_sha256_by_eol": {
+        "lf": "cd94748ce1afb4df4c4411ae739ea50291e40b4475f6f2a979323789dced7bc5"
+      },
+      "text_hunks": [
+        {
+          "after_start": 570,
+          "after_end": 683,
+          "before": "        files=json.loads((source/'dev_tests/lbfgs_reference_v1_inventory.json').read_text(encoding='utf-8'))\n",
+          "after": "        files=json.loads((source/'dev_tests/tutorial7_reference_v1_inventory.json').read_text(encoding='utf-8'))\n"
+        }
+      ]
+    },
+    "dev_tests/test_publication_checkout_eol.py": {
+      "archive": "dev_tests/fixtures/tutorial7_reference_v1/dev_tests__test_publication_checkout_eol.py.txt",
+      "before_sha256": "27b3de5ee2acd0cc37fd2144f0ed69e9c09784623d36a9eee5ee450deb4f45ad",
+      "after_sha256_by_eol": {
+        "lf": "4bb2db9b117efece702b6362b8c9d7f4e4ad72d7b6462620a3c3134c9b845e53"
+      },
+      "text_hunks": [
+        {
+          "after_start": 1711,
+          "after_end": 1893,
+          "before": "    for name in (*CANDIDATE_FILES, *reference['checkout_files']):\n",
+          "after": "    tutorial7=json.loads((ROOT/'dev_tests/tutorial7_reference_v1.json').read_bytes())\n    for name in (*CANDIDATE_FILES, *reference['checkout_files'], *tutorial7['checkout_files']):\n"
+        }
+      ]
+    }
+  },
+  "added_public_files": [
+    "dev_tests/tutorial7_reference_scope.py",
+    "dev_tests/tutorial7_reference_v1.json",
+    "dev_tests/tutorial7_reference_v1_inventory.json",
+    "dev_tests/test_tutorial7_reference_scope.py",
+    "dev_tests/test_tutorial7_reference_outputs.py",
+    "dev_tests/test_tutorial7_inference_artifacts.py",
+    "dev_tests/fixtures/tutorial7_reference_v1/dev_tests__generate_native_notebooks.py.txt",
+    "dev_tests/fixtures/tutorial7_reference_v1/tutorial__7_model_pruning_and_quantization_pytorch.ipynb.txt",
+    "dev_tests/fixtures/tutorial7_reference_v1/tutorial__7_model_pruning_and_quantization_colab.ipynb.txt",
+    "dev_tests/fixtures/tutorial7_reference_v1/tests__build_tutorial_7.py.txt",
+    "dev_tests/fixtures/tutorial7_reference_v1/tests__test_tutorial_7.py.txt",
+    "dev_tests/fixtures/tutorial7_reference_v1/dev_tests__lbfgs_reference_scope.py.txt",
+    "dev_tests/fixtures/tutorial7_reference_v1/dev_tests__publication_projection.py.txt",
+    "dev_tests/fixtures/tutorial7_reference_v1/dev_tests__test_publication_checkout_eol.py.txt"
+  ],
+  "required_sha256": {
+    "dev_tests/tutorial7_reference_v1_inventory.json": "77af902391cab81c7b4eeb4cf623a828dcbae961816027427e3a01ef0f7a8d7c",
+    "dev_tests/test_tutorial7_reference_scope.py": "49cb3d424f359a31e5261161c2a80f74db96c42d74aac0114548901335a65ae2",
+    "dev_tests/test_tutorial7_reference_outputs.py": "dc7aaa6448dbbcae68d787aafe8629f1a5a777138b786d21508dbea45664acce",
+    "dev_tests/test_tutorial7_inference_artifacts.py": "6020bd11347732f506ac2fdb6d9fa840d467b375ad240056d9b2a5d77a080388"
+  },
+  "original_tensorflow": {
+    "path": "tutorial/7_model_pruning_and_quantization.ipynb",
+    "sha256_by_eol": {
+      "lf": "c73b21bc412def17bf0d03b1378f4269b2f610f66a6ac281e4f06e59aef2a81b",
+      "crlf": "70b40530c618bafe7cd83186d383ca5b4878068e8fdc7660f239289f0023b036"
+    }
+  },
+  "checkout_files": [
+    "dev_tests/generate_native_notebooks.py",
+    "tutorial/7_model_pruning_and_quantization_pytorch.ipynb",
+    "tutorial/7_model_pruning_and_quantization_colab.ipynb",
+    "tests/build_tutorial_7.py",
+    "tests/test_tutorial_7.py",
+    "dev_tests/lbfgs_reference_scope.py",
+    "dev_tests/publication_projection.py",
+    "dev_tests/test_publication_checkout_eol.py",
+    "dev_tests/tutorial7_reference_scope.py",
+    "dev_tests/tutorial7_reference_v1.json",
+    "dev_tests/tutorial7_reference_v1_inventory.json",
+    "dev_tests/test_tutorial7_reference_scope.py",
+    "dev_tests/test_tutorial7_reference_outputs.py",
+    "dev_tests/test_tutorial7_inference_artifacts.py",
+    "dev_tests/fixtures/tutorial7_reference_v1/dev_tests__generate_native_notebooks.py.txt",
+    "dev_tests/fixtures/tutorial7_reference_v1/tutorial__7_model_pruning_and_quantization_pytorch.ipynb.txt",
+    "dev_tests/fixtures/tutorial7_reference_v1/tutorial__7_model_pruning_and_quantization_colab.ipynb.txt",
+    "dev_tests/fixtures/tutorial7_reference_v1/tests__build_tutorial_7.py.txt",
+    "dev_tests/fixtures/tutorial7_reference_v1/tests__test_tutorial_7.py.txt",
+    "dev_tests/fixtures/tutorial7_reference_v1/dev_tests__lbfgs_reference_scope.py.txt",
+    "dev_tests/fixtures/tutorial7_reference_v1/dev_tests__publication_projection.py.txt",
+    "dev_tests/fixtures/tutorial7_reference_v1/dev_tests__test_publication_checkout_eol.py.txt"
+  ],
+  "scope_source_template_sha256": "353021a0f0931b047fe480f902b0535658ca2a47718dadd8ec6127650317dacd"
+}

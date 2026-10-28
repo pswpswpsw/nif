@@ -1,261 +1,130 @@
-import tensorflow as tf
+"""Differentiable pointwise Jacobians and Hessians for neural implicit fields.
+
+A batch consists of independent points, as in the original batch-Jacobian
+operators. Summing the chosen output across rows computes all point derivatives
+in one reverse pass. Models coupling distinct batch rows are not pointwise and
+must instead use a full Jacobian (for example torch.func.jacrev).
+
+All reverse passes create graphs, including explicit connected zeros for
+constant and linear functions, so derivative losses can train model parameters.
+"""
+import numbers
+import torch
+from ._common import NativeLayer
 
 
-class JacobianLayer(tf.keras.layers.Layer):
+def _indices(index,size,name):
+    if isinstance(index,numbers.Integral): index=[int(index)]
+    elif isinstance(index,torch.Tensor): index=index.tolist()
+    index=list(index)
+    if not index: raise ValueError(f'{name} must select at least one component')
+    if any(not isinstance(i,numbers.Integral) or not -size<=i<size for i in index):
+        raise IndexError(f'{name} index outside dimension {size}')
+    return [int(i)%size for i in index]
+
+
+def _input(x):
+    if not isinstance(x,torch.Tensor): x=torch.as_tensor(x,dtype=torch.get_default_dtype())
+    if x.ndim!=2 or not x.is_floating_point():
+        raise ValueError('Derivative inputs must be floating point [batch, inputs] tensors')
+    # Preserve a caller's graph; only manufacture a leaf when no graph exists.
+    return x if x.requires_grad else x.detach().requires_grad_(True)
+
+
+def _zero(x,y):
+    # Includes y so zero derivatives retain parameter differentiation as well.
+    return x*0+y.sum()*0
+
+
+def _gradient(y,x,anchor):
+    gradient=None
+    if y.requires_grad:
+        gradient=torch.autograd.grad(y,x,grad_outputs=torch.ones_like(y),
+                                     create_graph=True,retain_graph=True,
+                                     allow_unused=True)[0]
+    zero=_zero(x,anchor)
+    return zero if gradient is None else gradient+zero
+
+
+def _jacobian(y,x,x_index,y_index):
+    if not isinstance(y,torch.Tensor) or y.ndim!=2 or y.shape[0]!=x.shape[0]:
+        raise ValueError('Model output must be [batch, outputs]')
+    xi=_indices(x_index,x.shape[1],'x_index')
+    yi=_indices(y_index,y.shape[1],'y_index')
+    jac=torch.stack([_gradient(y[:,i],x,y)[:,xi] for i in yi],dim=1)
+    return jac,xi
+
+
+def compute_output_and_grad(model,x,x_index,y_index):
+    """Return full model output and selected [batch, output, input] Jacobian."""
+    with torch.enable_grad():
+        x=_input(x)
+        y=model(x)
+        jac,_=_jacobian(y,x,x_index,y_index)
+        return y,jac
+
+
+def compute_output_and_augment_grad(model,x,x_index,y_index):
+    """Differentiate the second output of an augmented (output, latent) model."""
+    with torch.enable_grad():
+        x=_input(x)
+        y,latent=model(x)
+        jac,_=_jacobian(latent,x,x_index,y_index)
+        return y,jac
+
+
+def compute_output_and_grad_and_hessian(model,x,x_index,y_index):
+    """Return full output, selected Jacobian, and selected-input Hessian.
+
+    Hessian axes are [batch, selected_outputs, selected_inputs, selected_inputs].
     """
-    A custom Keras layer that computes the Jacobian matrix of a TensorFlow model.
+    with torch.enable_grad():
+        x=_input(x)
+        y=model(x)
+        jac,xi=_jacobian(y,x,x_index,y_index)
+        hessian=torch.stack([
+            torch.stack([_gradient(jac[:,o,i],x,y)[:,xi]
+                         for i in range(len(xi))],dim=1)
+            for o in range(jac.shape[1])],dim=1)
+        return y,jac,hessian
 
-    Args:
-        model (tf.keras.Model): The TensorFlow model for which to compute the Jacobian.
-        y_index (int or List[int]): The index or indices of the output variable(s) to compute the Jacobian
-                                    with respect to.
-        x_index (int or List[int]): The index or indices of the input variable(s) to compute the Jacobian
-                                    with respect to.
 
-    Returns:
-        Tuple[tf.Tensor, tf.Tensor]: A tuple containing the output of the model and the Jacobian matrix.
-    """
+class JacobianLayer(NativeLayer):
+    """Wrap a native pointwise model and expose its selected input derivatives."""
+    def __init__(self,model,y_index,x_index,**kwargs):
+        super().__init__(); self.model=model; self.y_index=y_index; self.x_index=x_index
 
-    def __init__(self, model, y_index, x_index, **kwargs):
-        """
-        Initializes a new instance of the JacobianLayer class.
+    def forward(self,x,**kwargs):
+        return compute_output_and_grad(self.model,x,self.x_index,self.y_index)
 
-        Args:
-            model (tf.keras.Model): The TensorFlow model for which to compute the Jacobian.
-            y_index (int or List[int]): The index or indices of the output variable(s) to compute the
-                                        Jacobian with respect to.
-            x_index (int or List[int]): The index or indices of the input variable(s) to compute the
-                                        Jacobian with respect to.
-            **kwargs: Additional keyword arguments to pass to the base class constructor.
-        """
-        super().__init__(**kwargs)
-        self.model = model
-        self.y_index = y_index
-        self.x_index = x_index
+    def get_config(self): return dict(y_index=self.y_index,x_index=self.x_index)
 
-    @tf.function
-    def call(self, x, **kwargs):
-        """
-        Computes the output of the model and the Jacobian matrix.
 
-        Args:
-            x (tf.Tensor): The input tensor(s) to the model.
-            **kwargs: Additional keyword arguments to pass to the underlying TensorFlow function.
-
-        Returns:
-            Tuple[tf.Tensor, tf.Tensor]: A tuple containing the output of the model and the Jacobian matrix.
-        """
-        y, dys_dxs = compute_output_and_grad(self.model, x, self.x_index, self.y_index)
-        return y, dys_dxs
+class HessianLayer(JacobianLayer):
+    """Expose full output plus selected first and second input derivatives."""
+    def forward(self,x,**kwargs):
+        return compute_output_and_grad_and_hessian(self.model,x,self.x_index,self.y_index)
 
 
 class JacRegLatentLayer(JacobianLayer):
+    """Pass through model output and explicitly penalize its latent Jacobian.
+
+    ``model(x)`` returns ``(output, latent)``. The historical ``l1`` name is
+    retained, but the penalty is l1 * mean(Jacobian ** 2), not an absolute norm.
+    Call ``regularization_loss(inputs)`` in the training objective. No batch is
+    cached, so evaluating unrelated data cannot silently change this penalty.
     """
-    A custom Keras layer that applies Jacobian regularization to a TensorFlow model's output.
+    def __init__(self,model,y_index,x_index,l1=1e-2,mixed_policy='float32',**kwargs):
+        super().__init__(model,y_index,x_index,**kwargs)
+        self.l1=float(l1); self.mixed_policy=mixed_policy
 
-    This layer computes the Jacobian matrix of the output with respect to the input, and
-    adds a regularization term to the loss function to encourage the Jacobian to be
-    small. The regularization term is given by:
-
-        L = l1 * mean((df/dx)^2)
-
-    where `l1` is a hyperparameter controlling the strength of the regularization,
-    `f` is the TensorFlow model, `y` is its output, and `x` is its input.
-
-    Args:
-        model (tf.keras.Model): The TensorFlow model for which to compute the Jacobian.
-        y_index (int or List[int]): The index or indices of the output variable(s) to compute the
-                                    Jacobian with respect to.
-        x_index (int or List[int]): The index or indices of the input variable(s) to compute the
-                                    Jacobian with respect to.
-        l1 (float): The weight of the Jacobian regularization term in the loss function.
-        mixed_policy (str): The floating-point precision to use for computing the Jacobian.
-        **kwargs: Additional keyword arguments to pass to the base class constructor.
-    """
-
-    def __init__(
-        self, model, y_index, x_index, l1=1e-2, mixed_policy="float32", **kwargs
-    ):
-        """
-        Initializes a new instance of the JacRegLatentLayer class.
-
-        Args:
-            model (tf.keras.Model): The TensorFlow model for which to compute the Jacobian.
-            y_index (int or List[int]): The index or indices of the output variable(s) to compute the
-                                        Jacobian with respect to.
-            x_index (int or List[int]): The index or indices of the input variable(s) to compute the
-                                        Jacobian with respect to.
-            l1 (float): The weight of the Jacobian regularization term in the loss function.
-            mixed_policy (str): The floating-point precision to use for computing the Jacobian.
-            **kwargs: Additional keyword arguments to pass to the base class constructor.
-        """
-        super().__init__(model, y_index, x_index, dtype=mixed_policy, **kwargs)
-        self.l1 = tf.cast(l1, self.mixed_policy.compute_dtype).numpy()
-
-    @tf.function
-    def call(self, x, **kwargs):
-        """
-        Computes the output of the model and the Jacobian regularization loss.
-
-        Args:
-            x (tf.Tensor): The input tensor(s) to the model.
-            **kwargs: Additional keyword arguments to pass to the underlying TensorFlow function.
-
-        Returns:
-            tf.Tensor: The output of the model.
-        """
-        y, dls_dxs = compute_output_and_augment_grad(
-            self.model, x, self.x_index, self.y_index
-        )
-        jac_reg_loss = self.l1 * tf.reduce_mean(tf.square(dls_dxs))
-        self.add_loss(jac_reg_loss)
+    def forward(self,x,**kwargs):
+        y,_=self.model(x)
         return y
 
-    def get_config(self):
-        """
-        Returns the configuration of the layer.
+    def regularization_loss(self,inputs=None):
+        if inputs is None: raise ValueError('inputs are required for latent Jacobian regularization')
+        _,jac=compute_output_and_augment_grad(self.model,inputs,self.x_index,self.y_index)
+        return self.l1*jac.square().mean()
 
-        Returns:
-            Dict[str, Any]: The configuration of the layer.
-        """
-        config = super().get_config().copy()
-        config.update(
-            {
-                "l1": self.l1,
-            }
-        )
-        return config
-
-
-class HessianLayer(tf.keras.layers.Layer):
-    """
-    A custom Keras layer that computes the Hessian matrix of a TensorFlow model's output.
-
-    This layer computes the Hessian matrix of the output with respect to the input, and
-    returns it along with the first and second derivatives of the output with respect to
-    the input. The first derivative is given by the Jacobian matrix, and the second
-    derivative is the Hessian matrix.
-
-    Args:
-        model (tf.keras.Model): The TensorFlow model for which to compute the Hessian.
-        y_index (int or List[int]): The index or indices of the output variable(s) to compute
-                                    the Hessian with respect to.
-        x_index (int or List[int]): The index or indices of the input variable(s) to compute
-                                    the Hessian with respect to.
-    """
-
-    def __init__(self, model, y_index, x_index):
-        """
-        Initializes a new instance of the HessianLayer class.
-
-        Args:
-            model (tf.keras.Model): The TensorFlow model for which to compute the Hessian.
-            y_index (int or List[int]): The index or indices of the output variable(s) to
-                                        compute the Hessian with respect to.
-            x_index (int or List[int]): The index or indices of the input variable(s) to
-                                        compute the Hessian with respect to.
-        """
-        super().__init__()
-        self.model = model
-        self.y_index = y_index
-        self.x_index = x_index
-
-    @tf.function
-    def call(self, x, **kwargs):
-        """
-        Computes the output of the model, the Jacobian matrix, and the Hessian matrix.
-
-        Args:
-            x (tf.Tensor): The input tensor(s) to the model.
-            **kwargs: Additional keyword arguments to pass to the underlying TensorFlow function.
-
-        Returns:
-            Tuple[tf.Tensor, tf.Tensor, tf.Tensor]: A tuple containing the output of the model,
-                                                    the Jacobian matrix, and the
-                                                    Hessian matrix.
-        """
-        y, dys_dxs, dys2_dxs2 = compute_output_and_grad_and_hessian(
-            self.model, x, self.x_index, self.y_index
-        )
-        return y, dys_dxs, dys2_dxs2
-
-
-def compute_output_and_augment_grad(model, x, x_index, y_index):
-    """
-    Computes the output of a model and the Jacobian matrix.
-
-    Args:
-        model (tf.keras.Model): The TensorFlow model for which to compute the Jacobian.
-        x (tf.Tensor): The input tensor(s) to the model.
-        x_index (int or List[int]): The index or indices of the input variable(s)
-                                    to compute the Jacobian with respect to.
-        y_index (int or List[int]): The index or indices of the output variable(s)
-                                    to compute the Jacobian with respect to.
-
-    Returns:
-        Tuple[tf.Tensor, tf.Tensor]: A tuple containing the output of the model and the Jacobian matrix.
-    """
-    with tf.GradientTape() as tape:
-        tape.watch(x)
-        y, layer_ = model(x)
-        ls = tf.gather(layer_, y_index, axis=-1)
-    dls_dx = tape.batch_jacobian(ls, x)
-    dls_dxs = tf.gather(dls_dx, x_index, axis=-1)
-    return y, dls_dxs
-
-
-def compute_output_and_grad(model, x, x_index, y_index):
-    """
-    Computes the output of a model and the Jacobian matrix.
-
-    Args:
-        model (tf.keras.Model): The TensorFlow model for which to compute the Jacobian.
-        x (tf.Tensor): The input tensor(s) to the model.
-        x_index (int or List[int]): The index or indices of the input variable(s) to
-                                    compute the Jacobian with respect to.
-        y_index (int or List[int]): The index or indices of the output variable(s) to
-                                    compute the Jacobian with respect to.
-
-    Returns:
-        Tuple[tf.Tensor, tf.Tensor]: A tuple containing the output of the model and the Jacobian matrix.
-    """
-    ys_list = []
-    with tf.GradientTape(persistent=True) as tape:
-        tape.watch(x)
-        y = model(x)
-        for i in y_index:
-            ys_list.append(y[:, i])
-    dys_dx = tf.stack([tape.gradient(q, x) for q in ys_list], 1)
-    dys_dxs = tf.gather(dys_dx, x_index, axis=-1)
-    del tape
-    return y, dys_dxs
-
-
-def compute_output_and_grad_and_hessian(model, x, x_index, y_index):
-    """
-    Computes the output of a model, the Jacobian matrix, and the Hessian matrix.
-
-    Args:
-        model (tf.keras.Model): The TensorFlow model for which to compute the Jacobian and Hessian.
-        x (tf.Tensor): The input tensor(s) to the model.
-        x_index (int or List[int]): The index or indices of the input variable(s) to
-                                    compute the Jacobian and Hessian with respect to.
-        y_index (int or List[int]): The index or indices of the output variable(s) to
-                                    compute the Jacobian and Hessian with respect to.
-
-    Returns:
-        Tuple[tf.Tensor, tf.Tensor, tf.Tensor]: A tuple containing the output of the model,
-                                                the Jacobian matrix, and the Hessian
-                                                matrix.
-    """
-    with tf.GradientTape() as g:
-        g.watch(x)
-        with tf.GradientTape() as tape:
-            tape.watch(x)
-            y = model(x)
-            ys = tf.gather(y, y_index, axis=-1)
-        dys_dx = tape.batch_jacobian(ys, x)
-        dys_dxs = tf.gather(dys_dx, x_index, axis=-1)
-    dys_dx2 = g.batch_jacobian(dys_dxs, x)
-    dys_dxs2 = tf.gather(dys_dx2, x_index, axis=-1)
-    return y, dys_dxs, dys_dxs2
+    def get_config(self): return dict(super().get_config(),l1=self.l1)

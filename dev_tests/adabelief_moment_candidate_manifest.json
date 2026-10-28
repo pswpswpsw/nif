@@ -1,0 +1,177 @@
+{
+  "phase": "v4_parameter_dtype_moment_coefficients",
+  "environment": {
+    "python": "3.13.17",
+    "torch": "2.14.1+cpu",
+    "numpy": "2.1.3",
+    "device": "cpu"
+  },
+  "reference": {
+    "commit": "ad9113df14590189b12068b6b3fa7c8c8d9187d4",
+    "path": "nif/optimizers/external_optimizers.py",
+    "sha256": "016b79ec31e9e66418c39c4fc1e0ba174d054798bc6c59b6aef0ff7bed41352a",
+    "verified_bytewise_with_git_show": true
+  },
+  "source_sha256": {
+    "dev_tests/adabelief_moment_checkpoint_green.log": "594bea5256cf76a2042ddfd057f2c3466641469287fd16d44784a6ba87f8c1ae",
+    "dev_tests/adabelief_moment_full.log": "1becc5fd33f19de26d3fcb723317ade73e815ff2ca04dc5256252060fbd6a948",
+    "dev_tests/adabelief_moment_green.log": "83c7e3ace54c9e9be7de971633fe1ac43f5a561d93ca81431cd07b7de68f77be",
+    "dev_tests/adabelief_moment_historical_scope_red.log": "6bd9a07330e523141d79205aa651aac81eec46c0beca1d0397dcef381115a2ff",
+    "dev_tests/adabelief_moment_history.py": "ee83bd8e41a5753c9c2d9cbe634c206bd08ad3ee39d8fd368d304c03ccc276bd",
+    "dev_tests/adabelief_moment_pre_fix_fingerprints.json": "0597fc1dee3a7f0ee1de46d5ab732275a23e8a06cc666f39d00789b2f59b2daa",
+    "dev_tests/adabelief_moment_red.log": "30fc7a0eb566047a3ce51b3613bd26a87b0505b43783c325fe2abb88a06b2999",
+    "dev_tests/adabelief_moment_red_fingerprints.json": "95a39c6eff7d9e57766200f898740a8b915226258027f251ec1fa9b62e4dbaee",
+    "dev_tests/adabelief_moment_scope.diff": "f3a4ee08f98cc6359edd16a2e3d420497d0fde621ee856350cb4abcc8bef33f6",
+    "dev_tests/adabelief_moment_scope.py": "f479169deb264dd92a82b7aa9e7b8cade3dde474f6e0279491958998723927dc",
+    "dev_tests/adabelief_moment_smoke.log": "db465ac56174ed95b31794c8196542cf7ac814609990923ddc7d040ba10218d4",
+    "dev_tests/adabelief_moment_smoke_summary.json": "a31caf10536e2723641036f5aca15007c3c48ec3c8358e4f8ea80b29fc8fe0af",
+    "dev_tests/adabelief_moment_succession_green.log": "7135a09d8ace5c5c39173a9171b9ea6b7ccf1e80ca3726f18813126eb474ce66",
+    "dev_tests/artifacts/adabelief_moment/public_suite.junit.xml": "60f6ba71cc149b7155b7f7f512f8ff09dba3cc5fa79714ea780fb09f7d62eb48",
+    "dev_tests/artifacts/adabelief_moment/smoke/1_simple_1d_wave_pytorch.ipynb": "05c588b107dc6491b5f7bea5a9cd89d2864a074b7e592e8fcd6cb251146bb4bf",
+    "dev_tests/artifacts/adabelief_moment/smoke/3_multi_scale_linear_NIF_pytorch.ipynb": "d549e82e04f6f8e9bbd10733f2e8761ac8b4f1e49ba390334b2eec9ce56de37c",
+    "dev_tests/artifacts/adabelief_moment/smoke/tutorial1/fine_tune_loss.png": "bac64c9aa15d7114ea461b8a60d3f59202fc9de3a5f56dc843af2e8bac181d13",
+    "dev_tests/artifacts/adabelief_moment/smoke/tutorial1/fine_tuned.pt": "b13ec50f4a2a92abb23c80c6616d93f5add85cfc8546f7878357286842289c11",
+    "dev_tests/artifacts/adabelief_moment/smoke/tutorial1/fine_tuned_reconstruction.png": "96057c15e3112e446881e0241d8c65f93d8c2b1a19a1a4170d1c5bcdcd46fef8",
+    "dev_tests/artifacts/adabelief_moment/smoke/tutorial1/latent.png": "d295738380985fe329a159ff62b2db0bea442ac575dddf2a060ef3463cad16f1",
+    "dev_tests/artifacts/adabelief_moment/smoke/tutorial1/metrics.json": "cfce2634d9b77e39352592aa1e3413f913c1a98ee86234a02d8d76acbdddb7b0",
+    "dev_tests/artifacts/adabelief_moment/smoke/tutorial1/parameter_to_latent.pt": "67323e2c5309f4dd74d1bb404104db180148ee53a5f4535e9aec5d5a505ab712",
+    "dev_tests/artifacts/adabelief_moment/smoke/tutorial1/traveling_wave.pt": "bcc43360e0b08674463401071d6a5d11c343f50b3515572ee7cd64323022ca7b",
+    "dev_tests/artifacts/adabelief_moment/smoke/tutorial1/traveling_wave_history.json": "46f5036d0d572a34b1deab978da999593fdea91cb965c6305770088886f5b212",
+    "dev_tests/artifacts/adabelief_moment/smoke/tutorial1/traveling_wave_latest.pt": "82d8146d4635c6ce8ac2e96f42ccef93cf8dadfb13a70868aba2651420d0a055",
+    "dev_tests/artifacts/adabelief_moment/smoke/tutorial1/traveling_wave_loss.png": "b52fe8ee1890d3e75475c28aff1e172b9007f8667b03ad0eef15b83415596c43",
+    "dev_tests/artifacts/adabelief_moment/smoke/tutorial1/traveling_wave_reconstruction.png": "92a6d33b5cdd48ac2e2313bca709e81420f12a1233eee6e8c4771aa88ca68f8d",
+    "dev_tests/artifacts/adabelief_moment/smoke/tutorial3/amr_mesh_counts.png": "1f23c22b43f5090914a40b4656bb671934d343df3139c02b4e6c009d9660cbb6",
+    "dev_tests/artifacts/adabelief_moment/smoke/tutorial3/cylinder.pt": "67791adf085b1eaf68de99ad02d9a1c4e1ffb1de000bd69980966c70dd5bc2c8",
+    "dev_tests/artifacts/adabelief_moment/smoke/tutorial3/cylinder_history.json": "d364f3d59f5666e56dfe0f0da1545a3dc56e61cfe1e46be2a8e76b7593aacbf2",
+    "dev_tests/artifacts/adabelief_moment/smoke/tutorial3/cylinder_latest.pt": "6335c29e5ce2876a652adf2995c0fb15f8628fda63e498258442e1b8ef4770cf",
+    "dev_tests/artifacts/adabelief_moment/smoke/tutorial3/cylinder_loss.png": "1c24caf5b3d19ef8c570021e02a85dfdb72bcb22334a06d76a46c00479f04ca1",
+    "dev_tests/artifacts/adabelief_moment/smoke/tutorial3/cylinder_reconstruction.png": "3e747fef0f688390baa5d756847bc9593bff83d2cb02c5c383bbebdd387f8076",
+    "dev_tests/artifacts/adabelief_moment/smoke/tutorial3/latent.png": "0b8e3f630b3578a04768baf10c1086f15cd4d11b9d5b0d4038f753767681e89f",
+    "dev_tests/artifacts/adabelief_moment/smoke/tutorial3/metrics.json": "0e7dc268f5af4dc9f4c2055f34f395849363cffc321d6c773f280d66011afcdc",
+    "dev_tests/fixtures/adabelief_moment_v4/adabelief_boundary_full.log.txt": "56d1b88d7014c21f0f6551e1e5c8a6b0d4f3515fa890a609f75405d7fcba99ac",
+    "dev_tests/fixtures/adabelief_moment_v4/adabelief_moment_historical_scope_red.log.txt": "6bd9a07330e523141d79205aa651aac81eec46c0beca1d0397dcef381115a2ff",
+    "dev_tests/fixtures/adabelief_moment_v4/adabelief_moment_red.log.txt": "30fc7a0eb566047a3ce51b3613bd26a87b0505b43783c325fe2abb88a06b2999",
+    "dev_tests/fixtures/adabelief_moment_v4/adabelief_phase_scope.py.txt": "6361852f79399850f65782293c1e74a56198ee1476b6fc524d9a24a9bd33db49",
+    "dev_tests/fixtures/adabelief_moment_v4/external_optimizers.py.txt": "918afd7ee94d2a8f197971d108afa9eb3a209d04a799ae234b4cd7aceb30bb62",
+    "dev_tests/fixtures/adabelief_moment_v4/manifest.json": "c2171b094ac4aedd5ee1d704207e3c0558e0246318bbe06a2c7d1b951689fb30",
+    "dev_tests/fixtures/adabelief_moment_v4/public_api_pre_fix_environment.json.txt": "a3ddbdb5f316df7928ccd4602f8b455f7f1d3f8bd1c42c65af1675a797f9a777",
+    "dev_tests/fixtures/adabelief_moment_v4/public_api_pre_fix_fingerprints.json.txt": "91f2bff6b6d7b63c25bf7e20a3dcbcc30d4559ad38161294b1ce56979db5ea85",
+    "dev_tests/fixtures/adabelief_moment_v4/test_adabelief_boundary_succession.py.txt": "3cf8c86b2056b95dbee333bfa4fd291d1f5476de1715a63db15c97a8f9c32011",
+    "dev_tests/fixtures/adabelief_moment_v4/test_adabelief_dtype_preservation.py.txt": "0e8a39a13b146394257da8cffca66704b867ab56d65c542df19f07da3d819d87",
+    "dev_tests/fixtures/adabelief_moment_v4/test_tutorial1_gc_scope.py.txt": "302ffdff8d4d41fc648d491307026fa745273f3313ef9b62800757f7ca1b96cc",
+    "dev_tests/run_adabelief_moment_smoke.py": "15d0969fd75fbb74385589eea4a9f4383eae3f9f6384fe51cd4c18be3467d537",
+    "dev_tests/test_adabelief_boundary_succession.py": "5cfa70a3d5e81321f8f6ccd33a3ab45a31e088b81c28c83269c3d2348f3f6ea0",
+    "dev_tests/test_adabelief_dtype_preservation.py": "17af7062f5bf82635ad749e55abd227c39bc7ecf28c8932d8245c73d2f1094a8",
+    "dev_tests/test_adabelief_moment_checkpoint.py": "a3011cc6308e55230200c07c63421c9b226ee95d1f10a309ed6aaba6e5a908dc",
+    "dev_tests/test_adabelief_moment_dtype.py": "429fc20394d4b729f0cf90ed68a568b60278dc7376e02d332dc35125b57c9272",
+    "dev_tests/test_tutorial1_gc_scope.py": "e8c106cf0cf1729ed386e2f626e733396e8275fef80ad4f7fee1261d11542887",
+    "docs/PYTORCH_ADABELIEF_MOMENT_CORRECTION.md": "da0d45785ccd005cca4e6f6c89568d81cf4afdf3a93d4a60912173354a3f9170",
+    "docs/PYTORCH_CANDIDATE_REPORT.md": "0d76aa6c9bcb8ce40be2e4365d40c965ca06930a0d2bf7b6bb67c699c40c9b95",
+    "nif/optimizers/external_optimizers.py": "d855f0e9f516c4048500e32dd764d0702ec9f1eea1140ee31e17280c87e1bd19"
+  },
+  "checks": {
+    "moment_red": {
+      "failed": 43,
+      "passed": 3
+    },
+    "moment_scalar_atomic_green": {
+      "passed": 111
+    },
+    "historical_scope_red": {
+      "failed": 15,
+      "passed": 5
+    },
+    "historical_scope_api_utf8_green": {
+      "passed": 97
+    },
+    "real_model_checkpoint_continuation": {
+      "passed": 2
+    },
+    "full_public": {
+      "passed": 390,
+      "skipped": 2,
+      "warnings": 571,
+      "seconds": 30.95
+    },
+    "git_diff_check": "passed"
+  },
+  "history": {
+    "archive_manifest": "dev_tests/fixtures/adabelief_moment_v4/manifest.json",
+    "pre_moment_optimizer_sha256": "918afd7ee94d2a8f197971d108afa9eb3a209d04a799ae234b4cd7aceb30bb62",
+    "original_test_sources_verbatim": true,
+    "old_expected_json_unchanged": true,
+    "raw_scope_failures_preserved": true,
+    "old_numerical_assertions": "Actually replay against PRE-moment optimizer; exact assertions unchanged",
+    "current_numerical_assertions": "BEFORE-fix-frozen source-derived dtype oracle; no current-output snapshot goldens",
+    "current_initializers_rng_and_old_trajectory_hashes_unchanged": true,
+    "scope_version": 4
+  },
+  "arithmetic": {
+    "float32_nominal_vs_materialized": "bitwise equal weights/m/v/AMSGrad through 24-step rectified and unrectified controls",
+    "float64": "caller precision preserved; nominal and explicit promoted-legacy-f32 representations separately checked",
+    "moment_order": "source-backed separate products then sum, RED-discriminated from alpha fusion",
+    "parameter_update": "unchanged add_(direction, alpha=-lr)",
+    "sparse": "observed-row behavior and native epsilon-addition order unchanged",
+    "cache": "ephemeral within each call/group/device/dtype; no host scalar extraction"
+  },
+  "smoke": [
+    {
+      "notebook": "1_simple_1d_wave_pytorch.ipynb",
+      "mode": "smoke",
+      "device": "cpu",
+      "source_sha256": "9c64c3de750de791df2b8f4c7f74a93e5eb4fee618ffe63236d1ddf6ec91a438",
+      "status": "passed",
+      "executed_code_cells": 18,
+      "metrics": {
+        "mode": "smoke",
+        "adabelief_epochs": 2,
+        "lbfgs_rounds": 1,
+        "lbfgs_max_iter": 2,
+        "final_mse": 0.9995570778846741
+      },
+      "seconds": 5.557191177000277
+    },
+    {
+      "notebook": "3_multi_scale_linear_NIF_pytorch.ipynb",
+      "mode": "smoke",
+      "device": "cpu",
+      "source_sha256": "ab7533c64635dce6faf3b8c931b191b1a7fdb3a34427c46702a9ace69b5a23bc",
+      "status": "passed",
+      "executed_code_cells": 12,
+      "metrics": {
+        "mode": "smoke",
+        "epochs": 2,
+        "training_rows": 4096,
+        "all_rows": 191775,
+        "weighted_mse": 0.07029974914085088,
+        "physical_u_mse": 1.602237201809498,
+        "physical_v_mse": 2.4832144644995258
+      },
+      "seconds": 4.847904541999924
+    }
+  ],
+  "preservation": {
+    "owned_preexisting_changes": [
+      "dev_tests/test_adabelief_boundary_succession.py",
+      "dev_tests/test_adabelief_dtype_preservation.py",
+      "dev_tests/test_tutorial1_gc_scope.py",
+      "docs/PYTORCH_CANDIDATE_REPORT.md",
+      "nif/optimizers/external_optimizers.py"
+    ],
+    "external_observed_changes": [
+      "docs/PYTORCH_TENSORFLOW_PARITY.md"
+    ],
+    "preexisting_unchanged_count": 730,
+    "gitattributes_unchanged": true,
+    "previous_manifests_logs_archives_unchanged": true,
+    "notebooks_generator_models_reference_data_other_optimizers_unchanged": true,
+    "red_test_source_unchanged": true,
+    "bounded_diff": "dev_tests/adabelief_moment_scope.diff"
+  },
+  "limitations": [
+    "CPU-only public development tests and separate smoke workloads",
+    "No TensorFlow runtime/GPU/full paired scientific training validation in this phase",
+    "No independent acceptance or full-training parity claim",
+    "No new claim of bitwise TF assign-sub or sparse scatter-kernel addition-order equivalence"
+  ]
+}

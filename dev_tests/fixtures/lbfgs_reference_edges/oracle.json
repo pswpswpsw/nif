@@ -1,0 +1,229 @@
+{
+  "tensorflow": "2.21.0",
+  "tensorflow_probability": "0.25.0",
+  "cuda_visible_devices": "-1",
+  "physical_gpus": [],
+  "logical_gpus": [],
+  "threads": [
+    1,
+    1
+  ],
+  "options": {
+    "num_correction_pairs": 20,
+    "tolerance": 1e-15,
+    "x_tolerance": 1e-15,
+    "f_relative_tolerance": 1e-15,
+    "parallel_iterations": 1,
+    "max_iterations": 1000,
+    "max_line_search_iterations": 100
+  },
+  "source_provenance": "dev_tests/fixtures/lbfgs_reference_phase0/oracle.json",
+  "cases": [
+    {
+      "case": "failed_left",
+      "dtype": "float32",
+      "overrides": {
+        "max_line_search_iterations": 1
+      },
+      "position": [
+        0.32891136407852173
+      ],
+      "objective_value": 5.409134251621595e-10,
+      "objective_gradient": [
+        3.289113648108355e-09
+      ],
+      "converged": false,
+      "failed": true,
+      "num_iterations": 2,
+      "num_objective_evaluations": 29
+    },
+    {
+      "case": "limited_first_call",
+      "dtype": "float32",
+      "overrides": {
+        "max_line_search_iterations": 1,
+        "max_iterations": 1
+      },
+      "position": [
+        0.9999999403953552
+      ],
+      "objective_value": 4.999999525523435e-09,
+      "objective_gradient": [
+        9.99999905104687e-09
+      ],
+      "converged": false,
+      "failed": false,
+      "num_iterations": 1,
+      "num_objective_evaluations": 27
+    },
+    {
+      "case": "strict_initial_boundary",
+      "dtype": "float32",
+      "overrides": {
+        "max_iterations": 0,
+        "tolerance": 1.0
+      },
+      "position": [
+        1.0
+      ],
+      "objective_value": 0.5,
+      "objective_gradient": [
+        1.0
+      ],
+      "converged": false,
+      "failed": false,
+      "num_iterations": 0,
+      "num_objective_evaluations": 1
+    },
+    {
+      "case": "inside_initial_boundary",
+      "dtype": "float32",
+      "overrides": {
+        "max_iterations": 0,
+        "tolerance": 1.0
+      },
+      "position": [
+        0.5
+      ],
+      "objective_value": 0.125,
+      "objective_gradient": [
+        0.5
+      ],
+      "converged": true,
+      "failed": false,
+      "num_iterations": 0,
+      "num_objective_evaluations": 1
+    },
+    {
+      "case": "rosenbrock",
+      "dtype": "float32",
+      "overrides": {},
+      "position": [
+        1.0,
+        1.0
+      ],
+      "objective_value": 0.0,
+      "objective_gradient": [
+        -0.0,
+        0.0
+      ],
+      "converged": true,
+      "failed": false,
+      "num_iterations": 31,
+      "num_objective_evaluations": 84
+    },
+    {
+      "case": "failed_left",
+      "dtype": "float64",
+      "overrides": {
+        "max_line_search_iterations": 1
+      },
+      "position": [
+        1.1102230246251565e-16
+      ],
+      "objective_value": 6.162975822039155e-41,
+      "objective_gradient": [
+        1.1102230246251566e-24
+      ],
+      "converged": true,
+      "failed": false,
+      "num_iterations": 2,
+      "num_objective_evaluations": 58
+    },
+    {
+      "case": "limited_first_call",
+      "dtype": "float64",
+      "overrides": {
+        "max_line_search_iterations": 1,
+        "max_iterations": 1
+      },
+      "position": [
+        0.99999995
+      ],
+      "objective_value": 4.999999500000012e-09,
+      "objective_gradient": [
+        9.9999995e-09
+      ],
+      "converged": false,
+      "failed": false,
+      "num_iterations": 1,
+      "num_objective_evaluations": 56
+    },
+    {
+      "case": "strict_initial_boundary",
+      "dtype": "float64",
+      "overrides": {
+        "max_iterations": 0,
+        "tolerance": 1.0
+      },
+      "position": [
+        1.0
+      ],
+      "objective_value": 0.5,
+      "objective_gradient": [
+        1.0
+      ],
+      "converged": false,
+      "failed": false,
+      "num_iterations": 0,
+      "num_objective_evaluations": 1
+    },
+    {
+      "case": "inside_initial_boundary",
+      "dtype": "float64",
+      "overrides": {
+        "max_iterations": 0,
+        "tolerance": 1.0
+      },
+      "position": [
+        0.5
+      ],
+      "objective_value": 0.125,
+      "objective_gradient": [
+        0.5
+      ],
+      "converged": true,
+      "failed": false,
+      "num_iterations": 0,
+      "num_objective_evaluations": 1
+    },
+    {
+      "case": "rosenbrock",
+      "dtype": "float64",
+      "overrides": {},
+      "position": [
+        1.0,
+        1.0
+      ],
+      "objective_value": 0.0,
+      "objective_gradient": [
+        -0.0,
+        0.0
+      ],
+      "converged": true,
+      "failed": false,
+      "num_iterations": 30,
+      "num_objective_evaluations": 83
+    }
+  ],
+  "exhausted_bracket_searches": [
+    {
+      "dtype": "float32",
+      "converged": true,
+      "failed": true,
+      "iterations": 1,
+      "evaluations": 26,
+      "left": 4.999999523162842,
+      "right": 5.0
+    },
+    {
+      "dtype": "float64",
+      "converged": true,
+      "failed": true,
+      "iterations": 1,
+      "evaluations": 55,
+      "left": 4.999999999999999,
+      "right": 5.0
+    }
+  ]
+}

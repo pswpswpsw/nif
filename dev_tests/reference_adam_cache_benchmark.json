@@ -1,0 +1,53 @@
+{
+  "python": "3.13.17",
+  "torch": "2.14.1+cpu",
+  "device": "cpu",
+  "threads": 1,
+  "note": "Local CPU microbenchmark, not GPU speed or full-training evidence.",
+  "results": [
+    {
+      "parameters": 64,
+      "scalars_per_parameter": 64,
+      "dtype": "float32",
+      "per_repeat_median_seconds": {
+        "uncached": [
+          0.0024774878000016543,
+          0.0023488024000016595,
+          0.0023202901999866297
+        ],
+        "cached": [
+          0.0011327643500067097,
+          0.0012473391999947125,
+          0.0011136980000173934
+        ]
+      },
+      "median_seconds": {
+        "uncached": 0.0023488024000016595,
+        "cached": 0.0011327643500067097
+      },
+      "uncached_over_cached": 2.0735137012281037
+    },
+    {
+      "parameters": 512,
+      "scalars_per_parameter": 4,
+      "dtype": "float32",
+      "per_repeat_median_seconds": {
+        "uncached": [
+          0.0192940769999268,
+          0.020433767999975316,
+          0.020109561499907613
+        ],
+        "cached": [
+          0.00914681499989456,
+          0.009544054499883714,
+          0.010292594500015184
+        ]
+      },
+      "median_seconds": {
+        "uncached": 0.020109561499907613,
+        "cached": 0.009544054499883714
+      },
+      "uncached_over_cached": 2.1070250070504764
+    }
+  ]
+}

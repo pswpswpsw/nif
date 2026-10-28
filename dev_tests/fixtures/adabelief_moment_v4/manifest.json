@@ -1,0 +1,42 @@
+{
+  "nif/optimizers/external_optimizers.py": {
+    "archive": "dev_tests/fixtures/adabelief_moment_v4/external_optimizers.py.txt",
+    "sha256": "918afd7ee94d2a8f197971d108afa9eb3a209d04a799ae234b4cd7aceb30bb62"
+  },
+  "dev_tests/test_adabelief_dtype_preservation.py": {
+    "archive": "dev_tests/fixtures/adabelief_moment_v4/test_adabelief_dtype_preservation.py.txt",
+    "sha256": "0e8a39a13b146394257da8cffca66704b867ab56d65c542df19f07da3d819d87"
+  },
+  "dev_tests/test_adabelief_boundary_succession.py": {
+    "archive": "dev_tests/fixtures/adabelief_moment_v4/test_adabelief_boundary_succession.py.txt",
+    "sha256": "3cf8c86b2056b95dbee333bfa4fd291d1f5476de1715a63db15c97a8f9c32011"
+  },
+  "dev_tests/adabelief_phase_scope.py": {
+    "archive": "dev_tests/fixtures/adabelief_moment_v4/adabelief_phase_scope.py.txt",
+    "sha256": "6361852f79399850f65782293c1e74a56198ee1476b6fc524d9a24a9bd33db49"
+  },
+  "dev_tests/test_tutorial1_gc_scope.py": {
+    "archive": "dev_tests/fixtures/adabelief_moment_v4/test_tutorial1_gc_scope.py.txt",
+    "sha256": "302ffdff8d4d41fc648d491307026fa745273f3313ef9b62800757f7ca1b96cc"
+  },
+  "dev_tests/public_api_pre_fix_fingerprints.json": {
+    "archive": "dev_tests/fixtures/adabelief_moment_v4/public_api_pre_fix_fingerprints.json.txt",
+    "sha256": "91f2bff6b6d7b63c25bf7e20a3dcbcc30d4559ad38161294b1ce56979db5ea85"
+  },
+  "dev_tests/public_api_pre_fix_environment.json": {
+    "archive": "dev_tests/fixtures/adabelief_moment_v4/public_api_pre_fix_environment.json.txt",
+    "sha256": "a3ddbdb5f316df7928ccd4602f8b455f7f1d3f8bd1c42c65af1675a797f9a777"
+  },
+  "dev_tests/adabelief_boundary_full.log": {
+    "archive": "dev_tests/fixtures/adabelief_moment_v4/adabelief_boundary_full.log.txt",
+    "sha256": "56d1b88d7014c21f0f6551e1e5c8a6b0d4f3515fa890a609f75405d7fcba99ac"
+  },
+  "dev_tests/adabelief_moment_historical_scope_red.log": {
+    "archive": "dev_tests/fixtures/adabelief_moment_v4/adabelief_moment_historical_scope_red.log.txt",
+    "sha256": "6bd9a07330e523141d79205aa651aac81eec46c0beca1d0397dcef381115a2ff"
+  },
+  "dev_tests/adabelief_moment_red.log": {
+    "archive": "dev_tests/fixtures/adabelief_moment_v4/adabelief_moment_red.log.txt",
+    "sha256": "30fc7a0eb566047a3ce51b3613bd26a87b0505b43783c325fe2abb88a06b2999"
+  }
+}

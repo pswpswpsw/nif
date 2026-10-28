@@ -1,0 +1,930 @@
+{
+  "status": "NUMERIC FROZEN v2; CPU synthetic checks passed; historical integration/public suite is separate",
+  "scope": "One shared scalar PyTorch ReferenceLBFGS + Hager-Zhang; no scientific model/data/quality/budget changes",
+  "source_files": {
+    "nif/optimizers/reference_lbfgs.py": {
+      "sha256": "9b28a409ee8552ea5400b362cd52d818103607f844ec87f6fb31d5fe63a64e42",
+      "bytes": 14505
+    },
+    "nif/optimizers/_hager_zhang.py": {
+      "sha256": "6c6c6576d8a672a2e5555315311f683ce36b57d37dd6a20733689982e62ffae5",
+      "bytes": 7829
+    },
+    "nif/optimizers/lbfgs_V2.py": {
+      "sha256": "e002a9777b80505c36b4eb271e0c8416e7ccaf62bba1e0f529f988fb75ae7bc8",
+      "bytes": 6524
+    },
+    "nif/optimizers/__init__.py": {
+      "sha256": "a45c6c9bed9f3edb1350ce3922aab7d05f4d1f6397454f42e4fd131764ba5bef",
+      "bytes": 918
+    },
+    "nif/optimizers/lbfgs.py": {
+      "sha256": "7506f2196163df1882663742b0d4b413a8bc2edafc9ba07e885559629e4c72a1",
+      "bytes": 3197
+    },
+    "nif/optimizers/TFP_LICENSE.txt": {
+      "sha256": "5c9817c129b98e7bb966bca028c43c19107102ef8e03fe799bffb4354f4ef015",
+      "bytes": 11356
+    },
+    "nif/optimizers/TFP_NOTICE.txt": {
+      "sha256": "a9a4f4f0b1a18937f511ece4ffad3f3c6b7253bb7eb89eabe2de560a028a8638",
+      "bytes": 2195
+    }
+  },
+  "public_numeric_files": {
+    "dev_tests/test_reference_lbfgs_contract.py": {
+      "sha256": "2abbc4b93afdb8c2ae0fb4900c2f8091abe97d012379ebdc1de617b1cdc81917",
+      "bytes": 9288
+    },
+    "dev_tests/test_reference_lbfgs_edges.py": {
+      "sha256": "77025d636f333de8bc6659b76ad9685832035486201d08a703c40c58382b6906",
+      "bytes": 4432
+    },
+    "dev_tests/test_reference_lbfgs_api.py": {
+      "sha256": "d40ef3609ab795a998823fd3eb788a75bfa58016eaebbfdb3b39b856eb7d3538",
+      "bytes": 593
+    },
+    "dev_tests/fixtures/lbfgs_reference_edges/tfp_oracle.py.txt": {
+      "sha256": "b68b8023541d00318610ebf6b88829e6867ad21d23bfe25ad39e2f87fe7d6550",
+      "bytes": 3782
+    },
+    "dev_tests/fixtures/lbfgs_reference_edges/oracle.json": {
+      "sha256": "dabfd228b62148183dbc2d2f31bd629f825022ce5279f62849ac6832f827ef09",
+      "bytes": 4980
+    },
+    "dev_tests/fixtures/lbfgs_reference_edges/native_diagnostic.py.txt": {
+      "sha256": "7e579e3a0031b8904539ed4e18f598d92b43ee29c57c3f99234448766384fa84",
+      "bytes": 5775
+    },
+    "dev_tests/LBFGS_REFERENCE_IMPLEMENTATION.md": {
+      "sha256": "10069ea83661e92b86d9762825f938040f18b3500561ef4089caa95479323774",
+      "bytes": 5270
+    },
+    "dev_tests/lbfgs_reference_numeric_green.log": {
+      "sha256": "3360e84315725fe2acfa0f491ffe229f2e8a344e80383752edf5d47d34ba6904",
+      "bytes": 968
+    }
+  },
+  "preserved_phase0_provenance": {
+    "sha256": "cb32980e30ae5b6b77270ba321efef4ea45519d5ab51860c5e955f8190497c7f",
+    "bytes": 6450
+  },
+  "preserved_original_test": {
+    "sha256": "16a203349aa115fef48785bd8af47f8e0a93962df9d4abf0d9c1c6ac74b8424c",
+    "bytes": 3598
+  },
+  "public_source_provenance": {
+    "lbfgs.py": {
+      "path": "C:\\Users\\pswpe\\.cache\\nif-colab-qa\\colab-matched\\Lib\\site-packages\\tensorflow_probability\\python\\optimizer\\lbfgs.py",
+      "sha256": "f4beaee9cf30f9928de16550734462196145c4f35816a1c5da22dffcc6aecaa5",
+      "bytes": 22371
+    },
+    "bfgs_utils.py": {
+      "path": "C:\\Users\\pswpe\\.cache\\nif-colab-qa\\colab-matched\\Lib\\site-packages\\tensorflow_probability\\python\\optimizer\\bfgs_utils.py",
+      "sha256": "134f6b35ec243ad120016d35e050baa3013b9c62bc64289a2e586620d0f40d88",
+      "bytes": 17130
+    },
+    "linesearch/hager_zhang.py": {
+      "path": "C:\\Users\\pswpe\\.cache\\nif-colab-qa\\colab-matched\\Lib\\site-packages\\tensorflow_probability\\python\\optimizer\\linesearch\\hager_zhang.py",
+      "sha256": "76996a5773e4ce3e9857a4dfb9a3697d3a58650377f2aa4de8557fd11aaa5047",
+      "bytes": 30645
+    },
+    "linesearch/internal/hager_zhang_lib.py": {
+      "path": "C:\\Users\\pswpe\\.cache\\nif-colab-qa\\colab-matched\\Lib\\site-packages\\tensorflow_probability\\python\\optimizer\\linesearch\\internal\\hager_zhang_lib.py",
+      "sha256": "b06f3b1bc2ff73b9a01b18454f3009874c6e84d5ba6716073c22dec5cb7d0881",
+      "bytes": 39253
+    }
+  },
+  "actual_focused_result": "62 passed,1 sparse construction warning in6.91s; includes original2, frozen23, phase09, newedges8/API1, existingoptimizer/data19",
+  "environment": {
+    "python": "3.13.11",
+    "torch": "2.14.1+cpu",
+    "CUDA_VISIBLE_DEVICES": "-1",
+    "cuda_available": false,
+    "threads": [
+      1,
+      1
+    ]
+  },
+  "canonical_log_lineage": {
+    "raw": "D:\\nif\\dev_tests\\artifacts\\lbfgs-reference-phase0-5d81e6b3b011\\numeric-green-v2-raw.log",
+    "raw_info": {
+      "sha256": "7c09666b7f71a95f0711a472b147f9ef56f571fabc72e21f9ca8a993153eae32",
+      "bytes": 977
+    },
+    "canonical": "dev_tests/lbfgs_reference_numeric_green.log",
+    "canonical_info": {
+      "sha256": "3360e84315725fe2acfa0f491ffe229f2e8a344e80383752edf5d47d34ba6904",
+      "bytes": 968
+    },
+    "only_crlf_to_lf": true
+  },
+  "version_lineage": {
+    "v1_to_v2": "Signature-only correction preserves original parallel_iterations positional slot; new f_absolute_tolerance appended after it. Other numeric source files unchanged.",
+    "v1_V2_source_raw": {
+      "sha256": "3000752a4910661aa80f7692c10b92899ff4bcd9fd7e576abae4afa8b3c2b715",
+      "bytes": 6543
+    },
+    "v2_V2_source": {
+      "sha256": "e002a9777b80505c36b4eb271e0c8416e7ccaf62bba1e0f529f988fb75ae7bc8",
+      "bytes": 6524
+    }
+  },
+  "development_evidence": {
+    "implementation-contract-first-raw.log": {
+      "sha256": "659815f356649658015e1551ee1a4817d52b545f9a1fa50ab1c129468f44b228",
+      "bytes": 942
+    },
+    "implementation-focused-raw.log": {
+      "sha256": "a10b47b093127c693d6223fcce4b6e02014ace06ca10fe7e2b8acd4b0da8b74e",
+      "bytes": 874
+    },
+    "add-group-red-raw.log": {
+      "sha256": "1cda04e82d951d7d31fea5c09c21296e36adc22471ab2f67f584cc7d45007c4a",
+      "bytes": 966
+    },
+    "add-group-green-raw.log": {
+      "sha256": "6af93ac16c782202abe1cc483e6c46564824d37d2a63d91cf4e02222784d3d5d",
+      "bytes": 100
+    },
+    "edge-tfp-oracle-raw.log": {
+      "sha256": "8f82339157e8a18c9b4ac616930500a8d7ca1f2c77c6764219ee78ab9b44e8aa",
+      "bytes": 5921
+    },
+    "edge-first-oracle.json": {
+      "sha256": "7f4b4af69da7dd5d1bff02301dd7c336e517fba5408c965ee6bb3bf6d7bf1d7f",
+      "bytes": 3665
+    },
+    "edge-tfp-oracle-v2-raw.log": {
+      "sha256": "22cdf82d0470c814c3b8dca8fe8ddc52431c50e099cb67ad36ae865571cf4301",
+      "bytes": 7294
+    },
+    "exhausted-bracket-red-raw.log": {
+      "sha256": "fbb1fe2460572ba0d7737d9c975fc2089e873ea5437e79a04305ecd68190da84",
+      "bytes": 3366
+    },
+    "numeric-green-raw.log": {
+      "sha256": "601fff3ec5dcd7ad9338272a373d178eb2aa2016b1a4d6d3e2e454e55d822646",
+      "bytes": 977
+    },
+    "positional-api-red-raw.log": {
+      "sha256": "ace1f71cfc2668d96ade096984e56e05d112a1700d05bd5777ad4746aa192fd3",
+      "bytes": 1310
+    },
+    "numeric-green-v2-raw.log": {
+      "sha256": "7c09666b7f71a95f0711a472b147f9ef56f571fabc72e21f9ca8a993153eae32",
+      "bytes": 977
+    },
+    "native-diagnostic-v2.json": {
+      "sha256": "5322fbae6cad2abc55897a5e2e2502af2bb0ed18af0b3730a5d8f1f89afdfbe3",
+      "bytes": 16883
+    },
+    "native-diagnostic-v2-raw.log": {
+      "sha256": "4189872362058ea0443724686d928b60a79c696f4a4274cb41f2b8c55532b58b",
+      "bytes": 4847
+    },
+    "notice-package-check-v2.json": {
+      "sha256": "aee8a5580cfaeac2d4c3e0998ecd3e0b4cbc0ece5797dbc25fdf5c4c0aff6015",
+      "bytes": 741
+    },
+    "check_notice_distribution-v2.py": {
+      "sha256": "ae1df4fe6091f0c85ce8abbf94a6b5256eb75dba2103031a761e55b957d78c96",
+      "bytes": 1988
+    }
+  },
+  "native_diagnostic": {
+    "python": "3.13.11",
+    "torch": "2.14.1+cpu",
+    "cuda_available": false,
+    "cuda_visible_devices": "-1",
+    "threads": [
+      1,
+      1
+    ],
+    "cases": [
+      {
+        "case": "unit_quadratic",
+        "dtype": "float32",
+        "result": {
+          "position": [
+            0.0
+          ],
+          "objective_value": 0.0,
+          "objective_gradient": [
+            0.0
+          ],
+          "converged": true,
+          "failed": false,
+          "num_iterations": 1,
+          "num_objective_evaluations": 3
+        }
+      },
+      {
+        "case": "small_quadratic",
+        "dtype": "float32",
+        "result": {
+          "position": [
+            5.960464477539063e-08
+          ],
+          "objective_value": 1.7763568286044933e-23,
+          "objective_gradient": [
+            5.960464441314513e-16
+          ],
+          "converged": true,
+          "failed": false,
+          "num_iterations": 1,
+          "num_objective_evaluations": 15
+        }
+      },
+      {
+        "case": "flat_offset_quadratic",
+        "dtype": "float32",
+        "result": {
+          "position": [
+            0.0
+          ],
+          "objective_value": 1048576.0,
+          "objective_gradient": [
+            0.0
+          ],
+          "converged": true,
+          "failed": false,
+          "num_iterations": 1,
+          "num_objective_evaluations": 5
+        }
+      },
+      {
+        "case": "flat_offset_quartic",
+        "dtype": "float32",
+        "result": {
+          "position": [
+            0.17226988077163696
+          ],
+          "objective_value": 1048576.0,
+          "objective_gradient": [
+            0.0025562189985066652
+          ],
+          "converged": true,
+          "failed": false,
+          "num_iterations": 2,
+          "num_objective_evaluations": 8
+        }
+      },
+      {
+        "case": "cumulative_resume",
+        "dtype": "float32",
+        "first": {
+          "position": [
+            0.8991008996963501,
+            -0.008991003036499023
+          ],
+          "objective_value": 0.40459540486335754,
+          "objective_gradient": [
+            0.8991008996963501,
+            -0.08991003036499023
+          ],
+          "converged": false,
+          "failed": false,
+          "num_iterations": 1,
+          "num_objective_evaluations": 3
+        },
+        "result": {
+          "position": [
+            0.0,
+            -6.51925802230835e-08
+          ],
+          "objective_value": 2.1250362580715887e-14,
+          "objective_gradient": [
+            0.0,
+            -6.51925802230835e-07
+          ],
+          "converged": false,
+          "failed": false,
+          "num_iterations": 2,
+          "num_objective_evaluations": 7
+        }
+      },
+      {
+        "case": "positive_relative_stop",
+        "dtype": "float32",
+        "result": {
+          "position": [
+            0.8991008996963501,
+            -0.008991003036499023
+          ],
+          "objective_value": 100.40459442138672,
+          "objective_gradient": [
+            0.8991008996963501,
+            -0.08991003036499023
+          ],
+          "converged": true,
+          "failed": false,
+          "num_iterations": 1,
+          "num_objective_evaluations": 3
+        }
+      },
+      {
+        "case": "negative_relative_continues",
+        "dtype": "float32",
+        "result": {
+          "position": [
+            0.8991008996963501,
+            -0.008991003036499023
+          ],
+          "objective_value": -99.59540557861328,
+          "objective_gradient": [
+            0.8991008996963501,
+            -0.08991003036499023
+          ],
+          "converged": false,
+          "failed": false,
+          "num_iterations": 1,
+          "num_objective_evaluations": 3
+        }
+      },
+      {
+        "case": "unbounded_linear",
+        "dtype": "float32",
+        "result": {
+          "position": [
+            "-inf"
+          ],
+          "objective_value": "-inf",
+          "objective_gradient": [
+            1.0
+          ],
+          "converged": true,
+          "failed": false,
+          "num_iterations": 1,
+          "num_objective_evaluations": 58
+        }
+      },
+      {
+        "case": "positive_infinity",
+        "dtype": "float32",
+        "result": {
+          "position": [
+            0.0
+          ],
+          "objective_value": "+inf",
+          "objective_gradient": [
+            1.0
+          ],
+          "converged": false,
+          "failed": true,
+          "num_iterations": 1,
+          "num_objective_evaluations": 2
+        }
+      },
+      {
+        "case": "negative_infinity",
+        "dtype": "float32",
+        "result": {
+          "position": [
+            0.0
+          ],
+          "objective_value": "-inf",
+          "objective_gradient": [
+            1.0
+          ],
+          "converged": true,
+          "failed": false,
+          "num_iterations": 1,
+          "num_objective_evaluations": 2
+        }
+      },
+      {
+        "case": "nan_gradient",
+        "dtype": "float32",
+        "result": {
+          "position": [
+            0.0
+          ],
+          "objective_value": 1.0,
+          "objective_gradient": [
+            "nan"
+          ],
+          "converged": false,
+          "failed": true,
+          "num_iterations": 1,
+          "num_objective_evaluations": 2
+        }
+      },
+      {
+        "case": "rosenbrock",
+        "dtype": "float32",
+        "result": {
+          "position": [
+            1.0,
+            1.0
+          ],
+          "objective_value": 0.0,
+          "objective_gradient": [
+            -0.0,
+            0.0
+          ],
+          "converged": true,
+          "failed": false,
+          "num_iterations": 31,
+          "num_objective_evaluations": 84
+        }
+      },
+      {
+        "case": "unit_quadratic",
+        "dtype": "float64",
+        "result": {
+          "position": [
+            0.0
+          ],
+          "objective_value": 0.0,
+          "objective_gradient": [
+            0.0
+          ],
+          "converged": true,
+          "failed": false,
+          "num_iterations": 1,
+          "num_objective_evaluations": 3
+        }
+      },
+      {
+        "case": "small_quadratic",
+        "dtype": "float64",
+        "result": {
+          "position": [
+            1.1102230246251565e-16
+          ],
+          "objective_value": 6.162975822039155e-41,
+          "objective_gradient": [
+            1.1102230246251566e-24
+          ],
+          "converged": true,
+          "failed": false,
+          "num_iterations": 1,
+          "num_objective_evaluations": 15
+        }
+      },
+      {
+        "case": "flat_offset_quadratic",
+        "dtype": "float64",
+        "result": {
+          "position": [
+            0.0
+          ],
+          "objective_value": 1048576.0,
+          "objective_gradient": [
+            0.0
+          ],
+          "converged": true,
+          "failed": false,
+          "num_iterations": 1,
+          "num_objective_evaluations": 5
+        }
+      },
+      {
+        "case": "flat_offset_quartic",
+        "dtype": "float64",
+        "result": {
+          "position": [
+            0.0021740687509912834
+          ],
+          "objective_value": 1048576.0,
+          "objective_gradient": [
+            5.1379494316540454e-09
+          ],
+          "converged": true,
+          "failed": false,
+          "num_iterations": 7,
+          "num_objective_evaluations": 28
+        }
+      },
+      {
+        "case": "cumulative_resume",
+        "dtype": "float64",
+        "first": {
+          "position": [
+            0.8991008991008991,
+            -0.00899100899100902
+          ],
+          "objective_value": 0.4045954045954046,
+          "objective_gradient": [
+            0.8991008991008991,
+            -0.0899100899100902
+          ],
+          "converged": false,
+          "failed": false,
+          "num_iterations": 1,
+          "num_objective_evaluations": 3
+        },
+        "result": {
+          "position": [
+            -2.220446049250313e-16,
+            2.5153490401663703e-16
+          ],
+          "objective_value": 3.4100094298145063e-31,
+          "objective_gradient": [
+            -2.220446049250313e-16,
+            2.5153490401663703e-15
+          ],
+          "converged": false,
+          "failed": false,
+          "num_iterations": 2,
+          "num_objective_evaluations": 7
+        }
+      },
+      {
+        "case": "positive_relative_stop",
+        "dtype": "float64",
+        "result": {
+          "position": [
+            0.8991008991008991,
+            -0.00899100899100902
+          ],
+          "objective_value": 100.4045954045954,
+          "objective_gradient": [
+            0.8991008991008991,
+            -0.0899100899100902
+          ],
+          "converged": true,
+          "failed": false,
+          "num_iterations": 1,
+          "num_objective_evaluations": 3
+        }
+      },
+      {
+        "case": "negative_relative_continues",
+        "dtype": "float64",
+        "result": {
+          "position": [
+            0.8991008991008991,
+            -0.00899100899100902
+          ],
+          "objective_value": -99.5954045954046,
+          "objective_gradient": [
+            0.8991008991008991,
+            -0.0899100899100902
+          ],
+          "converged": false,
+          "failed": false,
+          "num_iterations": 1,
+          "num_objective_evaluations": 3
+        }
+      },
+      {
+        "case": "unbounded_linear",
+        "dtype": "float64",
+        "result": {
+          "position": [
+            "nan"
+          ],
+          "objective_value": -7.888609052210121e+69,
+          "objective_gradient": [
+            1.0
+          ],
+          "converged": false,
+          "failed": true,
+          "num_iterations": 2,
+          "num_objective_evaluations": 156
+        }
+      },
+      {
+        "case": "positive_infinity",
+        "dtype": "float64",
+        "result": {
+          "position": [
+            0.0
+          ],
+          "objective_value": "+inf",
+          "objective_gradient": [
+            1.0
+          ],
+          "converged": false,
+          "failed": true,
+          "num_iterations": 1,
+          "num_objective_evaluations": 2
+        }
+      },
+      {
+        "case": "negative_infinity",
+        "dtype": "float64",
+        "result": {
+          "position": [
+            0.0
+          ],
+          "objective_value": "-inf",
+          "objective_gradient": [
+            1.0
+          ],
+          "converged": true,
+          "failed": false,
+          "num_iterations": 1,
+          "num_objective_evaluations": 2
+        }
+      },
+      {
+        "case": "nan_gradient",
+        "dtype": "float64",
+        "result": {
+          "position": [
+            0.0
+          ],
+          "objective_value": 1.0,
+          "objective_gradient": [
+            "nan"
+          ],
+          "converged": false,
+          "failed": true,
+          "num_iterations": 1,
+          "num_objective_evaluations": 2
+        }
+      },
+      {
+        "case": "rosenbrock",
+        "dtype": "float64",
+        "result": {
+          "position": [
+            1.0,
+            1.0
+          ],
+          "objective_value": 0.0,
+          "objective_gradient": [
+            -0.0,
+            0.0
+          ],
+          "converged": true,
+          "failed": false,
+          "num_iterations": 30,
+          "num_objective_evaluations": 83
+        }
+      }
+    ],
+    "comparisons": [
+      {
+        "case": "unit_quadratic",
+        "dtype": "float32",
+        "flags_match": true,
+        "native_iterations": 1,
+        "tfp_iterations": 1,
+        "native_evaluations": 3,
+        "tfp_evaluations": 3,
+        "max_finite_position_absdiff": 0.0
+      },
+      {
+        "case": "small_quadratic",
+        "dtype": "float32",
+        "flags_match": true,
+        "native_iterations": 1,
+        "tfp_iterations": 1,
+        "native_evaluations": 15,
+        "tfp_evaluations": 15,
+        "max_finite_position_absdiff": 0.0
+      },
+      {
+        "case": "flat_offset_quadratic",
+        "dtype": "float32",
+        "flags_match": true,
+        "native_iterations": 1,
+        "tfp_iterations": 1,
+        "native_evaluations": 5,
+        "tfp_evaluations": 5,
+        "max_finite_position_absdiff": 0.0
+      },
+      {
+        "case": "flat_offset_quartic",
+        "dtype": "float32",
+        "flags_match": true,
+        "native_iterations": 2,
+        "tfp_iterations": 2,
+        "native_evaluations": 8,
+        "tfp_evaluations": 8,
+        "max_finite_position_absdiff": 2.9802322387695312e-08
+      },
+      {
+        "case": "cumulative_resume",
+        "dtype": "float32",
+        "flags_match": true,
+        "native_iterations": 2,
+        "tfp_iterations": 2,
+        "native_evaluations": 7,
+        "tfp_evaluations": 7,
+        "max_finite_position_absdiff": 0.0
+      },
+      {
+        "case": "positive_relative_stop",
+        "dtype": "float32",
+        "flags_match": true,
+        "native_iterations": 1,
+        "tfp_iterations": 1,
+        "native_evaluations": 3,
+        "tfp_evaluations": 3,
+        "max_finite_position_absdiff": 0.0
+      },
+      {
+        "case": "negative_relative_continues",
+        "dtype": "float32",
+        "flags_match": true,
+        "native_iterations": 1,
+        "tfp_iterations": 1,
+        "native_evaluations": 3,
+        "tfp_evaluations": 3,
+        "max_finite_position_absdiff": 0.0
+      },
+      {
+        "case": "unbounded_linear",
+        "dtype": "float32",
+        "flags_match": true,
+        "native_iterations": 1,
+        "tfp_iterations": 1,
+        "native_evaluations": 58,
+        "tfp_evaluations": 58,
+        "max_finite_position_absdiff": null
+      },
+      {
+        "case": "positive_infinity",
+        "dtype": "float32",
+        "flags_match": true,
+        "native_iterations": 1,
+        "tfp_iterations": 1,
+        "native_evaluations": 2,
+        "tfp_evaluations": 2,
+        "max_finite_position_absdiff": 0.0
+      },
+      {
+        "case": "negative_infinity",
+        "dtype": "float32",
+        "flags_match": true,
+        "native_iterations": 1,
+        "tfp_iterations": 1,
+        "native_evaluations": 2,
+        "tfp_evaluations": 2,
+        "max_finite_position_absdiff": 0.0
+      },
+      {
+        "case": "nan_gradient",
+        "dtype": "float32",
+        "flags_match": true,
+        "native_iterations": 1,
+        "tfp_iterations": 1,
+        "native_evaluations": 2,
+        "tfp_evaluations": 2,
+        "max_finite_position_absdiff": 0.0
+      },
+      {
+        "case": "rosenbrock",
+        "dtype": "float32",
+        "flags_match": true,
+        "native_iterations": 31,
+        "tfp_iterations": 31,
+        "native_evaluations": 84,
+        "tfp_evaluations": 84,
+        "max_finite_position_absdiff": 0.0
+      },
+      {
+        "case": "unit_quadratic",
+        "dtype": "float64",
+        "flags_match": true,
+        "native_iterations": 1,
+        "tfp_iterations": 1,
+        "native_evaluations": 3,
+        "tfp_evaluations": 3,
+        "max_finite_position_absdiff": 0.0
+      },
+      {
+        "case": "small_quadratic",
+        "dtype": "float64",
+        "flags_match": true,
+        "native_iterations": 1,
+        "tfp_iterations": 1,
+        "native_evaluations": 15,
+        "tfp_evaluations": 15,
+        "max_finite_position_absdiff": 0.0
+      },
+      {
+        "case": "flat_offset_quadratic",
+        "dtype": "float64",
+        "flags_match": true,
+        "native_iterations": 1,
+        "tfp_iterations": 1,
+        "native_evaluations": 5,
+        "tfp_evaluations": 5,
+        "max_finite_position_absdiff": 0.0
+      },
+      {
+        "case": "flat_offset_quartic",
+        "dtype": "float64",
+        "flags_match": true,
+        "native_iterations": 7,
+        "tfp_iterations": 7,
+        "native_evaluations": 28,
+        "tfp_evaluations": 28,
+        "max_finite_position_absdiff": 0.0
+      },
+      {
+        "case": "cumulative_resume",
+        "dtype": "float64",
+        "flags_match": true,
+        "native_iterations": 2,
+        "tfp_iterations": 2,
+        "native_evaluations": 7,
+        "tfp_evaluations": 7,
+        "max_finite_position_absdiff": 0.0
+      },
+      {
+        "case": "positive_relative_stop",
+        "dtype": "float64",
+        "flags_match": true,
+        "native_iterations": 1,
+        "tfp_iterations": 1,
+        "native_evaluations": 3,
+        "tfp_evaluations": 3,
+        "max_finite_position_absdiff": 0.0
+      },
+      {
+        "case": "negative_relative_continues",
+        "dtype": "float64",
+        "flags_match": true,
+        "native_iterations": 1,
+        "tfp_iterations": 1,
+        "native_evaluations": 3,
+        "tfp_evaluations": 3,
+        "max_finite_position_absdiff": 0.0
+      },
+      {
+        "case": "unbounded_linear",
+        "dtype": "float64",
+        "flags_match": true,
+        "native_iterations": 2,
+        "tfp_iterations": 2,
+        "native_evaluations": 156,
+        "tfp_evaluations": 156,
+        "max_finite_position_absdiff": null
+      },
+      {
+        "case": "positive_infinity",
+        "dtype": "float64",
+        "flags_match": true,
+        "native_iterations": 1,
+        "tfp_iterations": 1,
+        "native_evaluations": 2,
+        "tfp_evaluations": 2,
+        "max_finite_position_absdiff": 0.0
+      },
+      {
+        "case": "negative_infinity",
+        "dtype": "float64",
+        "flags_match": true,
+        "native_iterations": 1,
+        "tfp_iterations": 1,
+        "native_evaluations": 2,
+        "tfp_evaluations": 2,
+        "max_finite_position_absdiff": 0.0
+      },
+      {
+        "case": "nan_gradient",
+        "dtype": "float64",
+        "flags_match": true,
+        "native_iterations": 1,
+        "tfp_iterations": 1,
+        "native_evaluations": 2,
+        "tfp_evaluations": 2,
+        "max_finite_position_absdiff": 0.0
+      },
+      {
+        "case": "rosenbrock",
+        "dtype": "float64",
+        "flags_match": true,
+        "native_iterations": 30,
+        "tfp_iterations": 30,
+        "native_evaluations": 83,
+        "tfp_evaluations": 83,
+        "max_finite_position_absdiff": 0.0
+      }
+    ],
+    "limits": "Measured scalar CPU diagnostics only; flags/counts/trajectories are reported, not a cross-backend bitwise gate or scientific training parity."
+  },
+  "distribution_notices": [
+    {
+      "artifact": "D:\\nif\\dev_tests\\artifacts\\lbfgs-reference-phase0-5d81e6b3b011\\package-stage-v2\\dist\\nif-1.0.3-py3-none-any.whl",
+      "sha256": "4a55c4154a3292ebe915476cd33363950a40fd567850a60c5e0160b5d0ab3090",
+      "notice_bytes_equal_source": true,
+      "notice_names": [
+        "nif/optimizers/TFP_LICENSE.txt",
+        "nif/optimizers/TFP_NOTICE.txt"
+      ]
+    },
+    {
+      "artifact": "D:\\nif\\dev_tests\\artifacts\\lbfgs-reference-phase0-5d81e6b3b011\\package-stage-v2\\dist\\nif-1.0.3.tar.gz",
+      "sha256": "18b0fc15cf593134bf24fe0db8752dcf3c5ac72f3840f43048cd29be6d183db7",
+      "notice_bytes_equal_source": true,
+      "notice_names": [
+        "nif/optimizers/TFP_LICENSE.txt",
+        "nif/optimizers/TFP_NOTICE.txt"
+      ]
+    }
+  ],
+  "limits": [
+    "CPU analytic checks only; no full NIF training or CUDA execution.",
+    "Reported cross-backend comparisons are not bitwise acceptance gates.",
+    "The initial development edge expectation of immediate exhausted-bracket failure was disproved, preserved and replaced by a measured-source regression before final freeze.",
+    "Algorithmic LS failure returns its LEFT endpoint; closure exceptions restore last accepted parameters."
+  ]
+}

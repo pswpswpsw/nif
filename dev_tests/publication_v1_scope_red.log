@@ -1,0 +1,135 @@
+FF..FFF...F                                                              [100%]
+=================================== FAILURES ===================================
+________ test_clean_public_scope_runs_without_git_or_generated_outputs _________
+
+public_root = PosixPath('/workspace/dev_tests/artifacts/publication_v1/red2_tmp/public_projection0')
+
+    def test_clean_public_scope_runs_without_git_or_generated_outputs(public_root):
+        result=scope_result(public_root)
+>       assert result.get('passed'),result
+E       AssertionError: {'error': 'FileNotFoundError', 'detail': "[Errno 2] No such file or directory: '/workspace/dev_tests/artifacts/publication_v1/red2_tmp/public_projection0/dev_tests/artifacts/adabelief_boundary/public_suite.junit.xml'"}
+E       assert None
+E        +  where None = <built-in method get of dict object at 0x772254c29f00>('passed')
+E        +    where <built-in method get of dict object at 0x772254c29f00> = {'error': 'FileNotFoundError', 'detail': "[Errno 2] No such file or directory: '/workspace/dev_tests/artifacts/publication_v1/red2_tmp/public_projection0/dev_tests/artifacts/adabelief_boundary/public_suite.junit.xml'"}.get
+
+dev_tests/test_publication_scope.py:51: AssertionError
+_ test_missing_required_public_fixture_or_provenance_fails[dev_tests/fixtures/adabelief_dtype/native_before.py.txt] _
+
+public_root = PosixPath('/workspace/dev_tests/artifacts/publication_v1/red2_tmp/public_projection0')
+name = 'dev_tests/fixtures/adabelief_dtype/native_before.py.txt'
+
+    @pytest.mark.parametrize('name',[
+        'dev_tests/fixtures/adabelief_dtype/native_before.py.txt',
+        'dev_tests/adabelief_dtype_red.log',
+        'dev_tests/adabelief_boundary_full.log',
+    ])
+    def test_missing_required_public_fixture_or_provenance_fails(public_root,name):
+        path=public_root/name;before=path.read_bytes()
+        try:
+            path.unlink()
+            result=scope_result(public_root)
+            assert result.get('error')=='FileNotFoundError',result
+>           assert name in result['detail'],result
+E           AssertionError: {'error': 'FileNotFoundError', 'detail': "[Errno 2] No such file or directory: '/workspace/dev_tests/artifacts/publication_v1/red2_tmp/public_projection0/dev_tests/artifacts/adabelief_boundary/public_suite.junit.xml'"}
+E           assert 'dev_tests/fixtures/adabelief_dtype/native_before.py.txt' in "[Errno 2] No such file or directory: '/workspace/dev_tests/artifacts/publication_v1/red2_tmp/public_projection0/dev_tests/artifacts/adabelief_boundary/public_suite.junit.xml'"
+
+dev_tests/test_publication_scope.py:65: AssertionError
+__ test_changed_public_source_golden_or_archived_fixture_fails[nif/model.py] ___
+
+public_root = PosixPath('/workspace/dev_tests/artifacts/publication_v1/red2_tmp/public_projection0')
+name = 'nif/model.py'
+
+    @pytest.mark.parametrize('name',[
+        'nif/model.py',
+        'dev_tests/public_api_pre_fix_fingerprints.json',
+        'dev_tests/fixtures/adabelief_dtype/native_before.py.txt',
+        'dev_tests/fixtures/adabelief_moment_v4/external_optimizers.py.txt',
+    ])
+    def test_changed_public_source_golden_or_archived_fixture_fails(public_root,name):
+        path=public_root/name;before=path.read_bytes()
+        try:
+            path.write_bytes(before+b'\n')
+            result=scope_result(public_root)
+>           assert result.get('error')=='AssertionError',result
+E           AssertionError: {'error': 'FileNotFoundError', 'detail': "[Errno 2] No such file or directory: '/workspace/dev_tests/artifacts/publication_v1/red2_tmp/public_projection0/dev_tests/artifacts/adabelief_boundary/public_suite.junit.xml'"}
+E           assert 'FileNotFoundError' == 'AssertionError'
+E             
+E             - AssertionError
+E             + FileNotFoundError
+
+dev_tests/test_publication_scope.py:80: AssertionError
+_ test_changed_public_source_golden_or_archived_fixture_fails[dev_tests/public_api_pre_fix_fingerprints.json] _
+
+public_root = PosixPath('/workspace/dev_tests/artifacts/publication_v1/red2_tmp/public_projection0')
+name = 'dev_tests/public_api_pre_fix_fingerprints.json'
+
+    @pytest.mark.parametrize('name',[
+        'nif/model.py',
+        'dev_tests/public_api_pre_fix_fingerprints.json',
+        'dev_tests/fixtures/adabelief_dtype/native_before.py.txt',
+        'dev_tests/fixtures/adabelief_moment_v4/external_optimizers.py.txt',
+    ])
+    def test_changed_public_source_golden_or_archived_fixture_fails(public_root,name):
+        path=public_root/name;before=path.read_bytes()
+        try:
+            path.write_bytes(before+b'\n')
+            result=scope_result(public_root)
+>           assert result.get('error')=='AssertionError',result
+E           AssertionError: {'error': 'FileNotFoundError', 'detail': "[Errno 2] No such file or directory: '/workspace/dev_tests/artifacts/publication_v1/red2_tmp/public_projection0/dev_tests/artifacts/adabelief_boundary/public_suite.junit.xml'"}
+E           assert 'FileNotFoundError' == 'AssertionError'
+E             
+E             - AssertionError
+E             + FileNotFoundError
+
+dev_tests/test_publication_scope.py:80: AssertionError
+_ test_changed_public_source_golden_or_archived_fixture_fails[dev_tests/fixtures/adabelief_dtype/native_before.py.txt] _
+
+public_root = PosixPath('/workspace/dev_tests/artifacts/publication_v1/red2_tmp/public_projection0')
+name = 'dev_tests/fixtures/adabelief_dtype/native_before.py.txt'
+
+    @pytest.mark.parametrize('name',[
+        'nif/model.py',
+        'dev_tests/public_api_pre_fix_fingerprints.json',
+        'dev_tests/fixtures/adabelief_dtype/native_before.py.txt',
+        'dev_tests/fixtures/adabelief_moment_v4/external_optimizers.py.txt',
+    ])
+    def test_changed_public_source_golden_or_archived_fixture_fails(public_root,name):
+        path=public_root/name;before=path.read_bytes()
+        try:
+            path.write_bytes(before+b'\n')
+            result=scope_result(public_root)
+>           assert result.get('error')=='AssertionError',result
+E           AssertionError: {'error': 'FileNotFoundError', 'detail': "[Errno 2] No such file or directory: '/workspace/dev_tests/artifacts/publication_v1/red2_tmp/public_projection0/dev_tests/artifacts/adabelief_boundary/public_suite.junit.xml'"}
+E           assert 'FileNotFoundError' == 'AssertionError'
+E             
+E             - AssertionError
+E             + FileNotFoundError
+
+dev_tests/test_publication_scope.py:80: AssertionError
+_____ test_publication_v1_is_only_exact_namespace_and_documentation_change _____
+
+    def test_publication_v1_is_only_exact_namespace_and_documentation_change():
+        archive=(ROOT/ARCHIVE).read_bytes()
+        manifest=json.loads((ROOT/'dev_tests/adabelief_moment_candidate_manifest.json').read_text(encoding='utf-8'))
+        assert hashlib.sha256(archive).hexdigest()==manifest['source_sha256'][SOURCE]
+>       assert (ROOT/SOURCE).read_text(encoding='utf-8')==expected_publication_source(archive.decode('utf-8'))
+E       assert '"""V4 exact ...t(phase_v3)\n' == '"""V4 exact ...t(phase_v3)\n'
+E         
+E         Skipping 315 identical leading characters in diff, use -v to show
+E            changed.
+E         - Publication v1 makes only dev_tests/artifacts/ optional local history;
+E         - public source, fixtures and provenance remain mandatory.
+E           """
+E           import hashlib...
+E         
+E         ...Full output truncated (93 lines hidden), use '-vv' to show
+
+dev_tests/test_publication_transition.py:29: AssertionError
+=========================== short test summary info ============================
+FAILED dev_tests/test_publication_scope.py::test_clean_public_scope_runs_without_git_or_generated_outputs
+FAILED dev_tests/test_publication_scope.py::test_missing_required_public_fixture_or_provenance_fails[dev_tests/fixtures/adabelief_dtype/native_before.py.txt]
+FAILED dev_tests/test_publication_scope.py::test_changed_public_source_golden_or_archived_fixture_fails[nif/model.py]
+FAILED dev_tests/test_publication_scope.py::test_changed_public_source_golden_or_archived_fixture_fails[dev_tests/public_api_pre_fix_fingerprints.json]
+FAILED dev_tests/test_publication_scope.py::test_changed_public_source_golden_or_archived_fixture_fails[dev_tests/fixtures/adabelief_dtype/native_before.py.txt]
+FAILED dev_tests/test_publication_transition.py::test_publication_v1_is_only_exact_namespace_and_documentation_change
+6 failed, 5 passed in 26.18s

@@ -1,0 +1,37 @@
+{"torch": "2.14.1+cpu", "cuda_build": null, "gpu_count": 0, "threads": 1}
+{"evaluations": 2, "final_gradient": 0.0, "final_loss": 0.0, "final_x": 0.0, "gradient_tolerance": 1e-15, "initial_gradient": 1.0, "initial_loss": 0.5, "initial_x": 1.0, "scale": 1.0}
+.{"evaluations": 1, "final_gradient": 1e-08, "final_loss": 5e-09, "final_x": 1.0, "gradient_tolerance": 1e-15, "initial_gradient": 1e-08, "initial_loss": 5e-09, "initial_x": 1.0, "scale": 1e-08}
+F
+================================== FAILURES ===================================
+_ test_full_t1_constructor_makes_progress_before_stopping_on_nonstationary_quadratic[small-scale] _
+
+scale = 1e-08
+
+    @pytest.mark.parametrize('scale',[1.,1e-8],ids=['unit-scale','small-scale'])
+    def test_full_t1_constructor_makes_progress_before_stopping_on_nonstationary_quadratic(scale):
+        point=torch.nn.Parameter(torch.tensor([1.],dtype=torch.float64,device='cpu'))
+        optimizer,gradient_tolerance=tutorial1_optimizer(point)
+        evaluations=[]
+        def closure():
+            optimizer.zero_grad(set_to_none=True)
+            loss=.5*scale*point.square().sum()
+            loss.backward()
+            evaluations.append(float(loss.detach()))
+            return loss
+        initial_loss=.5*scale
+        assert scale>gradient_tolerance
+        optimizer.step(closure)
+        final_loss=float((.5*scale*point.detach().square().sum()).item())
+        diagnostic={'scale':scale,'initial_x':1.,'final_x':float(point.detach().item()),
+                    'initial_loss':initial_loss,'final_loss':final_loss,
+                    'initial_gradient':scale,'final_gradient':scale*float(point.detach().item()),
+                    'gradient_tolerance':gradient_tolerance,'evaluations':len(evaluations)}
+        print(json.dumps(diagnostic,sort_keys=True))
+>       assert final_loss<initial_loss,diagnostic
+E       AssertionError: {'scale': 1e-08, 'initial_x': 1.0, 'final_x': 1.0, 'initial_loss': 5e-09, ...}
+E       assert 5e-09 < 5e-09
+
+dev_tests\test_lbfgs_stopping_contract.py:75: AssertionError
+=========================== short test summary info ===========================
+FAILED dev_tests/test_lbfgs_stopping_contract.py::test_full_t1_constructor_makes_progress_before_stopping_on_nonstationary_quadratic[small-scale]
+1 failed, 1 passed in 2.98s

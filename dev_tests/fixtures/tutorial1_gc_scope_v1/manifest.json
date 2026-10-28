@@ -1,0 +1,18 @@
+{
+  "test_pruning_adam_state.py.txt": {
+    "source": "dev_tests/test_pruning_adam_state.py",
+    "sha256": "60e83c210615ca5a4d478a484d5ad08940a6e8841ac1d597780e44f13186c268"
+  },
+  "historical_public_suite.log": {
+    "source": "dev_tests/pruning_adam_full.log",
+    "sha256": "3619f04214ee1f216756e4aa2b2ea1251454742eba6b01b6a48d6409b20a6ed5"
+  },
+  "tutorial1_before.ipynb.txt": {
+    "source": "tutorial/1_simple_1d_wave_pytorch.ipynb",
+    "sha256": "b9eb9b0e3985ac8302664e80b09990880d02ef445230428485b1d08b060350c6"
+  },
+  "generator_before.py.txt": {
+    "source": "dev_tests/generate_native_notebooks.py",
+    "sha256": "bc540c80ecd5bd9d111e895bbd6467187499b92be25bfa3ac3c1a32fde920102"
+  }
+}

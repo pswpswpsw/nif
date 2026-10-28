@@ -1,0 +1,86 @@
+..........                                                               [100%]
+=============================== warnings summary ===============================
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:64
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:64: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    prop = Group((name + Suppress("=") + comma_separated(value)) | oneOf(_CONSTANTS))
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:85: 6 warnings
+dev_tests/test_notebook_displays.py: 25 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:85: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+    parse = parser.parseString(pattern)
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:89: 6 warnings
+dev_tests/test_notebook_displays.py: 25 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_fontconfig_pattern.py:89: PyparsingDeprecationWarning: 'resetCache' deprecated - use 'reset_cache'
+    parser.resetCache()
+
+../usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:45
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:45: PyparsingDeprecationWarning: 'enablePackrat' deprecated - use 'enable_packrat'
+    ParserElement.enablePackrat()
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2010: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.space          = oneOf(self._space_widths)("space")
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2012: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.style_literal  = oneOf(
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2020: PyparsingDeprecationWarning: 'leaveWhitespace' deprecated - use 'leave_whitespace'
+    )("sym").leaveWhitespace()
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2024: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.start_group    = Optional(r"\math" + oneOf(self._fontnames)("font")) + "{"
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2027: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    p.delim          = oneOf(self._delims)
+
+dev_tests/test_notebook_displays.py: 47 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:1984: PyparsingDeprecationWarning: 'setName' deprecated - use 'set_name'
+    val.setName(key)
+
+dev_tests/test_notebook_displays.py: 44 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:1987: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    val.setParseAction(getattr(self, key))
+
+dev_tests/test_notebook_displays.py: 16 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:1748: PyparsingDeprecationWarning: 'setParseAction' deprecated - use 'set_parse_action'
+    return Empty().setParseAction(raise_error)
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2088: PyparsingDeprecationWarning: 'endQuoteChar' argument is deprecated, use 'end_quote_char'
+    p.text = cmd(r"\text", QuotedString('{', '\\', endQuoteChar="}"))
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2097: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    + OneOrMore(oneOf(["_", "^"]) - p.placeable)("subsuper")
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2146: PyparsingDeprecationWarning: 'unquoteResults' argument is deprecated, use 'unquote_results'
+    p.math_string   = QuotedString('$', '\\', unquoteResults=False)
+
+dev_tests/test_notebook_displays.py::test_initial_surface_labels_survive_ordinary_inline_tight_crop[1-notebook]
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2147: PyparsingDeprecationWarning: 'leaveWhitespace' deprecated - use 'leave_whitespace'
+    p.non_math      = Regex(r"(?:(?:\\[$])|[^$])*").leaveWhitespace()
+
+dev_tests/test_notebook_displays.py: 36 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2170: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+    result = self._expression.parseString(s)
+
+dev_tests/test_notebook_displays.py: 36 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2197: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+    return self._math_expression.parseString(toks[0][1:-1], parseAll=True)
+
+dev_tests/test_notebook_displays.py: 36 warnings
+  /usr/local/lib/python3.13/site-packages/pyparsing/util.py:466: PyparsingDeprecationWarning: 'parseAll' argument is deprecated, use 'parse_all'
+    return fn(self, *args, **kwargs)
+
+dev_tests/test_notebook_displays.py: 36 warnings
+  /usr/local/lib/python3.13/site-packages/matplotlib/_mathtext.py:2178: PyparsingDeprecationWarning: 'resetCache' deprecated - use 'reset_cache'
+    ParserElement.resetCache()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+10 passed, 324 warnings in 6.15s

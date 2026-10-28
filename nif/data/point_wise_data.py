@@ -24,7 +24,9 @@ class PointWiseData(object):
         """
         arrays = [np.asarray(a) for a in (parameter_data, x_data, u_data)]
         if any(a.ndim != 2 for a in arrays) or len({a.shape[0] for a in arrays}) != 1:
-            raise ValueError("parameter_data, x_data and u_data must be matrices with matching rows")
+            raise ValueError(
+                "parameter_data, x_data and u_data must be matrices with matching rows"
+            )
         parameter_data, x_data, u_data = arrays
         if sample_weight is not None:
             sample_weight = np.asarray(sample_weight).reshape(-1, 1)
@@ -109,7 +111,10 @@ class PointWiseData(object):
             numpy.ndarray: Standard deviation of raw data.
         """
         raw_data = PointWiseData._validate_data(raw_data, area_weighted)
-        if any(not isinstance(n, (int, np.integer)) or n < 0 for n in (n_para, n_x, n_target)):
+        if any(
+            not isinstance(n, (int, np.integer)) or n < 0
+            for n in (n_para, n_x, n_target)
+        ):
             raise ValueError("feature counts must be nonnegative integers")
         if n_para + n_x + n_target + int(area_weighted) != raw_data.shape[1]:
             raise ValueError("feature counts do not match the data columns")
@@ -159,6 +164,6 @@ class PointWiseData(object):
         predictions. Torch tensors preserve device, dtype and autograd.
         """
         PointWiseData._validate_scale(np.asarray(scale))
-        if hasattr(values, 'new_tensor'):
+        if hasattr(values, "new_tensor"):
             return values * values.new_tensor(scale) + values.new_tensor(mean)
         return np.asarray(values) * np.asarray(scale) + np.asarray(mean)

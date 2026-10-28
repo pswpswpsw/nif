@@ -58,13 +58,77 @@ The default model uses float32. On supported hardware, `mixed_policy="mixed_bflo
 
 ### Distributed learning
 
-The standalone [training example](examples/train_pytorch.py) uses PyTorch distributed data parallelism with one process per GPU. For example, on Linux or WSL with two CUDA GPUs and an NCCL-enabled PyTorch build:
+Use [DistributedDataParallel](https://docs.pytorch.org/docs/stable/generated/torch.nn.parallel.DistributedDataParallel.html) (DDP) to train one model across multiple GPUs, with one process per GPU. The following example shows the data sharding and synchronized training loop. Save it as `train_wave_ddp.py` in the repository root; it reuses `TrainingObjective` from the [training example](examples/train_pytorch.py) to evaluate MSE and regularization together inside the DDP forward pass.
+
+```python
+import os
+from pathlib import Path
+
+import torch
+import torch.distributed as dist
+from torch.nn.parallel import DistributedDataParallel as DDP
+from torch.utils.data import DataLoader, DistributedSampler, TensorDataset
+from nif import NIF
+from nif.demo import TravelingWave
+from examples.train_pytorch import TrainingObjective
+
+def main():
+    local_rank = int(os.environ["LOCAL_RANK"])
+    use_cuda = torch.cuda.is_available()
+    device = torch.device("cuda", local_rank) if use_cuda else torch.device("cpu")
+    if use_cuda:
+        torch.cuda.set_device(local_rank)
+    dist.init_process_group(backend="nccl" if use_cuda else "gloo")
+    try:
+        torch.manual_seed(42)
+        shape = dict(input_dim=1, output_dim=1, units=20, nlayers=2, activation="tanh")
+        parameter = dict(input_dim=1, latent_dim=2, units=10, nlayers=2, activation="tanh")
+        model = NIF(shape, parameter).to(device)
+        objective = DDP(TrainingObjective(model), device_ids=[local_rank] if use_cuda else None)
+
+        data = torch.as_tensor(TravelingWave().data, dtype=torch.float32)
+        dataset = TensorDataset(data[:, :2], data[:, 2:3])
+        if len(dataset) % dist.get_world_size():
+            raise ValueError("Dataset size must be divisible by the number of processes")
+        sampler = DistributedSampler(dataset, shuffle=True, seed=42)
+        loader = DataLoader(dataset, batch_size=256, sampler=sampler)
+        optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+
+        model.train()
+        for epoch in range(20):
+            sampler.set_epoch(epoch)  # Give every epoch a new shared shuffle.
+            for features, targets in loader:
+                features, targets = features.to(device), targets.to(device)
+                optimizer.zero_grad(set_to_none=True)
+                mse, loss = objective(features, targets)
+                loss.backward()  # DDP averages gradients across processes.
+                optimizer.step()
+
+        if dist.get_rank() == 0:  # Write one copy of the underlying NIF weights.
+            output = Path("pytorch_outputs/wave-ddp")
+            output.mkdir(parents=True, exist_ok=True)
+            torch.save(model.state_dict(), output / "model.pt")
+            model.save_config(output / "config.json")
+    finally:
+        dist.destroy_process_group()
+
+if __name__ == "__main__":
+    main()
+```
+
+On Linux or WSL, launch this snippet with two CUDA GPUs and an NCCL-enabled PyTorch build, or with CPU/Gloo when CUDA is unavailable:
+
+```bash
+torchrun --standalone --nproc-per-node=2 train_wave_ddp.py
+```
+
+The complete example also includes a learning-rate schedule, globally reduced metrics, checkpoints, and TensorBoard logging:
 
 ```bash
 torchrun --standalone --nproc-per-node=2 examples/train_pytorch.py --device cuda --epochs 20 --batch-size 256 --output-dir pytorch_outputs/wave-ddp --tensorboard
 ```
 
-`--batch-size` is per process. The dataset size must be divisible by the number of processes so that no samples are padded or dropped. The example also runs on one device with ordinary `python`; it trains on the same traveling-wave data used above. The L-BFGS example below uses one device. See the [training example validation and requirements](docs/PYTORCH_TRAINING_EXAMPLE.md) for tested platforms and limits.
+The batch size is per process: two processes with 256 rows each give a global batch of 512. Equal dataset shards also keep the final batch sizes equal, without padding or dropping samples. The complete example also runs on one device with ordinary `python`; it trains on the same traveling-wave data used above. The L-BFGS example below uses one device. See the [training example validation and requirements](docs/PYTORCH_TRAINING_EXAMPLE.md) for tested platforms and limits.
 
 ### Fine-tuning with L-BFGS
 
@@ -87,14 +151,56 @@ print("Iterations:", int(fine_tuner.result.num_iterations))
 
 ### Training schedules and monitoring
 
-The [training example](examples/train_pytorch.py) records training loss for TensorBoard and saves checkpoints. Run it on one CPU with:
+Add a [StepLR schedule](https://docs.pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.StepLR.html), TensorBoard scalars, and checkpoints to an explicit PyTorch training loop. This single-device example uses the `model`, `x`, and `target` from the first example and starts a new Adam optimizer. Install the optional TensorBoard dependency shown above.
+
+```python
+from pathlib import Path
+from torch.utils.tensorboard import SummaryWriter
+
+run = Path("pytorch_outputs/wave-monitored")
+run.mkdir(parents=True, exist_ok=True)
+model.save_config(run / "config.json")
+optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
+
+model.train()
+with SummaryWriter(log_dir=str(run / "tensorboard")) as writer:
+    for epoch in range(20):
+        learning_rate = optimizer.param_groups[0]["lr"]
+        optimizer.zero_grad(set_to_none=True)
+        mse = (model(x) - target).square().mean()
+        loss = mse + model.regularization_loss(x)
+        loss.backward()
+        optimizer.step()
+
+        writer.add_scalar("train/mse", mse.item(), epoch + 1)
+        writer.add_scalar("train/objective", loss.item(), epoch + 1)
+        writer.add_scalar("train/lr", learning_rate, epoch + 1)
+        print(f"epoch={epoch + 1} mse={mse.item():.6g} lr={learning_rate:.3g}")
+        scheduler.step()  # Decay the learning rate after the epoch's updates.
+        torch.save({
+            "epoch": epoch + 1,
+            "model_state_dict": model.state_dict(),
+            "optimizer_state_dict": optimizer.state_dict(),
+            "scheduler_state_dict": scheduler.state_dict(),
+        }, run / "checkpoint.pt")
+
+    model.eval()
+    with torch.no_grad():
+        final_mse = (model(x) - target).square().mean().item()
+    writer.add_scalar("eval/mse", final_mse, epoch + 1)
+```
+
+Open these logs with `tensorboard --logdir pytorch_outputs/wave-monitored`. The training scalars above describe each full-batch update; `eval/mse` measures the final weights. Both use the normalized data. The context manager flushes and closes the writer.
+
+For minibatch training with the same schedule and monitoring, run the [complete example](examples/train_pytorch.py) on one CPU:
 
 ```bash
 python examples/train_pytorch.py --device cpu --epochs 20 --batch-size 256 --output-dir pytorch_outputs/wave --tensorboard
 tensorboard --logdir pytorch_outputs/wave
 ```
 
-The example uses a learning-rate schedule and writes scalar logs on the primary process. Reported training and evaluation MSE use the normalized data. Install the optional monitoring dependency as described in the installation section above.
+For distributed runs, the complete example averages metrics across processes and writes logs and checkpoints on rank zero.
 
 ### Extracting subnetworks
 
@@ -174,7 +280,46 @@ model.save_config("config.json")
 
 ### Network pruning and quantization
 
-[Tutorial 7](tutorial/7_model_pruning_and_quantization_pytorch.ipynb) demonstrates magnitude pruning of the selected ParameterNet kernel, dynamic int8 CPU inference, and TorchScript export.
+Prune a copy of the trained float32 `NIF` from the first example, then run dynamic int8 inference on CPU. The pruning controller below acts on the final ParameterNet projection kernel, leaving its bias unchanged. This short example uses 20 full-batch updates to demonstrate the schedule; choose the pruning budget and target sparsity for your data.
+
+```python
+import copy
+from torch import nn
+from nif.pruning import PolynomialMagnitudePruning
+
+compressed = copy.deepcopy(model).cpu().float().train()
+features, targets = x.detach().cpu().float(), target.detach().cpu().float()
+projection = compressed.pnet_list[-1].linear
+pruner = PolynomialMagnitudePruning(
+    projection, name="weight", initial_sparsity=0.1, final_sparsity=0.9,
+    begin_step=0, end_step=20, frequency=1,
+)
+pruning_optimizer = torch.optim.Adam(compressed.parameters(), lr=1e-4)
+for epoch in range(20):
+    pruning_optimizer.zero_grad(set_to_none=True)
+    loss = (compressed(features) - targets).square().mean()
+    loss = loss + compressed.regularization_loss(features)
+    loss.backward()
+    pruning_optimizer.step()
+    pruner.on_epoch_end()  # Reapply the mask before checkpointing or inference.
+
+pruner.strip()  # Keep sparse weights; remove pruning hooks before conversion.
+compressed.eval()
+print("Projection sparsity:", (projection.weight == 0).float().mean().item())
+int8_model = torch.ao.quantization.quantize_dynamic(
+    compressed, {nn.Linear}, dtype=torch.qint8, inplace=False
+).eval()
+with torch.no_grad():
+    float_prediction = compressed(features)
+    int8_prediction = int8_model(features)
+    print("Pruned-model MAE:", (float_prediction - targets).abs().mean().item())
+    print("Int8-model MAE:", (int8_prediction - targets).abs().mean().item())
+    print("Quantization MAE:", (int8_prediction - float_prediction).abs().mean().item())
+```
+
+[Dynamic quantization](https://docs.pytorch.org/docs/stable/generated/torch.ao.quantization.quantize_dynamic.html) converts this model's native `nn.Linear` layers in ParameterNet to packed int8 CPU kernels. Custom residual layers and the generated ShapeNet computation remain floating point. All three MAEs use normalized output units; compare them before choosing the compressed model.
+
+[Tutorial 7](tutorial/7_model_pruning_and_quantization_pytorch.ipynb) shows the full multiscale pruning experiment and TorchScript export. Its SIREN projection uses `HyperLinearForSIREN.w`, which the tutorial converts to `nn.Linear` with the original weight orientation preserved before quantization.
 
 ## Google Colab Tutorial
 

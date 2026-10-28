@@ -40,7 +40,10 @@ setup(
     license="LGPL-2.1",
     install_requires=install_requires,
     python_requires=">=3.10",
-    extras_require={"dev": ["pytest>=8", "nbclient>=0.10", "nbformat>=5", "ipykernel>=6"]},
+    extras_require={
+        "dev": ["pytest>=8", "nbclient>=0.10", "nbformat>=5", "ipykernel>=6"],
+        "tensorboard": ["tensorboard>=2.14"],
+    },
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Science/Research",

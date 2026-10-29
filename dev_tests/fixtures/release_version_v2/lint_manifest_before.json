@@ -1,0 +1,830 @@
+{
+  "base_commit": "f1b1fc66cc65e31d902f8b07226c59bbae9b3dc6",
+  "public_files": [
+    "dev_tests/lint_preservation.py",
+    "dev_tests/fixtures/lint_formatting_v1/manifest.json",
+    "dev_tests/adabelief_history.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__adabelief_history.py.txt",
+    "dev_tests/adabelief_moment_history.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__adabelief_moment_history.py.txt",
+    "dev_tests/adabelief_moment_scope.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__adabelief_moment_scope.py.txt",
+    "dev_tests/adabelief_phase_scope.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__adabelief_phase_scope.py.txt",
+    "dev_tests/benchmark_reference_adam_cache.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__benchmark_reference_adam_cache.py.txt",
+    "dev_tests/diagnose_tutorial3_parity.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__diagnose_tutorial3_parity.py.txt",
+    "dev_tests/generate_native_notebooks.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__generate_native_notebooks.py.txt",
+    "dev_tests/lbfgs_reference_scope.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__lbfgs_reference_scope.py.txt",
+    "dev_tests/publication_projection.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__publication_projection.py.txt",
+    "dev_tests/publication_windows_scope.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__publication_windows_scope.py.txt",
+    "dev_tests/run_adabelief_boundary_smoke.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__run_adabelief_boundary_smoke.py.txt",
+    "dev_tests/run_adabelief_dtype_smoke.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__run_adabelief_dtype_smoke.py.txt",
+    "dev_tests/run_adabelief_moment_smoke.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__run_adabelief_moment_smoke.py.txt",
+    "dev_tests/run_native_notebooks.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__run_native_notebooks.py.txt",
+    "dev_tests/run_pruning_adam_smoke.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__run_pruning_adam_smoke.py.txt",
+    "dev_tests/run_tutorial1_gc_smoke.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__run_tutorial1_gc_smoke.py.txt",
+    "dev_tests/test_adabelief_boundary_succession.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_adabelief_boundary_succession.py.txt",
+    "dev_tests/test_adabelief_dtype_preservation.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_adabelief_dtype_preservation.py.txt",
+    "dev_tests/test_adabelief_empty_gradients.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_adabelief_empty_gradients.py.txt",
+    "dev_tests/test_adabelief_final_update_order.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_adabelief_final_update_order.py.txt",
+    "dev_tests/test_adabelief_final_update_successor.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_adabelief_final_update_successor.py.txt",
+    "dev_tests/test_adabelief_moment_checkpoint.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_adabelief_moment_checkpoint.py.txt",
+    "dev_tests/test_adabelief_moment_dtype.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_adabelief_moment_dtype.py.txt",
+    "dev_tests/test_adabelief_scalar_dtype.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_adabelief_scalar_dtype.py.txt",
+    "dev_tests/test_ci_workflow.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_ci_workflow.py.txt",
+    "dev_tests/test_layers.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_layers.py.txt",
+    "dev_tests/test_lbfgs_reference_integration.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_lbfgs_reference_integration.py.txt",
+    "dev_tests/test_lbfgs_reference_phase0_records.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_lbfgs_reference_phase0_records.py.txt",
+    "dev_tests/test_lbfgs_stopping_contract.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_lbfgs_stopping_contract.py.txt",
+    "dev_tests/test_model_review.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_model_review.py.txt",
+    "dev_tests/test_models.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_models.py.txt",
+    "dev_tests/test_native_notebooks.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_native_notebooks.py.txt",
+    "dev_tests/test_notebook_displays.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_notebook_displays.py.txt",
+    "dev_tests/test_optimizer_epsilon.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_optimizer_epsilon.py.txt",
+    "dev_tests/test_optimizers_data.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_optimizers_data.py.txt",
+    "dev_tests/test_pruning_adam_state.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_pruning_adam_state.py.txt",
+    "dev_tests/test_public_api_regressions.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_public_api_regressions.py.txt",
+    "dev_tests/test_publication_checkout_eol.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_publication_checkout_eol.py.txt",
+    "dev_tests/test_publication_checkout_successor.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_publication_checkout_successor.py.txt",
+    "dev_tests/test_publication_scope.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_publication_scope.py.txt",
+    "dev_tests/test_publication_transition.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_publication_transition.py.txt",
+    "dev_tests/test_publication_windows.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_publication_windows.py.txt",
+    "dev_tests/test_publication_windows_successor.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_publication_windows_successor.py.txt",
+    "dev_tests/test_reference_adam.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_reference_adam.py.txt",
+    "dev_tests/test_reference_adam_cache.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_reference_adam_cache.py.txt",
+    "dev_tests/test_reference_adam_empty_gradients.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_reference_adam_empty_gradients.py.txt",
+    "dev_tests/test_reference_lbfgs_api.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_reference_lbfgs_api.py.txt",
+    "dev_tests/test_reference_lbfgs_contract.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_reference_lbfgs_contract.py.txt",
+    "dev_tests/test_reference_lbfgs_edges.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_reference_lbfgs_edges.py.txt",
+    "dev_tests/test_scope_helper_utf8.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_scope_helper_utf8.py.txt",
+    "dev_tests/test_scope_helper_utf8_archives.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_scope_helper_utf8_archives.py.txt",
+    "dev_tests/test_teaching_markdown_scope.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_teaching_markdown_scope.py.txt",
+    "dev_tests/test_test_portability.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_test_portability.py.txt",
+    "dev_tests/test_tutorial1_gc_behavior.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_tutorial1_gc_behavior.py.txt",
+    "dev_tests/test_tutorial1_gc_scope.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_tutorial1_gc_scope.py.txt",
+    "dev_tests/test_tutorial1_lbfgs.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_tutorial1_lbfgs.py.txt",
+    "dev_tests/test_tutorial7_inference_artifacts.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_tutorial7_inference_artifacts.py.txt",
+    "dev_tests/test_tutorial7_pruning.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_tutorial7_pruning.py.txt",
+    "dev_tests/test_tutorial7_reference_outputs.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_tutorial7_reference_outputs.py.txt",
+    "dev_tests/test_tutorial7_reference_scope.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_tutorial7_reference_scope.py.txt",
+    "dev_tests/tutorial1_gc_scope.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__tutorial1_gc_scope.py.txt",
+    "dev_tests/tutorial7_reference_scope.py",
+    "dev_tests/fixtures/lint_formatting_v1/dev_tests__tutorial7_reference_scope.py.txt",
+    "nif/__init__.py",
+    "dev_tests/fixtures/lint_formatting_v1/nif____init__.py.txt",
+    "nif/data/point_wise_data.py",
+    "dev_tests/fixtures/lint_formatting_v1/nif__data__point_wise_data.py.txt",
+    "nif/data/tfr_dataset.py",
+    "dev_tests/fixtures/lint_formatting_v1/nif__data__tfr_dataset.py.txt",
+    "nif/layers/__init__.py",
+    "dev_tests/fixtures/lint_formatting_v1/nif__layers____init__.py.txt",
+    "nif/layers/_common.py",
+    "dev_tests/fixtures/lint_formatting_v1/nif__layers___common.py.txt",
+    "nif/layers/gradient.py",
+    "dev_tests/fixtures/lint_formatting_v1/nif__layers__gradient.py.txt",
+    "nif/layers/mlp.py",
+    "dev_tests/fixtures/lint_formatting_v1/nif__layers__mlp.py.txt",
+    "nif/layers/regularization.py",
+    "dev_tests/fixtures/lint_formatting_v1/nif__layers__regularization.py.txt",
+    "nif/layers/siren.py",
+    "dev_tests/fixtures/lint_formatting_v1/nif__layers__siren.py.txt",
+    "nif/model.py",
+    "dev_tests/fixtures/lint_formatting_v1/nif__model.py.txt",
+    "nif/optimizers/__init__.py",
+    "dev_tests/fixtures/lint_formatting_v1/nif__optimizers____init__.py.txt",
+    "nif/optimizers/_hager_zhang.py",
+    "dev_tests/fixtures/lint_formatting_v1/nif__optimizers___hager_zhang.py.txt",
+    "nif/optimizers/external_optimizers.py",
+    "dev_tests/fixtures/lint_formatting_v1/nif__optimizers__external_optimizers.py.txt",
+    "nif/optimizers/gtcf.py",
+    "dev_tests/fixtures/lint_formatting_v1/nif__optimizers__gtcf.py.txt",
+    "nif/optimizers/lbfgs.py",
+    "dev_tests/fixtures/lint_formatting_v1/nif__optimizers__lbfgs.py.txt",
+    "nif/optimizers/lbfgs_V2.py",
+    "dev_tests/fixtures/lint_formatting_v1/nif__optimizers__lbfgs_V2.py.txt",
+    "nif/optimizers/reference_adam.py",
+    "dev_tests/fixtures/lint_formatting_v1/nif__optimizers__reference_adam.py.txt",
+    "nif/optimizers/reference_lbfgs.py",
+    "dev_tests/fixtures/lint_formatting_v1/nif__optimizers__reference_lbfgs.py.txt",
+    "nif/pruning.py",
+    "dev_tests/fixtures/lint_formatting_v1/nif__pruning.py.txt",
+    "tests/test_tutorial_7.py",
+    "dev_tests/fixtures/lint_formatting_v1/tests__test_tutorial_7.py.txt"
+  ],
+  "reader_template_sha256": "1b5a1848dd9a7415d31c4f904eea44cf0d31516f25f4209d0283d60784792e4c",
+  "transitions": {
+    "dev_tests/adabelief_history.py": {
+      "after_sha256_by_eol": {
+        "crlf": "6eede079a0bb4ff3d6656497fe1933da203c07a79e42b96adb5e43238e058417",
+        "lf": "4a6cd361342eb88ce12e9cfb8e3a666c54974d9e207cc688b5b290a8dfd22ff0"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__adabelief_history.py.txt",
+      "before_sha256": "8b115baa3754c12644ffb96f3bbc3d1ef449f9007eac720d02fe0da063f85994"
+    },
+    "dev_tests/adabelief_moment_history.py": {
+      "after_sha256_by_eol": {
+        "crlf": "9da7a8f67aaa3ff151179c2194dfa95f1fcd0a130b377847acf95de6a07ee4e7",
+        "lf": "20534b7a8d6d6a4cc70ea0a6a076d73acf62a5be62a7194e8a84f138524c3321"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__adabelief_moment_history.py.txt",
+      "before_sha256": "ee83bd8e41a5753c9c2d9cbe634c206bd08ad3ee39d8fd368d304c03ccc276bd"
+    },
+    "dev_tests/adabelief_moment_scope.py": {
+      "after_sha256_by_eol": {
+        "crlf": "978e6f91357806597e7ab12637119f65d7dd4b18f15fa2ce297de8f5807c0554",
+        "lf": "01fb8045ae4cb153cc7c80abd5ed4e4a196b14759cb52d712dbd592f368f73db"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__adabelief_moment_scope.py.txt",
+      "before_sha256": "1a07a50d8b2a46f44e1d9f85749a0c431c248e7a254a11b38620ae98031d3a94"
+    },
+    "dev_tests/adabelief_phase_scope.py": {
+      "after_sha256_by_eol": {
+        "crlf": "a1bc2547d35dbf5f3e7637ba9ead1ee62a74ee22715dd03b692880afdac08cdf",
+        "lf": "1e6831a94a604a57e268b653c00da156e8ffd999e7eb407e8ce80c0bacb673ad"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__adabelief_phase_scope.py.txt",
+      "before_sha256": "6361852f79399850f65782293c1e74a56198ee1476b6fc524d9a24a9bd33db49"
+    },
+    "dev_tests/benchmark_reference_adam_cache.py": {
+      "after_sha256_by_eol": {
+        "crlf": "3d40518239c5d777155cacdf0ad1712d3861e6ddd68e8fd1bc4909ba7eedb40f",
+        "lf": "e8f3e35c905c9cf159cadc4099e505bc206ccce8d9ff2bac5f4012dc53daa28a"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__benchmark_reference_adam_cache.py.txt",
+      "before_sha256": "02a05ab2516e08588212f5999f642f65e1315657a7de1d1f7ccf50529a0f2bd5"
+    },
+    "dev_tests/diagnose_tutorial3_parity.py": {
+      "after_sha256_by_eol": {
+        "crlf": "2dfc5ae4695e2b18ef8e74a7cb839c556ed96e78af49b504ff2faba434f6c4e9",
+        "lf": "309916ccab66df605fccee5b6279798f0a0d38e3630dc85b0192d5960dedf542"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__diagnose_tutorial3_parity.py.txt",
+      "before_sha256": "8197a6a79a66b06cf99b60e6e1b85d2e9629d04599590afb0a9334701c9ed591"
+    },
+    "dev_tests/generate_native_notebooks.py": {
+      "after_sha256_by_eol": {
+        "crlf": "9a4c071c0fde9f57687ceb53df23b7ebecd96d294dfbac414ba3f9306e65e4a5",
+        "lf": "05c9e8d7462af86ba82d591ce54811bb0052387236e014b3cd7e91d9799293cf"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__generate_native_notebooks.py.txt",
+      "before_sha256": "feda08dba1aa05e5096f5bf289765c4cdb1c9242dc1819125eee64c9b9ffea42"
+    },
+    "dev_tests/lbfgs_reference_scope.py": {
+      "after_sha256_by_eol": {
+        "crlf": "32d17236c1a4689e78cc7fae1e56e693ba31f0bb53de849b49d35aef99018669",
+        "lf": "14cd979e1d90682aa2534d194e6d773e3c09e6fb66f4c65718c10d3c75e47723"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__lbfgs_reference_scope.py.txt",
+      "before_sha256": "a52d22fedaedcfa042ccc02be9c3ecdae9c1c3e9e03464d7cfed78c09221194b"
+    },
+    "dev_tests/publication_projection.py": {
+      "after_sha256_by_eol": {
+        "crlf": "ed66f1237f9e702e0d7868dbe25e468d5edf37eab83e46d9c006802d94e104fb",
+        "lf": "38150978b1d95ae7c5b1e59e00960cb1ea9c1fcdb0ecf3069ad3e1980c818686"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__publication_projection.py.txt",
+      "before_sha256": "cd94748ce1afb4df4c4411ae739ea50291e40b4475f6f2a979323789dced7bc5"
+    },
+    "dev_tests/publication_windows_scope.py": {
+      "after_sha256_by_eol": {
+        "crlf": "09ac20981f22fd4d0851aca9fdfc16c696e627c47061ec488cdcda7092373166",
+        "lf": "7ba6341fd2794b56508cff6c70fe4cf26cdc15e1a8880d15c0483f2e1b5b5bf0"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__publication_windows_scope.py.txt",
+      "before_sha256": "415bc1ccdf5b19eb770d2c0defd5bd2fbb2a936fa43d6a7bb3aefb61a5b037a3"
+    },
+    "dev_tests/run_adabelief_boundary_smoke.py": {
+      "after_sha256_by_eol": {
+        "crlf": "3ca22841d498c7a4d79109808f1f100d2601405673286adc4091bb7739376515",
+        "lf": "0235808cf1e5e0fe1f7e5e3f49d83bda2e153bb5321176a2ae5ca36696bf2586"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__run_adabelief_boundary_smoke.py.txt",
+      "before_sha256": "6ddb55ec4656c97e8a0f662551b8db70f9a34818539d202a385bf613aeb4a6f4"
+    },
+    "dev_tests/run_adabelief_dtype_smoke.py": {
+      "after_sha256_by_eol": {
+        "crlf": "8fdcb6488845f7a91552e660e966b611f0f6971f2443500bc52041a27a6895c8",
+        "lf": "03d8ebdd88c31f80c6b538db1b85a779104a154dcf95921da31a851406ef5a88"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__run_adabelief_dtype_smoke.py.txt",
+      "before_sha256": "144a1aeeb23c3a047f8aa52d07aca582e491521c5785108e2825865a2a08f380"
+    },
+    "dev_tests/run_adabelief_moment_smoke.py": {
+      "after_sha256_by_eol": {
+        "crlf": "a893669533af1d6fe4ed0fe980068b3b8cf5059158de39e31334818f18dcb590",
+        "lf": "34d10f6a0cca62e0c4e06af5f3692393b0951ab006bfdb912277b38a76dabbd4"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__run_adabelief_moment_smoke.py.txt",
+      "before_sha256": "15d0969fd75fbb74385589eea4a9f4383eae3f9f6384fe51cd4c18be3467d537"
+    },
+    "dev_tests/run_native_notebooks.py": {
+      "after_sha256_by_eol": {
+        "crlf": "70ddb904a04f03e194914dd15910ec0be502e98de76621418571684f1c5035e5",
+        "lf": "0d2bf88d4271fece29e5bdbe633c70a3e953c1f3ad63d8e9e9dd8aabbd72173e"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__run_native_notebooks.py.txt",
+      "before_sha256": "c41a328aa27e205e723cecb252a89a01f7404f2bbc6d02688d26da8460600c1a"
+    },
+    "dev_tests/run_pruning_adam_smoke.py": {
+      "after_sha256_by_eol": {
+        "crlf": "ca0824e60996a456013953e94c9aa93926c6a86e16b6946567c5a92cb0cd93bc",
+        "lf": "09c7ec470a6bbb2ec97bec4a3b784fad31a23dc7b81939fc0278fb6320f19b2a"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__run_pruning_adam_smoke.py.txt",
+      "before_sha256": "094f3b01d64bb5655351ea9693b1cdf454d7311e798408251a514ce50884d741"
+    },
+    "dev_tests/run_tutorial1_gc_smoke.py": {
+      "after_sha256_by_eol": {
+        "crlf": "c53b21fb3222fe1edeb0756324e4dd615a0764cf07239f7362fe4f8bfd7cc972",
+        "lf": "84238a7b80cc8a9493ad02a94949cff97ad5de1c2b35ca90c5d5266bc5c6e6c7"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__run_tutorial1_gc_smoke.py.txt",
+      "before_sha256": "26fcac8e838042f5abdf5a354d4a0abf4a115bd39ebd65ca1f794df0cd545234"
+    },
+    "dev_tests/test_adabelief_boundary_succession.py": {
+      "after_sha256_by_eol": {
+        "crlf": "65460218b67cc4f02ef69f4744ea183fcc472f34d8cc9b9c47f09210a4c113d0",
+        "lf": "3821239337a943234b021aa0863ac293ebd33e3d8124003b157d2a426287aa5c"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_adabelief_boundary_succession.py.txt",
+      "before_sha256": "848e8c8f1ea55a5fdf288b653d0f92a46e90ea163183c0312a2d1d3314925def"
+    },
+    "dev_tests/test_adabelief_dtype_preservation.py": {
+      "after_sha256_by_eol": {
+        "crlf": "b7031c2b181f64d0d4f994aa088039ddf2168fbe0d69e5d0cfc235273f38fa02",
+        "lf": "1019eeae332874f1fc1aafd6fe5528d1a79c06d548bdef5fc1f1c22798e607fd"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_adabelief_dtype_preservation.py.txt",
+      "before_sha256": "17af7062f5bf82635ad749e55abd227c39bc7ecf28c8932d8245c73d2f1094a8"
+    },
+    "dev_tests/test_adabelief_empty_gradients.py": {
+      "after_sha256_by_eol": {
+        "crlf": "225cde109c750f5203f5619c83301e4adeb9e2d897c5f4b4cdd028e85a3336ea",
+        "lf": "1b92e13584ddd0d3c30e6dc3096ae3f2e4a3df06c9d05bf9e90db478db5395e6"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_adabelief_empty_gradients.py.txt",
+      "before_sha256": "152a2eff0343b43d80e3025572b0ee8fde7ce7ed7cac31bd7b2152c9589e470e"
+    },
+    "dev_tests/test_adabelief_final_update_order.py": {
+      "after_sha256_by_eol": {
+        "crlf": "4578fa15c7729348e6eda17e620c9b0e01c9be78b3093507e5cffa13f0db38bb",
+        "lf": "ff6ea4419cd484b2ebc85bdbc27d349a6ce61b28e97c0b3aa322df8bae5993df"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_adabelief_final_update_order.py.txt",
+      "before_sha256": "f6f863a180a72377c262a18393506a4cd3dcc2f687a5f0a642cfd1cf38da28a6"
+    },
+    "dev_tests/test_adabelief_final_update_successor.py": {
+      "after_sha256_by_eol": {
+        "crlf": "d73a1db9c2a7d0296d5c4d5e88b6c30e8f4d476fc277d461fa59d55463241957",
+        "lf": "0c302efd06824fed49ae5cdbfe2f93b1a67b88875790a0859eb6a5ee3a46a7b7"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_adabelief_final_update_successor.py.txt",
+      "before_sha256": "cf7ae40652c261d770e64f5085cee164153543cce888832d6e416f4c29cf39dd"
+    },
+    "dev_tests/test_adabelief_moment_checkpoint.py": {
+      "after_sha256_by_eol": {
+        "crlf": "0ce5aae7bd4d96e9614eeba4d1d59023d5710aafb6dfb5122ac4fc3b6bdd1ec8",
+        "lf": "b68d3b2c95301ca48a3ef7d48617ce98071ea1b3583194eaa0f8f22f0d2dd84e"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_adabelief_moment_checkpoint.py.txt",
+      "before_sha256": "a3011cc6308e55230200c07c63421c9b226ee95d1f10a309ed6aaba6e5a908dc"
+    },
+    "dev_tests/test_adabelief_moment_dtype.py": {
+      "after_sha256_by_eol": {
+        "crlf": "0c977fd057358ea917f121564a7d96fbce1bdeb8ac796a4458c73a54182c74e5",
+        "lf": "9ab403c4afa02a981e3ca46c9ac29500af3b4e210902f3c3de8d4e730705f416"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_adabelief_moment_dtype.py.txt",
+      "before_sha256": "429fc20394d4b729f0cf90ed68a568b60278dc7376e02d332dc35125b57c9272"
+    },
+    "dev_tests/test_adabelief_scalar_dtype.py": {
+      "after_sha256_by_eol": {
+        "crlf": "9e663aeb0ba155f53e423cadfa75b19902b64999687a6323a1da6f7887084efd",
+        "lf": "4a90117d2b5ba72fcd106a5913ec836c70fe9346f9f56a0317af6bc71f429959"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_adabelief_scalar_dtype.py.txt",
+      "before_sha256": "5c5ab1b91da47d335d97150e6ba96524ff72a6c7b1f5465911be05cb440927b8"
+    },
+    "dev_tests/test_ci_workflow.py": {
+      "after_sha256_by_eol": {
+        "crlf": "7d3ec35d2112ecdba831d4734f785c727e7d6e9ad63fe325623742babdc5628f",
+        "lf": "bd8d815cffbbbcce276897eab298906e7c0d2dfe01549d3669ef3ae781b5bff7"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_ci_workflow.py.txt",
+      "before_sha256": "73803f1213e02347a14f008b92a8d8b4462b6b2066968fc495a7f2556dbaf0af"
+    },
+    "dev_tests/test_layers.py": {
+      "after_sha256_by_eol": {
+        "crlf": "9fdfda65a47ecaea8193dc7bc26c63813ceae84e9bce8a2ccc98d837bcff4e09",
+        "lf": "d1746989c9df2dd2c0c8fe425cec04ab2bae93748d35dc10dab7fca23a0cd118"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_layers.py.txt",
+      "before_sha256": "749662f0449ae85a7821a0c312c06627851f24839f515e60f2c961b7f5cdaf93"
+    },
+    "dev_tests/test_lbfgs_reference_integration.py": {
+      "after_sha256_by_eol": {
+        "crlf": "98271242e7f38ce2dd11e28787f7de3a283a3e26c6296076010c0a0937777869",
+        "lf": "9a0e18fbc53a1a0ac3a5792826a6e96107376da49c3689ff540a0ab48a5ef92d"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_lbfgs_reference_integration.py.txt",
+      "before_sha256": "315986e0449a85116a2ec4e27a560a7e2f6e0083239eaddc08a019e9b2f2a691"
+    },
+    "dev_tests/test_lbfgs_reference_phase0_records.py": {
+      "after_sha256_by_eol": {
+        "crlf": "89e413eb4bfb1128a6da38b5bcf057a62fea3ff017eb8a35fe23526fbc1326e3",
+        "lf": "0bef36a217f1e716ff2d2402b344d52a8561ccdf3a1e14224cc36d971ca349a6"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_lbfgs_reference_phase0_records.py.txt",
+      "before_sha256": "754f2fd614d6b7013189b2540be82a76d7e0c253409849d84480354e3f534423"
+    },
+    "dev_tests/test_lbfgs_stopping_contract.py": {
+      "after_sha256_by_eol": {
+        "crlf": "16439b7f3d2345cf9469377eb48e40822e9c04d08f448121ff2fc0fc5c6ade7f",
+        "lf": "359cf47e798e56dab30d5953b0a9a7ad4fddeb76a0f827a4f9c4b624c3869eb8"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_lbfgs_stopping_contract.py.txt",
+      "before_sha256": "16a203349aa115fef48785bd8af47f8e0a93962df9d4abf0d9c1c6ac74b8424c"
+    },
+    "dev_tests/test_model_review.py": {
+      "after_sha256_by_eol": {
+        "crlf": "35f29d04936aa4d849e85639455dbc87f597ed53861c2bb63cd952790dd178f8",
+        "lf": "d6028fe92d763b53bdb7fc394de7a9e987f496042bb77d211ed893853438cb42"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_model_review.py.txt",
+      "before_sha256": "e376e503eea71fc0bcd66def2389012eff04d2ad0f3cb3307041efe73d202758"
+    },
+    "dev_tests/test_models.py": {
+      "after_sha256_by_eol": {
+        "crlf": "d782d92f3339f28c19e80a89c2a59c7c6c16c38d18b1dcf974a2f5094a6ea175",
+        "lf": "e385090bfdcfda483142cf3d84b74c6bb70bd6f21b8e1cd7be05d282f5eb4ed8"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_models.py.txt",
+      "before_sha256": "70613b870857959769c1e93dc77b8b9de6fb616a6a67461e5f04874b2bca5a7c"
+    },
+    "dev_tests/test_native_notebooks.py": {
+      "after_sha256_by_eol": {
+        "crlf": "9c058400b61413892730f73bda215ddd6dc4284fe95e913eeebca546b2473fed",
+        "lf": "95a9bd9a2fc09fd84130fe463f41ce4678e7de99cdcc961f7089aee6db65432b"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_native_notebooks.py.txt",
+      "before_sha256": "6a4e21d2b8714836101ee6df027b7306990b5100818fa335dcb0ca7c9fc010c4"
+    },
+    "dev_tests/test_notebook_displays.py": {
+      "after_sha256_by_eol": {
+        "crlf": "8fdb00543122ff5f879775f54277d6919ba629e175a47b38f9c473f0d23be907",
+        "lf": "ae17aa17440e871ed9300087c10b692c291ef60a685bda9b008c26fc4488ee7b"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_notebook_displays.py.txt",
+      "before_sha256": "ed8263cf880696325dfcd2d24574ea1084aaeff2b028649e45b771d791c4d019"
+    },
+    "dev_tests/test_optimizer_epsilon.py": {
+      "after_sha256_by_eol": {
+        "crlf": "96fc122205f2321901bf44971cc86bb326b3424cec12244323504f9858b6dbe2",
+        "lf": "be73ae5262a74f4bf1a9fe5ba767f69aff7eaa7603dfe47e29e930f06ab3e81a"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_optimizer_epsilon.py.txt",
+      "before_sha256": "289c060bad77ff8e124c203e1bc9a85c0b8e8ec4bcdb662bff322aa2e7b45d23"
+    },
+    "dev_tests/test_optimizers_data.py": {
+      "after_sha256_by_eol": {
+        "crlf": "4fe91fb8c3fa2b804a6e75b30e2dcc1467d23dff46af93290abcdc3ccef368cc",
+        "lf": "c8c12abf82e690ddd829ecf6adabc927eec4de050062b5e116937b76de122c1c"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_optimizers_data.py.txt",
+      "before_sha256": "8f4f44418dbaedf2a496ed4d8d59e7becef89ebc2dbe83bb8c9196175e7909f8"
+    },
+    "dev_tests/test_pruning_adam_state.py": {
+      "after_sha256_by_eol": {
+        "crlf": "0eea49491ca32dcd93e50b06e0b4d9f3aa77177af7b41409e1f8cc0f0d089463",
+        "lf": "5c56f87c1f5593a7f20b3ba26637b46c65b6854b7bbb16860dd4b3066d992447"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_pruning_adam_state.py.txt",
+      "before_sha256": "c9e7e351739c1338b789d483b95f98425ac858d4cce8486a4598dc567aaec9db"
+    },
+    "dev_tests/test_public_api_regressions.py": {
+      "after_sha256_by_eol": {
+        "crlf": "e6a04e6c28e60e284fbb8cdc1dc081310802914d54eed3c70bbb8c62fb96df4e",
+        "lf": "bf156d252509e3eeebcf572852aea0b3ffb8b19a28899b9f2954ff27d36ae475"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_public_api_regressions.py.txt",
+      "before_sha256": "f0a7b71615e932a62baa6b791a149701a91154c5720a1a6fa8fb8a52684da261"
+    },
+    "dev_tests/test_publication_checkout_eol.py": {
+      "after_sha256_by_eol": {
+        "crlf": "d78c9dc8d6200b1061c0af2b910248b02ef9fa05566956ff53cfb58135d47109",
+        "lf": "8afcd3b5b97ce047f55d2b3a9e690dab65052599fb549658baf21d5197eb1d3f"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_publication_checkout_eol.py.txt",
+      "before_sha256": "4bb2db9b117efece702b6362b8c9d7f4e4ad72d7b6462620a3c3134c9b845e53"
+    },
+    "dev_tests/test_publication_checkout_successor.py": {
+      "after_sha256_by_eol": {
+        "crlf": "4baeea1f3fa7590775165f2e11a9063f415d2184210d6a51e897a01f652a731a",
+        "lf": "1d41ffb71361d71eb06bb00848ed59bf30ada4d89aae6c06ddc70378c798d668"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_publication_checkout_successor.py.txt",
+      "before_sha256": "e193c342d531dba4bb647f6bfb1dd94feb0505cd7ee790411e2efd85cdb5ba04"
+    },
+    "dev_tests/test_publication_scope.py": {
+      "after_sha256_by_eol": {
+        "crlf": "9784796aa7bb86e9259ff7c2b6b0d227796f82a160832786c8e0edcc92780b3b",
+        "lf": "7b1e33578962e6ca58846b90840ecc3a2a90d0c55bbf6868510e0036b35cf581"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_publication_scope.py.txt",
+      "before_sha256": "a991b9da0b024ea8bc3c07ac56eecb159d735177d7b8e2265c2f7f6a4016c8b8"
+    },
+    "dev_tests/test_publication_transition.py": {
+      "after_sha256_by_eol": {
+        "crlf": "3bd0db1f6a7df654b537ce69df605b25538a52df96e86be1aca3186779fae9e7",
+        "lf": "5f82d53aa76adde86b36df8622dadbd4735ecb02c5062341902b7d83f5ee67b2"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_publication_transition.py.txt",
+      "before_sha256": "3f1f87e2ed6df731f381ba872a3541548889172acd59981e674a1bf64eede426"
+    },
+    "dev_tests/test_publication_windows.py": {
+      "after_sha256_by_eol": {
+        "crlf": "b7f0aa18ef78d78d719d346d2bd4dcc0e7daaa7af565976b6d864b6e02250e87",
+        "lf": "d6f49329231cf35ecc6d8b923e5c3c4524ecdb7e56d7660cc56141aa2b6b6d28"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_publication_windows.py.txt",
+      "before_sha256": "5b67e9f7702d815152a5028587404f9cae6c219005044799cb34a2c959acd218"
+    },
+    "dev_tests/test_publication_windows_successor.py": {
+      "after_sha256_by_eol": {
+        "crlf": "10dc2d17537e9ba8c2fcec107d581f60d1d1444c0a0ad695213b8f9483d8fcc5",
+        "lf": "a83fd1dde5861ca6ecc499ac5271f4ba7c5caba373fa6421fb77c4f1763c2874"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_publication_windows_successor.py.txt",
+      "before_sha256": "5b36567948b2faa693cee8622ebba6323927e154b1da850c61102f421808fba7"
+    },
+    "dev_tests/test_reference_adam.py": {
+      "after_sha256_by_eol": {
+        "crlf": "e473d60671f459860e8ae16e5fcbdb367f2d735a1419815bf82a4c357954c647",
+        "lf": "95db0ce5ee9ba596cb5f784e5b7217be00c8792419d837bdefe08e4ba9b12928"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_reference_adam.py.txt",
+      "before_sha256": "8c4ccebb63f75d048e28fcf05eec32301d9f34ab6b97104652b6d3d9c094b01c"
+    },
+    "dev_tests/test_reference_adam_cache.py": {
+      "after_sha256_by_eol": {
+        "crlf": "a5add449f7386ae6b8ea96f41aa3d847a35f0586513bbb42bb31bed16fb4795f",
+        "lf": "da4633323da4a59d5e66c92fad713bb6ad98c4365fc902f692511c7b9fef9694"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_reference_adam_cache.py.txt",
+      "before_sha256": "3f39fa69b7cf87551c35c6ac8531601bdbeb58689745a634ecc49cd4328475f5"
+    },
+    "dev_tests/test_reference_adam_empty_gradients.py": {
+      "after_sha256_by_eol": {
+        "crlf": "18cded95bde978b8ac63bac8b39e4498a94b2bdb694e81cfcafb1d219f5affa1",
+        "lf": "0cc13e4e8170219fb6fae6a313c6695c0636cc877b3591ebec5bfcdcec1de6ca"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_reference_adam_empty_gradients.py.txt",
+      "before_sha256": "2d5f271b4bb9fbb18e46c14b8ee4a6a9a01fc3641ae6a0e8f9817b191a2bd30f"
+    },
+    "dev_tests/test_reference_lbfgs_api.py": {
+      "after_sha256_by_eol": {
+        "crlf": "7d0ffab45bca0a04b07b90d3f75474ce8deac95e800062870b044b25de7fa3ad",
+        "lf": "3add5392286ab6e3bb8e01ace46815fd7a244c503995753199a907bc24ebb88a"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_reference_lbfgs_api.py.txt",
+      "before_sha256": "d40ef3609ab795a998823fd3eb788a75bfa58016eaebbfdb3b39b856eb7d3538"
+    },
+    "dev_tests/test_reference_lbfgs_contract.py": {
+      "after_sha256_by_eol": {
+        "crlf": "fae5b38bfe6de696c03d90d9769c7811c4e36556bb01ef4055ff6caea9a4adeb",
+        "lf": "3d6e71e7b33880786a5814759909e37ffc2715daa973cab39d3f881cda5caa27"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_reference_lbfgs_contract.py.txt",
+      "before_sha256": "2abbc4b93afdb8c2ae0fb4900c2f8091abe97d012379ebdc1de617b1cdc81917"
+    },
+    "dev_tests/test_reference_lbfgs_edges.py": {
+      "after_sha256_by_eol": {
+        "crlf": "e12286b96ad3bad9f0781b3005f837b0b4e4e071919e7313d8b7b7f137ba8fd8",
+        "lf": "1f1013777544729e1460d969a3f569501fd5c086bf3dc936d224dae62fdc8991"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_reference_lbfgs_edges.py.txt",
+      "before_sha256": "77025d636f333de8bc6659b76ad9685832035486201d08a703c40c58382b6906"
+    },
+    "dev_tests/test_scope_helper_utf8.py": {
+      "after_sha256_by_eol": {
+        "crlf": "e3ad5bcb8a5c5d881f9968b30bf306d8de333b08412d0d5fe6587972a749e364",
+        "lf": "94e73d8a99a39b79a7166d02af9dadd20d7890caade00fdd0e1122acea10d346"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_scope_helper_utf8.py.txt",
+      "before_sha256": "15a526b173fc497eb3900ff267c1d9eaea59dd72dc5a81a89ba061fa6e994f8d"
+    },
+    "dev_tests/test_scope_helper_utf8_archives.py": {
+      "after_sha256_by_eol": {
+        "crlf": "1062762e3342a8d56ef1768a52c05f5f5f53f866d31d4df08cc37e8320ce81e9",
+        "lf": "bf403dc69d452b208fe53e9aaf5676b741c1572e623d2b69a87a975f6d8323a8"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_scope_helper_utf8_archives.py.txt",
+      "before_sha256": "4015d95aee77a8bd44100d5f9960265dd12fb0f3eb5bb817575bad8eaa31d3d0"
+    },
+    "dev_tests/test_teaching_markdown_scope.py": {
+      "after_sha256_by_eol": {
+        "crlf": "0e98e85afd85c6b275a7e19396c64e12ceced6de279de5a606d33264620592cd",
+        "lf": "dc8a5dcdfe93f21f23d3b643a8d4f51fa322c250e6a4fc1c6b05907f9377ae42"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_teaching_markdown_scope.py.txt",
+      "before_sha256": "cf2a31534898baae7efed076ad3d32249a25e826a4ead6cbd70a6481a46d8ea2"
+    },
+    "dev_tests/test_test_portability.py": {
+      "after_sha256_by_eol": {
+        "crlf": "73205afca13c44bc61d352769ca1a508fcee97faf61896ab608cf55198469064",
+        "lf": "0e32ff923166a8cd2f8b352280f657cf6202ad4ca38210e9ddb69250ca4c5e25"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_test_portability.py.txt",
+      "before_sha256": "7955d6f933a096fd746ee3da44f572573e48162d37f090307262d09f3f2ddef0"
+    },
+    "dev_tests/test_tutorial1_gc_behavior.py": {
+      "after_sha256_by_eol": {
+        "crlf": "e5170cb9eda9275ad7486f5debcc4cf49707b666aa577ead63e9f34bfad2ce30",
+        "lf": "8dd1ec200a288bdc184279be5693d417a508512eddf2cccbb7fc184b2fe9c548"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_tutorial1_gc_behavior.py.txt",
+      "before_sha256": "09ed0c3dce6eafeabc7a85b99880a6f8b7b56f42efc76cd1e2747f9e5898c2af"
+    },
+    "dev_tests/test_tutorial1_gc_scope.py": {
+      "after_sha256_by_eol": {
+        "crlf": "0e552417779c41fa148c0c1eeaded1590f5d5793882e458fd1647f4128ae4572",
+        "lf": "a768809e570931aa490d0e13bdbed1728ff5f713bbbb95fd99e3f95c9843c5d0"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_tutorial1_gc_scope.py.txt",
+      "before_sha256": "db7a617b207641b330c9ffce89972643c5f5e4febaf8a69276d84af9116c0851"
+    },
+    "dev_tests/test_tutorial1_lbfgs.py": {
+      "after_sha256_by_eol": {
+        "crlf": "29d081a14624c1f9c658e4b0c3dd6d325f63f37dd6ba46567fb606fbb1dacac5",
+        "lf": "6358d005c866257d4adc0b0796701563bd5535380fc7221646dd611d273380c6"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_tutorial1_lbfgs.py.txt",
+      "before_sha256": "19a3de36717ce639a02eb8ca81df1ee1676b289adbb9e11da6e0b92b309baef3"
+    },
+    "dev_tests/test_tutorial7_inference_artifacts.py": {
+      "after_sha256_by_eol": {
+        "crlf": "20a637e82cece091620ed5532596c35dbd4524563e2b0b29a88af93b1469178a",
+        "lf": "72b40da4962fdc74f1342c866427b87e705a010a7978aeb031e1b08a4c6d7bfc"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_tutorial7_inference_artifacts.py.txt",
+      "before_sha256": "6020bd11347732f506ac2fdb6d9fa840d467b375ad240056d9b2a5d77a080388"
+    },
+    "dev_tests/test_tutorial7_pruning.py": {
+      "after_sha256_by_eol": {
+        "crlf": "3156b0dc703d42c3d343afd3944b9525d51e453e648e8713c90512f4a3633cfb",
+        "lf": "ce8465cb6159089ef951c00e10740af274c43568090ba1af4a043ac588f3922b"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_tutorial7_pruning.py.txt",
+      "before_sha256": "b4486dd3a4796386d4573a5c66a1d036d2a30ae96df348fea0ad2c8ad1a71dea"
+    },
+    "dev_tests/test_tutorial7_reference_outputs.py": {
+      "after_sha256_by_eol": {
+        "crlf": "af824daa218a6eafb51159d07cdab838ba24d47da7cb08f79379f3473558f0e8",
+        "lf": "5c530d6e25275d01b7f8f0c415fa5d76438199f41fbd1d8f8feba61b76577fcb"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_tutorial7_reference_outputs.py.txt",
+      "before_sha256": "dc7aaa6448dbbcae68d787aafe8629f1a5a777138b786d21508dbea45664acce"
+    },
+    "dev_tests/test_tutorial7_reference_scope.py": {
+      "after_sha256_by_eol": {
+        "crlf": "1a58e8dc6a5089bc018ce3170311a2d99eaf062ef77b349526839733974e924a",
+        "lf": "f1b39ca80902078917526fbe563116c2e1551d1a3b15851dfff4b717cb7fc9a7"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__test_tutorial7_reference_scope.py.txt",
+      "before_sha256": "49cb3d424f359a31e5261161c2a80f74db96c42d74aac0114548901335a65ae2"
+    },
+    "dev_tests/tutorial1_gc_scope.py": {
+      "after_sha256_by_eol": {
+        "crlf": "00e836075ea622817e4404f6d049aaeb291238203a0dc05bb67bf1377e657d05",
+        "lf": "21a83ab9787039cb7e3f3469477b2263b54abaef778c651dfad1e4184ab21eef"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__tutorial1_gc_scope.py.txt",
+      "before_sha256": "ff47fbda69666bb4fe590ed6599a6de0342d5ec3b8518e5cc0cb3d9b1cbbfb93"
+    },
+    "dev_tests/tutorial7_reference_scope.py": {
+      "after_sha256_by_eol": {
+        "crlf": "36dbe4563b19efff0882d1ba32600a4be61367e7340c04793bb20e0b3f87640f",
+        "lf": "f3a3e567d8115a9060f491158df75ca522fe38d0f2d19071def8e30b7c47da49"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/dev_tests__tutorial7_reference_scope.py.txt",
+      "before_sha256": "cc7a2f26ed9f62c13983bfe50a643398dc056540552a83e15b321505aef8a228"
+    },
+    "nif/__init__.py": {
+      "after_sha256_by_eol": {
+        "crlf": "e8dbbb4c9b90bdece8fad1cb70c2a4a2d4c65383d966895a8fdcbebb82bae159",
+        "lf": "5221e74b0dfbec083e4df74f406b02f1404282b451f336d8f68c2e9d4c0992cb"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/nif____init__.py.txt",
+      "before_sha256": "f3ca8b722364eeb636b00855d90446ef7c4e51fb7c119ab043da0424a16be60b"
+    },
+    "nif/data/point_wise_data.py": {
+      "after_sha256_by_eol": {
+        "crlf": "b20af2a06652a842e326c1dcd060d4b22ed12a902dfe401738861801e177500d",
+        "lf": "0d87c0edf73b6e2b5e238da0730a879be7073de914b62e1a3dbfe407636c34de"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/nif__data__point_wise_data.py.txt",
+      "before_sha256": "1a3f2ae571fd8d723449e1ca6a6ae79dbb7431558e0fc84237963a9213f901d5"
+    },
+    "nif/data/tfr_dataset.py": {
+      "after_sha256_by_eol": {
+        "crlf": "48cfa13ab3df417ce3445befb0ee58f7c9e4414228dfe9e8e485f8d912d3a718",
+        "lf": "572b8a8a6b68452f3380b2cd12fb8bc0b863fc768c523906b299b2e5075b902e"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/nif__data__tfr_dataset.py.txt",
+      "before_sha256": "c6f19c447ac774a27f84276a6768de590baaddb88001f6973c7c73baca63dee0"
+    },
+    "nif/layers/__init__.py": {
+      "after_sha256_by_eol": {
+        "crlf": "275ad98f199a972f435aed7cccd504dc5ea0749d472facb5402937878b2082f5",
+        "lf": "1d1ea28a090907668f4f96d3e94d5f8b7cda684c3537f07042a8eacd5d870632"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/nif__layers____init__.py.txt",
+      "before_sha256": "d866caf6a8240f4c4442b55dcd34eabf33a1745fd12d79d7845ac27d04541bca"
+    },
+    "nif/layers/_common.py": {
+      "after_sha256_by_eol": {
+        "crlf": "c8a3759d186c98f197641c7945b98262bf1fe31e05f29cd8466f722ffdde3b8e",
+        "lf": "929c9c69501a5e39ada19f7ef243b1cdc6564fb682f1ae9cc92662445891d99e"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/nif__layers___common.py.txt",
+      "before_sha256": "a52dc9c15e95dbbb311b83f9443dce6c32593dc6f8ad4885b9023380ee36e812"
+    },
+    "nif/layers/gradient.py": {
+      "after_sha256_by_eol": {
+        "crlf": "16389136fa3ac1b8b5ad2dad93867ae655dd814a1308c0db33ef5b9db0d52798",
+        "lf": "a0e24ce57d6406ea46ab886fee184f8395dadd23531afeb4d70dedd5d78fd51c"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/nif__layers__gradient.py.txt",
+      "before_sha256": "ae4bedeeb8e76c1f3443b5558b3634fac60ab78ffd68040a9465d59f1c5f23ba"
+    },
+    "nif/layers/mlp.py": {
+      "after_sha256_by_eol": {
+        "crlf": "de0a9758fa3bbd87cbe55da3abe8850119560d965f9e91a555a8f4604fb880db",
+        "lf": "456a81a4669eefefc5fa0919595063cde1ee740c2713539d6a76bb6ff0e0207f"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/nif__layers__mlp.py.txt",
+      "before_sha256": "7a689765155cc201aec6333f1f1da71d4c5f93b5c790061ee642db4e0e2e32e5"
+    },
+    "nif/layers/regularization.py": {
+      "after_sha256_by_eol": {
+        "crlf": "b9b9b771af31f8f9c61d332643c9995080e009349a1a950669437084c11d9401",
+        "lf": "8d39adac9492cf123cf55aab12a1057fb0eea2c0a26d5198a24348689f6d7d0b"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/nif__layers__regularization.py.txt",
+      "before_sha256": "1e6f19a0c3df504795d16245d053ec809d095689c28d36dd155ec50764327037"
+    },
+    "nif/layers/siren.py": {
+      "after_sha256_by_eol": {
+        "crlf": "66c9aeac492b1e42bad3e42d585b80bb6cbff92e552d649efbbd7fd5cd938dfc",
+        "lf": "ad6b8fd55818662f66c4913514a96c79a6559060fffb971a1e567008fec7b5a4"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/nif__layers__siren.py.txt",
+      "before_sha256": "df7da28f8ff4a58a8f8c7e32308dad7f9569c1c3eb5c5d126652f47f6a8d9af7"
+    },
+    "nif/model.py": {
+      "after_sha256_by_eol": {
+        "crlf": "68e0ffb93e3a16108140f79ac9903e735bfd47611f3b26ca769e28994ca0b07f",
+        "lf": "80f189caa3e45895e63432e0da34c791d9b220d87bb39b83a35b23c4625f7278"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/nif__model.py.txt",
+      "before_sha256": "a310128998a160f273eb04a121598033812d6342e302645be53d0444962a1761"
+    },
+    "nif/optimizers/__init__.py": {
+      "after_sha256_by_eol": {
+        "crlf": "f8bd102be0cbff3441b93bde5b851b6c3f747c784999c874d1b187ff43477a88",
+        "lf": "bc6af30b0553f4a124af83f8f8838668d5d1a863170a7a5c99f5e1bcf717580b"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/nif__optimizers____init__.py.txt",
+      "before_sha256": "a45c6c9bed9f3edb1350ce3922aab7d05f4d1f6397454f42e4fd131764ba5bef"
+    },
+    "nif/optimizers/_hager_zhang.py": {
+      "after_sha256_by_eol": {
+        "crlf": "f765b87cde79cc3c2fe97e9c9f0c4a65930599b881cf42a8e535ae07554e9054",
+        "lf": "cd888feb6927aca71c00981c853e5cbb4a6c0e82b8a3abea80213185c3ed4b10"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/nif__optimizers___hager_zhang.py.txt",
+      "before_sha256": "6c6c6576d8a672a2e5555315311f683ce36b57d37dd6a20733689982e62ffae5"
+    },
+    "nif/optimizers/external_optimizers.py": {
+      "after_sha256_by_eol": {
+        "crlf": "65f5e19cce5220cbdcf53e6476eea0dc42b001ace680f722749c036bf28959ca",
+        "lf": "a50ca21d20b27d6d7f49120bb0bfcd5e899ee4095a541038d7ef6fe46efd61cf"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/nif__optimizers__external_optimizers.py.txt",
+      "before_sha256": "956a2f80f6dfee6c5603a3ed981d5bc0e2d537e156cc6e1e95e8fba6519674a4"
+    },
+    "nif/optimizers/gtcf.py": {
+      "after_sha256_by_eol": {
+        "crlf": "b50b5ead2eb956567b281f3d48a855287164f6f3b7a94ed732c24f70c4f5eeea",
+        "lf": "80594a774e113a1898e79bfbb1a6271324f0c961ab0973795ad305980e9a5cb7"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/nif__optimizers__gtcf.py.txt",
+      "before_sha256": "8698637fb975ff7df70a38a0503fa231f037855beeaf68efa0cb5b7ca37ac1b4"
+    },
+    "nif/optimizers/lbfgs.py": {
+      "after_sha256_by_eol": {
+        "crlf": "3b80ce5c03caeadac496337dd865e9a8f272b4ed0d4fc1c0a2547e0fbaf6aa60",
+        "lf": "4e97105ff5cb7d7c387b6057dbde014956979bb4e1bac0d389564d49e575a3a7"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/nif__optimizers__lbfgs.py.txt",
+      "before_sha256": "7506f2196163df1882663742b0d4b413a8bc2edafc9ba07e885559629e4c72a1"
+    },
+    "nif/optimizers/lbfgs_V2.py": {
+      "after_sha256_by_eol": {
+        "crlf": "869f3f66ad2b1b59b3a179c7ce1658cc22f8bc776234b0bd8f6e1cb064ee4c04",
+        "lf": "a438330323635818c8f8756850d143176b68674f68574c77342042dddd14b900"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/nif__optimizers__lbfgs_V2.py.txt",
+      "before_sha256": "e002a9777b80505c36b4eb271e0c8416e7ccaf62bba1e0f529f988fb75ae7bc8"
+    },
+    "nif/optimizers/reference_adam.py": {
+      "after_sha256_by_eol": {
+        "crlf": "917e871a57ba8167a316b74b2cae6052c5226cb1724492c73a1fdaaf2f3a3e6c",
+        "lf": "f5b046070751176c3563eb8eec355503d5de7be21526a306de9a97b886fd835d"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/nif__optimizers__reference_adam.py.txt",
+      "before_sha256": "cabfa26d9dbe7fc651459533357f4df80d983bfe270f5abcce0aab4dc31e77b7"
+    },
+    "nif/optimizers/reference_lbfgs.py": {
+      "after_sha256_by_eol": {
+        "crlf": "0d67efb51e78084fdf84909fd9726de53db11aaaf5f1676e8dd11935020bec81",
+        "lf": "984a192b994aa32e128c683dabc88c248ff3e4624f70ee4454e6465d609ef0c1"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/nif__optimizers__reference_lbfgs.py.txt",
+      "before_sha256": "9b28a409ee8552ea5400b362cd52d818103607f844ec87f6fb31d5fe63a64e42"
+    },
+    "nif/pruning.py": {
+      "after_sha256_by_eol": {
+        "crlf": "10366c76ad34c62fa0b1929735a1149e473c84fa5a5a92df2825124a3b84dfca",
+        "lf": "c6b17247780a1b9a1b759b650aa35fc7709b820d146b40dd4965b16d85cf1617"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/nif__pruning.py.txt",
+      "before_sha256": "aa2f4cb0268209230eb295b7fefd80e158b9f810dcc1012ba088abb88c1f32d0"
+    },
+    "tests/test_tutorial_7.py": {
+      "after_sha256_by_eol": {
+        "crlf": "f34e0c7731231bc6e3bffba4172a81bce91393ed9b2a34fd2aaaefb0ecaf1430",
+        "lf": "3b9c35396fc97a7af79dd9442b8a33f66a86ec6266a6342fb9e475674ee999da"
+      },
+      "archive": "dev_tests/fixtures/lint_formatting_v1/tests__test_tutorial_7.py.txt",
+      "before_sha256": "8fa0ce2584ff84c9ce585646c86390db5809bb19f5d49dac5eeaf044a082f10b"
+    }
+  }
+}

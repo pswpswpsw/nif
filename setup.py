@@ -34,7 +34,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="Shaowu Pan",
-    author_email="shawnpan@uw.edu",
+    author_email="pans2@rpi.edu",
     url="https://github.com/pswpswpsw/nif",
     download_url="https://github.com/pswpswpsw/nif/tarball/v" + version,
     license="LGPL-2.1",

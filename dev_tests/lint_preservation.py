@@ -1,8 +1,10 @@
-"""Exact source view for historical guards after the lint-only cleanup.
+"""Exact historical source views for lint cleanup and release metadata.
 
 The public manifest pins every permitted formatted source and its original
 archive. Historical checks receive the original only after both byte hashes
-pass. Runtime model imports continue to execute the current source.
+pass. A separate release-version projection preserves historical version
+fingerprints without treating the release as a formatting change. Runtime
+model imports continue to execute the current source.
 """
 import hashlib
 import json
@@ -10,8 +12,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 RECORD = "dev_tests/fixtures/lint_formatting_v1/manifest.json"
-RECORD_SHA256 = "2a07d432d8762ae547b641db51cdd895396277e036a21dd4932f0dd637ac572e"
+RECORD_SHA256 = "9b0d5d8dad67ce3cbbab68c50dd79a01797a603cf775d925337a281d0f62b55f"
 SOURCE = "dev_tests/lint_preservation.py"
+RELEASE_VERSION_SOURCE = "nif/__about__.py"
+RELEASE_VERSION_BEFORE = b'__version__ = "1.0.3"\n'
+RELEASE_MANIFEST_SOURCE = "MANIFEST.in"
+RELEASE_TEST_SOURCE = "dev_tests/test_lbfgs_reference_integration.py"
 # BEGIN SEALED PATHS
 LINT_PATHS = frozenset(
     {
@@ -128,6 +134,7 @@ def lint_record(root=ROOT):
 
 def historical_lint_bytes(root, name, current):
     """Undo one exact recorded cleanup; arbitrary source changes fail closed."""
+    current = historical_release_version_bytes(root, name, current)
     if name not in LINT_PATHS:
         return current
     entry = lint_record(root)["transitions"][name]
@@ -144,7 +151,10 @@ def read_lint_bytes(root, name):
 def read_lint_text(root, name):
     # Keep the original text-read boundary for historical mutation tests.
     current = (Path(root) / name).read_text(encoding="utf-8").encode("utf-8")
-    if name not in LINT_PATHS:
+    if name not in LINT_PATHS and name not in (
+        RELEASE_VERSION_SOURCE,
+        RELEASE_MANIFEST_SOURCE,
+    ):
         return current.decode("utf-8")
     raw = (Path(root) / name).read_bytes()
     original = historical_lint_bytes(root, name, raw)
@@ -159,6 +169,14 @@ def lint_public_files(root=ROOT):
     for name, entry in sorted(record["transitions"].items()):
         expected.extend((name, entry["archive"]))
     assert record["public_files"] == expected, RECORD
+    release = release_metadata_record(root)
+    expected.extend(
+        [
+            release["path"],
+            release["sdist_manifest"]["path"],
+            *release["archived_inputs"],
+        ]
+    )
     assert len(expected) == len(set(expected)), RECORD
     for name in expected:
         relative = Path(name)
@@ -167,3 +185,46 @@ def lint_public_files(root=ROOT):
         (Path(root) / name).stat()
         assert (Path(root) / name).is_file(), name
     return expected
+
+
+def release_metadata_record(root=ROOT):
+    """Validate the explicit v2 version change and the untouched lint record."""
+    record = lint_record(root)
+    release = record["release_version_metadata"]
+    assert release["path"] == RELEASE_VERSION_SOURCE, RECORD
+    assert release["sdist_manifest"]["path"] == RELEASE_MANIFEST_SOURCE, RECORD
+    assert release["test_reader"]["path"] == RELEASE_TEST_SOURCE, RECORD
+    assert (release["before_version"], release["after_version"]) == (
+        "1.0.3",
+        "2.0.0",
+    ), RECORD
+    for name, expected in release["archived_inputs"].items():
+        assert _digest((Path(root) / name).read_bytes()) == expected, name
+    prior = json.loads((Path(root) / release["prior_lint_record"]).read_bytes())
+    # Every formatting transition keeps its original before/after hashes.
+    for key in ("base_commit", "transitions", "public_files"):
+        assert record[key] == prior[key], RECORD
+    return release
+
+
+def historical_release_version_bytes(root, name, current):
+    """Undo only the exact version and source-distribution metadata changes."""
+    if name not in (
+        RELEASE_VERSION_SOURCE,
+        RELEASE_MANIFEST_SOURCE,
+        RELEASE_TEST_SOURCE,
+    ):
+        return current
+    release = release_metadata_record(root)
+    if name == RELEASE_VERSION_SOURCE:
+        entry = release
+        original = RELEASE_VERSION_BEFORE
+    elif name == RELEASE_MANIFEST_SOURCE:
+        entry = release["sdist_manifest"]
+        original = entry["before_source"].encode("utf-8")
+    else:
+        entry = release["test_reader"]
+        original = (Path(root) / entry["archive"]).read_bytes()
+    assert _digest(current) in entry["after_sha256_by_eol"].values(), name
+    assert _digest(original) == entry["before_sha256"], name
+    return original

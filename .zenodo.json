@@ -1,0 +1,32 @@
+{
+  "title": "Neural Implicit Flow (NIF): PyTorch edition",
+  "version": "2.0.0",
+  "publication_date": "2026-10-28",
+  "upload_type": "software",
+  "description": "Native PyTorch implementation of mesh-agnostic dimensionality reduction for parametric spatiotemporal fields. Version 2.0.0 includes differentiable NIF models, native optimizers, data pipelines, eight PyTorch tutorials, distributed training, TensorBoard monitoring, pruning and dynamic int8 inference. See the repository validation reports for the measured tutorial results and verification scope.",
+  "creators": [
+    {
+      "name": "Pan, Shaowu",
+      "affiliation": "Rensselaer Polytechnic Institute",
+      "orcid": "0000-0002-2462-362X"
+    },
+    {
+      "name": "Brunton, Steven",
+      "affiliation": "University of Washington, Seattle"
+    },
+    {
+      "name": "Kutz, J. Nathan",
+      "affiliation": "University of Washington, Seattle"
+    }
+  ],
+  "license": "LGPL-2.1-only",
+  "access_right": "open",
+  "keywords": ["scientific machine learning", "PyTorch", "neural fields", "dimensionality reduction"],
+  "related_identifiers": [
+    {
+      "identifier": "https://www.jmlr.org/papers/v24/22-0365.html",
+      "relation": "isSupplementTo",
+      "resource_type": "publication-article"
+    }
+  ]
+}

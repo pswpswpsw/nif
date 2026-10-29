@@ -35,6 +35,7 @@ myst_heading_anchors = 6
 html_theme = "sphinx_rtd_theme"
 html_title = f"NIF {release} — PyTorch documentation"
 html_static_path = ["_static"]
+html_css_files = ["docs.css"]
 html_theme_options = {
     "style_nav_header_background": "#2f5470",
     "collapse_navigation": False,

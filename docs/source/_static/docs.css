@@ -1,0 +1,11 @@
+/* Keep tutorial cases and their notebook links visible in the content column. */
+table.nif-tutorial-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.wy-table-responsive table.nif-tutorial-table th,
+.wy-table-responsive table.nif-tutorial-table td {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}

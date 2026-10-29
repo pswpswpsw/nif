@@ -8,7 +8,8 @@ development check and is separate from full training.
 
 .. list-table:: Native PyTorch tutorials
    :header-rows: 1
-   :widths: 8 30 44 18
+   :widths: 12 29 39 20
+   :class: nif-tutorial-table
 
    * - Tutorial
      - Scientific case
@@ -60,6 +61,7 @@ historical backend. The following links preserve access to both sets.
 
 .. list-table:: Historical references
    :header-rows: 1
+   :class: nif-tutorial-table
 
    * - Tutorial
      - Original notebook

@@ -168,7 +168,42 @@
     "tests/test_tutorial_7.py",
     "dev_tests/fixtures/lint_formatting_v1/tests__test_tutorial_7.py.txt"
   ],
-  "reader_template_sha256": "1b5a1848dd9a7415d31c4f904eea44cf0d31516f25f4209d0283d60784792e4c",
+  "reader_template_sha256": "23e8192afda3f102a22eb385a8ce43704b28224dc4cfda84e2dab75571beab26",
+  "release_version_metadata": {
+    "after_sha256_by_eol": {
+      "crlf": "1cb25cf367d9ea1eb9a9d1307c25b1d14d7fe75545407547bf791d76df6dd989",
+      "lf": "ffb3a541d6d590ae2369dd022dda48d20ad3fb31006feaa01661f9985cc35e20"
+    },
+    "after_version": "2.0.0",
+    "archived_inputs": {
+      "dev_tests/fixtures/release_version_v2/lint_manifest_before.json": "2a07d432d8762ae547b641db51cdd895396277e036a21dd4932f0dd637ac572e",
+      "dev_tests/fixtures/release_version_v2/lint_preservation_before.py.txt": "7fa1386da2254031e39e8412ff6770041c8ac9c614ea4e23ebf5124eadfe621c",
+      "dev_tests/fixtures/release_version_v2/test_lbfgs_reference_integration_before.py.txt": "9a0e18fbc53a1a0ac3a5792826a6e96107376da49c3689ff540a0ab48a5ef92d"
+    },
+    "before_sha256": "da997374411bdb814b8c4d88d97c8105c2443d858771c34be1282d2c2ffa7ab8",
+    "before_version": "1.0.3",
+    "path": "nif/__about__.py",
+    "prior_lint_reader": "dev_tests/fixtures/release_version_v2/lint_preservation_before.py.txt",
+    "prior_lint_record": "dev_tests/fixtures/release_version_v2/lint_manifest_before.json",
+    "sdist_manifest": {
+      "after_sha256_by_eol": {
+        "crlf": "4e3855ffbcf0965139d4b32bb6c2a5a7536e21d4ee0321d6c69409305baa85e4",
+        "lf": "b57ec8c83b8e2fe7f62fcb9d93b0695ebe8154d41877acba427bec283053c18b"
+      },
+      "before_sha256": "de5baa889b1a73311932cf8ec0fa769e61bd6af468ec115d9e9de0ab0b4205e6",
+      "before_source": "include README.md\ninclude LICENSE\ninclude MANIFEST.in\ninclude requirements.txt\ninclude nif/demo/dataset/*.npz\ninclude nif/optimizers/TFP_LICENSE.txt\ninclude nif/optimizers/TFP_NOTICE.txt\n",
+      "path": "MANIFEST.in"
+    },
+    "test_reader": {
+      "after_sha256_by_eol": {
+        "crlf": "ef8e6b23a6004bfa2dcf5f704218b47f21a7fbaca407dbb19a5c6b6220ae8835",
+        "lf": "181c73f05ab4327abdd3877dbef6b3c7e47076bed3944febd273cd3639fb66b1"
+      },
+      "archive": "dev_tests/fixtures/release_version_v2/test_lbfgs_reference_integration_before.py.txt",
+      "before_sha256": "9a0e18fbc53a1a0ac3a5792826a6e96107376da49c3689ff540a0ab48a5ef92d",
+      "path": "dev_tests/test_lbfgs_reference_integration.py"
+    }
+  },
   "transitions": {
     "dev_tests/adabelief_history.py": {
       "after_sha256_by_eol": {

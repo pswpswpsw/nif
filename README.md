@@ -359,6 +359,8 @@ Use the [issues](https://github.com/pswpswpsw/nif/issues) tracker to report bugs
 
 ## How to cite
 
+For the software, use [GitHub's citation metadata](CITATION.cff) and the [Zenodo software record](https://doi.org/10.5281/zenodo.7909312). The latter DOI represents all archived software versions. Cite the version-specific DOI from the Zenodo record when referring to a particular release.
+
 If you find NIF is helpful, please cite our JMLR [paper](https://www.jmlr.org/papers/volume24/22-0365/22-0365.pdf):
 
 ```bibtex

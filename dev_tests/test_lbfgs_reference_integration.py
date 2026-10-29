@@ -218,7 +218,7 @@ def test_three_exact_checkout_rules_and_two_license_includes_only():
         b"/nif/optimizers/TFP_NOTICE.txt text eol=lf\n"
     )
     manifest = (archive / "MANIFEST.in.txt").read_bytes()
-    assert (ROOT / "MANIFEST.in").read_bytes() == manifest + (
+    assert read_lint_bytes(ROOT, "MANIFEST.in") == manifest + (
         b"include nif/optimizers/TFP_LICENSE.txt\n"
         b"include nif/optimizers/TFP_NOTICE.txt\n"
     )

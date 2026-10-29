@@ -1,4 +1,4 @@
-matplotlib
-numpy
-tensorflow_probability==0.18.0
-tensorflow_model_optimization==0.7.3
+# Documentation tools; install NIF separately to autodocument the real package.
+Sphinx==8.2.3
+myst-parser==4.0.1
+sphinx-rtd-theme==3.0.2

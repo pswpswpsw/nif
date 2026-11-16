@@ -12,6 +12,8 @@ on:
       - 'nif/**'
       - 'requirements.txt'
       - 'setup.py'
+      - 'examples/self_scaled/**'
+      - 'tutorial/9_self_scaled_optimizers_pytorch.ipynb'
   push:
     branches: [main]
     paths:
@@ -24,6 +26,8 @@ on:
       - 'nif/**'
       - 'requirements.txt'
       - 'setup.py'
+      - 'examples/self_scaled/**'
+      - 'tutorial/9_self_scaled_optimizers_pytorch.ipynb'
   workflow_dispatch:
 
 permissions:

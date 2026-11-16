@@ -19,8 +19,9 @@ learning, monitoring, pruning, and quantized inference.
    :alt: Original comparison of field representations
    :align: center
 
-Start with :doc:`quickstart`, then explore the eight scientific cases in
-:doc:`tutorials`. Python 3.10+ and PyTorch 2.6+ are required; CUDA is optional.
+Start with :doc:`quickstart`, then explore the eight released scientific cases in
+:doc:`tutorials` and the experimental :doc:`self_scaled_optimizers` comparison.
+Python 3.10+ and PyTorch 2.6+ are required; CUDA is optional.
 The API pages below are generated from the actual implementation imported
 during the documentation build.
 
@@ -33,6 +34,7 @@ Getting started
    quickstart
    tutorials
    training_example
+   self_scaled_optimizers
 
 API reference
 -------------

@@ -38,6 +38,14 @@ def checkout(tmp_path):
         "docs/PYTORCH_VALIDATION.md": b"# Recorded validation\n",
         "docs/PYTORCH_TENSORFLOW_PARITY.md": b"# Recorded comparisons\n",
         "docs/PYTORCH_TRAINING_EXAMPLE.md": b"# Training\n",
+        "docs/SELF_SCALED_OPTIMIZERS.md": (
+            b"# Experimental self-scaled optimizers\n\n"
+            b"[source](../examples/self_scaled/benchmark.py)\n"
+            b"[notebook](../tutorial/9_self_scaled_optimizers_pytorch.ipynb)\n"
+            b"![Historical convergence](source/_static/self_scaled/convergence.png)\n"
+            b"```bash\npython examples/self_scaled/benchmark.py --help\n```\n"
+        ),
+        "docs/source/_static/self_scaled/convergence.png": b"historical-ss-figure",
         "docs/private_analysis.md": b"must not be published implicitly\n",
         "docs/build/old_output.html": b"do not copy prior build output\n",
         "misc/myimage.gif": b"original-flow-gif",
@@ -115,3 +123,37 @@ def test_repository_link_rewrite_keeps_external_and_anchor_links():
         "[source](https://github.com/pswpswpsw/nif/blob/v2.0.0/nif/model.py)"
         in rewritten
     )
+
+
+def test_post_release_experiment_links_use_current_source_not_old_release():
+    notebook = "tutorial/9_self_scaled_optimizers_pytorch.ipynb"
+    text = (
+        "[example](../examples/self_scaled/benchmark.py) "
+        "[notebook](../" + notebook + ") "
+        "[Colab](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/"
+        + notebook
+        + ") "
+        "[source](https://github.com/pswpswpsw/nif/tree/main/examples/self_scaled) "
+        "[original](../tutorial/1_simple_1d_wave_pytorch.ipynb)"
+    )
+    rewritten = helper().rewrite_markdown(
+        text, "docs/SELF_SCALED_OPTIMIZERS.md", "v2.0.0"
+    )
+    assert "nif/blob/main/examples/self_scaled/benchmark.py" in rewritten
+    assert "nif/blob/main/" + notebook in rewritten
+    assert "nif/tree/main/examples/self_scaled" in rewritten
+    assert "nif/blob/v2.0.0/tutorial/1_simple_1d_wave_pytorch.ipynb" in rewritten
+    assert "nif/blob/v2.0.0/" + notebook not in rewritten
+
+
+def test_prepared_experiment_guide_retains_local_historical_assets(checkout, tmp_path):
+    root, originals = checkout
+    source = tmp_path / "prepared"
+    helper().prepare_source(root, source)
+    guide = (source / "self_scaled_optimizers.md").read_text()
+    assert "![Historical convergence](_static/self_scaled/convergence.png)" in guide
+    assert "nif/blob/main/examples/self_scaled/benchmark.py" in guide
+    assert "```bash\npython examples/self_scaled/benchmark.py --help\n```" in guide
+    assert (source / "_static/self_scaled/convergence.png").read_bytes() == originals[
+        "docs/source/_static/self_scaled/convergence.png"
+    ]

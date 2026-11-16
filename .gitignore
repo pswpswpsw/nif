@@ -10,4 +10,5 @@ docs/build
 build/
 dist/
 pytorch_outputs/
+.venv-ss/
 dev_tests/artifacts/

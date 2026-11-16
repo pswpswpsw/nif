@@ -1,0 +1,3473 @@
+{
+  "schema_version": 1,
+  "kind": "Historical measurements and unchanged saved-array figures",
+  "recorded_date": "2026-10-27",
+  "publication_date": "2026-11-15",
+  "fresh_tutorial_9_outputs": false,
+  "timing_scope": "Sequential FP64 CPU arms, two Torch/BLAS threads. QN excludes common warmup, evaluation and plotting. Single measurements, not speedup estimates.",
+  "author_source": {
+    "repository": "https://github.com/EliKiani/Optimizing_the_Optimizer_PINNs",
+    "commit": "990a82c1353cbda9f5afee3200b222fdb821c521",
+    "raw_sha256": "65958e6bba33631ca5aeab9ecc309536199c08a7e380fc0487d404e93ae2687e",
+    "historical_whitespace_normalized_sha256": "cc2380115343c2622581d8479ed1be27f56545277e130ed89cd651a4488d901b"
+  },
+  "T1": {
+    "warmup_elapsed_seconds": 150.34330169996247,
+    "arms": {
+      "lbfgs": {
+        "method": "lbfgs",
+        "elapsed_seconds": 185.4812072000932,
+        "evaluation_seconds": 0.1694226001854986,
+        "iterations": 1000,
+        "evaluations": 2955,
+        "rounds": [
+          {
+            "round": 1,
+            "iterations": 1000,
+            "evaluations": 2955,
+            "failed": false,
+            "converged": false,
+            "final_loss": 1.0059444072128438e-05
+          }
+        ],
+        "status": {
+          "round": 1,
+          "iterations": 1000,
+          "evaluations": 2955,
+          "failed": false,
+          "converged": false,
+          "final_loss": 1.0059444072128438e-05
+        },
+        "initial_parameter_hash": "096db9f0d679b1bb700f0f7518c17e38773e126346d63ff49cfc605d563e63ab",
+        "final_parameter_hash": "90865f9157571275ae33772a2d16a3d1182e0468b439b34503f3080d5e970a27",
+        "first_evaluation": {
+          "parameter_hash": "096db9f0d679b1bb700f0f7518c17e38773e126346d63ff49cfc605d563e63ab",
+          "loss": 3.576173593841328e-05,
+          "gradient_hash": "8b0af86bbfd35e1e5be6b72d1bcff82cc8e836a18c0ba9d92f2230c3983ba7f8",
+          "gradient_dtype": "float64",
+          "gradient_inf": 0.037673901977862606
+        },
+        "train": {
+          "rmse": 3.9854588573370626e-05,
+          "mae": 2.5661129334578885e-05,
+          "max_abs": 0.0002914263529662717,
+          "mse": 1.5883882303526446e-09
+        },
+        "dense": {
+          "rmse": 6.064504900954432e-05,
+          "mae": 3.8771248007553e-05,
+          "max_abs": 0.0004391221684527632,
+          "mse": 3.677821969370033e-09
+        }
+      },
+      "ssbfgs": {
+        "method": "ssbfgs",
+        "elapsed_seconds": 679.349821300013,
+        "evaluation_seconds": 0.15754849999211729,
+        "iterations": 1000,
+        "evaluations": 1012,
+        "rounds": [
+          {
+            "round": 1,
+            "iterations": 1000,
+            "evaluations": 1012,
+            "status": 1,
+            "message": "Maximum number of iterations has been exceeded.",
+            "converged": false,
+            "final_loss": 5.463019833641949e-09
+          }
+        ],
+        "status": {
+          "round": 1,
+          "iterations": 1000,
+          "evaluations": 1012,
+          "status": 1,
+          "message": "Maximum number of iterations has been exceeded.",
+          "converged": false,
+          "final_loss": 5.463019833641949e-09
+        },
+        "initial_parameter_hash": "096db9f0d679b1bb700f0f7518c17e38773e126346d63ff49cfc605d563e63ab",
+        "final_parameter_hash": "9a17ebd7b892fdee5bccbf289fe77051f284c31fc29b0104d9311c8f73e55dc4",
+        "first_evaluation": {
+          "parameter_hash": "096db9f0d679b1bb700f0f7518c17e38773e126346d63ff49cfc605d563e63ab",
+          "loss": 3.576173593841328e-05,
+          "gradient_hash": "8b0af86bbfd35e1e5be6b72d1bcff82cc8e836a18c0ba9d92f2230c3983ba7f8",
+          "gradient_dtype": "float64",
+          "gradient_inf": 0.037673901977862606
+        },
+        "train": {
+          "rmse": 9.287718793999638e-07,
+          "mae": 6.809515110042527e-07,
+          "max_abs": 4.636243592412437e-06,
+          "mse": 8.626172039641409e-13
+        },
+        "dense": {
+          "rmse": 1.2567935411588224e-06,
+          "mae": 8.14594174506544e-07,
+          "max_abs": 1.2431136258187842e-05,
+          "mse": 1.579530005098533e-12
+        }
+      },
+      "ssbroyden": {
+        "method": "ssbroyden",
+        "elapsed_seconds": 779.3848514999263,
+        "evaluation_seconds": 0.15819950005970895,
+        "iterations": 1000,
+        "evaluations": 1033,
+        "rounds": [
+          {
+            "round": 1,
+            "iterations": 1000,
+            "evaluations": 1033,
+            "status": 1,
+            "message": "Maximum number of iterations has been exceeded.",
+            "converged": false,
+            "final_loss": 4.863851297927669e-10
+          }
+        ],
+        "status": {
+          "round": 1,
+          "iterations": 1000,
+          "evaluations": 1033,
+          "status": 1,
+          "message": "Maximum number of iterations has been exceeded.",
+          "converged": false,
+          "final_loss": 4.863851297927669e-10
+        },
+        "initial_parameter_hash": "096db9f0d679b1bb700f0f7518c17e38773e126346d63ff49cfc605d563e63ab",
+        "final_parameter_hash": "c2f78e0d0da92f15181284089803f5073c17001c09bdc66428899368a3914832",
+        "first_evaluation": {
+          "parameter_hash": "096db9f0d679b1bb700f0f7518c17e38773e126346d63ff49cfc605d563e63ab",
+          "loss": 3.576173593841328e-05,
+          "gradient_hash": "8b0af86bbfd35e1e5be6b72d1bcff82cc8e836a18c0ba9d92f2230c3983ba7f8",
+          "gradient_dtype": "float64",
+          "gradient_inf": 0.037673901977862606
+        },
+        "train": {
+          "rmse": 2.7712393302799434e-07,
+          "mae": 2.1055380809599306e-07,
+          "max_abs": 1.442668026619909e-06,
+          "mse": 7.67976742569043e-14
+        },
+        "dense": {
+          "rmse": 3.7664706294611077e-07,
+          "mae": 2.464976420513416e-07,
+          "max_abs": 3.0921965675322418e-06,
+          "mse": 1.4186301002593153e-13
+        }
+      }
+    },
+    "warmup_epochs": 5000,
+    "parameters": 5853,
+    "shared_start_parameter_hash": "096db9f0d679b1bb700f0f7518c17e38773e126346d63ff49cfc605d563e63ab",
+    "mean": [
+      45.0,
+      0.4975000023841858,
+      3.796941493855455e-12
+    ],
+    "std": [
+      28.72281265258789,
+      0.28867149353027344,
+      0.012565848417580128
+    ],
+    "train_reference": "Original stored physical u, 10 times by 200 x points",
+    "dense_reference": "FP64 analytical u, 45 times by 800 x points; t=[0,90], x=[0,.995]",
+    "termination_scope": "All three methods used the 1000-iteration budget; none met strict convergence criteria."
+  },
+  "T2": {
+    "architectures": {
+      "swish": {
+        "warmup_elapsed_seconds": 169.48065549996682,
+        "arms": {
+          "lbfgs": {
+            "method": "lbfgs",
+            "elapsed_seconds": 1.2421454000286758,
+            "evaluation_seconds": 0.0669259000569582,
+            "iterations": 7,
+            "evaluations": 26,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 7,
+                "evaluations": 26,
+                "failed": false,
+                "converged": true,
+                "final_loss": 0.025196066666749842
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 7,
+              "evaluations": 26,
+              "failed": false,
+              "converged": true,
+              "final_loss": 0.025196066666749842
+            },
+            "initial_parameter_hash": "68d5cd06963f5ecfe82e3f84b601d78a6f377c16c89e43a7cfe8ecc48f992335",
+            "final_parameter_hash": "cbf62c7e9bacaca351f48b9f089d3c1296290fe7623d11dbf4c988df303eba4e",
+            "first_evaluation": {
+              "parameter_hash": "68d5cd06963f5ecfe82e3f84b601d78a6f377c16c89e43a7cfe8ecc48f992335",
+              "loss": 0.02519619252011034,
+              "gradient_hash": "341207057001e1585501add895006de5fc4a36be6fb03bc0f57bde88f83c4370",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.0007011657433444651
+            },
+            "train": {
+              "rmse": 0.14077157538770121,
+              "mae": 0.03534143125985194,
+              "max_abs": 0.8868478220193298,
+              "mse": 0.019816636437135247
+            },
+            "dense": {
+              "rmse": 0.1410365991686032,
+              "mae": 0.035817449357788966,
+              "max_abs": 0.9848844195626586,
+              "mse": 0.019891322305045242
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "correction_positions_finite": true,
+              "correction_gradients_finite": true,
+              "dense_inverse_hessian_finite": null,
+              "reason": "Limited-memory implementation has no dense H"
+            }
+          },
+          "ssbfgs": {
+            "method": "ssbfgs",
+            "elapsed_seconds": 46.81803790014237,
+            "evaluation_seconds": 0.06918790005147457,
+            "iterations": 76,
+            "evaluations": 106,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 76,
+                "evaluations": 106,
+                "status": 2,
+                "message": "Desired error not necessarily achieved due to precision loss.",
+                "converged": false,
+                "failed": true,
+                "final_loss": 0.025196066665269662,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 76,
+              "evaluations": 106,
+              "status": 2,
+              "message": "Desired error not necessarily achieved due to precision loss.",
+              "converged": false,
+              "failed": true,
+              "final_loss": 0.025196066665269662,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "68d5cd06963f5ecfe82e3f84b601d78a6f377c16c89e43a7cfe8ecc48f992335",
+            "final_parameter_hash": "bb4d03bd066ccac359eca4bbed772bf7149029feca38b2ea18b9828f37f088fe",
+            "first_evaluation": {
+              "parameter_hash": "68d5cd06963f5ecfe82e3f84b601d78a6f377c16c89e43a7cfe8ecc48f992335",
+              "loss": 0.02519619252011034,
+              "gradient_hash": "341207057001e1585501add895006de5fc4a36be6fb03bc0f57bde88f83c4370",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.0007011657433444651
+            },
+            "train": {
+              "rmse": 0.14077157538356616,
+              "mae": 0.03534069398301955,
+              "max_abs": 0.8868467970865807,
+              "mse": 0.01981663643597105
+            },
+            "dense": {
+              "rmse": 0.14103659916468458,
+              "mae": 0.03581673157130482,
+              "max_abs": 0.9848844380156019,
+              "mse": 0.01989132230393991
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            }
+          },
+          "ssbroyden": {
+            "method": "ssbroyden",
+            "elapsed_seconds": 51.95802180003375,
+            "evaluation_seconds": 0.06390370009467006,
+            "iterations": 78,
+            "evaluations": 141,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 78,
+                "evaluations": 141,
+                "status": 2,
+                "message": "Desired error not necessarily achieved due to precision loss.",
+                "converged": false,
+                "failed": true,
+                "final_loss": 0.0251960666652696,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 78,
+              "evaluations": 141,
+              "status": 2,
+              "message": "Desired error not necessarily achieved due to precision loss.",
+              "converged": false,
+              "failed": true,
+              "final_loss": 0.0251960666652696,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "68d5cd06963f5ecfe82e3f84b601d78a6f377c16c89e43a7cfe8ecc48f992335",
+            "final_parameter_hash": "bb2a343bcd848dbbdf0a95cd0f3229dc19646913c3b5262af65d619d655704a1",
+            "first_evaluation": {
+              "parameter_hash": "68d5cd06963f5ecfe82e3f84b601d78a6f377c16c89e43a7cfe8ecc48f992335",
+              "loss": 0.02519619252011034,
+              "gradient_hash": "341207057001e1585501add895006de5fc4a36be6fb03bc0f57bde88f83c4370",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.0007011657433444651
+            },
+            "train": {
+              "rmse": 0.140771575383566,
+              "mae": 0.035340692792319536,
+              "max_abs": 0.8868467955188297,
+              "mse": 0.019816636435971
+            },
+            "dense": {
+              "rmse": 0.14103659916468445,
+              "mae": 0.03581673041346146,
+              "max_abs": 0.9848844398291476,
+              "mse": 0.019891322303939866
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            }
+          }
+        }
+      },
+      "siren": {
+        "warmup_elapsed_seconds": 163.45507510006428,
+        "arms": {
+          "lbfgs": {
+            "method": "lbfgs",
+            "elapsed_seconds": 144.0730951000005,
+            "evaluation_seconds": 0.10721990000456572,
+            "iterations": 1000,
+            "evaluations": 2986,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 2986,
+                "failed": false,
+                "converged": false,
+                "final_loss": 1.7728512648447788e-07
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 2986,
+              "failed": false,
+              "converged": false,
+              "final_loss": 1.7728512648447788e-07
+            },
+            "initial_parameter_hash": "84dbfad1935af2e63392409211926f9f888a72247c2f4f497fba81a8a046ae69",
+            "final_parameter_hash": "b1cb7ea67067ec05e2270429cdb6c0f8c805d680ba19fb33980e2f34f9570a33",
+            "first_evaluation": {
+              "parameter_hash": "84dbfad1935af2e63392409211926f9f888a72247c2f4f497fba81a8a046ae69",
+              "loss": 1.62945331615016e-06,
+              "gradient_hash": "9db59d6ed672b21986847aefd3d83094d880ae836dca94072f7a406e610cbca2",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.0013156152591486104
+            },
+            "train": {
+              "rmse": 0.0003734089780997037,
+              "mae": 0.0002227079445971918,
+              "max_abs": 0.0023325037998774157,
+              "mse": 1.39434264925465e-07
+            },
+            "dense": {
+              "rmse": 0.1946676230107832,
+              "mae": 0.072017557952847,
+              "max_abs": 1.9607317698184135,
+              "mse": 0.0378954834486684
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "correction_positions_finite": true,
+              "correction_gradients_finite": true,
+              "dense_inverse_hessian_finite": null,
+              "reason": "Limited-memory implementation has no dense H"
+            }
+          },
+          "ssbfgs": {
+            "method": "ssbfgs",
+            "elapsed_seconds": 629.394740199903,
+            "evaluation_seconds": 0.15298949996940792,
+            "iterations": 1000,
+            "evaluations": 1005,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 1005,
+                "status": 1,
+                "message": "Maximum number of iterations has been exceeded.",
+                "converged": false,
+                "failed": false,
+                "final_loss": 1.4171993120917673e-08,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 1005,
+              "status": 1,
+              "message": "Maximum number of iterations has been exceeded.",
+              "converged": false,
+              "failed": false,
+              "final_loss": 1.4171993120917673e-08,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "84dbfad1935af2e63392409211926f9f888a72247c2f4f497fba81a8a046ae69",
+            "final_parameter_hash": "508098ce1bf336bb81b517a4d246ef8bd9df8c242dfd1564a4b9c42e4e50fb97",
+            "first_evaluation": {
+              "parameter_hash": "84dbfad1935af2e63392409211926f9f888a72247c2f4f497fba81a8a046ae69",
+              "loss": 1.62945331615016e-06,
+              "gradient_hash": "9db59d6ed672b21986847aefd3d83094d880ae836dca94072f7a406e610cbca2",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.0013156152591486104
+            },
+            "train": {
+              "rmse": 0.00010557571953178222,
+              "mae": 5.629153513719771e-05,
+              "max_abs": 0.000859670326811727,
+              "mse": 1.1146232554653543e-08
+            },
+            "dense": {
+              "rmse": 0.19568644700293103,
+              "mae": 0.07254561990313949,
+              "max_abs": 1.9860116718858334,
+              "mse": 0.03829318554063093
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            }
+          },
+          "ssbroyden": {
+            "method": "ssbroyden",
+            "elapsed_seconds": 762.270355500048,
+            "evaluation_seconds": 0.16383759980089962,
+            "iterations": 1000,
+            "evaluations": 1005,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 1005,
+                "status": 1,
+                "message": "Maximum number of iterations has been exceeded.",
+                "converged": false,
+                "failed": false,
+                "final_loss": 1.4045265864446865e-08,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 1005,
+              "status": 1,
+              "message": "Maximum number of iterations has been exceeded.",
+              "converged": false,
+              "failed": false,
+              "final_loss": 1.4045265864446865e-08,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "84dbfad1935af2e63392409211926f9f888a72247c2f4f497fba81a8a046ae69",
+            "final_parameter_hash": "eab8a6c21f59bdb8ed72e602b69580a8cc75dac99214f2927747b6dd50f0a125",
+            "first_evaluation": {
+              "parameter_hash": "84dbfad1935af2e63392409211926f9f888a72247c2f4f497fba81a8a046ae69",
+              "loss": 1.62945331615016e-06,
+              "gradient_hash": "9db59d6ed672b21986847aefd3d83094d880ae836dca94072f7a406e610cbca2",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.0013156152591486104
+            },
+            "train": {
+              "rmse": 0.00010510262222748237,
+              "mae": 5.620685809254124e-05,
+              "max_abs": 0.00087422924054298,
+              "mse": 1.1046561199092871e-08
+            },
+            "dense": {
+              "rmse": 0.1956852920886163,
+              "mae": 0.0725432407065237,
+              "max_abs": 1.9859707783372031,
+              "mse": 0.03829273353980707
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            }
+          }
+        }
+      }
+    },
+    "additional_seen_time_spatial_refinement": {
+      "architectures": {
+        "swish": {
+          "arms": {
+            "lbfgs": {
+              "rmse": 0.141036599168738,
+              "mae": 0.03581746923927942,
+              "max_abs": 0.9848519344174638,
+              "mse": 0.019891322305083274
+            },
+            "ssbfgs": {
+              "rmse": 0.1410365991646846,
+              "mae": 0.03581674136510604,
+              "max_abs": 0.9848522627379269,
+              "mse": 0.019891322303939914
+            },
+            "ssbroyden": {
+              "rmse": 0.14103659916468445,
+              "mae": 0.03581674018887649,
+              "max_abs": 0.9848522614965758,
+              "mse": 0.019891322303939873
+            }
+          }
+        },
+        "siren": {
+          "arms": {
+            "lbfgs": {
+              "rmse": 0.06184922689264941,
+              "mae": 0.029675419350370408,
+              "max_abs": 0.8029841119722526,
+              "mse": 0.0038253268672184273
+            },
+            "ssbfgs": {
+              "rmse": 0.06263968079565768,
+              "mae": 0.02992189025474543,
+              "max_abs": 0.8241036974480386,
+              "mse": 0.003923729610181886
+            },
+            "ssbroyden": {
+              "rmse": 0.06263301654874402,
+              "mae": 0.029916288091770552,
+              "max_abs": 0.824301093020165,
+              "mse": 0.003922894761995242
+            }
+          }
+        }
+      },
+      "grid": {
+        "shape": [
+          10,
+          800
+        ],
+        "t": "Original 10 training times",
+        "x": [
+          0.0,
+          0.995
+        ],
+        "scope": "Additional spatial refinement at seen times; distinct from training and novel-time interpolation"
+      }
+    },
+    "scope": "Original Adam-only tutorial extended with QN; no consistent refined-field benefit; Swish SS status2 is precision loss."
+  },
+  "T3": {
+    "warmup_elapsed_seconds": null,
+    "arms": {
+      "lbfgs": {
+        "method": "lbfgs",
+        "elapsed_seconds": 1495.9241383001208,
+        "evaluation_seconds": 0.19074360001832247,
+        "iterations": 1000,
+        "evaluations": 3000,
+        "status": {
+          "iterations": 1000,
+          "evaluations": 3000,
+          "failed": false,
+          "converged": false,
+          "final_loss": 0.001667273199405011,
+          "termination": "iteration_budget"
+        },
+        "initial_parameter_hash": "44c40317472477eb5cfac3777e761612bf4b8177d6378510eac1f6762ac6766a",
+        "final_parameter_hash": "8a11513e6b13d93bc8c012053ec3a2094461cf2cbb1cd57adacf4a10a60e2176",
+        "first_evaluation": {
+          "parameter_hash": "44c40317472477eb5cfac3777e761612bf4b8177d6378510eac1f6762ac6766a",
+          "loss": 0.0018435550834200673,
+          "gradient_hash": "e5a58746366ec8543e42825e1d86f4b0b6c3ea8f502256d3be36b8fc615c6d65",
+          "gradient_dtype": "float64",
+          "gradient_inf": 0.005048097194586522,
+          "rows": 191775,
+          "chunks": 24
+        },
+        "physical": {
+          "u": {
+            "rmse": 0.17415356816831445,
+            "mae": 0.10636572600804052,
+            "max_abs": 1.449422235161617,
+            "mse": 0.03032946530575575
+          },
+          "v": {
+            "rmse": 0.30836006383710207,
+            "mae": 0.16163889676171284,
+            "max_abs": 2.321016965081121,
+            "mse": 0.09508592896962166
+          },
+          "joint": {
+            "rmse": 0.25041504974279943,
+            "mae": 0.1340023113848767,
+            "max_abs": 2.321016965081121,
+            "mse": 0.06270769713768871
+          }
+        },
+        "normalized_weighted_mse": 0.0016672731994050113,
+        "final_dense_hessian_finite": null
+      },
+      "ssbfgs": {
+        "method": "ssbfgs",
+        "elapsed_seconds": 849.6949337001424,
+        "evaluation_seconds": 0.08173219999298453,
+        "iterations": 1000,
+        "evaluations": 1005,
+        "status": {
+          "iterations": 1000,
+          "evaluations": 1005,
+          "author_status": 1,
+          "message": "Maximum number of iterations has been exceeded.",
+          "returned_x_gradient_objective_hessian_finite": true,
+          "failed": false,
+          "converged": false,
+          "final_loss": 0.0013631066008184052,
+          "model_selection": "returned_state",
+          "termination": "iteration_budget"
+        },
+        "initial_parameter_hash": "44c40317472477eb5cfac3777e761612bf4b8177d6378510eac1f6762ac6766a",
+        "final_parameter_hash": "e8b48704376828bd9078ea711a99df70f54054383b6b331097f804f4629f6a6d",
+        "first_evaluation": {
+          "parameter_hash": "44c40317472477eb5cfac3777e761612bf4b8177d6378510eac1f6762ac6766a",
+          "loss": 0.0018435550834200673,
+          "gradient_hash": "e5a58746366ec8543e42825e1d86f4b0b6c3ea8f502256d3be36b8fc615c6d65",
+          "gradient_dtype": "float64",
+          "gradient_inf": 0.005048097194586522,
+          "rows": 191775,
+          "chunks": 24
+        },
+        "physical": {
+          "u": {
+            "rmse": 0.19043129810918386,
+            "mae": 0.11577152977029098,
+            "max_abs": 1.9173732515914048,
+            "mse": 0.03626407929954885
+          },
+          "v": {
+            "rmse": 0.2634980126573593,
+            "mae": 0.14814251633793113,
+            "max_abs": 2.0709301182010122,
+            "mse": 0.06943120267437788
+          },
+          "joint": {
+            "rmse": 0.22988614787969144,
+            "mae": 0.1319570230541111,
+            "max_abs": 2.0709301182010122,
+            "mse": 0.052847640986963366
+          }
+        },
+        "normalized_weighted_mse": 0.0013631066008184052,
+        "final_dense_hessian_finite": true
+      },
+      "ssbroyden": {
+        "method": "ssbroyden",
+        "elapsed_seconds": 864.8095438000746,
+        "evaluation_seconds": 0.18776010000146925,
+        "iterations": 1000,
+        "evaluations": 1004,
+        "status": {
+          "iterations": 1000,
+          "evaluations": 1004,
+          "author_status": 1,
+          "message": "Maximum number of iterations has been exceeded.",
+          "returned_x_gradient_objective_hessian_finite": true,
+          "failed": false,
+          "converged": false,
+          "final_loss": 0.0013590891993190395,
+          "model_selection": "returned_state",
+          "termination": "iteration_budget"
+        },
+        "initial_parameter_hash": "44c40317472477eb5cfac3777e761612bf4b8177d6378510eac1f6762ac6766a",
+        "final_parameter_hash": "c105df28bb33e9cfbbc9d228a2ad611e7cea69c57c416283fba1bfc48a6607d8",
+        "first_evaluation": {
+          "parameter_hash": "44c40317472477eb5cfac3777e761612bf4b8177d6378510eac1f6762ac6766a",
+          "loss": 0.0018435550834200673,
+          "gradient_hash": "e5a58746366ec8543e42825e1d86f4b0b6c3ea8f502256d3be36b8fc615c6d65",
+          "gradient_dtype": "float64",
+          "gradient_inf": 0.005048097194586522,
+          "rows": 191775,
+          "chunks": 24
+        },
+        "physical": {
+          "u": {
+            "rmse": 0.1908300786660559,
+            "mae": 0.11593890563245182,
+            "max_abs": 1.9071772281401518,
+            "mse": 0.03641611892369308
+          },
+          "v": {
+            "rmse": 0.26275988850149185,
+            "mae": 0.147825076217846,
+            "max_abs": 2.0826424554682945,
+            "mse": 0.06904275900531644
+          },
+          "joint": {
+            "rmse": 0.22962891578480435,
+            "mae": 0.1318819909251489,
+            "max_abs": 2.0826424554682945,
+            "mse": 0.05272943896450477
+          }
+        },
+        "normalized_weighted_mse": 0.001359089199319039,
+        "final_dense_hessian_finite": true
+      }
+    },
+    "scope": "Original accepted 600-epoch FP32 checkpoint promoted to FP64; common full 191775-row weighted objective. Physical u worsened and v improved for SS."
+  },
+  "T5": {
+    "arms": {
+      "lbfgs": {
+        "method": "lbfgs",
+        "elapsed_seconds": 5.918929900042713,
+        "iterations": 11,
+        "evaluations": 35,
+        "converged": true,
+        "failed": false,
+        "message": "ReferenceLBFGS native status",
+        "final_parameter_hash": "e0de8dec0ddd91ccd25fe6c212d5affff3f1cb6712045719850b0f2f48c0b540",
+        "first_evaluation": {
+          "parameter_hash": "d905c092362eab008065c8ea7645246572015a57ee3b3fa7cf131551271c44a1",
+          "loss": 0.08334868877947708,
+          "gradient_hash": "b404e24ec0c21c67ebeb79c366ada0cd612e9694d986844714d83c65b812958d",
+          "gradient": [
+            0.0006265827996805311,
+            0.00043706933117300715,
+            0.0007048737626738294,
+            0.0008666000060873349,
+            0.0031754032737778904,
+            0.0031325495160298353,
+            0.003071985979784155,
+            0.003134208593530132,
+            0.001315767985393954,
+            0.0010578506458715632,
+            0.0010926731101919215,
+            0.0011044436302739334,
+            0.001367943484309889,
+            0.005822612834815057,
+            0.0022165158626744562
+          ]
+        },
+        "final": {
+          "mse": 0.08328701286195415,
+          "rmse": 0.28859489403306177,
+          "mae": 0.24989232391304952,
+          "max_abs": 0.5013104155542739,
+          "per_output_rmse": [
+            0.2885782226862888,
+            0.28845700458533846,
+            0.28874938005602563
+          ]
+        },
+        "final_gradient_inf": 4.912639398605605e-11
+      },
+      "ssbfgs": {
+        "method": "ssbfgs",
+        "elapsed_seconds": 3.057975099887699,
+        "iterations": 14,
+        "evaluations": 19,
+        "status": 2,
+        "converged": false,
+        "failed": true,
+        "message": "Desired error not necessarily achieved due to precision loss.",
+        "final_parameter_hash": "4cfc35ed073b6046c156e5a703f6865fe1e7cce1cfc3f330bbbef5237316d70e",
+        "first_evaluation": {
+          "parameter_hash": "d905c092362eab008065c8ea7645246572015a57ee3b3fa7cf131551271c44a1",
+          "loss": 0.08334868877947708,
+          "gradient_hash": "b404e24ec0c21c67ebeb79c366ada0cd612e9694d986844714d83c65b812958d",
+          "gradient": [
+            0.0006265827996805311,
+            0.00043706933117300715,
+            0.0007048737626738294,
+            0.0008666000060873349,
+            0.0031754032737778904,
+            0.0031325495160298353,
+            0.003071985979784155,
+            0.003134208593530132,
+            0.001315767985393954,
+            0.0010578506458715632,
+            0.0010926731101919215,
+            0.0011044436302739334,
+            0.001367943484309889,
+            0.005822612834815057,
+            0.0022165158626744562
+          ]
+        },
+        "final": {
+          "mse": 0.08328701286195413,
+          "rmse": 0.2885948940330617,
+          "mae": 0.24989232391338326,
+          "max_abs": 0.5013104142618292,
+          "per_output_rmse": [
+            0.2885782226862888,
+            0.28845700458533846,
+            0.2887493800560257
+          ]
+        },
+        "final_gradient_inf": 2.8040209135724373e-10,
+        "inverse_hessian_finite": true
+      },
+      "ssbroyden": {
+        "method": "ssbroyden",
+        "elapsed_seconds": 3.6335229000542313,
+        "iterations": 16,
+        "evaluations": 22,
+        "status": 2,
+        "converged": false,
+        "failed": true,
+        "message": "Desired error not necessarily achieved due to precision loss.",
+        "final_parameter_hash": "ea23701116350a35f8a1bcc83d64070bba51aaed79873232050838c112b99e5b",
+        "first_evaluation": {
+          "parameter_hash": "d905c092362eab008065c8ea7645246572015a57ee3b3fa7cf131551271c44a1",
+          "loss": 0.08334868877947708,
+          "gradient_hash": "b404e24ec0c21c67ebeb79c366ada0cd612e9694d986844714d83c65b812958d",
+          "gradient": [
+            0.0006265827996805311,
+            0.00043706933117300715,
+            0.0007048737626738294,
+            0.0008666000060873349,
+            0.0031754032737778904,
+            0.0031325495160298353,
+            0.003071985979784155,
+            0.003134208593530132,
+            0.001315767985393954,
+            0.0010578506458715632,
+            0.0010926731101919215,
+            0.0011044436302739334,
+            0.001367943484309889,
+            0.005822612834815057,
+            0.0022165158626744562
+          ]
+        },
+        "final": {
+          "mse": 0.08328701286195414,
+          "rmse": 0.28859489403306177,
+          "mae": 0.2498923239129681,
+          "max_abs": 0.5013104157722492,
+          "per_output_rmse": [
+            0.2885782226862888,
+            0.2884570045853385,
+            0.28874938005602563
+          ]
+        },
+        "final_gradient_inf": 4.735354879956545e-11,
+        "inverse_hessian_finite": true
+      }
+    },
+    "scope": "One million independent random-label rows, 100 shards; no physical analytical truth. Timing follows complete common cache warmup."
+  },
+  "T6": {
+    "cases": {
+      "baseline": {
+        "case": "baseline",
+        "kind": null,
+        "coefficient": 0.0,
+        "warmup_elapsed_seconds": 205.16500580008142,
+        "warmup_provenance": "new 3000-epoch FP64 warmup",
+        "shared_start_parameter_hash": "6bcb2b39d36a62b49009c99cd99bb92db00ab692c8eb43d3382b7f4d94521f9b",
+        "arms": {
+          "lbfgs": {
+            "method": "lbfgs",
+            "elapsed_seconds": 227.4026152000297,
+            "evaluation_seconds": 0.6352721001021564,
+            "iterations": 1000,
+            "evaluations": 2995,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 2995,
+                "failed": false,
+                "converged": false,
+                "final_loss": 9.894013375445144e-08
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 2995,
+              "failed": false,
+              "converged": false,
+              "final_loss": 9.894013375445144e-08
+            },
+            "initial_parameter_hash": "6bcb2b39d36a62b49009c99cd99bb92db00ab692c8eb43d3382b7f4d94521f9b",
+            "final_parameter_hash": "2339157cf5a741729b350020ad9b179d82f459feeaf6f6bb6dc0afa707f3d9aa",
+            "first_evaluation": {
+              "parameter_hash": "6bcb2b39d36a62b49009c99cd99bb92db00ab692c8eb43d3382b7f4d94521f9b",
+              "loss": 0.00038027166603822734,
+              "gradient_hash": "1e540ba209244d14c8c62fe3e4227103abbe5d93801e673cf23e28cb6b8d07dc",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.014514737820022034
+            },
+            "train": {
+              "rmse": 0.00027895541776893593,
+              "mae": 0.00016858775840613622,
+              "max_abs": 0.0015900114577084366,
+              "mse": 7.781612510264158e-08
+            },
+            "dense": {
+              "rmse": 0.1822350822626686,
+              "mae": 0.06351152995055238,
+              "max_abs": 1.8429244376354184,
+              "mse": 0.033209625207281594
+            },
+            "spatial": {
+              "rmse": 0.058534713031611486,
+              "mae": 0.024390257941432753,
+              "max_abs": 0.6226253168794984,
+              "mse": 0.0034263126296931075
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "correction_positions_finite": true,
+              "correction_gradients_finite": true,
+              "dense_inverse_hessian_finite": null,
+              "reason": "Limited-memory implementation has no dense H"
+            },
+            "final_training_mse_normalized": 9.894013375445144e-08,
+            "final_regularization_loss": -0.0
+          },
+          "ssbfgs": {
+            "method": "ssbfgs",
+            "elapsed_seconds": 658.7704384999815,
+            "evaluation_seconds": 0.5729938000440598,
+            "iterations": 1000,
+            "evaluations": 1004,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 1004,
+                "status": 1,
+                "message": "Maximum number of iterations has been exceeded.",
+                "converged": false,
+                "failed": false,
+                "final_loss": 6.080462926834603e-09,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 1004,
+              "status": 1,
+              "message": "Maximum number of iterations has been exceeded.",
+              "converged": false,
+              "failed": false,
+              "final_loss": 6.080462926834603e-09,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "6bcb2b39d36a62b49009c99cd99bb92db00ab692c8eb43d3382b7f4d94521f9b",
+            "final_parameter_hash": "440a4831362f0796bb6cd573874206fad296398fa01d85da7cad8886620db7e3",
+            "first_evaluation": {
+              "parameter_hash": "6bcb2b39d36a62b49009c99cd99bb92db00ab692c8eb43d3382b7f4d94521f9b",
+              "loss": 0.00038027166603822734,
+              "gradient_hash": "1e540ba209244d14c8c62fe3e4227103abbe5d93801e673cf23e28cb6b8d07dc",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.014514737820022034
+            },
+            "train": {
+              "rmse": 6.915393669032583e-05,
+              "mae": 3.780229333188543e-05,
+              "max_abs": 0.0004088326928035171,
+              "mse": 4.782266959769593e-09
+            },
+            "dense": {
+              "rmse": 0.18290387745528022,
+              "mae": 0.06405678037031452,
+              "max_abs": 1.8389332233772628,
+              "mse": 0.03345382838817616
+            },
+            "spatial": {
+              "rmse": 0.0594071159318757,
+              "mae": 0.0249214425310926,
+              "max_abs": 0.6003871051623305,
+              "mse": 0.0035292054233433193
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            },
+            "final_training_mse_normalized": 6.080462926834603e-09,
+            "final_regularization_loss": -0.0
+          },
+          "ssbroyden": {
+            "method": "ssbroyden",
+            "elapsed_seconds": 765.6745350998826,
+            "evaluation_seconds": 0.5676017999649048,
+            "iterations": 1000,
+            "evaluations": 1004,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 1004,
+                "status": 1,
+                "message": "Maximum number of iterations has been exceeded.",
+                "converged": false,
+                "failed": false,
+                "final_loss": 5.879393964647322e-09,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 1004,
+              "status": 1,
+              "message": "Maximum number of iterations has been exceeded.",
+              "converged": false,
+              "failed": false,
+              "final_loss": 5.879393964647322e-09,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "6bcb2b39d36a62b49009c99cd99bb92db00ab692c8eb43d3382b7f4d94521f9b",
+            "final_parameter_hash": "0ba253c027f393d2c339f8b2db96e5498595975b7fe8e6c7db6a3893f4bc2bcb",
+            "first_evaluation": {
+              "parameter_hash": "6bcb2b39d36a62b49009c99cd99bb92db00ab692c8eb43d3382b7f4d94521f9b",
+              "loss": 0.00038027166603822734,
+              "gradient_hash": "1e540ba209244d14c8c62fe3e4227103abbe5d93801e673cf23e28cb6b8d07dc",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.014514737820022034
+            },
+            "train": {
+              "rmse": 6.800093236411979e-05,
+              "mae": 3.7273035510617884e-05,
+              "max_abs": 0.00040283778063914563,
+              "mse": 4.6241268023895946e-09
+            },
+            "dense": {
+              "rmse": 0.18290564952569455,
+              "mae": 0.06405882996089042,
+              "max_abs": 1.8390310031409718,
+              "mse": 0.033454476628416205
+            },
+            "spatial": {
+              "rmse": 0.059423497027331934,
+              "mae": 0.024925153226277103,
+              "max_abs": 0.6007862038063785,
+              "mse": 0.003531151998957327
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            },
+            "final_training_mse_normalized": 5.879393964647322e-09,
+            "final_regularization_loss": -0.0
+          }
+        }
+      },
+      "l2_5": {
+        "case": "l2_5",
+        "kind": "l2",
+        "coefficient": 1e-05,
+        "warmup_elapsed_seconds": 191.24889619997703,
+        "warmup_provenance": "new 3000-epoch FP64 warmup",
+        "shared_start_parameter_hash": "f85adfc8f34de7b93fb82879c9898f431dd0b2e0269bd5e3518124e9389b0638",
+        "arms": {
+          "lbfgs": {
+            "method": "lbfgs",
+            "elapsed_seconds": 191.67301789997146,
+            "evaluation_seconds": 0.5794822000898421,
+            "iterations": 1000,
+            "evaluations": 2964,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 2964,
+                "failed": false,
+                "converged": false,
+                "final_loss": 0.00017820844190777005
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 2964,
+              "failed": false,
+              "converged": false,
+              "final_loss": 0.00017820844190777005
+            },
+            "initial_parameter_hash": "f85adfc8f34de7b93fb82879c9898f431dd0b2e0269bd5e3518124e9389b0638",
+            "final_parameter_hash": "4e7ea52586e73a8bbd5d8e6d9773c058251a26f3ccc5418f8651fe2efb253ca2",
+            "first_evaluation": {
+              "parameter_hash": "f85adfc8f34de7b93fb82879c9898f431dd0b2e0269bd5e3518124e9389b0638",
+              "loss": 0.0003969713726577281,
+              "gradient_hash": "048fde67a84c6897304c7b17beac4b684abd061b3369869d1073ccc0a37e6e44",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.011218824719215252
+            },
+            "train": {
+              "rmse": 0.0018476794403551957,
+              "mae": 0.0013704975886038157,
+              "max_abs": 0.007854240556240469,
+              "mse": 3.4139193143112893e-06
+            },
+            "dense": {
+              "rmse": 0.19070893105529443,
+              "mae": 0.07188658332849829,
+              "max_abs": 2.0104936297564118,
+              "mse": 0.036369896384253045
+            },
+            "spatial": {
+              "rmse": 0.06598286250644277,
+              "mae": 0.029491313219303202,
+              "max_abs": 0.7824024961926466,
+              "mse": 0.00435373814454413
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "correction_positions_finite": true,
+              "correction_gradients_finite": true,
+              "dense_inverse_hessian_finite": null,
+              "reason": "Limited-memory implementation has no dense H"
+            },
+            "final_training_mse_normalized": 4.340662746692634e-06,
+            "final_regularization_loss": 0.00017386777916107742
+          },
+          "ssbfgs": {
+            "method": "ssbfgs",
+            "elapsed_seconds": 671.7072236000095,
+            "evaluation_seconds": 0.5679542999714613,
+            "iterations": 1000,
+            "evaluations": 1003,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 1003,
+                "status": 1,
+                "message": "Maximum number of iterations has been exceeded.",
+                "converged": false,
+                "failed": false,
+                "final_loss": 0.00013382736306448526,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 1003,
+              "status": 1,
+              "message": "Maximum number of iterations has been exceeded.",
+              "converged": false,
+              "failed": false,
+              "final_loss": 0.00013382736306448526,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "f85adfc8f34de7b93fb82879c9898f431dd0b2e0269bd5e3518124e9389b0638",
+            "final_parameter_hash": "d2ecbbad983fcef8daf7ecddb2ab2f8a1bc9d7aa4f4837145efda7efcec5935f",
+            "first_evaluation": {
+              "parameter_hash": "f85adfc8f34de7b93fb82879c9898f431dd0b2e0269bd5e3518124e9389b0638",
+              "loss": 0.0003969713726577281,
+              "gradient_hash": "048fde67a84c6897304c7b17beac4b684abd061b3369869d1073ccc0a37e6e44",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.011218824719215252
+            },
+            "train": {
+              "rmse": 0.0008757688466528419,
+              "mae": 0.0006100316548351,
+              "max_abs": 0.004275576517139158,
+              "mse": 7.669710727676489e-07
+            },
+            "dense": {
+              "rmse": 0.19950102174829715,
+              "mae": 0.081720073411521,
+              "max_abs": 2.192127068408063,
+              "mse": 0.039800657678614536
+            },
+            "spatial": {
+              "rmse": 0.07779435817971155,
+              "mae": 0.036317036216448884,
+              "max_abs": 1.0067162620422245,
+              "mse": 0.006051962164593253
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            },
+            "final_training_mse_normalized": 9.75173210205662e-07,
+            "final_regularization_loss": 0.0001328521898542796
+          },
+          "ssbroyden": {
+            "method": "ssbroyden",
+            "elapsed_seconds": 762.4811505000107,
+            "evaluation_seconds": 0.6260744000319391,
+            "iterations": 1000,
+            "evaluations": 1003,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 1003,
+                "status": 1,
+                "message": "Maximum number of iterations has been exceeded.",
+                "converged": false,
+                "failed": false,
+                "final_loss": 0.00013380793473582677,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 1003,
+              "status": 1,
+              "message": "Maximum number of iterations has been exceeded.",
+              "converged": false,
+              "failed": false,
+              "final_loss": 0.00013380793473582677,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "f85adfc8f34de7b93fb82879c9898f431dd0b2e0269bd5e3518124e9389b0638",
+            "final_parameter_hash": "dbb9284c8dd0247ab888d58ca7f64cc9dee135fac4865a3b01539274d4242455",
+            "first_evaluation": {
+              "parameter_hash": "f85adfc8f34de7b93fb82879c9898f431dd0b2e0269bd5e3518124e9389b0638",
+              "loss": 0.0003969713726577281,
+              "gradient_hash": "048fde67a84c6897304c7b17beac4b684abd061b3369869d1073ccc0a37e6e44",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.011218824719215252
+            },
+            "train": {
+              "rmse": 0.000792628357026145,
+              "mae": 0.0005567242143419797,
+              "max_abs": 0.004106706323468778,
+              "mse": 6.282597123619658e-07
+            },
+            "dense": {
+              "rmse": 0.1988169004969684,
+              "mae": 0.08131795541743474,
+              "max_abs": 2.0536048901735744,
+              "mse": 0.03952815992322144
+            },
+            "spatial": {
+              "rmse": 0.07503389932033715,
+              "mae": 0.03544397692330657,
+              "max_abs": 0.9213859700491066,
+              "mse": 0.005630086047214492
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            },
+            "final_training_mse_normalized": 7.988072379127234e-07,
+            "final_regularization_loss": 0.00013300912749791404
+          }
+        }
+      },
+      "l2_4": {
+        "case": "l2_4",
+        "kind": "l2",
+        "coefficient": 0.0001,
+        "warmup_elapsed_seconds": 183.97176330001093,
+        "warmup_provenance": "new 3000-epoch FP64 warmup",
+        "shared_start_parameter_hash": "d8faaab5a5082b028f2fd393d0d98e05312deb23263816bb52c4eb072d1920bc",
+        "arms": {
+          "lbfgs": {
+            "method": "lbfgs",
+            "elapsed_seconds": 191.35779540007934,
+            "evaluation_seconds": 0.5825927001424134,
+            "iterations": 1000,
+            "evaluations": 2950,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 2950,
+                "failed": false,
+                "converged": false,
+                "final_loss": 0.0010816431661643013
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 2950,
+              "failed": false,
+              "converged": false,
+              "final_loss": 0.0010816431661643013
+            },
+            "initial_parameter_hash": "d8faaab5a5082b028f2fd393d0d98e05312deb23263816bb52c4eb072d1920bc",
+            "final_parameter_hash": "45ac532850278bc2573dc82af003c283802b32ba50bac427f1d85d578d0d4b9a",
+            "first_evaluation": {
+              "parameter_hash": "d8faaab5a5082b028f2fd393d0d98e05312deb23263816bb52c4eb072d1920bc",
+              "loss": 0.0019055677372522373,
+              "gradient_hash": "3f0f6692dd7906b9c8a91b4001549b9a4db5f9477db49d7ca04f26baf3b385df",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.07900894510754199
+            },
+            "train": {
+              "rmse": 0.002739290381885881,
+              "mae": 0.0020819004609564234,
+              "max_abs": 0.013433389398965115,
+              "mse": 7.5037117962924956e-06
+            },
+            "dense": {
+              "rmse": 0.19460012933997473,
+              "mae": 0.07891654492068292,
+              "max_abs": 1.8925125432562173,
+              "mse": 0.037869210339134894
+            },
+            "spatial": {
+              "rmse": 0.06945108645083022,
+              "mae": 0.03338081868362332,
+              "max_abs": 0.7195361818290213,
+              "mse": 0.004823453409200692
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "correction_positions_finite": true,
+              "correction_gradients_finite": true,
+              "dense_inverse_hessian_finite": null,
+              "reason": "Limited-memory implementation has no dense H"
+            },
+            "final_training_mse_normalized": 9.540671382554022e-06,
+            "final_regularization_loss": 0.0010721024947817472
+          },
+          "ssbfgs": {
+            "method": "ssbfgs",
+            "elapsed_seconds": 655.8699552000035,
+            "evaluation_seconds": 0.5659650999587029,
+            "iterations": 1000,
+            "evaluations": 1005,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 1005,
+                "status": 1,
+                "message": "Maximum number of iterations has been exceeded.",
+                "converged": false,
+                "failed": false,
+                "final_loss": 0.0009799832528193397,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 1005,
+              "status": 1,
+              "message": "Maximum number of iterations has been exceeded.",
+              "converged": false,
+              "failed": false,
+              "final_loss": 0.0009799832528193397,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "d8faaab5a5082b028f2fd393d0d98e05312deb23263816bb52c4eb072d1920bc",
+            "final_parameter_hash": "9f90057b59dc99d16ae4899f5c050a2ea68c671eb7decb735337495281610a56",
+            "first_evaluation": {
+              "parameter_hash": "d8faaab5a5082b028f2fd393d0d98e05312deb23263816bb52c4eb072d1920bc",
+              "loss": 0.0019055677372522373,
+              "gradient_hash": "3f0f6692dd7906b9c8a91b4001549b9a4db5f9477db49d7ca04f26baf3b385df",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.07900894510754199
+            },
+            "train": {
+              "rmse": 0.002011623810901691,
+              "mae": 0.001491886889445802,
+              "max_abs": 0.01415580360941637,
+              "mse": 4.046630356586643e-06
+            },
+            "dense": {
+              "rmse": 0.20047205311954566,
+              "mae": 0.08514537442768784,
+              "max_abs": 2.0225224496398555,
+              "mse": 0.040189044081965934
+            },
+            "spatial": {
+              "rmse": 0.07647724138995574,
+              "mae": 0.037523143453470936,
+              "max_abs": 0.8148964661268815,
+              "mse": 0.005848768450617559
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            },
+            "final_training_mse_normalized": 5.145129425452199e-06,
+            "final_regularization_loss": 0.0009748381233938876
+          },
+          "ssbroyden": {
+            "method": "ssbroyden",
+            "elapsed_seconds": 760.7764051000122,
+            "evaluation_seconds": 0.5744352999608964,
+            "iterations": 1000,
+            "evaluations": 1005,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 1005,
+                "status": 1,
+                "message": "Maximum number of iterations has been exceeded.",
+                "converged": false,
+                "failed": false,
+                "final_loss": 0.0009865891584613482,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 1005,
+              "status": 1,
+              "message": "Maximum number of iterations has been exceeded.",
+              "converged": false,
+              "failed": false,
+              "final_loss": 0.0009865891584613482,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "d8faaab5a5082b028f2fd393d0d98e05312deb23263816bb52c4eb072d1920bc",
+            "final_parameter_hash": "66e0f3cc6bab3bda12728cee1add242b10d877ee007ddef06bbb89e861906d95",
+            "first_evaluation": {
+              "parameter_hash": "d8faaab5a5082b028f2fd393d0d98e05312deb23263816bb52c4eb072d1920bc",
+              "loss": 0.0019055677372522373,
+              "gradient_hash": "3f0f6692dd7906b9c8a91b4001549b9a4db5f9477db49d7ca04f26baf3b385df",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.07900894510754199
+            },
+            "train": {
+              "rmse": 0.002153959673392406,
+              "mae": 0.0015772925937844358,
+              "max_abs": 0.015451386758757398,
+              "mse": 4.639542274600721e-06
+            },
+            "dense": {
+              "rmse": 0.20226336543810836,
+              "mae": 0.08630563943607268,
+              "max_abs": 1.988871519039085,
+              "mse": 0.04091046899834976
+            },
+            "spatial": {
+              "rmse": 0.07605879974980864,
+              "mae": 0.03757788017963725,
+              "max_abs": 0.8045202763184509,
+              "mse": 0.00578494101938149
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            },
+            "final_training_mse_normalized": 5.898993661629081e-06,
+            "final_regularization_loss": 0.000980690164799719
+          }
+        }
+      },
+      "l2_3": {
+        "case": "l2_3",
+        "kind": "l2",
+        "coefficient": 0.001,
+        "warmup_elapsed_seconds": 188.66872290009633,
+        "warmup_provenance": "new 3000-epoch FP64 warmup",
+        "shared_start_parameter_hash": "5022e900f2a36409815eae55beefd2c1a89e695b929d60012b44c6eb61796cb8",
+        "arms": {
+          "lbfgs": {
+            "method": "lbfgs",
+            "elapsed_seconds": 195.22003849991597,
+            "evaluation_seconds": 0.7057771999388933,
+            "iterations": 1000,
+            "evaluations": 2935,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 2935,
+                "failed": false,
+                "converged": false,
+                "final_loss": 0.006121620507698245
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 2935,
+              "failed": false,
+              "converged": false,
+              "final_loss": 0.006121620507698245
+            },
+            "initial_parameter_hash": "5022e900f2a36409815eae55beefd2c1a89e695b929d60012b44c6eb61796cb8",
+            "final_parameter_hash": "99665b28ad799e8483e9927d8a6e71bf0a0844501d01090bd4f723780611ba56",
+            "first_evaluation": {
+              "parameter_hash": "5022e900f2a36409815eae55beefd2c1a89e695b929d60012b44c6eb61796cb8",
+              "loss": 0.008223284884805612,
+              "gradient_hash": "43d59da4127adb16c13e2aff1e4d334c7cf2652cca7087efd00a877d6b779ee2",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.0641320618361317
+            },
+            "train": {
+              "rmse": 0.008816253082798485,
+              "mae": 0.006108089391032637,
+              "max_abs": 0.12475735202554372,
+              "mse": 7.772631841995378e-05
+            },
+            "dense": {
+              "rmse": 0.19947349454339344,
+              "mae": 0.08314691354110794,
+              "max_abs": 2.1342819722253754,
+              "mse": 0.03978967502535321
+            },
+            "spatial": {
+              "rmse": 0.08097848843715706,
+              "mae": 0.0383132822995444,
+              "max_abs": 0.9540638554606016,
+              "mse": 0.00655751558956678
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "correction_positions_finite": true,
+              "correction_gradients_finite": true,
+              "dense_inverse_hessian_finite": null,
+              "reason": "Limited-memory implementation has no dense H"
+            },
+            "final_training_mse_normalized": 9.882592695985287e-05,
+            "final_regularization_loss": 0.006022794580738392
+          },
+          "ssbfgs": {
+            "method": "ssbfgs",
+            "elapsed_seconds": 656.8205319999252,
+            "evaluation_seconds": 0.6981887998990715,
+            "iterations": 1000,
+            "evaluations": 1004,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 1004,
+                "status": 1,
+                "message": "Maximum number of iterations has been exceeded.",
+                "converged": false,
+                "failed": false,
+                "final_loss": 0.005609558712408957,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 1004,
+              "status": 1,
+              "message": "Maximum number of iterations has been exceeded.",
+              "converged": false,
+              "failed": false,
+              "final_loss": 0.005609558712408957,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "5022e900f2a36409815eae55beefd2c1a89e695b929d60012b44c6eb61796cb8",
+            "final_parameter_hash": "cdcc26c70ae2aa734ccdb15e5a0d5f7a9b921d5757c62fb88c685c5cfb469be5",
+            "first_evaluation": {
+              "parameter_hash": "5022e900f2a36409815eae55beefd2c1a89e695b929d60012b44c6eb61796cb8",
+              "loss": 0.008223284884805612,
+              "gradient_hash": "43d59da4127adb16c13e2aff1e4d334c7cf2652cca7087efd00a877d6b779ee2",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.0641320618361317
+            },
+            "train": {
+              "rmse": 0.00818192571016698,
+              "mae": 0.004982347780902409,
+              "max_abs": 0.1251862222414073,
+              "mse": 6.694390832669145e-05
+            },
+            "dense": {
+              "rmse": 0.20770674802325118,
+              "mae": 0.09075243474128962,
+              "max_abs": 2.0211829153977945,
+              "mse": 0.04314209317439435
+            },
+            "spatial": {
+              "rmse": 0.09815319201859508,
+              "mae": 0.04476035254731783,
+              "max_abs": 0.942238058296857,
+              "mse": 0.009634049103439197
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            },
+            "final_training_mse_normalized": 8.511652205659717e-05,
+            "final_regularization_loss": 0.00552444219035236
+          },
+          "ssbroyden": {
+            "method": "ssbroyden",
+            "elapsed_seconds": 761.9276256000157,
+            "evaluation_seconds": 0.6978547000326216,
+            "iterations": 1000,
+            "evaluations": 1004,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 1004,
+                "status": 1,
+                "message": "Maximum number of iterations has been exceeded.",
+                "converged": false,
+                "failed": false,
+                "final_loss": 0.005605934000184666,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 1004,
+              "status": 1,
+              "message": "Maximum number of iterations has been exceeded.",
+              "converged": false,
+              "failed": false,
+              "final_loss": 0.005605934000184666,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "5022e900f2a36409815eae55beefd2c1a89e695b929d60012b44c6eb61796cb8",
+            "final_parameter_hash": "2695cb6ebb0418a7321dd932b7eb5943cf99ba421d28b94477d6deb3a54e03be",
+            "first_evaluation": {
+              "parameter_hash": "5022e900f2a36409815eae55beefd2c1a89e695b929d60012b44c6eb61796cb8",
+              "loss": 0.008223284884805612,
+              "gradient_hash": "43d59da4127adb16c13e2aff1e4d334c7cf2652cca7087efd00a877d6b779ee2",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.0641320618361317
+            },
+            "train": {
+              "rmse": 0.007354934632020838,
+              "mae": 0.004909037085354638,
+              "max_abs": 0.09024952289883481,
+              "mse": 5.4095063441299505e-05
+            },
+            "dense": {
+              "rmse": 0.20822927858388793,
+              "mae": 0.09198466997986725,
+              "max_abs": 2.069411201816085,
+              "mse": 0.04335943245956641
+            },
+            "spatial": {
+              "rmse": 0.10230067592480675,
+              "mae": 0.04739987454374868,
+              "max_abs": 0.9069199721796188,
+              "mse": 0.010465428294672336
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            },
+            "final_training_mse_normalized": 6.877972394654067e-05,
+            "final_regularization_loss": 0.005537154276238125
+          }
+        }
+      },
+      "l2_2": {
+        "case": "l2_2",
+        "kind": "l2",
+        "coefficient": 0.01,
+        "warmup_elapsed_seconds": 384.3918167001102,
+        "warmup_provenance": "new 3000-epoch FP64 warmup",
+        "shared_start_parameter_hash": "70007c3302f71232d08718176480d7bb5690d091bd3fe3fd7d47864badacfe5e",
+        "arms": {
+          "lbfgs": {
+            "method": "lbfgs",
+            "elapsed_seconds": 0.7317814000416547,
+            "evaluation_seconds": 1.2401785000693053,
+            "iterations": 3,
+            "evaluations": 11,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 3,
+                "evaluations": 11,
+                "failed": false,
+                "converged": true,
+                "final_loss": 0.0251960666652694
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 3,
+              "evaluations": 11,
+              "failed": false,
+              "converged": true,
+              "final_loss": 0.0251960666652694
+            },
+            "initial_parameter_hash": "70007c3302f71232d08718176480d7bb5690d091bd3fe3fd7d47864badacfe5e",
+            "final_parameter_hash": "dedc63637d375b2329afdd8dddf4202e8c80f106556bc4c8089693a0c458fe92",
+            "first_evaluation": {
+              "parameter_hash": "70007c3302f71232d08718176480d7bb5690d091bd3fe3fd7d47864badacfe5e",
+              "loss": 0.02519623442888495,
+              "gradient_hash": "dcd9ae5c89bd0ecb4ae3756dd50be7367746f8a2ed6f28affd745d54f5540dd3",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.0007969582789384633
+            },
+            "train": {
+              "rmse": 0.14077157538356544,
+              "mae": 0.03534068460383835,
+              "max_abs": 0.8868467807787578,
+              "mse": 0.01981663643597085
+            },
+            "dense": {
+              "rmse": 0.14093450590101392,
+              "mae": 0.035765134810574764,
+              "max_abs": 0.984884519049377,
+              "mse": 0.019862534953562924
+            },
+            "spatial": {
+              "rmse": 0.14077157556847208,
+              "mae": 0.035664710970042875,
+              "max_abs": 0.9835658819178684,
+              "mse": 0.019816636488030046
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "correction_positions_finite": true,
+              "correction_gradients_finite": true,
+              "dense_inverse_hessian_finite": null,
+              "reason": "Limited-memory implementation has no dense H"
+            },
+            "final_training_mse_normalized": 0.0251960666652694,
+            "final_regularization_loss": 7.488468981672552e-25
+          },
+          "ssbfgs": {
+            "method": "ssbfgs",
+            "elapsed_seconds": 4.6206068999599665,
+            "evaluation_seconds": 1.341984299942851,
+            "iterations": 7,
+            "evaluations": 11,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 7,
+                "evaluations": 11,
+                "status": 0,
+                "message": "Optimization terminated successfully.",
+                "converged": true,
+                "failed": false,
+                "final_loss": 0.0251960666652694,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 7,
+              "evaluations": 11,
+              "status": 0,
+              "message": "Optimization terminated successfully.",
+              "converged": true,
+              "failed": false,
+              "final_loss": 0.0251960666652694,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "70007c3302f71232d08718176480d7bb5690d091bd3fe3fd7d47864badacfe5e",
+            "final_parameter_hash": "9128ea77f766dddb8471a0e4d8df3e71beb917f5b034304c93878cdf5c347245",
+            "first_evaluation": {
+              "parameter_hash": "70007c3302f71232d08718176480d7bb5690d091bd3fe3fd7d47864badacfe5e",
+              "loss": 0.02519623442888495,
+              "gradient_hash": "dcd9ae5c89bd0ecb4ae3756dd50be7367746f8a2ed6f28affd745d54f5540dd3",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.0007969582789384633
+            },
+            "train": {
+              "rmse": 0.14077157538356544,
+              "mae": 0.03534068460383835,
+              "max_abs": 0.8868467807787578,
+              "mse": 0.01981663643597085
+            },
+            "dense": {
+              "rmse": 0.14093450590101392,
+              "mae": 0.035765134810574764,
+              "max_abs": 0.984884519049377,
+              "mse": 0.019862534953562924
+            },
+            "spatial": {
+              "rmse": 0.14077157556847208,
+              "mae": 0.035664710970042875,
+              "max_abs": 0.9835658819178684,
+              "mse": 0.019816636488030046
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            },
+            "final_training_mse_normalized": 0.0251960666652694,
+            "final_regularization_loss": 7.488467545626015e-25
+          },
+          "ssbroyden": {
+            "method": "ssbroyden",
+            "elapsed_seconds": 5.199612499913201,
+            "evaluation_seconds": 1.1988932001404464,
+            "iterations": 7,
+            "evaluations": 11,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 7,
+                "evaluations": 11,
+                "status": 0,
+                "message": "Optimization terminated successfully.",
+                "converged": true,
+                "failed": false,
+                "final_loss": 0.0251960666652694,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 7,
+              "evaluations": 11,
+              "status": 0,
+              "message": "Optimization terminated successfully.",
+              "converged": true,
+              "failed": false,
+              "final_loss": 0.0251960666652694,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "70007c3302f71232d08718176480d7bb5690d091bd3fe3fd7d47864badacfe5e",
+            "final_parameter_hash": "b81b897afc985657129afc321379e4955f7d94efd4a391f76676ac4d1bb9cec8",
+            "first_evaluation": {
+              "parameter_hash": "70007c3302f71232d08718176480d7bb5690d091bd3fe3fd7d47864badacfe5e",
+              "loss": 0.02519623442888495,
+              "gradient_hash": "dcd9ae5c89bd0ecb4ae3756dd50be7367746f8a2ed6f28affd745d54f5540dd3",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.0007969582789384633
+            },
+            "train": {
+              "rmse": 0.14077157538356544,
+              "mae": 0.03534068460383835,
+              "max_abs": 0.8868467807787578,
+              "mse": 0.01981663643597085
+            },
+            "dense": {
+              "rmse": 0.14093450590101392,
+              "mae": 0.035765134810574764,
+              "max_abs": 0.984884519049377,
+              "mse": 0.019862534953562924
+            },
+            "spatial": {
+              "rmse": 0.14077157556847208,
+              "mae": 0.035664710970042875,
+              "max_abs": 0.9835658819178684,
+              "mse": 0.019816636488030046
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            },
+            "final_training_mse_normalized": 0.0251960666652694,
+            "final_regularization_loss": 7.488471007510014e-25
+          }
+        }
+      },
+      "l1_5": {
+        "case": "l1_5",
+        "kind": "l1",
+        "coefficient": 1e-05,
+        "warmup_elapsed_seconds": 184.99317899998277,
+        "warmup_provenance": "new 3000-epoch FP64 warmup",
+        "shared_start_parameter_hash": "fcb8ea5c01bfef00599df90593c437f3c3dd42969a1935e344509d562089cbde",
+        "arms": {
+          "lbfgs": {
+            "method": "lbfgs",
+            "elapsed_seconds": 190.36229979991913,
+            "evaluation_seconds": 0.5811115000396967,
+            "iterations": 1000,
+            "evaluations": 2950,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 2950,
+                "failed": false,
+                "converged": false,
+                "final_loss": 0.0006668528139438501
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 2950,
+              "failed": false,
+              "converged": false,
+              "final_loss": 0.0006668528139438501
+            },
+            "initial_parameter_hash": "fcb8ea5c01bfef00599df90593c437f3c3dd42969a1935e344509d562089cbde",
+            "final_parameter_hash": "6a42b9602f8fda591e3dad1294f1b1a5b3d2c27f45ec8b708068622e7a49c81b",
+            "first_evaluation": {
+              "parameter_hash": "fcb8ea5c01bfef00599df90593c437f3c3dd42969a1935e344509d562089cbde",
+              "loss": 0.0013447303828070679,
+              "gradient_hash": "f2f770b4e1911b088df9cbb9cb21f46094927600559f6a609666fa58ad2f97e4",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.026864563066458493
+            },
+            "train": {
+              "rmse": 0.0019416881752048077,
+              "mae": 0.0014821831817117825,
+              "max_abs": 0.008744821143219964,
+              "mse": 3.770152969730176e-06
+            },
+            "dense": {
+              "rmse": 0.19585876403583918,
+              "mae": 0.07326142316450905,
+              "max_abs": 1.9934532731557426,
+              "mse": 0.038360655449646536
+            },
+            "spatial": {
+              "rmse": 0.06110966285613223,
+              "mae": 0.026222743019113252,
+              "max_abs": 0.7704926228455478,
+              "mse": 0.0037343908943901468
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "correction_positions_finite": true,
+              "correction_gradients_finite": true,
+              "dense_inverse_hessian_finite": null,
+              "reason": "Limited-memory implementation has no dense H"
+            },
+            "final_training_mse_normalized": 4.793599649839764e-06,
+            "final_regularization_loss": 0.0006620592142940104
+          },
+          "ssbfgs": {
+            "method": "ssbfgs",
+            "elapsed_seconds": 651.5101497999858,
+            "evaluation_seconds": 0.5550202000886202,
+            "iterations": 1000,
+            "evaluations": 1002,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 1002,
+                "status": 1,
+                "message": "Maximum number of iterations has been exceeded.",
+                "converged": false,
+                "failed": false,
+                "final_loss": 0.0005531239750466046,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 1002,
+              "status": 1,
+              "message": "Maximum number of iterations has been exceeded.",
+              "converged": false,
+              "failed": false,
+              "final_loss": 0.0005531239750466046,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "fcb8ea5c01bfef00599df90593c437f3c3dd42969a1935e344509d562089cbde",
+            "final_parameter_hash": "796012be12ba43f36b15c0bc6e5fa6ee7f9693599526dc858aab1cfedb11b85e",
+            "first_evaluation": {
+              "parameter_hash": "fcb8ea5c01bfef00599df90593c437f3c3dd42969a1935e344509d562089cbde",
+              "loss": 0.0013447303828070679,
+              "gradient_hash": "f2f770b4e1911b088df9cbb9cb21f46094927600559f6a609666fa58ad2f97e4",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.026864563066458493
+            },
+            "train": {
+              "rmse": 0.0013118573915561244,
+              "mae": 0.0009592652428094791,
+              "max_abs": 0.007533789371996656,
+              "mse": 1.7209698157804388e-06
+            },
+            "dense": {
+              "rmse": 0.1973054515195447,
+              "mae": 0.07383198201384127,
+              "max_abs": 2.07367785585052,
+              "mse": 0.0389294411993314
+            },
+            "spatial": {
+              "rmse": 0.056480182800286806,
+              "mae": 0.025275733755984128,
+              "max_abs": 0.6108799913607587,
+              "mse": 0.003190011049153814
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            },
+            "final_training_mse_normalized": 2.188144633660064e-06,
+            "final_regularization_loss": 0.0005509358304129446
+          },
+          "ssbroyden": {
+            "method": "ssbroyden",
+            "elapsed_seconds": 757.530579800019,
+            "evaluation_seconds": 0.5465000001713634,
+            "iterations": 1000,
+            "evaluations": 1003,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 1003,
+                "status": 1,
+                "message": "Maximum number of iterations has been exceeded.",
+                "converged": false,
+                "failed": false,
+                "final_loss": 0.0005550455994396213,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 1003,
+              "status": 1,
+              "message": "Maximum number of iterations has been exceeded.",
+              "converged": false,
+              "failed": false,
+              "final_loss": 0.0005550455994396213,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "fcb8ea5c01bfef00599df90593c437f3c3dd42969a1935e344509d562089cbde",
+            "final_parameter_hash": "2230f4355651752c68bd4f73b26a895d10482d11b6c909049548349c7e0f2033",
+            "first_evaluation": {
+              "parameter_hash": "fcb8ea5c01bfef00599df90593c437f3c3dd42969a1935e344509d562089cbde",
+              "loss": 0.0013447303828070679,
+              "gradient_hash": "f2f770b4e1911b088df9cbb9cb21f46094927600559f6a609666fa58ad2f97e4",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.026864563066458493
+            },
+            "train": {
+              "rmse": 0.0013647131839190389,
+              "mae": 0.0009981260581876945,
+              "max_abs": 0.007713595187522268,
+              "mse": 1.8624420743624404e-06
+            },
+            "dense": {
+              "rmse": 0.1968302626467303,
+              "mae": 0.07322665948314662,
+              "max_abs": 2.0028374364169927,
+              "mse": 0.03874215229358083
+            },
+            "spatial": {
+              "rmse": 0.056853525163481806,
+              "mae": 0.02507773899244807,
+              "max_abs": 0.6164597246871696,
+              "mse": 0.003232323323514659
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            },
+            "final_training_mse_normalized": 2.368020842213941e-06,
+            "final_regularization_loss": 0.0005526775785974074
+          }
+        }
+      },
+      "l1_4": {
+        "case": "l1_4",
+        "kind": "l1",
+        "coefficient": 0.0001,
+        "warmup_elapsed_seconds": 195.90770700015128,
+        "warmup_provenance": "new 3000-epoch FP64 warmup",
+        "shared_start_parameter_hash": "d1b4c1a174c04f2e59129e71cbd5e460fa9dd115a2f0e992efa43986f2c2a65a",
+        "arms": {
+          "lbfgs": {
+            "method": "lbfgs",
+            "elapsed_seconds": 201.13432830013335,
+            "evaluation_seconds": 0.6337866999674588,
+            "iterations": 1000,
+            "evaluations": 2943,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 2943,
+                "failed": false,
+                "converged": false,
+                "final_loss": 0.023732204557200952
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 2943,
+              "failed": false,
+              "converged": false,
+              "final_loss": 0.023732204557200952
+            },
+            "initial_parameter_hash": "d1b4c1a174c04f2e59129e71cbd5e460fa9dd115a2f0e992efa43986f2c2a65a",
+            "final_parameter_hash": "235487a0d688d5a606cb566d2c67b7b71e938994c30c21dc5a28661d503c6ffd",
+            "first_evaluation": {
+              "parameter_hash": "d1b4c1a174c04f2e59129e71cbd5e460fa9dd115a2f0e992efa43986f2c2a65a",
+              "loss": 0.024189380731081726,
+              "gradient_hash": "c74060d7f6187ffba498b9f8f0808cedb96f7e9372004cbc5461caf64d450955",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.005321777455514508
+            },
+            "train": {
+              "rmse": 0.13267571883942111,
+              "mae": 0.05738917087922348,
+              "max_abs": 0.8084020391007226,
+              "mse": 0.017602846369557126
+            },
+            "dense": {
+              "rmse": 0.14881047855732152,
+              "mae": 0.06589118865016566,
+              "max_abs": 1.123193946393529,
+              "mse": 0.022144558528459046
+            },
+            "spatial": {
+              "rmse": 0.1349168601661219,
+              "mae": 0.061842229337148905,
+              "max_abs": 0.9551867148387461,
+              "mse": 0.01820255915708489
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "correction_positions_finite": true,
+              "correction_gradients_finite": true,
+              "dense_inverse_hessian_finite": null,
+              "reason": "Limited-memory implementation has no dense H"
+            },
+            "final_training_mse_normalized": 0.0223813204710459,
+            "final_regularization_loss": 0.001350884086155053
+          },
+          "ssbfgs": {
+            "method": "ssbfgs",
+            "elapsed_seconds": 662.5268939998932,
+            "evaluation_seconds": 0.5682739999610931,
+            "iterations": 1000,
+            "evaluations": 1004,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 1004,
+                "status": 1,
+                "message": "Maximum number of iterations has been exceeded.",
+                "converged": false,
+                "failed": false,
+                "final_loss": 0.023712708023903267,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 1004,
+              "status": 1,
+              "message": "Maximum number of iterations has been exceeded.",
+              "converged": false,
+              "failed": false,
+              "final_loss": 0.023712708023903267,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "d1b4c1a174c04f2e59129e71cbd5e460fa9dd115a2f0e992efa43986f2c2a65a",
+            "final_parameter_hash": "d39fead2d0a78f45b31665ca94eae5b29d720328b7e13a5ad205418355b6e757",
+            "first_evaluation": {
+              "parameter_hash": "d1b4c1a174c04f2e59129e71cbd5e460fa9dd115a2f0e992efa43986f2c2a65a",
+              "loss": 0.024189380731081726,
+              "gradient_hash": "c74060d7f6187ffba498b9f8f0808cedb96f7e9372004cbc5461caf64d450955",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.005321777455514508
+            },
+            "train": {
+              "rmse": 0.13268156000270828,
+              "mae": 0.057497773953387385,
+              "max_abs": 0.8058915683258169,
+              "mse": 0.017604396364752282
+            },
+            "dense": {
+              "rmse": 0.14888307577305504,
+              "mae": 0.06600495178824405,
+              "max_abs": 1.1065194195683916,
+              "mse": 0.022166170251645245
+            },
+            "spatial": {
+              "rmse": 0.13491232677538065,
+              "mae": 0.062143218939147205,
+              "max_abs": 0.9630614666074202,
+              "mse": 0.01820133591594709
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            },
+            "final_training_mse_normalized": 0.02238329122842434,
+            "final_regularization_loss": 0.0013294167954789266
+          },
+          "ssbroyden": {
+            "method": "ssbroyden",
+            "elapsed_seconds": 765.9851566001307,
+            "evaluation_seconds": 0.6087764999829233,
+            "iterations": 1000,
+            "evaluations": 1003,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 1003,
+                "status": 1,
+                "message": "Maximum number of iterations has been exceeded.",
+                "converged": false,
+                "failed": false,
+                "final_loss": 0.023822041537966177,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 1003,
+              "status": 1,
+              "message": "Maximum number of iterations has been exceeded.",
+              "converged": false,
+              "failed": false,
+              "final_loss": 0.023822041537966177,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "d1b4c1a174c04f2e59129e71cbd5e460fa9dd115a2f0e992efa43986f2c2a65a",
+            "final_parameter_hash": "997aaf8c40e51c0c312bdb7fef38c6f2534b96a03ad53b12b73eb26f256420a5",
+            "first_evaluation": {
+              "parameter_hash": "d1b4c1a174c04f2e59129e71cbd5e460fa9dd115a2f0e992efa43986f2c2a65a",
+              "loss": 0.024189380731081726,
+              "gradient_hash": "c74060d7f6187ffba498b9f8f0808cedb96f7e9372004cbc5461caf64d450955",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.005321777455514508
+            },
+            "train": {
+              "rmse": 0.13266802832149185,
+              "mae": 0.057503600854773095,
+              "max_abs": 0.8028341963357835,
+              "mse": 0.01760080573871217
+            },
+            "dense": {
+              "rmse": 0.14858815953631138,
+              "mae": 0.0655642259720155,
+              "max_abs": 1.1122116054577051,
+              "mse": 0.022078441154388326
+            },
+            "spatial": {
+              "rmse": 0.13467634705175832,
+              "mae": 0.06154710869138547,
+              "max_abs": 0.9610185022134818,
+              "mse": 0.01813771845520565
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            },
+            "final_training_mse_normalized": 0.022378725889970936,
+            "final_regularization_loss": 0.0014433156479952427
+          }
+        }
+      },
+      "l1_3": {
+        "case": "l1_3",
+        "kind": "l1",
+        "coefficient": 0.001,
+        "warmup_elapsed_seconds": 190.69640309992246,
+        "warmup_provenance": "new 3000-epoch FP64 warmup",
+        "shared_start_parameter_hash": "ab4cba0dcee5378a348e55dc48163faeb1022d4593a3d7b705cba6025a5cd9e1",
+        "arms": {
+          "lbfgs": {
+            "method": "lbfgs",
+            "elapsed_seconds": 175.9749384999741,
+            "evaluation_seconds": 0.5977207999676466,
+            "iterations": 1000,
+            "evaluations": 2698,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 2698,
+                "failed": false,
+                "converged": false,
+                "final_loss": 0.02760851459692104
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 2698,
+              "failed": false,
+              "converged": false,
+              "final_loss": 0.02760851459692104
+            },
+            "initial_parameter_hash": "ab4cba0dcee5378a348e55dc48163faeb1022d4593a3d7b705cba6025a5cd9e1",
+            "final_parameter_hash": "d57a86fc02024c14f32e8a9b0d199163c6dff9d2a63fd3017ce7a2691fa453a2",
+            "first_evaluation": {
+              "parameter_hash": "ab4cba0dcee5378a348e55dc48163faeb1022d4593a3d7b705cba6025a5cd9e1",
+              "loss": 0.028238146290488257,
+              "gradient_hash": "88bbfbb1a5df3f2c7fa1ca3967d9a254756c9b8ece46384f71320bff85fec991",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.007029968477949153
+            },
+            "train": {
+              "rmse": 0.1363751172029662,
+              "mae": 0.05177100134874604,
+              "max_abs": 0.8962241267690556,
+              "mse": 0.018598172592122764
+            },
+            "dense": {
+              "rmse": 0.1450414791355075,
+              "mae": 0.054997311693839916,
+              "max_abs": 1.1047899614815535,
+              "mse": 0.021037030669815854
+            },
+            "spatial": {
+              "rmse": 0.13663180044511608,
+              "mae": 0.052796634031444016,
+              "max_abs": 0.991930571061534,
+              "mse": 0.01866824889287402
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "correction_positions_finite": true,
+              "correction_gradients_finite": true,
+              "dense_inverse_hessian_finite": null,
+              "reason": "Limited-memory implementation has no dense H"
+            },
+            "final_training_mse_normalized": 0.023646838246859328,
+            "final_regularization_loss": 0.003961676350061715
+          },
+          "ssbfgs": {
+            "method": "ssbfgs",
+            "elapsed_seconds": 653.5575295998715,
+            "evaluation_seconds": 0.5677672999445349,
+            "iterations": 1000,
+            "evaluations": 1004,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 1004,
+                "status": 1,
+                "message": "Maximum number of iterations has been exceeded.",
+                "converged": false,
+                "failed": false,
+                "final_loss": 0.027610287885146013,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 1004,
+              "status": 1,
+              "message": "Maximum number of iterations has been exceeded.",
+              "converged": false,
+              "failed": false,
+              "final_loss": 0.027610287885146013,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "ab4cba0dcee5378a348e55dc48163faeb1022d4593a3d7b705cba6025a5cd9e1",
+            "final_parameter_hash": "47dc3cdde4bddaafa4f4bf459f4b5fb1c20bebbc49eab5eb1e360f9a77a95514",
+            "first_evaluation": {
+              "parameter_hash": "ab4cba0dcee5378a348e55dc48163faeb1022d4593a3d7b705cba6025a5cd9e1",
+              "loss": 0.028238146290488257,
+              "gradient_hash": "88bbfbb1a5df3f2c7fa1ca3967d9a254756c9b8ece46384f71320bff85fec991",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.007029968477949153
+            },
+            "train": {
+              "rmse": 0.13636784409039854,
+              "mae": 0.05196831486592926,
+              "max_abs": 0.8956561577985233,
+              "mse": 0.018596188901863243
+            },
+            "dense": {
+              "rmse": 0.14515937040700827,
+              "mae": 0.055202467767154144,
+              "max_abs": 1.1062504315873691,
+              "mse": 0.02107124281695903
+            },
+            "spatial": {
+              "rmse": 0.1366389186753924,
+              "mae": 0.052996624427715855,
+              "max_abs": 0.9913593581613672,
+              "mse": 0.018670194096780498
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            },
+            "final_training_mse_normalized": 0.023644316063537587,
+            "final_regularization_loss": 0.003965971821608427
+          },
+          "ssbroyden": {
+            "method": "ssbroyden",
+            "elapsed_seconds": 758.3109150999226,
+            "evaluation_seconds": 0.5828417001757771,
+            "iterations": 1000,
+            "evaluations": 1005,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 1005,
+                "status": 1,
+                "message": "Maximum number of iterations has been exceeded.",
+                "converged": false,
+                "failed": false,
+                "final_loss": 0.027617530120527783,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 1005,
+              "status": 1,
+              "message": "Maximum number of iterations has been exceeded.",
+              "converged": false,
+              "failed": false,
+              "final_loss": 0.027617530120527783,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "ab4cba0dcee5378a348e55dc48163faeb1022d4593a3d7b705cba6025a5cd9e1",
+            "final_parameter_hash": "9a097a2b74be43ef2e8161c2ff9e4e6b7eb25abf8f1e8af006d8d58ff0cd442b",
+            "first_evaluation": {
+              "parameter_hash": "ab4cba0dcee5378a348e55dc48163faeb1022d4593a3d7b705cba6025a5cd9e1",
+              "loss": 0.028238146290488257,
+              "gradient_hash": "88bbfbb1a5df3f2c7fa1ca3967d9a254756c9b8ece46384f71320bff85fec991",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.007029968477949153
+            },
+            "train": {
+              "rmse": 0.13637041642413555,
+              "mae": 0.051996605217960935,
+              "max_abs": 0.8957558103453774,
+              "mse": 0.018596890475692143
+            },
+            "dense": {
+              "rmse": 0.14516175060907088,
+              "mae": 0.055261497647909275,
+              "max_abs": 1.106792846517683,
+              "mse": 0.021071933839890093
+            },
+            "spatial": {
+              "rmse": 0.13664407560210898,
+              "mae": 0.05304384165487393,
+              "max_abs": 0.9915093687372023,
+              "mse": 0.018671603397154877
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            },
+            "final_training_mse_normalized": 0.023645208086753022,
+            "final_regularization_loss": 0.003972322033774761
+          }
+        }
+      },
+      "l1_2": {
+        "case": "l1_2",
+        "kind": "l1",
+        "coefficient": 0.01,
+        "warmup_elapsed_seconds": 185.67881499999203,
+        "warmup_provenance": "new 3000-epoch FP64 warmup",
+        "shared_start_parameter_hash": "a4e545db1012f2569c629453f7b7f0680a5b9b212a68d64a827ab6ffafbc6573",
+        "arms": {
+          "lbfgs": {
+            "method": "lbfgs",
+            "elapsed_seconds": 177.1769946999848,
+            "evaluation_seconds": 0.5827317000366747,
+            "iterations": 1000,
+            "evaluations": 2725,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 2725,
+                "failed": false,
+                "converged": false,
+                "final_loss": 0.025197323086759222
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 2725,
+              "failed": false,
+              "converged": false,
+              "final_loss": 0.025197323086759222
+            },
+            "initial_parameter_hash": "a4e545db1012f2569c629453f7b7f0680a5b9b212a68d64a827ab6ffafbc6573",
+            "final_parameter_hash": "ed8c98cc07bd5f5707de795424c6d19dbfbf310e2467c0fe033202d9ef97c579",
+            "first_evaluation": {
+              "parameter_hash": "a4e545db1012f2569c629453f7b7f0680a5b9b212a68d64a827ab6ffafbc6573",
+              "loss": 0.031745945822716615,
+              "gradient_hash": "88a8b4881e06d4865c291b9805b57e97c75448243afff49fe097c04780c829dc",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.010978319288371279
+            },
+            "train": {
+              "rmse": 0.1407715754109034,
+              "mae": 0.035342853793824146,
+              "max_abs": 0.886849555089884,
+              "mse": 0.01981663644366766
+            },
+            "dense": {
+              "rmse": 0.14093450592832027,
+              "mae": 0.03576727267244705,
+              "max_abs": 0.9848872932572612,
+              "mse": 0.01986253496125974
+            },
+            "spatial": {
+              "rmse": 0.14077157559581002,
+              "mae": 0.035666852638306885,
+              "max_abs": 0.9835686562289968,
+              "mse": 0.019816636495726857
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "correction_positions_finite": true,
+              "correction_gradients_finite": true,
+              "dense_inverse_hessian_finite": null,
+              "reason": "Limited-memory implementation has no dense H"
+            },
+            "final_training_mse_normalized": 0.0251960666750556,
+            "final_regularization_loss": 1.2564117036201037e-06
+          },
+          "ssbfgs": {
+            "method": "ssbfgs",
+            "elapsed_seconds": 653.7144920998253,
+            "evaluation_seconds": 0.5549063000362366,
+            "iterations": 1000,
+            "evaluations": 1010,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 1010,
+                "status": 1,
+                "message": "Maximum number of iterations has been exceeded.",
+                "converged": false,
+                "failed": false,
+                "final_loss": 0.025419607785215768,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 1010,
+              "status": 1,
+              "message": "Maximum number of iterations has been exceeded.",
+              "converged": false,
+              "failed": false,
+              "final_loss": 0.025419607785215768,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "a4e545db1012f2569c629453f7b7f0680a5b9b212a68d64a827ab6ffafbc6573",
+            "final_parameter_hash": "649d9a7e1e0f709f30f9a39fc75246a66bba7dfd4b5455a96193a2c1f6a3ece9",
+            "first_evaluation": {
+              "parameter_hash": "a4e545db1012f2569c629453f7b7f0680a5b9b212a68d64a827ab6ffafbc6573",
+              "loss": 0.031745945822716615,
+              "gradient_hash": "88a8b4881e06d4865c291b9805b57e97c75448243afff49fe097c04780c829dc",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.010978319288371279
+            },
+            "train": {
+              "rmse": 0.1407715966854986,
+              "mae": 0.03540332102964658,
+              "max_abs": 0.886924223748509,
+              "mse": 0.01981664243338468
+            },
+            "dense": {
+              "rmse": 0.14093452717832053,
+              "mae": 0.03582725635832242,
+              "max_abs": 0.9849619620191274,
+              "mse": 0.01986254095097677
+            },
+            "spatial": {
+              "rmse": 0.14077159687040525,
+              "mae": 0.0357269971820205,
+              "max_abs": 0.9836433248876189,
+              "mse": 0.019816642485443885
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            },
+            "final_training_mse_normalized": 0.025196074290742807,
+            "final_regularization_loss": 0.00022353349447296132
+          },
+          "ssbroyden": {
+            "method": "ssbroyden",
+            "elapsed_seconds": 761.7391856000759,
+            "evaluation_seconds": 0.569296200061217,
+            "iterations": 1000,
+            "evaluations": 1007,
+            "rounds": [
+              {
+                "round": 1,
+                "iterations": 1000,
+                "evaluations": 1007,
+                "status": 1,
+                "message": "Maximum number of iterations has been exceeded.",
+                "converged": false,
+                "failed": false,
+                "final_loss": 0.02568072491852727,
+                "optimizer_state_audit": {
+                  "final_parameters_finite": true,
+                  "final_gradient_finite": true,
+                  "final_loss_finite": true,
+                  "dense_inverse_hessian_finite": true,
+                  "dense_inverse_hessian_shape": [
+                    5853,
+                    5853
+                  ],
+                  "dense_inverse_hessian_dtype": "float64"
+                }
+              }
+            ],
+            "status": {
+              "round": 1,
+              "iterations": 1000,
+              "evaluations": 1007,
+              "status": 1,
+              "message": "Maximum number of iterations has been exceeded.",
+              "converged": false,
+              "failed": false,
+              "final_loss": 0.02568072491852727,
+              "optimizer_state_audit": {
+                "final_parameters_finite": true,
+                "final_gradient_finite": true,
+                "final_loss_finite": true,
+                "dense_inverse_hessian_finite": true,
+                "dense_inverse_hessian_shape": [
+                  5853,
+                  5853
+                ],
+                "dense_inverse_hessian_dtype": "float64"
+              }
+            },
+            "initial_parameter_hash": "a4e545db1012f2569c629453f7b7f0680a5b9b212a68d64a827ab6ffafbc6573",
+            "final_parameter_hash": "229b25158cc5eb106c72cae976ffce6fc31b9f2fd1d603a953ab08eafb423d3f",
+            "first_evaluation": {
+              "parameter_hash": "a4e545db1012f2569c629453f7b7f0680a5b9b212a68d64a827ab6ffafbc6573",
+              "loss": 0.031745945822716615,
+              "gradient_hash": "88a8b4881e06d4865c291b9805b57e97c75448243afff49fe097c04780c829dc",
+              "gradient_dtype": "float64",
+              "gradient_inf": 0.010978319288371279
+            },
+            "train": {
+              "rmse": 0.14077185457183863,
+              "mae": 0.03556971576342009,
+              "max_abs": 0.8871271441555678,
+              "mse": 0.01981671503959489
+            },
+            "dense": {
+              "rmse": 0.14093478476652588,
+              "mae": 0.035993788011511575,
+              "max_abs": 0.9851648823229128,
+              "mse": 0.01986261355718698
+            },
+            "spatial": {
+              "rmse": 0.14077185475674492,
+              "mae": 0.03589388331468148,
+              "max_abs": 0.9838462452946808,
+              "mse": 0.01981671509165409
+            },
+            "optimizer_state_finite": true,
+            "optimizer_state_audit": {
+              "final_parameters_finite": true,
+              "final_gradient_finite": true,
+              "final_loss_finite": true,
+              "dense_inverse_hessian_finite": true,
+              "dense_inverse_hessian_shape": [
+                5853,
+                5853
+              ],
+              "dense_inverse_hessian_dtype": "float64"
+            },
+            "final_training_mse_normalized": 0.025196166606659836,
+            "final_regularization_loss": 0.00048455831186743433
+          }
+        }
+      }
+    },
+    "scope": "Nine original regularization conditions, each with a new 3000-epoch FP64 Adam warmup followed by QN. Original dense evaluation is 371x371; spatial diagnostics are separate and include three small spatial-extrapolation points per time.",
+    "timing_caveat": "Baseline L-BFGS completed before an interrupted process; SS arms restarted from the same checkpoint in another process. Large-L2 early convergence gave a near-constant field."
+  },
+  "not_tested": [
+    "SS extensions to T4/T7/T8",
+    "Multiple independent seeds",
+    "Stochastic mini-batch QN",
+    "GPU or distributed SS backends"
+  ],
+  "source_records": [
+    {
+      "id": "tutorial1-self-scaled-20261027/public/RESULTS_ZH.md",
+      "sha256": "77efbb4e285da0fcfbdf3266d8da7969a5d838be3bab2c6a9c1ce4bd9dc7d8bb"
+    },
+    {
+      "id": "tutorial1-self-scaled-20261027/public/manifest.json",
+      "sha256": "4a501bee8b8d6ee9da07bae81922bcf4dccfff6bc5cf3e9b1878a642f439acff"
+    },
+    {
+      "id": "tutorial1-self-scaled-20261027/public/summary.json",
+      "sha256": "e19da05000a8b03ea4e8329fb7381adb0ad6ebf52152a64dfbcc9158a0f4aa42"
+    },
+    {
+      "id": "tutorial2-self-scaled-20261027/public/RESULTS_ZH.md",
+      "sha256": "f01c84fe4dfb751461427510e4a19b11a369520a718e19d7bb5fd2075f795848"
+    },
+    {
+      "id": "tutorial2-self-scaled-20261027/public/master_summary.json",
+      "sha256": "4f697d4156bba3a487ca64ff5b8b32c6ef1604cd3536b58590c248ad5ac0644e"
+    },
+    {
+      "id": "tutorial2-self-scaled-20261027/public/additional_diagnostics/seen_time_spatial_refinement/summary.json",
+      "sha256": "c93d886d4ca0fa8613a4c8bb6e70940cb64da0352db2493f8f7ba53d228bb15b"
+    },
+    {
+      "id": "tutorial3-self-scaled-20261027/public/RESULTS_ZH.md",
+      "sha256": "ebc4da74c68be29ed9268e6c5c08e6738fff4fef71dd6ff9e306a3aec4a6c769"
+    },
+    {
+      "id": "tutorial3-self-scaled-20261027/public/manifest.json",
+      "sha256": "d1d55831f73962a5016b4c92f9be083ea44d7520e7858cd7ffae41237989a08e"
+    },
+    {
+      "id": "tutorial3-self-scaled-20261027/public/summary.json",
+      "sha256": "f04ca9f5d0e8872c7f07bd5132f4dd30e47f5d2610644ade5313b44447cf7b5e"
+    },
+    {
+      "id": "tutorial5-self-scaled-20261027/public-final-v2/manifest.json",
+      "sha256": "dbf422d364eb5e10a413d7aec575396a9f7a399862a6ba2ce34d40c7119a1ef5"
+    },
+    {
+      "id": "tutorial5-self-scaled-20261027/public-final-v2/summary.json",
+      "sha256": "6df4faf89774ddf6e5852b83cb84339a82f664376102f0cf525a8bd749a60100"
+    },
+    {
+      "id": "tutorial6-self-scaled-20261027/public-recovery-v1/original_manifest.json",
+      "sha256": "fec0a7230e730b13f6da1250670b2fb28b75cca0f2cd2f4c032418e000c175e5"
+    },
+    {
+      "id": "tutorial6-self-scaled-20261027/public-recovery-v1/recovery_manifest.json",
+      "sha256": "bea406cac174ff873259ac049eeee5b9185893ca3ec42333c96fd1f8c52f13dd"
+    },
+    {
+      "id": "tutorial6-self-scaled-20261027/public-recovery-v1/COMPLETE.json",
+      "sha256": "7c294d7cce977a4294116290c83456316dc2480c458205e45b64c0999fcd4baf"
+    },
+    {
+      "id": "tutorial6-self-scaled-20261027/public-recovery-v1/baseline/summary.json",
+      "sha256": "6c037020bfde709800b5732b64fbf0bbb42f7abab4da75bd54ce94d72d76ae65"
+    },
+    {
+      "id": "tutorial6-self-scaled-20261027/public-recovery-v1/l2_5/summary.json",
+      "sha256": "c46aeb2e2827647fccca20719199b06947059404d46dfa06bd82bf9ecc92c575"
+    },
+    {
+      "id": "tutorial6-self-scaled-20261027/public-recovery-v1/l2_4/summary.json",
+      "sha256": "77f9c18cd3da1d25fd4659f45c7240ff3cce004f31223aab953629ac09324f0c"
+    },
+    {
+      "id": "tutorial6-self-scaled-20261027/public-recovery-v1/l2_3/summary.json",
+      "sha256": "2a8ff63ce94dcf68aaaa421ef735f5db427343b4f71a35672b1bc0db7ef2537f"
+    },
+    {
+      "id": "tutorial6-self-scaled-20261027/public-recovery-v1/l2_2/summary.json",
+      "sha256": "aec37501bdfe417c278e5e033c0e50d0d4b2306ad565b2ddb579c3067e02e7e4"
+    },
+    {
+      "id": "tutorial6-self-scaled-20261027/public-recovery-v1/l1_5/summary.json",
+      "sha256": "31b06bfae092247510af21c9c1d244bed710bb65030a0773fe11af148d555fa8"
+    },
+    {
+      "id": "tutorial6-self-scaled-20261027/public-recovery-v1/l1_4/summary.json",
+      "sha256": "7ed579e62bf53c06fc11f55d058547cbde7161b1e3f2c733778f3532c1c9c47f"
+    },
+    {
+      "id": "tutorial6-self-scaled-20261027/public-recovery-v1/l1_3/summary.json",
+      "sha256": "498d89bb0231b1aedbedb172ab9cc4ff11571f5cf80fb648195915ab35287ca4"
+    },
+    {
+      "id": "tutorial6-self-scaled-20261027/public-recovery-v1/l1_2/summary.json",
+      "sha256": "a6268ad0906b5536f3aef552c2e7df61199ef83b3cd43d27aa631c055229c797"
+    },
+    {
+      "id": "experiments/tutorial5_self_scaled/RESULTS_ZH.md",
+      "sha256": "b1499278536e0282dfac97cfb8dfdf46f4a12f1adeb312ad7d7964b450ca8f59"
+    },
+    {
+      "id": "experiments/tutorial6_self_scaled/RESULTS_ZH.md",
+      "sha256": "5a11f6f63295925fddf12d70535e1d7b708e18f4e896f4ce61ff3fb2f12746ee"
+    }
+  ],
+  "figures": [
+    {
+      "id": "tutorial1-self-scaled-20261027/public/figures/lbfgs_original_style.png",
+      "sha256": "6c07a66cdb87cf442f3b1eefacbf414b867f3247540e2f5717258e76f81a7b97",
+      "published_file": "lbfgs_original_style.png",
+      "bytes": 93702
+    },
+    {
+      "id": "tutorial1-self-scaled-20261027/public/figures/ssbfgs_original_style.png",
+      "sha256": "5622ec392ac309774fac2cfb53ff1680fa6fa7416eed2e6052e4cc0d16e9a016",
+      "published_file": "ssbfgs_original_style.png",
+      "bytes": 94671
+    },
+    {
+      "id": "tutorial1-self-scaled-20261027/public/figures/ssbroyden_original_style.png",
+      "sha256": "0c56c823c725cd7ab2971e7d6d03c1aa887b9d76c6cb1c040a090a88627eab56",
+      "published_file": "ssbroyden_original_style.png",
+      "bytes": 97232
+    },
+    {
+      "id": "tutorial1-self-scaled-20261027/public/figures/training_physical_comparison.png",
+      "sha256": "37e3254dce4801d1fb6a4b4e68a0d7e1b880d448d913d4282af52e629cd059d5",
+      "published_file": "training_physical_comparison.png",
+      "bytes": 125805
+    },
+    {
+      "id": "tutorial1-self-scaled-20261027/public/figures/dense_absolute_errors.png",
+      "sha256": "0a32011eb106ca390250e9527b20c7adefb4e847c84f3f09840cb3e138dcf645",
+      "published_file": "dense_absolute_errors.png",
+      "bytes": 160003
+    },
+    {
+      "id": "tutorial1-self-scaled-20261027/public/figures/convergence.png",
+      "sha256": "51b5395d8452bdc7ce48509571870a44189d44a8ecf48926782548f733b6e1c1",
+      "published_file": "convergence.png",
+      "bytes": 143098
+    }
+  ]
+}

@@ -10,7 +10,7 @@
 - NIF represents fields at arbitrary spatial coordinates, including data from adaptive mesh refinement, without requiring interpolation onto a uniform grid. Details can be found in our [paper](https://arxiv.org/pdf/2204.03216.pdf).
 - NIF is implemented in **PyTorch**. A ParameterNet maps time or physical parameters to the weights of a coordinate-dependent ShapeNet.
 
-Read the [PyTorch v2.0.0 documentation](https://www.shaowupan.com/nif/) for the API reference, runnable examples, and all eight tutorials.
+Read the [PyTorch documentation](https://www.shaowupan.com/nif/) for the API reference, runnable examples, eight released tutorials, and an experimental self-scaled optimizer comparison.
 
 ## Highlights
 
@@ -150,6 +150,12 @@ fine_tuner.step(closure)
 print("Final loss:", float(fine_tuner.result.objective_value))
 print("Iterations:", int(fine_tuner.result.num_iterations))
 ```
+
+### Experimental self-scaled optimizers
+
+[Tutorial 9](tutorial/9_self_scaled_optimizers_pytorch.ipynb) compares L-BFGS, SSBFGS and SSBroyden on the first tutorial's traveling wave. The three methods start from the same actual weights and optimize the same fixed full-batch objective in float64. The notebook runs fresh training and reports physical absolute errors, termination states and timings.
+
+The [experimental guide](docs/SELF_SCALED_OPTIMIZERS.md) includes the controlled setup, recorded T1/T2/T3/T5/T6 results, original-style figures and limitations. The [portable example](examples/self_scaled/README.md) provides the runner and pinned dependencies. These dense CPU experiments are separate from the released `nif.optimizers` API.
 
 ### Training schedules and monitoring
 
@@ -354,6 +360,10 @@ The notebooks below run the native PyTorch examples. Their scientific workloads 
 8. **Revisit multi-scale data with Sobolev training** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb)
     - Add spatial-derivative supervision with `nif.layers.JacobianLayer` and compare field and derivative errors.
     - Inspect how derivative information affects the refined spatial prediction.
+
+9. **Experimental: self-scaled optimizer comparison** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/9_self_scaled_optimizers_pytorch.ipynb)
+    - Compare L-BFGS, SSBFGS and SSBroyden from one actual traveling-wave checkpoint in float64.
+    - Run all three methods and inspect physical errors, convergence curves and elapsed time. See the [experimental guide](docs/SELF_SCALED_OPTIMIZERS.md) for the recorded results and scope.
 
 ## Issues, bugs, requests, ideas
 

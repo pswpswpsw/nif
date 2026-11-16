@@ -21,7 +21,7 @@ def coefficients(dtype, step, betas=BETAS):
     scalar = np.float32 if dtype == torch.float32 else np.float64
     one, t = scalar(1), scalar(step)
     b1, b2 = map(scalar, betas)
-    power1, power2 = np.power(b1, t), np.power(b2, t)
+    power1, power2 = b1**t, b2**t
     maximum = scalar(2) / (one - b2) - one
     rho = maximum - scalar(2) * t * power2 / (one - power2)
     with np.errstate(invalid="ignore"):
@@ -44,6 +44,24 @@ def direction(m, v, dtype, step, rectify, betas=BETAS, epsilon=1e-14):
     if rho >= 5:
         return float(r) * corrected / ((v / float(c2)).sqrt() + epsilon)
     return corrected
+
+
+@pytest.mark.parametrize("dtype", [torch.float32, torch.float64])
+def test_scalar_reference_is_independent_of_vector_power_rounding(dtype, monkeypatch):
+    scalar = np.float32 if dtype == torch.float32 else np.float64
+    expected = np.asarray(coefficients(dtype, 20))
+    original = np.power
+
+    def adjacent_vector_result(base, exponent):
+        value = original(base, exponent)
+        return np.nextafter(value, scalar(np.inf))
+
+    # SIMD power kernels may differ from scalar libm by one ULP. The source
+    # scalar oracle must remain stable when that unrelated ufunc path changes.
+    monkeypatch.setattr(np, "power", adjacent_vector_result)
+    actual = np.asarray(coefficients(dtype, 20))
+    assert actual.dtype == np.dtype(scalar)
+    np.testing.assert_array_equal(actual, expected)
 
 
 def test_source_float32_transition_scalar_values():

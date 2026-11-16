@@ -14,7 +14,9 @@ os.environ.setdefault("TF_NUM_INTRAOP_THREADS", "2")
 os.environ.setdefault("TF_NUM_INTEROP_THREADS", "1")
 os.environ.setdefault("OMP_NUM_THREADS", "2")
 ROOT = Path(__file__).resolve().parents[1]
-ORIGINAL = ROOT / "tutorial" / "7_model_pruning_and_quantization.ipynb"
+ORIGINAL = (
+    ROOT / "tutorial/legacy/tensorflow" / "7_model_pruning_and_quantization.ipynb"
+)
 COPY = ORIGINAL.with_name(ORIGINAL.stem + "_colab.ipynb")
 
 
@@ -52,9 +54,12 @@ class Tutorial7(unittest.TestCase):
                     self.assertEqual(before["source"], after["source"], index)
         self.assertEqual(
             "".join(repaired["cells"][0]["source"]),
-            (ROOT / "tutorial" / "colab_support" / "bootstrap_tutorials.py").read_text(
-                encoding="utf-8"
-            ),
+            (
+                ROOT
+                / "tutorial/legacy/tensorflow"
+                / "colab_support"
+                / "bootstrap_tutorials.py"
+            ).read_text(encoding="utf-8"),
         )
         self.assertIn("nepoch = 5000", "".join(repaired["cells"][4]["source"]))
         self.assertIn("nepoch=5000*10", "".join(repaired["cells"][14]["source"]))
@@ -119,7 +124,10 @@ class Tutorial7(unittest.TestCase):
             "".join(notebook["cells"][0]["source"])
             if selected != ORIGINAL
             else (
-                ROOT / "tutorial" / "colab_support" / "bootstrap_tutorial1.py"
+                ROOT
+                / "tutorial/legacy/tensorflow"
+                / "colab_support"
+                / "bootstrap_tutorial1.py"
             ).read_text(encoding="utf-8")
         )
         exec(bootstrap, namespace)

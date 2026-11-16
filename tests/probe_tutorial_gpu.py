@@ -9,7 +9,9 @@ os.environ.setdefault("TF_NUM_INTRAOP_THREADS", "2")
 os.environ.setdefault("TF_NUM_INTEROP_THREADS", "1")
 os.environ.setdefault("OMP_NUM_THREADS", "2")
 root = Path(__file__).resolve().parents[1]
-runpy.run_path(str(root / "tutorial/colab_support/bootstrap_tutorials.py"))
+runpy.run_path(
+    str(root / "tutorial/legacy/tensorflow/colab_support/bootstrap_tutorials.py")
+)
 import tensorflow as tf  # noqa: E402 - bootstrap configures legacy Keras first.
 
 devices = tf.config.list_physical_devices("GPU")

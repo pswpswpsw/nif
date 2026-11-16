@@ -230,6 +230,23 @@ def test_post_release_experiment_links_use_current_source_not_old_release():
     assert "nif/blob/v2.0.0/" + notebook not in rewritten
 
 
+def test_relocated_legacy_links_use_the_current_tree_without_changing_tag_links():
+    relocated = "tutorial/legacy/tensorflow/1_simple_1d_wave_colab.ipynb"
+    old = "https://github.com/pswpswpsw/nif/blob/v2.0.0/tutorial/1_simple_1d_wave.ipynb"
+    text = (
+        "[relocated](../" + relocated + ") "
+        "[Colab](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/"
+        + relocated
+        + ") [release]("
+        + old
+        + ")"
+    )
+    result = helper().rewrite_markdown(text, "docs/README.md", "v2.0.0")
+    assert "nif/blob/main/" + relocated in result
+    assert "nif/blob/v2.0.0/tutorial/legacy/" not in result
+    assert "](" + old + ")" in result
+
+
 def test_prepared_experiment_guide_retains_local_historical_assets(checkout, tmp_path):
     root, originals = checkout
     source = tmp_path / "prepared"

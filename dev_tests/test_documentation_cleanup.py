@@ -41,9 +41,9 @@ def test_current_t7_metric_matches_the_original_tutorial_definition():
     assert "norm(error, ord=2)**2 / norm(unpruned, ord=2)**2" in api
     assert "matrix spectral" in api
     assert "native metric\ncorrects the earlier MSE label" not in api
-    guide = (ROOT / "tutorial/colab_support/README-tutorials-2-8.md").read_text(
-        encoding="utf-8"
-    )
+    guide = (
+        ROOT / "tutorial/legacy/tensorflow/colab_support/README-tutorials-2-8.md"
+    ).read_text(encoding="utf-8")
     assert "ord=2" in guide
     assert "replacing the matrix spectral norm" not in guide
 

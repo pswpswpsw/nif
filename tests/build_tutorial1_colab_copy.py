@@ -7,14 +7,14 @@ from pathlib import Path
 from notebook_metadata import clear_execution_metadata
 
 ROOT = Path(__file__).resolve().parents[1]
-source = ROOT / "tutorial" / "1_simple_1d_wave.ipynb"
-output = ROOT / "tutorial" / "1_simple_1d_wave_colab.ipynb"
+source = ROOT / "tutorial/legacy/tensorflow" / "1_simple_1d_wave.ipynb"
+output = ROOT / "tutorial/legacy/tensorflow" / "1_simple_1d_wave_colab.ipynb"
 notebook = json.loads(source.read_text(encoding="utf-8"))
 original_sha256 = hashlib.sha256(source.read_bytes()).hexdigest()
 notebook = copy.deepcopy(notebook)
-bootstrap = (ROOT / "tutorial" / "colab_support" / "bootstrap_tutorial1.py").read_text(
-    encoding="utf-8"
-)
+bootstrap = (
+    ROOT / "tutorial/legacy/tensorflow" / "colab_support" / "bootstrap_tutorial1.py"
+).read_text(encoding="utf-8")
 notebook["cells"][0]["source"] = bootstrap.splitlines(keepends=True)
 # GPU detection should also succeed on a CPU-only Colab session.
 notebook["cells"][4]["source"] = [

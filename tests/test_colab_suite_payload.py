@@ -42,7 +42,7 @@ class SuitePayloadTests(unittest.TestCase):
         self.assertEqual(len(items), 6)
         for number, item in enumerate(items, start=2):
             with self.subTest(tutorial=number):
-                path = ROOT / "tutorial" / item["name"]
+                path = ROOT / "tutorial/legacy/tensorflow" / item["name"]
                 self.assertTrue(path.name.startswith(str(number) + "_"))
                 self.assertEqual(
                     hashlib.sha256(path.read_bytes()).hexdigest(), item["sha256"]

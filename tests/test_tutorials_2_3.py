@@ -19,7 +19,12 @@ class TutorialTwoThreeColab(unittest.TestCase):
         "Set NIF_RUN_RUNTIME_TESTS=1 in the matched TensorFlow environment",
     )
     def test_tutorial3_fit_actually_centralizes_gradients(self):
-        helper = ROOT / "tutorial" / "colab_support" / "bootstrap_tutorials.py"
+        helper = (
+            ROOT
+            / "tutorial/legacy/tensorflow"
+            / "colab_support"
+            / "bootstrap_tutorials.py"
+        )
         exec(compile(helper.read_text(encoding="utf-8"), str(helper), "exec"), {})
         import numpy as np
         import tensorflow as tf
@@ -105,12 +110,12 @@ class TutorialTwoThreeColab(unittest.TestCase):
     def test_original_research_and_comments_are_preserved(self):
         for stem in STEMS:
             with self.subTest(notebook=stem):
-                original_path = ROOT / "tutorial" / (stem + ".ipynb")
+                original_path = ROOT / "tutorial/legacy/tensorflow" / (stem + ".ipynb")
                 original = json.loads(original_path.read_text(encoding="utf-8"))
                 repaired = json.loads(
-                    (ROOT / "tutorial" / (stem + "_colab.ipynb")).read_text(
-                        encoding="utf-8"
-                    )
+                    (
+                        ROOT / "tutorial/legacy/tensorflow" / (stem + "_colab.ipynb")
+                    ).read_text(encoding="utf-8")
                 )
                 self.assertEqual(len(original["cells"]), len(repaired["cells"]))
                 self.assertEqual(
@@ -135,9 +140,9 @@ class TutorialTwoThreeColab(unittest.TestCase):
         for stem in STEMS:
             with self.subTest(notebook=stem):
                 suffix = "" if os.environ.get("NIF_TEST_ORIGINALS") else "_colab"
-                path = ROOT / "tutorial" / (stem + suffix + ".ipynb")
+                path = ROOT / "tutorial/legacy/tensorflow" / (stem + suffix + ".ipynb")
                 if not path.exists():
-                    path = ROOT / "tutorial" / (stem + ".ipynb")
+                    path = ROOT / "tutorial/legacy/tensorflow" / (stem + ".ipynb")
                 notebook = json.loads(path.read_text(encoding="utf-8"))
                 source = "".join(notebook["cells"][0]["source"])
                 match = re.search(r"COLAB_REQUIREMENTS\s*=\s*(\[[\s\S]*?\])", source)

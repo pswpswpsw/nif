@@ -11,11 +11,11 @@ STEM = "8_revisit_multi_scale_NIF_with_sobolov_training"
 
 
 def main():
-    source = ROOT / "tutorial" / (STEM + ".ipynb")
-    output = ROOT / "tutorial" / (STEM + "_colab.ipynb")
+    source = ROOT / "tutorial/legacy/tensorflow" / (STEM + ".ipynb")
+    output = ROOT / "tutorial/legacy/tensorflow" / (STEM + "_colab.ipynb")
     notebook = copy.deepcopy(json.loads(source.read_text(encoding="utf-8")))
     bootstrap = (
-        ROOT / "tutorial" / "colab_support" / "bootstrap_tutorials.py"
+        ROOT / "tutorial/legacy/tensorflow" / "colab_support" / "bootstrap_tutorials.py"
     ).read_text(encoding="utf-8")
     notebook["cells"][0]["source"] = bootstrap.splitlines(keepends=True)
     prediction = "".join(notebook["cells"][36]["source"])

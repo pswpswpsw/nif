@@ -1,8 +1,8 @@
 # Tutorials 2–8: Colab compatibility copies
 
-> Historical TensorFlow compatibility record. Use the [tutorial index](../README.md) for the released PyTorch notebooks and experimental T9. The [original dated text](../../docs/archive/2026-11-15/colab-support/README-tutorials-2-8.md) is preserved with its source revision and checksums.
+> Historical TensorFlow compatibility record. Use the [tutorial index](../../../README.md) for the released PyTorch notebooks and experimental T9. The [original dated text](../../../../docs/archive/2026-11-15/colab-support/README-tutorials-2-8.md) is preserved with its source revision and checksums.
 
-Run the seven `tutorial/*_colab.ipynb` copies from their first cell in a fresh runtime. The original notebooks are preserved. Every original Markdown cell and code comment is retained exactly; compatibility explanations live in this guide rather than additional notebook cells. The copies retain the original data sizes, model settings, learning rates, batch sizes, training lengths, and pruning schedule.
+Run the seven `tutorial/legacy/tensorflow/*_colab.ipynb` copies from their first cell in a fresh runtime. The original notebooks are preserved. Every original Markdown cell and code comment is retained exactly; compatibility explanations live in this guide rather than additional notebook cells. The copies retain the original data sizes, model settings, learning rates, batch sizes, training lengths, and pruning schedule.
 
 | Copy | Full workload |
 | --- | --- |
@@ -17,13 +17,13 @@ Run the seven `tutorial/*_colab.ipynb` copies from their first cell in a fresh r
 The cylinder-flow and traveling-wave datasets come with the pinned NIF package. Tutorial 5 generates its own data. Use a separate working directory for each notebook because checkpoints, logs, and image filenames overlap.
 
 Open the GitHub copies directly in Colab:
-[2](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/2_multi_scale_NIF_colab.ipynb),
-[3](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/3_multi_scale_linear_NIF_colab.ipynb),
-[4](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/4_get_gradients_by_wrapping_model_with_layer_colab.ipynb),
-[5](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/5_large_scale_training_on_tensorflow_record_data_colab.ipynb),
-[6](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/6_revisit_multi_scale_NIF_with_L1_L2_regularization_colab.ipynb),
-[7](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/7_model_pruning_and_quantization_colab.ipynb), and
-[8](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_colab.ipynb).
+[2](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/legacy/tensorflow/2_multi_scale_NIF_colab.ipynb),
+[3](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/legacy/tensorflow/3_multi_scale_linear_NIF_colab.ipynb),
+[4](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/legacy/tensorflow/4_get_gradients_by_wrapping_model_with_layer_colab.ipynb),
+[5](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/legacy/tensorflow/5_large_scale_training_on_tensorflow_record_data_colab.ipynb),
+[6](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/legacy/tensorflow/6_revisit_multi_scale_NIF_with_L1_L2_regularization_colab.ipynb),
+[7](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/legacy/tensorflow/7_model_pruning_and_quantization_colab.ipynb), and
+[8](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/legacy/tensorflow/8_revisit_multi_scale_NIF_with_sobolov_training_colab.ipynb).
 Downloaded full-run snapshots matched the pre-publication copies, allowing Colab's trailing-whitespace normalization. Publication changes only bootstrap formatting and independent standard-library import order; normalized executable ASTs match and every other source cell is unchanged. See [publication validation](VALIDATION.md).
 
 ## Runtime and fixes
@@ -47,7 +47,7 @@ The shared runtime patches update the distribution-context import, put AdaBelief
 Three small notebook changes accompany the bootstrap:
 
 - **Tutorial 5:** use a portable `pathlib` file listing in place of `%ls TFR_dir -lrth`.
-- **Tutorial 7:** retain the original squared matrix spectral-norm ratio with `ord=2`. The [current definition](../../docs/PYTORCH_API.md#tutorials-and-artifacts) and [restoration record](../../docs/TUTORIAL_SEMANTICS_REVIEW.md#f-t7-三项原定义恢复及独立验收) supersede the earlier Frobenius description in the dated snapshot.
+- **Tutorial 7:** retain the original squared matrix spectral-norm ratio with `ord=2`. The [current definition](../../../../docs/PYTORCH_API.md#tutorials-and-artifacts) and [restoration record](../../../../docs/TUTORIAL_SEMANTICS_REVIEW.md#f-t7-三项原定义恢复及独立验收) supersede the earlier Frobenius description in the dated snapshot.
 - **Tutorial 8:** convert superresolution predictions back to physical units before comparing them with the analytic wave. Its original loss still penalizes the field and spatial derivative; the temporal derivative remains a reported metric.
 
 If TensorFlow or a package that needs changing has already been imported, restart the runtime and begin at the first cell. The bootstrap reports package versions and the loaded NIF source location.
@@ -62,7 +62,7 @@ The validated Windows CPU environment uses Python 3.13.11. With `uv` and Git ins
 $nifEnvironment = Join-Path $env:USERPROFILE '.cache\nif-colab-qa\colab-matched'
 uv venv --python 3.13.11 $nifEnvironment
 $nifPython = Join-Path $nifEnvironment 'Scripts\python.exe'
-uv pip install --python $nifPython -r 'tutorial\colab_support\requirements-qa.txt'
+uv pip install --python $nifPython -r 'tutorial\legacy\tensorflow\colab_support\requirements-qa.txt'
 & $nifPython 'tests\execute_tutorial1.py' `
   --notebook 'tutorial\2_multi_scale_NIF_colab.ipynb' `
   --output '.codex\validation\tutorials-2-3\tutorial2.reproduction.executed.ipynb' `
@@ -77,7 +77,7 @@ NIF_CUDA_LIBS=$("$NIF_ENV/bin/python" -c 'import pathlib, sysconfig; p=pathlib.P
 LD_LIBRARY_PATH="$NIF_CUDA_LIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
 TF_FORCE_GPU_ALLOW_GROWTH=true \
 "$NIF_ENV/bin/python" tests/execute_tutorial1.py \
-  --notebook tutorial/7_model_pruning_and_quantization_colab.ipynb \
+  --notebook tutorial/legacy/tensorflow/7_model_pruning_and_quantization_colab.ipynb \
   --output .codex/validation/tutorial-7/reproduction.executed.ipynb \
   --workdir "$HOME/.cache/nif-colab-qa/reproduction-7"
 ```

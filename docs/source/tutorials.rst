@@ -78,6 +78,8 @@ Original cases and compatibility notebooks
 
 Original notebooks preserve the scientific definitions and historical outputs.
 Compatibility copies retain the pinned setup for the historical backend.
+Their current checkout location is ``tutorial/legacy/tensorflow/``; the links
+below keep their original paths in the immutable release.
 
 .. list-table:: Historical references
    :header-rows: 1

@@ -12,7 +12,7 @@ from unittest import mock
 
 BOOTSTRAP = (
     Path(__file__).resolve().parents[1]
-    / "tutorial"
+    / "tutorial/legacy/tensorflow"
     / "colab_support"
     / "bootstrap_tutorial1.py"
 )

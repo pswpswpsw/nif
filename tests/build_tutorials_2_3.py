@@ -12,10 +12,10 @@ STEMS = ("2_multi_scale_NIF", "3_multi_scale_linear_NIF")
 
 def main():
     bootstrap = (
-        ROOT / "tutorial" / "colab_support" / "bootstrap_tutorials.py"
+        ROOT / "tutorial/legacy/tensorflow" / "colab_support" / "bootstrap_tutorials.py"
     ).read_text(encoding="utf-8")
     for stem in STEMS:
-        source = ROOT / "tutorial" / (stem + ".ipynb")
+        source = ROOT / "tutorial/legacy/tensorflow" / (stem + ".ipynb")
         target = source.with_name(stem + "_colab.ipynb")
         notebook = copy.deepcopy(json.loads(source.read_text(encoding="utf-8")))
         notebook["cells"][0]["source"] = bootstrap.splitlines(keepends=True)

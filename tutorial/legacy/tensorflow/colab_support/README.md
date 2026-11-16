@@ -1,6 +1,6 @@
 # Tutorial 1: Colab compatibility copy
 
-> Historical TensorFlow compatibility record. Use the [tutorial index](../README.md) for the released PyTorch notebooks and experimental T9. The [original dated text](../../docs/archive/2026-11-15/colab-support/README.md) is preserved with its source revision and checksums.
+> Historical TensorFlow compatibility record. Use the [tutorial index](../../../README.md) for the released PyTorch notebooks and experimental T9. The [original dated text](../../../../docs/archive/2026-11-15/colab-support/README.md) is preserved with its source revision and checksums.
 
 For the remaining notebooks, see [Tutorials 2–8: Colab compatibility copies](README-tutorials-2-8.md).
 
@@ -10,7 +10,7 @@ The compatibility copy defaults to CPU, matching the hosted runtime used for val
 
 The original 51-cell order, all 24 Markdown cells, and all 11 original code comments are preserved verbatim. Added introductory prose and code comments were removed from the notebook; compatibility explanations remain in this file.
 
-[Open tutorial 1 in Colab](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/1_simple_1d_wave_colab.ipynb). Downloaded validation snapshots matched the same 27 code cells, allowing Colab's trailing-whitespace normalization.
+[Open tutorial 1 in Colab](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/legacy/tensorflow/1_simple_1d_wave_colab.ipynb). Downloaded validation snapshots matched the same 27 code cells, allowing Colab's trailing-whitespace normalization.
 
 Publication formatting changes only the bootstrap layout and independent standard-library import order. Its normalized executable AST matches the validated source; every other cell is unchanged. See [publication validation](VALIDATION.md).
 

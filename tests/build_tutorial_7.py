@@ -7,12 +7,12 @@ from pathlib import Path
 from notebook_metadata import clear_execution_metadata
 
 ROOT = Path(__file__).resolve().parents[1]
-source = ROOT / "tutorial" / "7_model_pruning_and_quantization.ipynb"
+source = ROOT / "tutorial/legacy/tensorflow" / "7_model_pruning_and_quantization.ipynb"
 output = source.with_name(source.stem + "_colab.ipynb")
 notebook = copy.deepcopy(json.loads(source.read_text(encoding="utf-8")))
-bootstrap = (ROOT / "tutorial" / "colab_support" / "bootstrap_tutorials.py").read_text(
-    encoding="utf-8"
-)
+bootstrap = (
+    ROOT / "tutorial/legacy/tensorflow" / "colab_support" / "bootstrap_tutorials.py"
+).read_text(encoding="utf-8")
 notebook["cells"][0]["source"] = bootstrap.splitlines(keepends=True)
 for cell in notebook["cells"]:
     if cell["cell_type"] == "code":

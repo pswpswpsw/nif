@@ -16,17 +16,17 @@ NAMES = {
 
 def notebook(number, compatibility=True):
     suffix = "_colab" if compatibility else ""
-    path = ROOT / "tutorial" / (NAMES[number] + suffix + ".ipynb")
+    path = ROOT / "tutorial/legacy/tensorflow" / (NAMES[number] + suffix + ".ipynb")
     if compatibility and not path.exists():
-        path = ROOT / "tutorial" / (NAMES[number] + ".ipynb")
+        path = ROOT / "tutorial/legacy/tensorflow" / (NAMES[number] + ".ipynb")
     return json.loads(path.read_text(encoding="utf-8"))
 
 
 class CopyPreservationTests(unittest.TestCase):
     def test_copies_embed_pinned_bootstrap_and_preserve_cells(self):
-        bootstrap = (ROOT / "tutorial/colab_support/bootstrap_tutorials.py").read_text(
-            encoding="utf-8"
-        )
+        bootstrap = (
+            ROOT / "tutorial/legacy/tensorflow/colab_support/bootstrap_tutorials.py"
+        ).read_text(encoding="utf-8")
         for number in NAMES:
             with self.subTest(tutorial=number):
                 original = notebook(number, False)
@@ -79,7 +79,9 @@ class RuntimeTests(unittest.TestCase):
         os.environ.setdefault("TF_NUM_INTRAOP_THREADS", "2")
         os.environ.setdefault("TF_NUM_INTEROP_THREADS", "1")
         os.environ.setdefault("OMP_NUM_THREADS", "2")
-        bootstrap = ROOT / "tutorial/colab_support/bootstrap_tutorials.py"
+        bootstrap = (
+            ROOT / "tutorial/legacy/tensorflow/colab_support/bootstrap_tutorials.py"
+        )
         exec(compile(bootstrap.read_text(encoding="utf-8"), str(bootstrap), "exec"), {})
         import numpy as np
         import tensorflow as tf

@@ -14,11 +14,11 @@ NAMES = (
 
 
 def build():
-    bootstrap = (ROOT / "tutorial/colab_support/bootstrap_tutorials.py").read_text(
-        encoding="utf-8"
-    )
+    bootstrap = (
+        ROOT / "tutorial/legacy/tensorflow/colab_support/bootstrap_tutorials.py"
+    ).read_text(encoding="utf-8")
     for name in NAMES:
-        original = ROOT / "tutorial" / (name + ".ipynb")
+        original = ROOT / "tutorial/legacy/tensorflow" / (name + ".ipynb")
         repaired = deepcopy(json.loads(original.read_text(encoding="utf-8")))
         repaired["cells"][0]["source"] = bootstrap.splitlines(keepends=True)
         if name.startswith("5_"):

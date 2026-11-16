@@ -40,6 +40,13 @@ Original notebook text accepts only its exact LF or uniform CRLF checkout form;
 mixed line endings and content changes are rejected. Live files are never
 rewritten by this reader.
 
+The 16 historical TensorFlow notebooks now live under
+`tutorial/legacy/tensorflow/`. A fixed relocation map reads those exact backing
+files while retaining their original `tutorial/<filename>.ipynb` logical paths
+inside the frozen projection. The baseline manifest, ZIP objects, content
+digests and original line-ending rules remain unchanged. Other backing assets
+keep their recorded locations.
+
 `migration.json` indexes the flat historical paths moved into the bundle. They
 include the old scope helpers, scope-only tests, logs, manifests, duplicate
 fixtures, editor state and Sphinx caches. The original source, numerical

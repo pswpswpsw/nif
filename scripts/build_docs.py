@@ -37,6 +37,7 @@ POST_RELEASE_SOURCES = (
     "dev_tests/provenance",
     "scripts/tutorial_catalog.py",
     "tutorial/catalog.json",
+    "tutorial/legacy/tensorflow",
     "docs/legacy-assets.json",
     "tutorial/9_self_scaled_optimizers_pytorch.ipynb",
     "docs/SELF_SCALED_OPTIMIZERS.md",

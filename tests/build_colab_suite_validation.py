@@ -16,7 +16,9 @@ OUT = ROOT / ".codex/validation/tutorial-suite"
 def main():
     notebooks = []
     for number in range(2, 8):
-        path = next((ROOT / "tutorial").glob(f"{number}_*_colab.ipynb"))
+        path = next(
+            (ROOT / "tutorial/legacy/tensorflow").glob(f"{number}_*_colab.ipynb")
+        )
         original = json.loads(path.read_text(encoding="utf-8"))
         clean = {"nbformat": 4, "nbformat_minor": 5, "metadata": {}, "cells": []}
         for index, cell in enumerate(original["cells"]):

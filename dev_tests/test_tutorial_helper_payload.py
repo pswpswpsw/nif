@@ -109,12 +109,14 @@ def test_generator_reproduces_current_teaching_and_preserves_existing_cells(
     generator_root = ROOT
     if fresh:
         generator_root = tmp_path
-        destination = tmp_path / "tutorial"
-        destination.mkdir()
+        destination = tmp_path / "tutorial/legacy/tensorflow"
+        destination.mkdir(parents=True)
         for number in range(1, 9):
             path = next(
                 path
-                for path in (ROOT / "tutorial").glob(f"{number}_*.ipynb")
+                for path in (ROOT / "tutorial/legacy/tensorflow").glob(
+                    f"{number}_*.ipynb"
+                )
                 if not path.stem.endswith(("_colab", "_pytorch"))
                 and "self_scaled_comparison" not in path.stem
             )
@@ -125,11 +127,12 @@ def test_generator_reproduces_current_teaching_and_preserves_existing_cells(
                     cell.execution_count = None
             nbformat.write(reference, destination / path.name)
     generated = {}
-    monkeypatch.setattr(
-        nbformat,
-        "write",
-        lambda value, path: generated.update({Path(path).name: copy.deepcopy(value)}),
-    )
+
+    def capture_notebook(value, path):
+        assert Path(path).parent == generator_root / "tutorial"
+        generated[Path(path).name] = copy.deepcopy(value)
+
+    monkeypatch.setattr(nbformat, "write", capture_notebook)
     exec(
         compile(source, str(generator), "exec"),
         {"__file__": str(generator_root / "dev_tests/generate_native_notebooks.py")},

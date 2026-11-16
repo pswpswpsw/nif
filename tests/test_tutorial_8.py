@@ -18,8 +18,8 @@ os.environ.setdefault("MPLBACKEND", "Agg")
 
 ROOT = Path(__file__).resolve().parents[1]
 STEM = "8_revisit_multi_scale_NIF_with_sobolov_training"
-ORIGINAL = ROOT / "tutorial" / (STEM + ".ipynb")
-COPY = ROOT / "tutorial" / (STEM + "_colab.ipynb")
+ORIGINAL = ROOT / "tutorial/legacy/tensorflow" / (STEM + ".ipynb")
+COPY = ROOT / "tutorial/legacy/tensorflow" / (STEM + "_colab.ipynb")
 
 
 def notebook():
@@ -46,7 +46,12 @@ def normalization():
 
 class TutorialEightRegression(unittest.TestCase):
     def test_jacobian_layer_and_derivative_normalization(self):
-        bootstrap = ROOT / "tutorial" / "colab_support" / "bootstrap_tutorials.py"
+        bootstrap = (
+            ROOT
+            / "tutorial/legacy/tensorflow"
+            / "colab_support"
+            / "bootstrap_tutorials.py"
+        )
         exec(compile(bootstrap.read_text(encoding="utf-8"), str(bootstrap), "exec"), {})
         import tensorflow as tf
         from nif.layers import JacobianLayer
@@ -168,7 +173,10 @@ class TutorialEightRegression(unittest.TestCase):
             self.assertEqual(
                 source(0, current),
                 (
-                    ROOT / "tutorial" / "colab_support" / "bootstrap_tutorials.py"
+                    ROOT
+                    / "tutorial/legacy/tensorflow"
+                    / "colab_support"
+                    / "bootstrap_tutorials.py"
                 ).read_text(encoding="utf-8"),
             )
 

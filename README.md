@@ -334,6 +334,7 @@ with torch.no_grad():
 <!-- Generated from tutorial/catalog.json by scripts/tutorial_catalog.py. -->
 
 The notebooks below run the native PyTorch examples. Their scientific workloads are the default; set `NIF_SMOKE=1` before running only for a short development check.
+Google Colab runs these same PyTorch notebooks; the framework and platform are separate choices.
 
 1. **Hello world! A simple fitting on a 1D traveling wave** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/1_simple_1d_wave_pytorch.ipynb)
     - Learn the `nif.NIF` model, its configuration, and training loop.

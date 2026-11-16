@@ -11,9 +11,9 @@ ROOT = Path(__file__).resolve().parents[1]
 class BootstrapPythonVersion(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        source = (ROOT / "tutorial/colab_support/bootstrap_tutorials.py").read_text(
-            encoding="utf-8"
-        )
+        source = (
+            ROOT / "tutorial/legacy/tensorflow/colab_support/bootstrap_tutorials.py"
+        ).read_text(encoding="utf-8")
         tree = ast.parse(source)
         guards = [
             node

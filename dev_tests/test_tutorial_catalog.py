@@ -42,7 +42,9 @@ def test_catalog_outputs_are_current_without_rewriting_source_files():
     assert helper().update_outputs(ROOT, check=True) == []
 
 
-@pytest.mark.parametrize("mutation", ["duplicate-id", "traversal", "missing", "status"])
+@pytest.mark.parametrize(
+    "mutation", ["duplicate-id", "traversal", "missing", "status", "historical-path"]
+)
 def test_invalid_catalog_entries_fail_before_rendering(mutation):
     module = helper()
     catalog = copy.deepcopy(module.load_catalog(ROOT))
@@ -52,6 +54,8 @@ def test_invalid_catalog_entries_fail_before_rendering(mutation):
         catalog["tutorials"][0]["notebook"] = "tutorial/../../outside.ipynb"
     elif mutation == "missing":
         catalog["tutorials"][0]["notebook"] = "tutorial/missing_pytorch.ipynb"
+    elif mutation == "historical-path":
+        catalog["tutorials"][0]["historical_original"] = "tutorial/../outside.ipynb"
     else:
         catalog["tutorials"][0]["status"] = "unknown"
     with pytest.raises(ValueError):
@@ -70,6 +74,8 @@ def test_readme_update_preserves_everything_outside_tutorial_section():
 
 
 def test_check_cli_reports_stale_listings_without_writing(tmp_path):
+    if sys.platform == "win32":
+        tmp_path = Path("\\\\?\\" + str(tmp_path))
     module = helper()
     catalog = module.load_catalog(ROOT)
     (tmp_path / "tutorial").mkdir()
@@ -79,7 +85,9 @@ def test_check_cli_reports_stale_listings_without_writing(tmp_path):
     for entry in catalog["tutorials"]:
         for key in ("notebook", "original", "compatibility"):
             if key in entry:
-                (tmp_path / entry[key]).touch()
+                target = tmp_path / entry[key]
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.touch()
     readme = (
         "# Existing README\n\n## Google Colab Tutorial\n\nstale\n\n"
         "## Issues, bugs, requests, ideas\n\nKeep this footer.\n"
@@ -89,6 +97,7 @@ def test_check_cli_reports_stale_listings_without_writing(tmp_path):
         "README.md",
         "docs/source/tutorials.rst",
         "tutorial/README.md",
+        "tutorial/legacy/tensorflow/README.md",
     }
     assert (tmp_path / "README.md").read_text(encoding="utf-8") == readme
     module.update_outputs(tmp_path, check=False)

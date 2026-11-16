@@ -18,9 +18,9 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class TutorialOneColabBootstrap(unittest.TestCase):
     def test_bootstrap_has_installable_colab_dependencies(self):
-        default = ROOT / "tutorial" / "1_simple_1d_wave_colab.ipynb"
+        default = ROOT / "tutorial/legacy/tensorflow" / "1_simple_1d_wave_colab.ipynb"
         if not default.exists():
-            default = ROOT / "tutorial" / "1_simple_1d_wave.ipynb"
+            default = ROOT / "tutorial/legacy/tensorflow" / "1_simple_1d_wave.ipynb"
         notebook_path = Path(os.environ.get("TUTORIAL1_NOTEBOOK", default))
         notebook = json.loads(notebook_path.read_text(encoding="utf-8"))
         code = "\n".join(

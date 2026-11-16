@@ -10,6 +10,27 @@ from pathlib import PurePosixPath
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 MANIFEST_SHA256 = "392facc286eb33caf90ec16ead2052ea1ae4aaa4c41bf009635e94cbace1f7c3"
+BACKING_RELOCATIONS = {
+    "tutorial/" + name: "tutorial/legacy/tensorflow/" + name
+    for name in (
+        "1_simple_1d_wave.ipynb",
+        "1_simple_1d_wave_colab.ipynb",
+        "2_multi_scale_NIF.ipynb",
+        "2_multi_scale_NIF_colab.ipynb",
+        "3_multi_scale_linear_NIF.ipynb",
+        "3_multi_scale_linear_NIF_colab.ipynb",
+        "4_get_gradients_by_wrapping_model_with_layer.ipynb",
+        "4_get_gradients_by_wrapping_model_with_layer_colab.ipynb",
+        "5_large_scale_training_on_tensorflow_record_data.ipynb",
+        "5_large_scale_training_on_tensorflow_record_data_colab.ipynb",
+        "6_revisit_multi_scale_NIF_with_L1_L2_regularization.ipynb",
+        "6_revisit_multi_scale_NIF_with_L1_L2_regularization_colab.ipynb",
+        "7_model_pruning_and_quantization.ipynb",
+        "7_model_pruning_and_quantization_colab.ipynb",
+        "8_revisit_multi_scale_NIF_with_sobolov_training.ipynb",
+        "8_revisit_multi_scale_NIF_with_sobolov_training_colab.ipynb",
+    )
+}
 
 
 def relative_name(name):
@@ -79,7 +100,7 @@ class Snapshot:
         if entry["storage"] == "bundle":
             data = self._objects[entry["sha256"]]
         else:
-            source = self.root / name
+            source = self.root / relative_name(BACKING_RELOCATIONS.get(name, name))
             if not source.resolve().is_relative_to(self.root):
                 raise ValueError("Historical backing path escapes repository")
             data = source.read_bytes()

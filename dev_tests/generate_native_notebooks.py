@@ -323,7 +323,7 @@ ax.xaxis.labelpad = ax.yaxis.labelpad = ax.zaxis.labelpad = 12
 def original(number):
     return next(
         p
-        for p in (ROOT / ("tutorial")).glob(str(number) + ("_*.ipynb"))
+        for p in (ROOT / "tutorial/legacy/tensorflow").glob(str(number) + "_*.ipynb")
         if not p.stem.endswith((("_colab"), ("_pytorch")))
     )
 
@@ -518,7 +518,7 @@ def emit(number, replacements, notes="", omitted_markdown=()):
             },
         },
     )
-    dest = path.with_name(path.stem + "_pytorch.ipynb")
+    dest = ROOT / "tutorial" / (path.stem + "_pytorch.ipynb")
     if dest.exists():
         existing = nb.read(dest, as_version=4)
         if len(existing.cells) == len(cells) and all(

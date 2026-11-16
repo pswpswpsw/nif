@@ -8,7 +8,11 @@ from pathlib import Path
 from notebook_metadata import clear_execution_metadata
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "tutorial" / "6_revisit_multi_scale_NIF_with_L1_L2_regularization.ipynb"
+SOURCE = (
+    ROOT
+    / "tutorial/legacy/tensorflow"
+    / "6_revisit_multi_scale_NIF_with_L1_L2_regularization.ipynb"
+)
 OUTPUT = SOURCE.with_name(SOURCE.stem + "_colab.ipynb")
 
 
@@ -18,7 +22,12 @@ def main():
     args = parser.parse_args()
     notebook = json.loads(SOURCE.read_text(encoding="utf-8"))
     notebook["cells"][0]["source"] = (
-        (ROOT / "tutorial" / "colab_support" / "bootstrap_tutorials.py")
+        (
+            ROOT
+            / "tutorial/legacy/tensorflow"
+            / "colab_support"
+            / "bootstrap_tutorials.py"
+        )
         .read_text(encoding="utf-8")
         .splitlines(keepends=True)
     )

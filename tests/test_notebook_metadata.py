@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class NotebookMetadataTests(unittest.TestCase):
     def test_copies_exclude_execution_metadata(self):
-        notebooks = sorted((ROOT / "tutorial").glob("*_colab.ipynb"))
+        notebooks = sorted((ROOT / "tutorial/legacy/tensorflow").glob("*_colab.ipynb"))
         self.assertEqual(len(notebooks), 8)
         for path in notebooks:
             with self.subTest(notebook=path.name):

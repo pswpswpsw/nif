@@ -9,7 +9,11 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "tutorial" / "6_revisit_multi_scale_NIF_with_L1_L2_regularization.ipynb"
+SOURCE = (
+    ROOT
+    / "tutorial/legacy/tensorflow"
+    / "6_revisit_multi_scale_NIF_with_L1_L2_regularization.ipynb"
+)
 COPY = SOURCE.with_name(SOURCE.stem + "_colab.ipynb")
 
 
@@ -32,9 +36,12 @@ class TutorialSix(unittest.TestCase):
                 self.assertEqual(old["source"], new["source"], f"cell {index} changed")
         self.assertEqual(
             "".join(notebook["cells"][0]["source"]),
-            (ROOT / "tutorial" / "colab_support" / "bootstrap_tutorials.py").read_text(
-                encoding="utf-8"
-            ),
+            (
+                ROOT
+                / "tutorial/legacy/tensorflow"
+                / "colab_support"
+                / "bootstrap_tutorials.py"
+            ).read_text(encoding="utf-8"),
         )
 
     def test_colab_dependencies_resolve(self):
@@ -73,7 +80,12 @@ class TutorialSix(unittest.TestCase):
         os.environ.setdefault("TF_NUM_INTRAOP_THREADS", "2")
         os.environ.setdefault("TF_NUM_INTEROP_THREADS", "2")
         os.environ.setdefault("OMP_NUM_THREADS", "2")
-        bootstrap = ROOT / "tutorial" / "colab_support" / "bootstrap_tutorials.py"
+        bootstrap = (
+            ROOT
+            / "tutorial/legacy/tensorflow"
+            / "colab_support"
+            / "bootstrap_tutorials.py"
+        )
         exec(compile(bootstrap.read_text(encoding="utf-8"), str(bootstrap), "exec"), {})
         import numpy as np
         import tensorflow as tf

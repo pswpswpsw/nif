@@ -18,7 +18,12 @@ def validate_catalog(catalog, root=ROOT):
     if catalog.get("schema_version") != 1 or not catalog.get("tutorials"):
         raise ValueError("Expected a nonempty version-1 tutorial catalog")
     links = catalog.get("links", {})
-    for key in ("readme_ref", "released_docs_ref", "experimental_docs_ref"):
+    for key in (
+        "readme_ref",
+        "released_docs_ref",
+        "experimental_docs_ref",
+        "historical_docs_ref",
+    ):
         value = links.get(key, "")
         if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._/-]*", value) or ".." in value:
             raise ValueError("Invalid source ref: " + key)
@@ -60,6 +65,19 @@ def validate_catalog(catalog, root=ROOT):
                 or not (root / path).is_file()
             ):
                 raise ValueError("Invalid or missing tutorial file: " + str(name))
+        if entry["status"] == "released":
+            for key in ("original", "compatibility"):
+                published = entry.get("historical_" + key, "")
+                if (
+                    not isinstance(published, str)
+                    or "\\" in published
+                    or Path(published).parent != Path("tutorial")
+                    or Path(published).name != Path(entry[key]).name
+                    or not published.endswith(".ipynb")
+                ):
+                    raise ValueError(
+                        "Invalid historical tutorial path: " + str(published)
+                    )
         if entry["notebook"] in notebooks or not entry["notebook"].endswith(
             "_pytorch.ipynb"
         ):
@@ -110,6 +128,7 @@ def render_readme(catalog):
         "",
         "The notebooks below run the native PyTorch examples. Their scientific workloads "
         "are the default; set `NIF_SMOKE=1` before running only for a short development check.",
+        "Google Colab runs these same PyTorch notebooks; the framework and platform are separate choices.",
         "",
     ]
     for entry in catalog["tutorials"]:
@@ -191,6 +210,8 @@ def render_rst(catalog):
         "",
         "Original notebooks preserve the scientific definitions and historical outputs.",
         "Compatibility copies retain the pinned setup for the historical backend.",
+        "Their current checkout location is ``tutorial/legacy/tensorflow/``; the links",
+        "below keep their original paths in the immutable release.",
         "",
         ".. list-table:: Historical references",
         "   :header-rows: 1",
@@ -201,12 +222,12 @@ def render_rst(catalog):
         "     - Compatibility notebook",
     ]
     for entry in released:
-        prefix = REPOSITORY + "/blob/" + source_ref(catalog, entry, "docs") + "/"
+        prefix = REPOSITORY + "/blob/" + catalog["links"]["historical_docs_ref"] + "/"
         lines.extend(
             [
                 f'   * - {entry["id"]}',
-                f'     - `Original <{prefix + entry["original"]}>`__',
-                f'     - `Compatibility <{prefix + entry["compatibility"]}>`__',
+                f'     - `Original <{prefix + entry["historical_original"]}>`__',
+                f'     - `Compatibility <{prefix + entry["historical_compatibility"]}>`__',
             ]
         )
     lines.extend(
@@ -237,6 +258,9 @@ def render_tutorial_readme(catalog):
         "Use the [tutorial index](../docs/source/tutorials.rst) for scientific cases and",
         "versioned notebook links, or the [README Colab links](../README.md#google-colab-tutorial).",
         "",
+        "Colab is a notebook execution platform. These same PyTorch notebooks run",
+        "locally or in Colab; each notebook includes its own environment setup.",
+        "",
         "Released notebooks run their full scientific workloads by default.",
         "`NIF_SMOKE=1` selects a short development check.",
         "",
@@ -250,9 +274,49 @@ def render_tutorial_readme(catalog):
     lines.extend(
         [
             "",
-            "Original notebooks, compatibility `_colab.ipynb` copies and `colab_support/`",
-            "preserve the legacy TensorFlow workflow. The native tutorials use their own",
-            "setup. See the [native API guide](../docs/PYTORCH_API.md) for package usage.",
+            "The [TensorFlow archive](legacy/tensorflow/README.md) contains the eight",
+            "original notebooks, their eight `_colab.ipynb` compatibility copies and",
+            "historical setup files. See the [native API guide](../docs/PYTORCH_API.md)",
+            "for current package usage.",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def render_legacy_readme(catalog):
+    lines = [
+        "# Historical TensorFlow tutorials",
+        "",
+        "<!-- Generated from ../../catalog.json by scripts/tutorial_catalog.py. -->",
+        "",
+        "The current [PyTorch tutorials](../../README.md) run locally or in Google Colab.",
+        "This archive preserves the original TensorFlow notebooks and the later",
+        "Colab compatibility copies, including their scientific code, comments and outputs.",
+        "",
+        "| Tutorial | Original TensorFlow notebook | TensorFlow compatibility copy |",
+        "| --- | --- | --- |",
+    ]
+    for entry in catalog["tutorials"]:
+        if entry["status"] == "released":
+            original = Path(entry["original"]).name
+            compatibility = Path(entry["compatibility"]).name
+            lines.append(
+                f'| {entry["id"]} | [{original}]({original}) | '
+                f"[{compatibility}]({compatibility}) |"
+            )
+    lines.extend(
+        [
+            "",
+            "`_colab.ipynb` is a historical name for the TensorFlow dependency-compatibility",
+            "copies. Colab is a platform; the current PyTorch notebooks also include Colab setup.",
+            "",
+            "The [compatibility guide](colab_support/README.md) records the pinned historical",
+            "environment. These notebooks load their recorded older NIF implementation; use",
+            "`*_pytorch.ipynb` in the parent tutorial index with the current package.",
+            "",
+            "The [catalog](../../catalog.json) records current archive paths separately from",
+            "immutable `v2.0.0` links, where these files retain their original published paths.",
             "",
         ]
     )
@@ -268,6 +332,7 @@ def update_outputs(root=ROOT, check=False):
         ),
         "docs/source/tutorials.rst": render_rst(catalog),
         "tutorial/README.md": render_tutorial_readme(catalog),
+        "tutorial/legacy/tensorflow/README.md": render_legacy_readme(catalog),
     }
     changed = []
     for name, expected in outputs.items():

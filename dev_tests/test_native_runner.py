@@ -33,6 +33,7 @@ def checkout(tmp_path):
     for entry in catalog["tutorials"]:
         for key in ("notebook", "original", "compatibility"):
             if key in entry:
+                (root / entry[key]).parent.mkdir(parents=True, exist_ok=True)
                 notebook = nbformat.v4.new_notebook(
                     cells=[nbformat.v4.new_code_cell("pass")]
                 )

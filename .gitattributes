@@ -1,7 +1,8 @@
 /.gitattributes text eol=lf
 /tests/* text eol=lf
 /tutorial/*.ipynb text eol=lf
-/tutorial/colab_support/* text eol=lf
+/tutorial/legacy/tensorflow/*.ipynb text eol=lf
+/tutorial/legacy/tensorflow/colab_support/* text eol=lf
 
 # Keep native source and recorded hashes portable between Windows and Linux.
 /nif/**/*.py text eol=lf

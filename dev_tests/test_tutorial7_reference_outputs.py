@@ -35,8 +35,9 @@ STEM = "7_model_pruning_and_quantization"
 
 
 def notebook(suffix=""):
+    directory = "tutorial" if suffix == "_pytorch" else "tutorial/legacy/tensorflow"
     return json.loads(
-        (ROOT / "tutorial" / (STEM + suffix + ".ipynb")).read_text(encoding="utf-8")
+        (ROOT / directory / (STEM + suffix + ".ipynb")).read_text(encoding="utf-8")
     )
 
 

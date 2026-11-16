@@ -52,6 +52,36 @@ The :doc:`validation` and :doc:`comparison_records` pages retain the recorded
 error measurements and acceptance scope. Training points and additional spatial
 or temporal evaluation points are distinguished in those comparisons.
 
+Experimental tutorial added after v2.0.0
+------------------------------------------------------------
+
+Tutorial 9 adds a controlled optimizer experiment to the first scientific case.
+It runs fresh training and compares L-BFGS, SSBFGS and SSBroyden from the same
+actual checkpoint, fixed full-batch objective and float64 precision. The
+:doc:`self_scaled_optimizers` guide explains the numerical controls, CPU memory
+requirements, historical results and known limits.
+
+.. list-table:: Experimental PyTorch tutorial
+   :header-rows: 1
+   :widths: 12 29 39 20
+   :class: nif-tutorial-table
+
+   * - Tutorial
+     - Scientific case
+     - Main implementation concepts
+     - Open
+   * - 9
+     - One-dimensional traveling wave
+     - Compare three quasi-Newton implementations, physical absolute errors and timing.
+     - `Notebook <https://github.com/pswpswpsw/nif/blob/main/tutorial/9_self_scaled_optimizers_pytorch.ipynb>`__ / `Colab <https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/9_self_scaled_optimizers_pytorch.ipynb>`__
+
+The default full run includes 5,000 warmup epochs and up to 1,000 quasi-Newton
+iterations per method. A historical two-thread CPU run took about half an hour;
+runtime varies by machine. ``NIF_SMOKE=1`` selects a short execution check and
+does not reproduce the full comparison. This notebook is a post-release
+experiment on ``main``; the eight released notebooks above remain linked to
+the immutable ``v2.0.0`` tag.
+
 Original cases and compatibility notebooks
 ------------------------------------------
 

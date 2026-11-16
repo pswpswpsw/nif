@@ -1,0 +1,213 @@
+{
+  "result": "PASS",
+  "scope": "Actual hosted Colab original C4 FULL execution plus independent saved-result recomputation",
+  "support_commit": "40a0a212d5d2d38078a21d0cb27440439e8c5ae4",
+  "core_commit": "462ba32c7f1e45ecf4c9d7cc6e0880bf4f9eafc5",
+  "core_ref": "v2.0.0",
+  "author_source": {
+    "repository": "EliKiani/Optimizing_the_Optimizer_PINNs",
+    "commit": "990a82c1353cbda9f5afee3200b222fdb821c521",
+    "url": "https://raw.githubusercontent.com/EliKiani/Optimizing_the_Optimizer_PINNs/990a82c1353cbda9f5afee3200b222fdb821c521/_optimize.py",
+    "sha256": "65958e6bba33631ca5aeab9ecc309536199c08a7e380fc0487d404e93ae2687e",
+    "bytes": 160175,
+    "scipy": "1.16.3",
+    "distribution": "Runtime download; author modifications are not redistributed in this repository"
+  },
+  "versions": {
+    "python": "3.13.16",
+    "torch": "2.14.1+cu130",
+    "numpy": "2.1.3",
+    "scipy": "1.16.3",
+    "NIF": "2.0.0",
+    "matplotlib": "3.10.0",
+    "protobuf": "7.36.2",
+    "google-crc32c": "1.9.0",
+    "tfrecord": "1.14.6"
+  },
+  "device": "cpu",
+  "dtype": "float64",
+  "threads": 2,
+  "warmup_epochs": 5000,
+  "actual_warmup_optimizer_steps": 20000,
+  "full_batch_rows": 2000,
+  "max_iterations_per_method": 1000,
+  "train_grid": [
+    10,
+    200
+  ],
+  "additional_interpolation_grid": [
+    45,
+    800
+  ],
+  "shared_start_parameter_hash": "da9c29c102175abef5f83e7b7903104d1c2fdfdadea4a44b5ec146e4642eb84f",
+  "shared_start_gradient_hash": "5b64a5aa40fd520f8c074491755427f1d67636a516ce17d23ddcc5b78f812eb2",
+  "independent_first_gradient_max_abs_difference": 2.0348306373207947e-15,
+  "independent_first_gradient_relative_l2_difference": 1.0837559792907473e-13,
+  "shared_start_objective": 3.342616660612104e-05,
+  "batch_order_sha256": "8fd3cccd4eb7aec18d404df2c609fb177a65e61bd7055a63f10c2f7f3e14c2ae",
+  "warmup_seconds": 369.081160863,
+  "arms": {
+    "lbfgs": {
+      "metrics": {
+        "train": {
+          "mse": 1.693526195490969e-09,
+          "rmse": 4.115247496191413e-05,
+          "mae": 2.6617226219688228e-05,
+          "max_abs": 0.00028784372355318555
+        },
+        "dense": {
+          "mse": 3.5074758994144553e-09,
+          "rmse": 5.922394700975658e-05,
+          "mae": 3.968002448298458e-05,
+          "max_abs": 0.00041884230207620693
+        }
+      },
+      "status": {
+        "converged": false,
+        "failed": false,
+        "state_finite": true,
+        "termination": "iteration_limit",
+        "backend_nit": 1000,
+        "backend_nfev": 2963
+      },
+      "qn_seconds": 268.38084764199994,
+      "iterations": 1000,
+      "objective_evaluations": 2964,
+      "independently_recomputed_final_objective": 1.0725290299530052e-05,
+      "maximum_prediction_difference": {
+        "train": 3.3481518339067984e-16,
+        "dense": 3.0184188481996443e-16
+      }
+    },
+    "ssbfgs": {
+      "metrics": {
+        "train": {
+          "mse": 1.3512410159381544e-12,
+          "rmse": 1.1624289294138176e-06,
+          "mae": 8.236335157329551e-07,
+          "max_abs": 5.186323245691404e-06
+        },
+        "dense": {
+          "mse": 1.4443412407916505e-12,
+          "rmse": 1.2018074890728758e-06,
+          "mae": 8.57543933408589e-07,
+          "max_abs": 6.788482806918832e-06
+        }
+      },
+      "status": {
+        "backend_success": false,
+        "backend_status": 1,
+        "message": "Maximum number of iterations has been exceeded.",
+        "finite": {
+          "x": true,
+          "jac": true,
+          "hess_inv": true,
+          "objective": true
+        },
+        "state_finite": true,
+        "converged": false,
+        "termination": "iteration_limit",
+        "backend_nit": 1000,
+        "backend_nfev": 1018,
+        "backend_njev": 1018
+      },
+      "qn_seconds": 869.557965151,
+      "iterations": 1000,
+      "objective_evaluations": 1019,
+      "independently_recomputed_final_objective": 8.557802882742124e-09,
+      "maximum_prediction_difference": {
+        "train": 1.214306433183765e-16,
+        "dense": 1.973247953923618e-16
+      }
+    },
+    "ssbroyden": {
+      "metrics": {
+        "train": {
+          "mse": 7.587343348156173e-14,
+          "rmse": 2.754513268829209e-07,
+          "mae": 2.0461139760784221e-07,
+          "max_abs": 1.2070736585604019e-06
+        },
+        "dense": {
+          "mse": 1.1974389072489183e-13,
+          "rmse": 3.460403021685362e-07,
+          "mae": 2.2943672273655266e-07,
+          "max_abs": 2.6260882858307287e-06
+        }
+      },
+      "status": {
+        "backend_success": false,
+        "backend_status": 1,
+        "message": "Maximum number of iterations has been exceeded.",
+        "finite": {
+          "x": true,
+          "jac": true,
+          "hess_inv": true,
+          "objective": true
+        },
+        "state_finite": true,
+        "converged": false,
+        "termination": "iteration_limit",
+        "backend_nit": 1000,
+        "backend_nfev": 1026,
+        "backend_njev": 1026
+      },
+      "qn_seconds": 950.5784101349998,
+      "iterations": 1000,
+      "objective_evaluations": 1027,
+      "independently_recomputed_final_objective": 4.805563275314165e-10,
+      "maximum_prediction_difference": {
+        "train": 1.626151123669996e-16,
+        "dense": 3.660266534311063e-16
+      }
+    }
+  },
+  "notebook": {
+    "notebook_sha256": "8eb2ae041a2712bc7dd17762dbf8e9a19dcf6c548385fa0c00f0321906b480d6",
+    "executed_original_code_cells": 7,
+    "core_cell_error_outputs": 0,
+    "execution_evidence": [
+      "execution_count",
+      "execution_count",
+      "execution_count",
+      "execution_count",
+      "execution_count",
+      "execution_count",
+      "execution_count"
+    ],
+    "inline_png_count": 8,
+    "inline_png_sha256": [
+      "23d5a319ed04d5d5b68d43b7e2e67a671bb4dc16f5e711396fcde4139dc87ad1",
+      "feae16730f58b02c46ea63e46640c6e9aba4982954848d107a6fb6c6b6b516cc",
+      "916133f605b045ecde98241e61f7fdc90f7121a8713565ca7d3b103881605a96",
+      "8314c143e0f2b7bbb1c8dc71ca08d6684814b49041d4e4cfbeb17bdfd55beaf2",
+      "b564c01c0622b5c6b2be980b5cb42db1cbc1d3728bde62223a90d76dd5e2db0f",
+      "fa76e4e9dba71f50c390510f960275ec6ee231a579aca1569d17b0e0684dc4f7",
+      "c18df3f2d0bd90e58f814958bb28f9df06e11011ab7f7939dbabcfdc5e6fb61b",
+      "d9e759c97d4392761682499e3e933ce9c895383dd2196c61f715da7b3895c92f"
+    ],
+    "original_code_cell_hashes": [
+      "d6a472e4c146837430ad6cfc1bb85b2a1e184776b39110b2b70cb567c09afe3a",
+      "63d829d0215d6c1d1483d483a46efca94d4e7aee581879d74e76c3e8b9bc9e45",
+      "ae819030d467e8cec0713e5fd76bd0a9fd918caf1b354c91063cefda50b7048f",
+      "7c0e32d06c372b9db19edeb3e77ff9e7d682a11baa76fa3c38a562bfb355b351",
+      "17c9f311d4a15d4757e7615e375d3d0905c6305af02f3179fe2c1354c4d36587",
+      "1bf9fa1a90c349d3d1d6bc7efd0053aef66c9d1c6a69aca0e21185f1213f1e34",
+      "245263c5e096939dd73ee72a5a679dc9d7051535302a66b2a45d1e9113109dad"
+    ],
+    "extra_export_or_postprocessing_code_cells": 0
+  },
+  "generated_png_files": 8,
+  "saved_and_inline_png_bytes_match": true,
+  "evidence_export_optimizer_steps": 0,
+  "interpretation": "The original C4 hosted FULL ran before the output-transport-only follow-up. These are this hosted run's actual results; convergence status and hardware-specific timing are retained.",
+  "download_archive_sha256": "e251ec608da8fd286526f9396c2bad09aa6906666abce8dead87d179a51fe5b4",
+  "downloaded_original_files_unchanged_during_audit": true,
+  "visual_inspection": "All eight actual hosted FULL PNGs inspected; original-style and additional physical/absolute-error views retained original coordinate semantics and declared scales",
+  "output_transport_followup": {
+    "scope": "Only stdout/stderr forwarding changed after original C4 FULL; scientific child program/arguments remain unchanged",
+    "hosted_all_current_code_cells_smoke": "PASS",
+    "hosted_smoke_receipt": "PUBLIC_HOSTED_SMOKE_VALIDATION.json",
+    "smoke_replaces_full_training_evidence": false
+  }
+}

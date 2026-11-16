@@ -26,8 +26,14 @@ GUIDES = {
     "docs/PYTORCH_VALIDATION.md": "validation.md",
     "docs/PYTORCH_TENSORFLOW_PARITY.md": "comparison_records.md",
     "docs/PYTORCH_TRAINING_EXAMPLE.md": "training_example.md",
+    "docs/SELF_SCALED_OPTIMIZERS.md": "self_scaled_optimizers.md",
 }
 README_IMAGES = ("myimage.gif", "compare.gif")
+POST_RELEASE_SOURCES = (
+    "examples/self_scaled",
+    "tutorial/9_self_scaled_optimizers_pytorch.ipynb",
+    "docs/SELF_SCALED_OPTIMIZERS.md",
+)
 
 
 def package_version(root):
@@ -69,6 +75,15 @@ def markdown_sections(text):
 def rewrite_markdown(text, source_name, tag):
     """Resolve site links while leaving fenced executable examples verbatim."""
 
+    def source_ref(name):
+        # These experimental files were added after the immutable v2.0.0 tag.
+        if any(
+            name == prefix or name.startswith(prefix + "/")
+            for prefix in POST_RELEASE_SOURCES
+        ):
+            return "main"
+        return tag
+
     def target_for(match):
         target = match.group(1)
         for prefix in (
@@ -77,7 +92,12 @@ def rewrite_markdown(text, source_name, tag):
             "https://colab.research.google.com/github/pswpswpsw/nif/blob/main/",
         ):
             if target.startswith(prefix):
-                return "](" + target.replace("/main/", "/" + tag + "/", 1) + ")"
+                name = unquote(urlsplit(target[len(prefix) :]).path)
+                return (
+                    "]("
+                    + target.replace("/main/", "/" + source_ref(name) + "/", 1)
+                    + ")"
+                )
         parts = urlsplit(target)
         if parts.scheme or parts.netloc or not parts.path or target.startswith("/"):
             return match.group(0)
@@ -91,8 +111,10 @@ def rewrite_markdown(text, source_name, tag):
             resolved = GUIDES[name]
         elif name in {"misc/" + image for image in README_IMAGES}:
             resolved = "_static/readme/" + posixpath.basename(name)
+        elif name.startswith("docs/source/_static/"):
+            resolved = name.removeprefix("docs/source/")
         else:
-            resolved = f"{REPOSITORY}/blob/{tag}/" + quote(name, safe="/")
+            resolved = f"{REPOSITORY}/blob/{source_ref(name)}/" + quote(name, safe="/")
         return "](" + resolved + suffix + ")"
 
     def prose(content):

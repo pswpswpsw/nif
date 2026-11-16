@@ -21,6 +21,7 @@ def test_readme_retains_original_visuals_and_native_tutorials():
         "6_revisit_multi_scale_NIF_with_L1_L2_regularization",
         "7_model_pruning_and_quantization",
         "8_revisit_multi_scale_NIF_with_sobolov_training",
+        "9_self_scaled_optimizers",
     ):
         notebook = f"{stem}_pytorch.ipynb"
         assert (ROOT / "tutorial" / notebook).is_file(), notebook
@@ -29,7 +30,7 @@ def test_readme_retains_original_visuals_and_native_tutorials():
     assert "## Highlights" in readme
     assert "PointWiseData.minmax_normalize" in readme
     assert "TFRDataset" in readme
-    assert readme.count("https://colab.research.google.com/assets/colab-badge.svg") == 8
+    assert readme.count("https://colab.research.google.com/assets/colab-badge.svg") == 9
     assert "PyTorch" in readme
     # The tutorial 5 filename contains a historical format name. It is part
     # of an actual URL, not text rendered in the public README.

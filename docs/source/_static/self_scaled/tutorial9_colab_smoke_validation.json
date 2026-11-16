@@ -1,0 +1,111 @@
+{
+  "result": "PASS",
+  "scope": "Actual hosted Colab execution of all seven current published code cells with the new output-stream bridge, explicitly shortened SMOKE workload",
+  "mode": "SMOKE",
+  "scientific_full_validation": false,
+  "hosted_notebook_sha256": "53811054f2cf3d9bec1b02b4b1fb28678cdab035df9347e30d7e5b8c586b3912",
+  "published_notebook_sha256": "274655250fd0e7812a45ad88469fbea38093ab1b46cd21a1dc8f0b2f309e7d24",
+  "published_computational_commit": "187cd9148b7f5c15a7bd57cf02c70c07925bfa73",
+  "all_seven_code_cell_sources_match_published": true,
+  "code_cell_hashes_by_id": {
+    "ss-tutorial-01": "d6a472e4c146837430ad6cfc1bb85b2a1e184776b39110b2b70cb567c09afe3a",
+    "ss-tutorial-03": "63d829d0215d6c1d1483d483a46efca94d4e7aee581879d74e76c3e8b9bc9e45",
+    "ss-tutorial-05": "21665a23ffda90671a059a3a565f090bdb34d7dd4aa3f07791b3a7a7c814a896",
+    "ss-tutorial-07": "7c0e32d06c372b9db19edeb3e77ff9e7d682a11baa76fa3c38a562bfb355b351",
+    "ss-tutorial-09": "17c9f311d4a15d4757e7615e375d3d0905c6305af02f3179fe2c1354c4d36587",
+    "ss-tutorial-11": "1bf9fa1a90c349d3d1d6bc7efd0053aef66c9d1c6a69aca0e21185f1213f1e34",
+    "ss-tutorial-13": "245263c5e096939dd73ee72a5a679dc9d7051535302a66b2a45d1e9113109dad"
+  },
+  "executed_original_code_cells": 7,
+  "execution_counts": [
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ],
+  "core_cell_error_outputs": 0,
+  "inline_png_outputs": 8,
+  "warmup_epochs": 2,
+  "max_quasi_newton_iterations_per_method": 3,
+  "actual_warmup_epochs_observed_in_stdout": [
+    1,
+    2
+  ],
+  "actual_optimizer_iterations": {
+    "lbfgs": 3,
+    "ssbfgs": 3,
+    "ssbroyden": 3
+  },
+  "raw_termination_states": {
+    "lbfgs": {
+      "converged": false,
+      "failed": false,
+      "state_finite": true,
+      "termination": "iteration_limit",
+      "backend_nit": 3,
+      "backend_nfev": 9
+    },
+    "ssbfgs": {
+      "backend_success": false,
+      "backend_status": 1,
+      "message": "Maximum number of iterations has been exceeded.",
+      "finite": {
+        "x": true,
+        "jac": true,
+        "hess_inv": true,
+        "objective": true
+      },
+      "state_finite": true,
+      "converged": false,
+      "termination": "iteration_limit",
+      "backend_nit": 3,
+      "backend_nfev": 4,
+      "backend_njev": 4
+    },
+    "ssbroyden": {
+      "backend_success": false,
+      "backend_status": 1,
+      "message": "Maximum number of iterations has been exceeded.",
+      "finite": {
+        "x": true,
+        "jac": true,
+        "hess_inv": true,
+        "objective": true
+      },
+      "state_finite": true,
+      "converged": false,
+      "termination": "iteration_limit",
+      "backend_nit": 3,
+      "backend_nfev": 4,
+      "backend_njev": 4
+    }
+  },
+  "actual_child_progress_visible_in_parent_notebook_stdout": true,
+  "shared_actual_initial_parameters_and_gradient_verified": true,
+  "support_commit": "40a0a212d5d2d38078a21d0cb27440439e8c5ae4",
+  "core_ref": "v2.0.0",
+  "environment": {
+    "python": "3.13.16",
+    "nif": "2.0.0",
+    "torch": "2.14.1+cu130",
+    "numpy": "2.1.3",
+    "scipy": "1.16.3",
+    "matplotlib": "3.10.0"
+  },
+  "author_source": {
+    "repository": "EliKiani/Optimizing_the_Optimizer_PINNs",
+    "commit": "990a82c1353cbda9f5afee3200b222fdb821c521",
+    "url": "https://raw.githubusercontent.com/EliKiani/Optimizing_the_Optimizer_PINNs/990a82c1353cbda9f5afee3200b222fdb821c521/_optimize.py",
+    "sha256": "65958e6bba33631ca5aeab9ecc309536199c08a7e380fc0487d404e93ae2687e",
+    "bytes": 160175,
+    "scipy": "1.16.3",
+    "distribution": "Runtime download; author modifications are not redistributed in this repository"
+  },
+  "source_selection": "Published default FULL code unchanged; explicit NIF_SMOKE=1 runtime selector used for this follow-up",
+  "extra_runtime_selector_code_cells": 1,
+  "installed_environment_reused": true,
+  "interpretation": "This verifies current notebook integration and visible progress, not full-budget convergence. The original C4 hosted FULL has a separate independent result receipt."
+}

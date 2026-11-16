@@ -119,8 +119,9 @@ global `sum(g*v)` over all parameters. Initialize `L_min=gamma_0*L`, then take
 `alpha*(L-gamma*L_min)/(sum(g*v)+epsilon)` and afterward forget with
 `L_min *= (1+1/tau)`. The direction epsilon and denominator epsilon are separate
 numerical safeguards. A closure/current loss is required; the moving minimum is
-serialized. Native L-BFGS replaces TensorFlow Probability; retained historical
-class names are aliases for native execution, not compatibility wrappers.
+serialized. Native L-BFGS entry points delegate to `ReferenceLBFGS`.
+`TFPLBFGS` retains the round-based interface and restarts curvature each round;
+`LBFGSOptimizer` retains continuation through its optimizer state.
 
 `PointWiseData` retains parameter/coordinate/target ordering, normalization, and
 optional area weights. Zero ranges and invalid inputs raise explicit errors.
@@ -130,7 +131,8 @@ repetitions are retained; training consumes native DataLoaders/iterables.
 
 ## Tutorials and artifacts
 
-The eight `*_pytorch.ipynb` notebooks preserve full default scientific workloads.
+The eight released PyTorch notebooks preserve full default scientific workloads;
+the separate experimental T9 compares self-scaled optimizers.
 `NIF_SMOKE=1` is explicitly a separate development mode. Tutorial 6 evaluates
 superresolution in `[parameter, coordinate]` order. Tutorial 8 uses
 `physical_u = normalized_u * scale_u + mean_u` and derivative chain rules, so
@@ -143,8 +145,10 @@ backward with coordinate gradients are unsupported: preforward masking changes
 the kernel in place. Strip pruning controls before tracing/export. PyTorch state dictionaries
 are the checkpoint format; historical Keras checkpoints are not supported.
 
-Tutorial 7 reports relative mean-square error as the sum of squared differences
-divided by the sum of squared reference values (the squared Frobenius-norm
-ratio). The archived TensorFlow notebook instead used the squared matrix
-spectral-norm ratio. These reported metrics are different; the native metric
-corrects the earlier MSE label and does not change the training objective.
+Tutorial 7 retains the original squared matrix spectral-norm ratio:
+`norm(error, ord=2)**2 / norm(unpruned, ord=2)**2`. The two-dimensional arrays
+use the original coordinate rearrangement. The historical `relative_mse_*`
+field names remain for traceability; this diagnostic is distinct from the
+pointwise MSE training objective. The
+[semantic restoration record](TUTORIAL_SEMANTICS_REVIEW.md#f-t7-三项原定义恢复及独立验收)
+documents the metric, figure and artifact-size corrections.

@@ -1,5 +1,7 @@
 # Tutorial 1: Colab compatibility copy
 
+> Historical TensorFlow compatibility record. Use the [tutorial index](../README.md) for the released PyTorch notebooks and experimental T9. The [original dated text](../../docs/archive/2026-11-15/colab-support/README.md) is preserved with its source revision and checksums.
+
 For the remaining notebooks, see [Tutorials 2–8: Colab compatibility copies](README-tutorials-2-8.md).
 
 Use [`../1_simple_1d_wave_colab.ipynb`](../1_simple_1d_wave_colab.ipynb) in a fresh Colab session and run from the first cell. The original `1_simple_1d_wave.ipynb` is preserved. The copy retains all 27 code cells, the original 5,000 training epochs, and L-BFGS settings (`rounds=200, max_iter=1000`).

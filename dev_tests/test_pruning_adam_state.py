@@ -1,15 +1,10 @@
 """Supplemental public lifecycle checks after the immutable RED regressions."""
 import copy
-import hashlib
 import io
-import json
-from pathlib import Path
 
-import nbformat
 import pytest
 import torch
 
-from dev_tests.lint_preservation import read_lint_bytes
 from nif.optimizers import ReferenceAdam
 from nif.pruning import PolynomialMagnitudePruning
 
@@ -210,38 +205,6 @@ def test_cuda_state_restore_and_masking():
     advance(restored, resumed)
     resumed_ctl.on_epoch_end()
     assert torch.isfinite(restored.weight).all()
-
-
-def test_red_test_fingerprints_unchanged_and_scientific_calls_migrated_v2():
-    root = Path(__file__).resolve().parents[1]
-    fingerprints = json.loads(
-        (root / "dev_tests/pruning_adam_pre_fix_fingerprints.json").read_text()
-    )
-    for name in (
-        "dev_tests/test_reference_adam.py",
-        "dev_tests/test_tutorial7_pruning.py",
-    ):
-        assert (
-            hashlib.sha256(read_lint_bytes(root, name)).hexdigest()
-            == fingerprints[name]
-        )
-    for number in (2, 5, 6, 7, 8):
-        nb = nbformat.read(
-            next((root / "tutorial").glob(f"{number}_*_pytorch.ipynb")), as_version=4
-        )
-        code = "\n".join(c.source for c in nb.cells if c.cell_type == "code")
-        assert "torch.optim.Adam(" not in code
-        assert "ReferenceAdam(" in code
-    # Scope v2: tutorial 1 has an authorized, exactly bounded GC default correction.
-    from dev_tests.tutorial1_gc_scope import assert_tutorial1_gc_scope_v2
-
-    assert_tutorial1_gc_scope_v2()
-    for number in (3, 4):
-        path = next((root / "tutorial").glob(f"{number}_*_pytorch.ipynb"))
-        assert (
-            hashlib.sha256(path.read_bytes()).hexdigest()
-            == fingerprints[path.relative_to(root).as_posix()]
-        )
 
 
 @pytest.mark.parametrize(

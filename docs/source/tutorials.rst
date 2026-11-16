@@ -1,12 +1,13 @@
-Eight scientific tutorials
-==========================
+Scientific tutorials
+====================
 
-Each native notebook contains the scientific case, training loop, evaluation,
-and figures. Open the version 2.0.0 notebook in GitHub or run it in Google Colab.
-The full scientific workloads are the default. ``NIF_SMOKE=1`` selects a short
-development check and is separate from full training.
+.. Generated from tutorial/catalog.json; update with scripts/tutorial_catalog.py --write.
 
-.. list-table:: Native PyTorch tutorials
+The 8 released notebooks contain their scientific cases, training, evaluation and figures.
+Open the immutable ``v2.0.0`` versions below in GitHub or Google Colab.
+Full workloads are the default; ``NIF_SMOKE=1`` selects a short development check.
+
+.. list-table:: Released PyTorch tutorials
    :header-rows: 1
    :widths: 12 29 39 20
    :class: nif-tutorial-table
@@ -48,20 +49,17 @@ development check and is separate from full training.
      - Supervise spatial derivatives and evaluate field and derivative errors.
      - `Notebook <https://github.com/pswpswpsw/nif/blob/v2.0.0/tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb>`__ / `Colab <https://colab.research.google.com/github/pswpswpsw/nif/blob/v2.0.0/tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb>`__
 
-The :doc:`validation` and :doc:`comparison_records` pages retain the recorded
-error measurements and acceptance scope. Training points and additional spatial
-or temporal evaluation points are distinguished in those comparisons.
+The :doc:`validation` and :doc:`comparison_records` pages retain the numerical
+results, user acceptance and evaluation-grid definitions.
 
-Experimental tutorial added after v2.0.0
-------------------------------------------------------------
+Experimental tutorials
+----------------------
 
-Tutorial 9 adds a controlled optimizer experiment to the first scientific case.
-It runs fresh training and compares L-BFGS, SSBFGS and SSBroyden from the same
-actual checkpoint, fixed full-batch objective and float64 precision. The
-:doc:`self_scaled_optimizers` guide explains the numerical controls, CPU memory
-requirements, historical results and known limits.
+These post-release experiments extend the scientific cases. The
+:doc:`self_scaled_optimizers` guide gives the optimizer comparison's methods,
+budgets, measured results and execution receipts.
 
-.. list-table:: Experimental PyTorch tutorial
+.. list-table:: Experimental PyTorch tutorials
    :header-rows: 1
    :widths: 12 29 39 20
    :class: nif-tutorial-table
@@ -75,19 +73,11 @@ requirements, historical results and known limits.
      - Compare three quasi-Newton implementations, physical absolute errors and timing.
      - `Notebook <https://github.com/pswpswpsw/nif/blob/main/tutorial/9_self_scaled_optimizers_pytorch.ipynb>`__ / `Colab <https://colab.research.google.com/github/pswpswpsw/nif/blob/main/tutorial/9_self_scaled_optimizers_pytorch.ipynb>`__
 
-The default full run includes 5,000 warmup epochs and up to 1,000 quasi-Newton
-iterations per method. A historical two-thread CPU run took about half an hour;
-runtime varies by machine. ``NIF_SMOKE=1`` selects a short execution check and
-does not reproduce the full comparison. This notebook is a post-release
-experiment on ``main``; the eight released notebooks above remain linked to
-the immutable ``v2.0.0`` tag.
-
 Original cases and compatibility notebooks
 ------------------------------------------
 
-The original notebooks preserve the scientific definitions and historical
-outputs. The compatibility copies contain the pinned setup used for the
-historical backend. The following links preserve access to both sets.
+Original notebooks preserve the scientific definitions and historical outputs.
+Compatibility copies retain the pinned setup for the historical backend.
 
 .. list-table:: Historical references
    :header-rows: 1
@@ -121,5 +111,5 @@ historical backend. The following links preserve access to both sets.
      - `Original <https://github.com/pswpswpsw/nif/blob/v2.0.0/tutorial/8_revisit_multi_scale_NIF_with_sobolov_training.ipynb>`__
      - `Compatibility <https://github.com/pswpswpsw/nif/blob/v2.0.0/tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_colab.ipynb>`__
 
-See the `original API documentation <legacy/tensorflow/index.html>`_ for that
-historical workflow. Use the native PyTorch links above for version 2.0.0.
+See the `original API documentation <legacy/tensorflow/index.html>`_ for the
+historical workflow. Use the native PyTorch links above for current execution.

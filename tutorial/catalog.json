@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "links": {
+    "readme_ref": "main",
+    "released_docs_ref": "v2.0.0",
+    "experimental_docs_ref": "main"
+  },
+  "tutorials": [
+    {
+      "id": 1,
+      "status": "released",
+      "title": "Hello world! A simple fitting on a 1D traveling wave",
+      "case": "One-dimensional traveling wave",
+      "concepts": "Configure NIF, train, save and restore weights, refine with L-BFGS.",
+      "notebook": "tutorial/1_simple_1d_wave_pytorch.ipynb",
+      "original": "tutorial/1_simple_1d_wave.ipynb",
+      "compatibility": "tutorial/1_simple_1d_wave_colab.ipynb",
+      "goals": [
+        "Learn the `nif.NIF` model, its configuration, and training loop.",
+        "Save and restore checkpoints; refine the fit with L-BFGS."
+      ]
+    },
+    {
+      "id": 2,
+      "status": "released",
+      "title": "Tackling multi-scale data",
+      "case": "Multiscale wave",
+      "concepts": "Use NIFMultiScale to represent high-frequency spatial structure.",
+      "notebook": "tutorial/2_multi_scale_NIF_pytorch.ipynb",
+      "original": "tutorial/2_multi_scale_NIF.ipynb",
+      "compatibility": "tutorial/2_multi_scale_NIF_colab.ipynb",
+      "goals": [
+        "Use `nif.NIFMultiScale` and compare fits to a high-frequency wave."
+      ]
+    },
+    {
+      "id": 3,
+      "status": "released",
+      "title": "Learning a linear representation",
+      "case": "Cylinder-flow data from an adaptive mesh",
+      "concepts": "Use NIFMultiScaleLastLayerParameterized to learn linear spatial bases.",
+      "notebook": "tutorial/3_multi_scale_linear_NIF_pytorch.ipynb",
+      "original": "tutorial/3_multi_scale_linear_NIF.ipynb",
+      "compatibility": "tutorial/3_multi_scale_linear_NIF_colab.ipynb",
+      "goals": [
+        "Use `nif.NIFMultiScaleLastLayerParameterized` on a cylinder-flow dataset from an adaptive mesh."
+      ]
+    },
+    {
+      "id": 4,
+      "status": "released",
+      "title": "Getting input-output derivatives",
+      "case": "Input-output derivatives",
+      "concepts": "Wrap a field model with JacobianLayer and HessianLayer.",
+      "notebook": "tutorial/4_get_gradients_by_wrapping_model_with_layer_pytorch.ipynb",
+      "original": "tutorial/4_get_gradients_by_wrapping_model_with_layer.ipynb",
+      "compatibility": "tutorial/4_get_gradients_by_wrapping_model_with_layer_colab.ipynb",
+      "goals": [
+        "Use `nif.layers.JacobianLayer` and `nif.layers.HessianLayer`."
+      ]
+    },
+    {
+      "id": 5,
+      "status": "released",
+      "title": "Large-scale data training",
+      "case": "Large-scale record data",
+      "concepts": "Create shards and stream batches from a one-million-row dataset.",
+      "notebook": "tutorial/5_large_scale_training_on_tensorflow_record_data_pytorch.ipynb",
+      "original": "tutorial/5_large_scale_training_on_tensorflow_record_data.ipynb",
+      "compatibility": "tutorial/5_large_scale_training_on_tensorflow_record_data_colab.ipynb",
+      "goals": [
+        "Create and stream record shards using `nif.data.tfr_dataset.TFRDataset`.",
+        "Train on batches from a one-million-row example dataset."
+      ]
+    },
+    {
+      "id": 6,
+      "status": "released",
+      "title": "Revisit multi-scale data with regularization",
+      "case": "Multiscale fields with L1/L2 regularization",
+      "concepts": "Penalize ParameterNet parameters and inspect a refined evaluation grid.",
+      "notebook": "tutorial/6_revisit_multi_scale_NIF_with_L1_L2_regularization_pytorch.ipynb",
+      "original": "tutorial/6_revisit_multi_scale_NIF_with_L1_L2_regularization.ipynb",
+      "compatibility": "tutorial/6_revisit_multi_scale_NIF_with_L1_L2_regularization_colab.ipynb",
+      "goals": [
+        "Compare L1 and L2 regularization of ParameterNet weights and biases.",
+        "Inspect training fits and spurious signals on a refined space-time grid."
+      ]
+    },
+    {
+      "id": 7,
+      "status": "released",
+      "title": "NIF compression",
+      "case": "Model compression",
+      "concepts": "Magnitude pruning, dynamic int8 CPU inference, and inference export.",
+      "notebook": "tutorial/7_model_pruning_and_quantization_pytorch.ipynb",
+      "original": "tutorial/7_model_pruning_and_quantization.ipynb",
+      "compatibility": "tutorial/7_model_pruning_and_quantization_colab.ipynb",
+      "goals": [
+        "Explore magnitude pruning, dynamic int8 quantization, and exported inference."
+      ]
+    },
+    {
+      "id": 8,
+      "status": "released",
+      "title": "Revisit multi-scale data with Sobolev training",
+      "case": "Sobolev training of a multiscale field",
+      "concepts": "Supervise spatial derivatives and evaluate field and derivative errors.",
+      "notebook": "tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_pytorch.ipynb",
+      "original": "tutorial/8_revisit_multi_scale_NIF_with_sobolov_training.ipynb",
+      "compatibility": "tutorial/8_revisit_multi_scale_NIF_with_sobolov_training_colab.ipynb",
+      "goals": [
+        "Add spatial-derivative supervision with `nif.layers.JacobianLayer` and compare field and derivative errors.",
+        "Inspect how derivative information affects the refined spatial prediction."
+      ]
+    },
+    {
+      "id": 9,
+      "status": "experimental",
+      "title": "Experimental: self-scaled optimizer comparison",
+      "case": "One-dimensional traveling wave",
+      "concepts": "Compare three quasi-Newton implementations, physical absolute errors and timing.",
+      "notebook": "tutorial/9_self_scaled_optimizers_pytorch.ipynb",
+      "goals": [
+        "Compare L-BFGS, SSBFGS and SSBroyden from one actual traveling-wave checkpoint in float64.",
+        "Run all three methods and inspect physical errors, convergence curves and elapsed time. See the [experimental guide](docs/SELF_SCALED_OPTIMIZERS.md) for the recorded results and scope."
+      ]
+    }
+  ]
+}

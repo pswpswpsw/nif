@@ -1,0 +1,265 @@
+{
+  "schema_version": 1,
+  "source_commit": "73b2ffcf71d9f0d019bd86d62cbf80989e9f7eac",
+  "description": "Frozen original HTML, search, theme, source and figure assets. text_lf permits uniform CRLF checkouts; copied source bytes remain unchanged.",
+  "files": {
+    "_sources/api_nif_data.rst.txt": {
+      "sha256": "40bd1e2635fbf3835fbee08213760d97cbb9abcd090ea47cb814542d799a3892",
+      "bytes": 98,
+      "text_lf": true
+    },
+    "_sources/api_nif_demo.rst.txt": {
+      "sha256": "6df4cf28dc644703c1e9953daa97ca375d9c9bbc5738bc85e0313c6077c6dfdb",
+      "bytes": 98,
+      "text_lf": true
+    },
+    "_sources/api_nif_layers.rst.txt": {
+      "sha256": "89a14498122be8740dad09d326500dc79565a7ae6b70a2379786c73ead780e60",
+      "bytes": 104,
+      "text_lf": true
+    },
+    "_sources/api_nif_model.rst.txt": {
+      "sha256": "3f161a8d663c5abed1fe7a7a06b9209b0538dd11022fe1168f6870e098ac1379",
+      "bytes": 101,
+      "text_lf": true
+    },
+    "_sources/api_nif_optimizers.rst.txt": {
+      "sha256": "aa2da0285391b4f8e30afdffc2b3bbf7eba47f2d4a40b9997b752f112a3ed876",
+      "bytes": 116,
+      "text_lf": true
+    },
+    "_sources/index.rst.txt": {
+      "sha256": "727a07d5c98b651025d7ba149c07cd730963c777d465c467c2287fd1971b5b43",
+      "bytes": 494,
+      "text_lf": true
+    },
+    "_static/_sphinx_javascript_frameworks_compat.js": {
+      "sha256": "480a2c7377252c14a11bca4d3a49dfa16ea540a998fa637fae0189aee1b89113",
+      "bytes": 4289,
+      "text_lf": true
+    },
+    "_static/basic.css": {
+      "sha256": "9980fa28cbdcd8d6b437edcb1a911e0e2a788d7fa0dfe6ea25a302d824a3094d",
+      "bytes": 14813,
+      "text_lf": true
+    },
+    "_static/classic.css": {
+      "sha256": "c6ed0f4d42e297c558edd1f4f6cfd72ffd139df1bdad7a90129537172804e292",
+      "bytes": 4303,
+      "text_lf": true
+    },
+    "_static/css/badge_only.css": {
+      "sha256": "3ebb8a7c4ab074330ec0c24a9bcb32b6ced1c5eb45be7ef34b79193864337865",
+      "bytes": 3229,
+      "text_lf": true
+    },
+    "_static/css/fonts/Roboto-Slab-Bold.woff": {
+      "sha256": "9fec87cadbe2413b255f1ec577573a83f1ca2e1c37aa023dbebcd3a7b864636a",
+      "bytes": 87624
+    },
+    "_static/css/fonts/Roboto-Slab-Bold.woff2": {
+      "sha256": "1a0c024dd1a267c52d5575469ffe8570d1e84164de7d393cf3414bafd17d7a0c",
+      "bytes": 67312
+    },
+    "_static/css/fonts/Roboto-Slab-Regular.woff": {
+      "sha256": "9f32630e2c0c5135bf1e86e36cb65b3932e4410644235bc2bd995e9c7f6ff117",
+      "bytes": 86288
+    },
+    "_static/css/fonts/Roboto-Slab-Regular.woff2": {
+      "sha256": "874e42222856d7af03b3f438d21d923a4280d47fe67c48510e2174a1579795ef",
+      "bytes": 66444
+    },
+    "_static/css/fonts/fontawesome-webfont.eot": {
+      "sha256": "7bfcab6db99d5cfbf1705ca0536ddc78585432cc5fa41bbd7ad0f009033b2979",
+      "bytes": 165742
+    },
+    "_static/css/fonts/fontawesome-webfont.svg": {
+      "sha256": "ad6157926c1622ba4e1d03d478f1541368524bfc46f51e42fe0d945f7ef323e4",
+      "bytes": 444379,
+      "text_lf": true
+    },
+    "_static/css/fonts/fontawesome-webfont.ttf": {
+      "sha256": "aa58f33f239a0fb02f5c7a6c45c043d7a9ac9a093335806694ecd6d4edc0d6a8",
+      "bytes": 165548
+    },
+    "_static/css/fonts/fontawesome-webfont.woff": {
+      "sha256": "ba0c59deb5450f5cb41b3f93609ee2d0d995415877ddfa223e8a8a7533474f07",
+      "bytes": 98024
+    },
+    "_static/css/fonts/fontawesome-webfont.woff2": {
+      "sha256": "2adefcbc041e7d18fcf2d417879dc5a09997aa64d675b7a3c4b6ce33da13f3fe",
+      "bytes": 77160
+    },
+    "_static/css/fonts/lato-bold-italic.woff": {
+      "sha256": "980c8592e5488df256192c999e92db8fd302db8cd8909b7fa266a684e37e45f8",
+      "bytes": 323344
+    },
+    "_static/css/fonts/lato-bold-italic.woff2": {
+      "sha256": "c0916a33340d063f7b05679e08031e729d1888444706f04804705da5966d895d",
+      "bytes": 193308
+    },
+    "_static/css/fonts/lato-bold.woff": {
+      "sha256": "0e56b17d142eb366c8007031d14e34da48c70b4a9d9a0ca492e696a7bae45e1e",
+      "bytes": 309728
+    },
+    "_static/css/fonts/lato-bold.woff2": {
+      "sha256": "ae88fc0d7a961832f809527d30bd3983a6866d42f66a56ade23f543681594db6",
+      "bytes": 184912
+    },
+    "_static/css/fonts/lato-normal-italic.woff": {
+      "sha256": "26318a1467a5e5caf10b04cfa942d079632560cd7a29cec565fd1dc9f7ec5081",
+      "bytes": 328412
+    },
+    "_static/css/fonts/lato-normal-italic.woff2": {
+      "sha256": "4465765f2f6eddcdad34ffd7cab559e56bc0e75e45e192f85e9562b0771481dc",
+      "bytes": 195704
+    },
+    "_static/css/fonts/lato-normal.woff": {
+      "sha256": "5b9025dda4d7688e3311b0c17eddc501133b807def33effaef6593843cf5416e",
+      "bytes": 309192
+    },
+    "_static/css/fonts/lato-normal.woff2": {
+      "sha256": "983b0caf336e8542214fc17019a4fc5e0360864b92806ca14d55c1fc1c2c5a0f",
+      "bytes": 182708
+    },
+    "_static/css/theme.css": {
+      "sha256": "979dea86ca96a6f7a92a2be6c693ab575013a1473e1bace2e845db3724e61aac",
+      "bytes": 135235,
+      "text_lf": true
+    },
+    "_static/doctools.js": {
+      "sha256": "3d62b81f63b0418a39a8f5a323203d88ddafc8c5226f86d311970025d86d7b6c",
+      "bytes": 4472,
+      "text_lf": true
+    },
+    "_static/documentation_options.js": {
+      "sha256": "e2718b75af040caf95a8915192026ec541cc7ad4c73b0160b7c4c2f4564d7d4f",
+      "bytes": 415,
+      "text_lf": true
+    },
+    "_static/file.png": {
+      "sha256": "5c4bc9a16aebf38c4b950f59b8e501ca36495328cb9eb622218bce9064a35e3e",
+      "bytes": 286
+    },
+    "_static/jquery.js": {
+      "sha256": "ff1523fb7389539c84c65aba19260648793bb4f5e29329d2ee8804bc37a3fe6e",
+      "bytes": 89501,
+      "text_lf": true
+    },
+    "_static/js/badge_only.js": {
+      "sha256": "f0a4808d04c4d55378751ac096a8376b64b1a704c82584b0ee590212cf413013",
+      "bytes": 934,
+      "text_lf": true
+    },
+    "_static/js/html5shiv-printshiv.min.js": {
+      "sha256": "b42a7e949a6e21d66b30fbbb4a22deafd9e0ccabc04f0fa2907fc6252fdf165f",
+      "bytes": 4370,
+      "text_lf": true
+    },
+    "_static/js/html5shiv.min.js": {
+      "sha256": "f6e0283561ddb33b140e14977ffad57163aa28f7e2e7ff15e51e1475b6657b60",
+      "bytes": 2734,
+      "text_lf": true
+    },
+    "_static/js/theme.js": {
+      "sha256": "536ad2d746e944c5570cc15badaeccc3c0582a1b66e45511fe4edce32b6da510",
+      "bytes": 5023,
+      "text_lf": true
+    },
+    "_static/language_data.js": {
+      "sha256": "95b1d44e1ba5a3155d89f8427a3b2c981158f956bf48b9cdf0030265e8b7a609",
+      "bytes": 4758,
+      "text_lf": true
+    },
+    "_static/minus.png": {
+      "sha256": "47e7fc50db3699f1ca41ce9a2ffa202c00c5d1d5180c55f62ba859b1bd6cc008",
+      "bytes": 90
+    },
+    "_static/plus.png": {
+      "sha256": "54115199b96a130cba02147c47c0deb43dcc9b9f08b5162bba8642b34980ac63",
+      "bytes": 90
+    },
+    "_static/pygments.css": {
+      "sha256": "f82f422053b4413684181f281e3cfcc2e84bea525d66feb8116f9dbe8674fcc2",
+      "bytes": 4819,
+      "text_lf": true
+    },
+    "_static/searchtools.js": {
+      "sha256": "5b9facbcb36e5e15e409e2db42439fb8cbc1e43275e337a645bb3c76c3191b93",
+      "bytes": 18215,
+      "text_lf": true
+    },
+    "_static/sidebar.js": {
+      "sha256": "d11b485ead44416fd800383b298a56e50b95589240f7b9f60e79b1e4ef7a716e",
+      "bytes": 2541,
+      "text_lf": true
+    },
+    "_static/sphinx_highlight.js": {
+      "sha256": "0a20464b65797522de18421a7db1a0851a26aae6dd06b7109d442236313c27ee",
+      "bytes": 4712,
+      "text_lf": true
+    },
+    "api_nif_data.html": {
+      "sha256": "99d1d25957786801defe3cfea46c5634bb8f270c230dffc6ff02c3b817250349",
+      "bytes": 20852,
+      "text_lf": true
+    },
+    "api_nif_demo.html": {
+      "sha256": "4c43a9ed2698d76f6153cd4ad0dc78204de78037c8e3dcc94e84327fa3bc3d8f",
+      "bytes": 14145,
+      "text_lf": true
+    },
+    "api_nif_layers.html": {
+      "sha256": "a9bc97aca140279da369c5794dadf4933257b1afa571c4da1185c317086b0a27",
+      "bytes": 82342,
+      "text_lf": true
+    },
+    "api_nif_model.html": {
+      "sha256": "64b440da206dcf10cfbc5f1d17af5237620e340a080f9a1e98a91c7714d5bb11",
+      "bytes": 40734,
+      "text_lf": true
+    },
+    "api_nif_optimizers.html": {
+      "sha256": "9957a4ce73be61fcca0e5489ff4eff38cdf7aba4f4bdda51b549ee1e05431867",
+      "bytes": 64572,
+      "text_lf": true
+    },
+    "genindex.html": {
+      "sha256": "69a9a5526559c8a2ae45f1edd32414be1a70134610f8a0c043c86d322bf2d80d",
+      "bytes": 23092,
+      "text_lf": true
+    },
+    "index.html": {
+      "sha256": "4f13c53cf33fa51bb768996321144e8292c9d5614caec6c668125ce4664f0d55",
+      "bytes": 38603,
+      "text_lf": true
+    },
+    "objects.inv": {
+      "sha256": "bf5aed2b34bf8c017eaa0378e79ce6ef4ccc2fcd893b66a2f532aed656423f78",
+      "bytes": 1523
+    },
+    "py-modindex.html": {
+      "sha256": "a0b0f06f539e415764c5abd52204dbc835fead8e97c79540326fe53b9e959626",
+      "bytes": 5403,
+      "text_lf": true
+    },
+    "search.html": {
+      "sha256": "e6003049cbbb8e5313e1864290fc28bd6d8dd0582d76e974ba9fa76686f5c661",
+      "bytes": 4273,
+      "text_lf": true
+    },
+    "searchindex.js": {
+      "sha256": "24ca5963fb7d8e72058bcf7bdbbf749a74d19c34a5b3e1e184d7c0effc9a3288",
+      "bytes": 33403,
+      "text_lf": true
+    },
+    "source/_static/compare.png": {
+      "sha256": "4a44a5eeb2c96b46ef75285db16ce70183b3974d54780da8817bef917d417645",
+      "bytes": 371754
+    },
+    "source/_static/myimage.png": {
+      "sha256": "01c0c35f13ad5008ce93da540687ce114838be579e86e98627367853f6f96f9e",
+      "bytes": 37455
+    }
+  }
+}

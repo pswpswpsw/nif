@@ -5,7 +5,10 @@ on:
     paths:
       - '.github/workflows/docs.yml'
       - 'scripts/build_docs.py'
+      - 'scripts/tutorial_catalog.py'
       - 'dev_tests/test_docs_site.py'
+      - 'dev_tests/test_documentation_cleanup.py'
+      - 'dev_tests/test_tutorial_catalog.py'
       - 'docs/**'
       - 'README.md'
       - 'misc/**'
@@ -14,12 +17,16 @@ on:
       - 'setup.py'
       - 'examples/self_scaled/**'
       - 'tutorial/9_self_scaled_optimizers_pytorch.ipynb'
+      - 'tutorial/catalog.json'
   push:
     branches: [main]
     paths:
       - '.github/workflows/docs.yml'
       - 'scripts/build_docs.py'
+      - 'scripts/tutorial_catalog.py'
       - 'dev_tests/test_docs_site.py'
+      - 'dev_tests/test_documentation_cleanup.py'
+      - 'dev_tests/test_tutorial_catalog.py'
       - 'docs/**'
       - 'README.md'
       - 'misc/**'
@@ -28,6 +35,7 @@ on:
       - 'setup.py'
       - 'examples/self_scaled/**'
       - 'tutorial/9_self_scaled_optimizers_pytorch.ipynb'
+      - 'tutorial/catalog.json'
   workflow_dispatch:
 
 permissions:
@@ -55,7 +63,9 @@ jobs:
           python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
           python -m pip install -e . -r docs/requirements.txt pytest
       - name: Verify source preparation and preserved assets
-        run: python -m pytest dev_tests/test_docs_site.py -q
+        run: |
+          python scripts/tutorial_catalog.py --check
+          python -m pytest dev_tests/test_docs_site.py dev_tests/test_documentation_cleanup.py dev_tests/test_tutorial_catalog.py -q
       - name: Build the current API and retain legacy documentation
         run: python scripts/build_docs.py --output dev_tests/artifacts/pages/html
       - name: Upload documentation artifact

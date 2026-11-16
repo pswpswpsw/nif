@@ -21,3 +21,8 @@
 /MANIFEST.in text eol=lf
 /nif/optimizers/TFP_LICENSE.txt text eol=lf
 /nif/optimizers/TFP_NOTICE.txt text eol=lf
+
+# Immutable cleanup baselines and archived documents retain their exact bytes.
+/docs/archive/** -text -whitespace
+/dev_tests/provenance/baseline-* -text -whitespace
+/dev_tests/provenance/*.py text eol=lf

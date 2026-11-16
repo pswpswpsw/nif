@@ -28,8 +28,15 @@ deploys successful `main` builds to GitHub Pages. Deployment uses the
 
 The original generated HTML, images, and notebooks remain in the repository.
 Each new build includes the old documentation under `legacy/tensorflow/`, with
-its assets and relative links. The current API reference and eight native
-tutorials are linked separately from that historical archive.
+its assets and relative links. The current API reference, eight released native
+tutorials and experimental T9 have separate entries.
+
+The [validation index](PYTORCH_VALIDATION.md) and
+[tutorial comparison summary](PYTORCH_TENSORFLOW_PARITY.md) give current status.
+The [dated documentation archive](archive/2026-11-15/README.md) preserves the full
+migration records, original homepages and checksums.
+Historical test sources and process audits are indexed separately in the
+[provenance archive](../dev_tests/provenance/README.md).
 
 [PYTORCH_API.md](PYTORCH_API.md) records the native definitions;
 [PYTORCH_PORT_CONTRACT.md](PYTORCH_PORT_CONTRACT.md) is the migration contract.

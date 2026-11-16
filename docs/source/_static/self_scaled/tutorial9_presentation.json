@@ -1,0 +1,36 @@
+{
+  "scope": "Presentation-only reduction of repeated notebook explanations",
+  "previous_commit": "73b2ffcf71d9f0d019bd86d62cbf80989e9f7eac",
+  "previous_notebook_sha256": "274655250fd0e7812a45ad88469fbea38093ab1b46cd21a1dc8f0b2f309e7d24",
+  "current_notebook_sha256": "e72aa4712785e1ec31fe1366c8f020d119b4a4971cc38a3ecb50ac76d280f6a6",
+  "edited_markdown_cell_ids": [
+    "saved-output-provenance",
+    "ss-tutorial-06",
+    "ss-tutorial-12"
+  ],
+  "code_cell_hashes_by_id": {
+    "ss-tutorial-01": "d6a472e4c146837430ad6cfc1bb85b2a1e184776b39110b2b70cb567c09afe3a",
+    "ss-tutorial-03": "63d829d0215d6c1d1483d483a46efca94d4e7aee581879d74e76c3e8b9bc9e45",
+    "ss-tutorial-05": "21665a23ffda90671a059a3a565f090bdb34d7dd4aa3f07791b3a7a7c814a896",
+    "ss-tutorial-07": "7c0e32d06c372b9db19edeb3e77ff9e7d682a11baa76fa3c38a562bfb355b351",
+    "ss-tutorial-09": "17c9f311d4a15d4757e7615e375d3d0905c6305af02f3179fe2c1354c4d36587",
+    "ss-tutorial-11": "1bf9fa1a90c349d3d1d6bc7efd0053aef66c9d1c6a69aca0e21185f1213f1e34",
+    "ss-tutorial-13": "245263c5e096939dd73ee72a5a679dc9d7051535302a66b2a45d1e9113109dad"
+  },
+  "png_sha256": [
+    "27d31d016f0b9be39b8f3431ea5673453b12924630d2b53f8a9ec8e0a2bbd829",
+    "570314a905ae8390cf45cd63bbe111d8e81811e0d8a3f63a0ab2210ccfe1db6d",
+    "ebd01eda46f6c11bd36a01698f84a51db5e50b87bf25dcdaa6242b0fa3b0176c",
+    "2919da131f8b560afee999372669625259ddb76e435d90d905661de792c8e582",
+    "575facca2767288b7f09fad044f5bc02aac649b15804b2073fe8b5535f67b3a9",
+    "d5425aee7e4cc7be5a60a55b3d4d3ddb38bc29f391eda7d8bd449b5cf0523895",
+    "80f5b137d375c870220b0c277ac21624cb4dcfc71b75a10e318464b259bf9a44",
+    "05abb25f4f048f8dde795515ffa4c5d24ec5ee1d2ec8274787b97054f144eaf9"
+  ],
+  "additional_optimization": false,
+  "execution_receipts": [
+    "tutorial9_validation.json",
+    "tutorial9_colab_validation.json",
+    "tutorial9_colab_smoke_validation.json"
+  ]
+}

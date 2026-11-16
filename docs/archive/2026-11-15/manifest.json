@@ -1,0 +1,52 @@
+{
+  "source_commit": "73b2ffcf71d9f0d019bd86d62cbf80989e9f7eac",
+  "snapshot_date": "2026-11-15",
+  "records": {
+    "docs/PYTORCH_TENSORFLOW_PARITY.md": {
+      "archive": "PYTORCH_TENSORFLOW_PARITY.md",
+      "sha256": "b1830dab2a72faa0f9e12059975f8381db27281fed95873efb8301ed9b56c091",
+      "bytes": 98374
+    },
+    "docs/PYTORCH_CANDIDATE_REPORT.md": {
+      "archive": "PYTORCH_CANDIDATE_REPORT.md",
+      "sha256": "0d76aa6c9bcb8ce40be2e4365d40c965ca06930a0d2bf7b6bb67c699c40c9b95",
+      "bytes": 56097
+    },
+    "docs/PYTORCH_VALIDATION.md": {
+      "archive": "PYTORCH_VALIDATION.md",
+      "sha256": "16529119e1641af9889bf229c6ea5418b2c309fa268251a3c296b91d360876a8",
+      "bytes": 9484
+    },
+    "docs/PYTORCH_API.md": {
+      "archive": "PYTORCH_API.md",
+      "sha256": "6665a515594ccaeec2d1fb73a0453a99814ed98c3b967eee282e721142a456b8",
+      "bytes": 9410
+    },
+    "docs/README.rst": {
+      "archive": "README.rst",
+      "sha256": "be839f65b7d4eed6bdf6feaa7b84840d6e623ef5749358ef22d4cef4d6754989",
+      "bytes": 11809
+    },
+    "docs/README_TENSORFLOW_LEGACY.md": {
+      "archive": "README_TENSORFLOW_LEGACY.md",
+      "sha256": "b32e5b43de2f4d4c04272e912da20aee9a038ee2cd83c4fe451114972baba69b",
+      "bytes": 11624,
+      "link_source": "README.md"
+    },
+    "tutorial/colab_support/README-tutorials-2-8.md": {
+      "archive": "colab-support/README-tutorials-2-8.md",
+      "sha256": "efe37f928ae6f3ea2d1c60f7a16f909b1e3ccab33bc471d9f0e4b95f8247ac6d",
+      "bytes": 12423
+    },
+    "tutorial/colab_support/README.md": {
+      "archive": "colab-support/README.md",
+      "sha256": "81a037b04810ab7d49c765a5b151d5106379076f695890a1677d1157b889bdd9",
+      "bytes": 7799
+    },
+    "tutorial/colab_support/VALIDATION.md": {
+      "archive": "colab-support/VALIDATION.md",
+      "sha256": "06380077d4f4308b2ce1e658d09ea0aed1962e261653587ea0290df6dc5cb773",
+      "bytes": 3497
+    }
+  }
+}

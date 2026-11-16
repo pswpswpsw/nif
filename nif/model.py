@@ -19,7 +19,9 @@ from .layers import MLP_ResNet
 from .layers import MLP_SimpleShortCut
 from .layers import SIREN
 from .layers import SIREN_ResNet
+from .layers._common import _FLOAT_DTYPES
 from .layers._common import activation as _activation
+from .layers._common import policy_dtypes
 
 F = nn.functional
 
@@ -30,17 +32,9 @@ def _policy(policy):
     if isinstance(policy, torch.dtype):
         return str(policy).removeprefix("torch."), policy, policy
     name = getattr(policy, "name", policy)
-    dtypes = {
-        "float16": torch.float16,
-        "float32": torch.float32,
-        "float64": torch.float64,
-        "bfloat16": torch.bfloat16,
-    }
-    if name in ("mixed_float16", "mixed_bfloat16"):
-        return name, torch.float32, dtypes[name.removeprefix("mixed_")]
-    if name not in dtypes:
+    if name not in ("mixed_float16", "mixed_bfloat16") and name not in _FLOAT_DTYPES:
         raise ValueError(f"Unsupported precision policy: {policy}")
-    return name, dtypes[name], dtypes[name]
+    return name, *policy_dtypes(name)
 
 
 def _truncated(tensor):
@@ -84,6 +78,16 @@ class _ParameterView(nn.Sequential):
         )
         with context:
             return super().forward(x)
+
+
+def _shape_basis(inputs, layers, output_dim, latent_dim):
+    for layer in layers:
+        inputs = layer(inputs)
+    return inputs.reshape(-1, output_dim, latent_dim)
+
+
+def _combine_shape_basis(phi, coefficients, bias_layer):
+    return bias_layer(torch.einsum("bol,bl->bo", phi, coefficients))
 
 
 class _ShapeView(nn.Module):
@@ -131,14 +135,13 @@ class _ShapeView(nn.Module):
         if self.kind == "last":
             ref = next(self.snet_list.parameters())
             x = torch.as_tensor(x, device=ref.device, dtype=ref.dtype)
-            phi = x
-            for layer in self.snet_list:
-                phi = layer(phi)
-            phi = phi.reshape(-1, self.cfg["output_dim"], self.pi_hidden)
+            phi = _shape_basis(
+                x, self.snet_list, self.cfg["output_dim"], self.pi_hidden
+            )
             if self.phi_only:
                 return phi
             w = torch.as_tensor(w, device=phi.device, dtype=phi.dtype)
-            return self.last_bias_layer(torch.einsum("bol,bl->bo", phi, w))
+            return _combine_shape_basis(phi, w, self.last_bias_layer)
         if not isinstance(w, torch.Tensor):
             w = torch.as_tensor(w)
         x = torch.as_tensor(x, device=w.device, dtype=w.dtype)
@@ -598,10 +601,7 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         return layers
 
     def _call_shape_net_get_phi_x(self, input_s, snet_layers_list, so_dim, pi_hidden):
-        phi = input_s
-        for layer in snet_layers_list:
-            phi = layer(phi)
-        return phi.reshape(-1, so_dim, pi_hidden)
+        return _shape_basis(input_s, snet_layers_list, so_dim, pi_hidden)
 
     def _call_shape_net_mres_only_para_last_layer(
         self, input_s, snet_layers_list, pnet_output, so_dim, pi_hidden, variable_dtype
@@ -609,7 +609,7 @@ class NIFMultiScaleLastLayerParameterized(NIFMultiScale):
         phi = self._call_shape_net_get_phi_x(
             input_s, snet_layers_list, so_dim, pi_hidden
         )
-        return self.last_bias_layer(torch.einsum("bol,bl->bo", phi, pnet_output)).to(
+        return _combine_shape_basis(phi, pnet_output, self.last_bias_layer).to(
             _policy(variable_dtype)[1]
         )
 

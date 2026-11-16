@@ -4,12 +4,15 @@ from pathlib import Path
 
 import nbformat
 
+from scripts.tutorial_catalog import tutorial_entries
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_eight_native_notebooks_compile_and_are_native():
-    paths = sorted((ROOT / "tutorial").glob("*_pytorch.ipynb"))
-    assert len(paths) == 8, "All eight native tutorials must exist"
+    entries = tutorial_entries(ROOT, status="released")
+    assert [entry["id"] for entry in entries] == list(range(1, 9))
+    paths = [ROOT / entry["notebook"] for entry in entries]
     for path in paths:
         nb = nbformat.read(path, as_version=4)
         source = "\n".join(c.source for c in nb.cells if c.cell_type == "code")

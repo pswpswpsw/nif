@@ -12,3 +12,8 @@ dist/
 pytorch_outputs/
 .venv-ss/
 dev_tests/artifacts/
+
+# Editor state and Sphinx caches belong to the historical provenance archive.
+/.README.md.un~
+/docs/.toknow.un~
+/docs/.doctrees/

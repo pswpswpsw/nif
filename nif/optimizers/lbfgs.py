@@ -2,6 +2,7 @@
 import numpy as np
 import torch
 
+from nif.optimizers.lbfgs_V2 import _value_and_gradients
 from nif.optimizers.lbfgs_V2 import assign_tensors
 from nif.optimizers.lbfgs_V2 import lbfgs_minimize
 from nif.optimizers.lbfgs_V2 import pack_tensors
@@ -34,15 +35,12 @@ def function_factory(model, loss, train_x, train_y, display_epoch=1):
     def assign(params_1d):
         assign_tensors(parameters, unpack_tensors(parameters, params_1d))
 
+    def objective():
+        return loss(model(train_x), train_y)
+
     def f(params_1d):
         assign(params_1d)
-        with torch.enable_grad():
-            value = loss(model(train_x), train_y)
-            gradients = torch.autograd.grad(value, parameters, allow_unused=True)
-        gradients = [
-            torch.zeros_like(p) if g is None else g
-            for p, g in zip(parameters, gradients)
-        ]
+        value, gradients = _value_and_gradients(objective, parameters)
         f.iter += 1
         f.history.append(float(value.detach()))
         if display_epoch and f.iter % display_epoch == 0:

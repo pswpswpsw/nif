@@ -6,34 +6,33 @@ from torch import nn
 from torch.nn import functional as F
 
 
+_FLOAT_DTYPES = {
+    "float16": torch.float16,
+    "float32": torch.float32,
+    "float64": torch.float64,
+    "bfloat16": torch.bfloat16,
+}
+_DTYPE_ALIASES = {"half": "float16", "float": "float32", "double": "float64"}
+
+
 def resolve_dtype(dtype):
     if isinstance(dtype, torch.dtype):
         return dtype
     if dtype is None:
         return torch.float32
     name = str(dtype).replace("torch.", "")
-    names = {
-        "float16": torch.float16,
-        "half": torch.float16,
-        "float32": torch.float32,
-        "float": torch.float32,
-        "float64": torch.float64,
-        "double": torch.float64,
-        "bfloat16": torch.bfloat16,
-    }
-    if name not in names:
+    canonical = _DTYPE_ALIASES.get(name, name)
+    if canonical not in _FLOAT_DTYPES:
         raise ValueError(f"Unsupported floating point dtype: {dtype}")
-    return names[name]
+    return _FLOAT_DTYPES[canonical]
 
 
 def policy_dtypes(policy="float32"):
     """Return variable, compute dtypes for native strings or policy-like objects."""
     if hasattr(policy, "variable_dtype"):
         return resolve_dtype(policy.variable_dtype), resolve_dtype(policy.compute_dtype)
-    if policy == "mixed_float16":
-        return torch.float32, torch.float16
-    if policy == "mixed_bfloat16":
-        return torch.float32, torch.bfloat16
+    if policy in ("mixed_float16", "mixed_bfloat16"):
+        return torch.float32, resolve_dtype(policy.removeprefix("mixed_"))
     dtype = resolve_dtype(policy)
     return dtype, dtype
 

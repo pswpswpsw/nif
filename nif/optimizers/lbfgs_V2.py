@@ -44,6 +44,16 @@ def assign_tensors(to_tensors, values):
             target.copy_(value)
 
 
+def _value_and_gradients(loss_closure, variables):
+    with torch.enable_grad():
+        value = loss_closure()
+        gradients = torch.autograd.grad(value, variables, allow_unused=True)
+    return value, [
+        torch.zeros_like(parameter) if gradient is None else gradient
+        for parameter, gradient in zip(variables, gradients)
+    ]
+
+
 def create_value_and_gradient_function(loss_closure, trainable_variables, verbose=1):
     variables = list(trainable_variables)
 
@@ -52,12 +62,7 @@ def create_value_and_gradient_function(loss_closure, trainable_variables, verbos
 
     def value_and_gradients(x):
         assign(x)
-        with torch.enable_grad():
-            value = loss_closure()
-            grads = torch.autograd.grad(value, variables, allow_unused=True)
-        grads = [
-            torch.zeros_like(p) if g is None else g for p, g in zip(variables, grads)
-        ]
+        value, grads = _value_and_gradients(loss_closure, variables)
         value_and_gradients.iter += 1
         if verbose:
             print(f"Iter: {value_and_gradients.iter} loss: {float(value.detach()):.8g}")

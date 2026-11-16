@@ -1,5 +1,7 @@
 # Tutorials 2–8: Colab compatibility copies
 
+> Historical TensorFlow compatibility record. Use the [tutorial index](../README.md) for the released PyTorch notebooks and experimental T9. The [original dated text](../../docs/archive/2026-11-15/colab-support/README-tutorials-2-8.md) is preserved with its source revision and checksums.
+
 Run the seven `tutorial/*_colab.ipynb` copies from their first cell in a fresh runtime. The original notebooks are preserved. Every original Markdown cell and code comment is retained exactly; compatibility explanations live in this guide rather than additional notebook cells. The copies retain the original data sizes, model settings, learning rates, batch sizes, training lengths, and pruning schedule.
 
 | Copy | Full workload |
@@ -45,7 +47,7 @@ The shared runtime patches update the distribution-context import, put AdaBelief
 Three small notebook changes accompany the bootstrap:
 
 - **Tutorial 5:** use a portable `pathlib` file listing in place of `%ls TFR_dir -lrth`.
-- **Tutorial 7:** use the Frobenius norm for the reported relative mean-square error, replacing the matrix spectral norm.
+- **Tutorial 7:** retain the original squared matrix spectral-norm ratio with `ord=2`. The [current definition](../../docs/PYTORCH_API.md#tutorials-and-artifacts) and [restoration record](../../docs/TUTORIAL_SEMANTICS_REVIEW.md#f-t7-三项原定义恢复及独立验收) supersede the earlier Frobenius description in the dated snapshot.
 - **Tutorial 8:** convert superresolution predictions back to physical units before comparing them with the analytic wave. Its original loss still penalizes the field and spatial derivative; the temporal derivative remains a reported metric.
 
 If TensorFlow or a package that needs changing has already been imported, restart the runtime and begin at the first cell. The bootstrap reports package versions and the loaded NIF source location.

@@ -1,4 +1,5 @@
 """Build self-contained native tutorials while retaining the reference teaching narrative."""
+import ast
 from pathlib import Path
 
 import nbformat as nb
@@ -200,6 +201,96 @@ HELPERS = (
     '    (OUT / "metrics.json").write_text(json.dumps({"mode": "smoke'
     '" if SMOKE else "full", **values}, indent=2))\n'
 )
+# Published native teaching notes, keyed by tutorial and output cell index.
+TEACHING_NOTES = {
+    1: {
+        8: "* this native notebook uses\n"
+        "  * **one selected device (`cpu` or `cuda`)**,\n"
+        "  * **float32 for storage and computation**\n"
+        "\n"
+        "* Select the device with `NIF_DEVICE` before starting the "
+        "notebook.\n"
+        "\n"
+        "* The two flags below do not enable multi-GPU or mixed-precision "
+        "training in this native loop.",
+        10: "* now we can further setup \n"
+        "  * the total number of epochs\n"
+        "  * initial learning rate\n"
+        "  * batch size\n"
+        "* The native loop uses fixed frequencies: checkpoints at epoch "
+        "indices 0, 1000, ... and the final epoch;\n"
+        "  training-history logging at epoch indices 0, 100, ... and the "
+        "final epoch;\n"
+        "  loss and prediction figures after fitting. The three frequency "
+        "variables below do not change these intervals.",
+        34: "- now we can fine tune the model with an outer `rounds` loop and "
+        "`fine_tuner.step(closure)`\n"
+        "  - `max_iter` means the we will run LBFGS updates until maximal "
+        "number of iterations is achieved or error tolerance is achieved\n"
+        "  - here `rounds` means repeating the above process. it can be "
+        "useful to force running optimization process when error doesn't "
+        "change even at the level of 1e-15.  ",
+    },
+    5: {
+        11: "### Then, you need to decide \n"
+        "1. How many points to store in one single **tfrecord** file ----> "
+        "`num_pts_per_file`\n"
+        "    - it doesn't have to be perfectly dividing the total number of "
+        "points, we will make the last one smaller if it doesn't have a "
+        "perfect divide.\n"
+        "    - Tensorflow official document "
+        "[suggest](https://www.tensorflow.org/tutorials/load_data/tfrecord) "
+        "around 100 MB.\n"
+        "    \n"
+        "2. What's the `npz` filepath? ----> `npz_path`\n"
+        "3. What's the key to access the 2-D matrix pointwise data? ----> "
+        "`npz_key`\n"
+        "4. Where do you want to put the generated tfrecord file? ----> "
+        "`tfr_path`\n"
+        "5. What's the prefix you want to put in the filename for the "
+        "tfrecord file? \n"
+        "    - they will be something like `prefix_0.tfrecord`, ..., "
+        "`prefix_10.tfrecord`, ...",
+        12: "###  If you have answers to the above in your mind, now you can "
+        "just call \n"
+        "### `fh.create_from_npz(num_pts_per_file, npz_path, npz_key, "
+        "tfr_path, prefix)`",
+        20: "### Finally, we do sub-dataset batching with `meta_dataset`\n"
+        "\n"
+        "- we obtain `batch_file`, which are Tensors basically, from "
+        "meta_dataset\n"
+        "- we create a `sub` dataset from `batch_file`\n"
+        "\n"
+        "- you can add your favourite callbacks if you want\n"
+        "- each shard is traversed once per pass; `epoch=2` makes "
+        "`meta_dataset` provide two complete global passes",
+        22: "### Cautious! \n"
+        "- the native loop keeps the same optimizer continuously across all "
+        "shards and both global passes\n"
+        "- we retain progress with the accumulated `rows_seen` and "
+        "`shard_visits` counters, and write the complete results to disk.\n"
+        "- **again what is presented here is not perfect, I am open for "
+        "your solutions!**",
+    },
+    8: {
+        10: "### Here, we will use the following loss function\n"
+        "\n"
+        "$$\n"
+        "\\mathcal{L} = \\mathcal{L}_{mse} + \\alpha \\mathcal{L}_{mse, "
+        "derivative} = \\frac{1}{M} \\sum_i (u(t_i,x_i) - "
+        "u_{NN}(t_i,x_i;\\theta))^2 + \\alpha  \\frac{1}{M} \\sum_i "
+        "(\\frac{\\partial u}{\\partial x}(t_i,x_i) - \\frac{\\partial "
+        "u_{NN}}{\\partial x}(t_i,x_i;\\theta))^2\n"
+        "$$\n"
+        "\n"
+        "then we use Adam optimizer to find $\\min_{\\theta} \\mathcal{L}$\n"
+        "\n"
+        "We empirically choose $\\alpha=10^{-3}$. Intuitively, this number "
+        "is related to when will the optimizer turns its attention to "
+        "minimize $\\mathcal{L}_{mse, derivative}$"
+    },
+}
+
 SWISH = """cfg_shape_net = {"connectivity": "full", "input_dim": 1, "output_dim": 1,
                  "units": 30, "nlayers": 2, "activation": "swish"}
 cfg_parameter_net = {"input_dim": 1, "latent_dim": 1, "units": 30,
@@ -315,6 +406,38 @@ def save_inference_and_check(model, name, example, factory=None):
 """
 
 
+def select_helpers(source, code_sources):
+    """Keep verbatim definitions reached by the tutorial, including callbacks."""
+    tree = ast.parse(source)
+    if any(not isinstance(node, ast.FunctionDef) for node in tree.body):
+        raise ValueError("The helper template must contain only function definitions")
+    definitions = {node.name: node for node in tree.body}
+    needed = {
+        node.id
+        for code in code_sources
+        for node in ast.walk(ast.parse(code))
+        if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load)
+    } & definitions.keys()
+    pending = list(needed)
+    while pending:
+        dependencies = {
+            node.id
+            for node in ast.walk(definitions[pending.pop()])
+            if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load)
+        } & definitions.keys()
+        pending.extend(dependencies - needed)
+        needed.update(dependencies)
+    lines = source.splitlines(keepends=True)
+    starts = [node.lineno - 1 for node in tree.body] + [len(lines)]
+    parts = ["".join(lines[: starts[0]])]
+    parts.extend(
+        "".join(lines[starts[index] : starts[index + 1]])
+        for index, node in enumerate(tree.body)
+        if node.name in needed
+    )
+    return "".join(parts)
+
+
 def emit(number, replacements, notes="", omitted_markdown=()):
     path = original(number)
     src = nb.read(path, as_version=4)
@@ -362,11 +485,23 @@ def emit(number, replacements, notes="", omitted_markdown=()):
     ]
     for i, c in enumerate(src.cells):
         if c.cell_type == "markdown" and i not in omitted_markdown:
-            cells.append(nb.v4.new_markdown_cell(markdown(c.source)))
+            cells.append(
+                nb.v4.new_markdown_cell(
+                    TEACHING_NOTES.get(number, {}).get(len(cells), markdown(c.source))
+                )
+            )
         if i in replacements:
             s = replacements[i]
             if s.strip():
                 cells.append(nb.v4.new_code_cell(s))
+    cells[2].source = select_helpers(
+        cells[2].source,
+        [
+            cell.source
+            for index, cell in enumerate(cells)
+            if index != 2 and cell.cell_type == "code"
+        ],
+    )
     out = nb.v4.new_notebook(
         cells=cells,
         metadata={
@@ -384,6 +519,15 @@ def emit(number, replacements, notes="", omitted_markdown=()):
         },
     )
     dest = path.with_name(path.stem + "_pytorch.ipynb")
+    if dest.exists():
+        existing = nb.read(dest, as_version=4)
+        if len(existing.cells) == len(cells) and all(
+            old.cell_type == new.cell_type and (index == 2 or old.source == new.source)
+            for index, (old, new) in enumerate(zip(existing.cells, cells))
+        ):
+            # Trimming definitions preserves every other cell and its saved evidence.
+            existing.cells[2].source = cells[2].source
+            out = existing
     nb.write(out, dest)
     print(dest)
 

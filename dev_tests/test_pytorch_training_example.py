@@ -17,6 +17,13 @@ ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "examples" / "train_pytorch.py"
 
 
+def _process_text(data):
+    # Native Windows Gloo diagnostics can contain local-codepage bytes even
+    # when Python uses UTF-8. Capture bytes first so a decoder thread cannot
+    # discard stderr; keep undecodable bytes visible in failure reports.
+    return data.decode("utf-8", errors="backslashreplace")
+
+
 def run_example(output, *, distributed=False, samples=64, tensorboard=False):
     assert SCRIPT.is_file(), "The documented native training example is missing"
     command = [sys.executable]
@@ -78,7 +85,6 @@ def run_example(output, *, distributed=False, samples=64, tensorboard=False):
                         command,
                         cwd=ROOT,
                         env=rank_environment,
-                        text=True,
                         stdout=subprocess.PIPE,
                         stderr=subprocess.PIPE,
                     )
@@ -87,21 +93,26 @@ def run_example(output, *, distributed=False, samples=64, tensorboard=False):
             return subprocess.CompletedProcess(
                 command,
                 max(process.returncode for process in processes),
-                "".join(out for out, _ in outputs),
-                "".join(err for _, err in outputs),
+                _process_text(b"".join(out for out, _ in outputs)),
+                _process_text(b"".join(err for _, err in outputs)),
             )
         finally:
             for process in processes:
                 if process.poll() is None:
                     process.kill()
                     process.wait()
-    return subprocess.run(
+    result = subprocess.run(
         command,
         cwd=ROOT,
         env=environment,
-        text=True,
         capture_output=True,
         timeout=120,
+    )
+    return subprocess.CompletedProcess(
+        result.args,
+        result.returncode,
+        _process_text(result.stdout),
+        _process_text(result.stderr),
     )
 
 
@@ -126,6 +137,22 @@ def load_run(output):
     ).all()
     assert all(entry["samples"] == history["samples"] for entry in history["epochs"])
     return history, checkpoint
+
+
+def test_run_example_preserves_non_utf8_native_stderr(tmp_path, monkeypatch):
+    script = tmp_path / "native_error.py"
+    script.write_text(
+        "import os\n"
+        "os.write(1, b'partial stdout\\n')\n"
+        "os.write(2, b'native_error=\\xff\\x80\\n')\n"
+        "raise SystemExit(7)\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(sys.modules[__name__], "SCRIPT", script)
+    result = run_example(tmp_path / "unused")
+    assert result.returncode == 7
+    assert result.stdout == "partial stdout\n"
+    assert result.stderr == "native_error=\\xff\\x80\n"
 
 
 def test_single_device_checkpoint_and_tensorboard(tmp_path):

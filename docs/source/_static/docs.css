@@ -1,3 +1,26 @@
+/* Keep prose tables readable within the documentation content column. */
+.rst-content .wy-table-responsive table.docutils {
+  width: 100%;
+}
+
+.rst-content .wy-table-responsive table.docutils th,
+.rst-content .wy-table-responsive table.docutils td {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+#released-tutorial-results table {
+  table-layout: fixed;
+}
+
+#released-tutorial-results th:first-child {
+  width: 5.5rem;
+}
+
+#released-tutorial-results th:nth-child(2) {
+  width: 12rem;
+}
+
 /* Keep tutorial cases and their notebook links visible in the content column. */
 table.nif-tutorial-table {
   width: 100%;

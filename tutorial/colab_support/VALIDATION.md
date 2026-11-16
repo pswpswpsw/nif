@@ -1,5 +1,7 @@
 # Colab tutorial validation
 
+> Historical TensorFlow compatibility record. Use the [tutorial index](../README.md) for the released PyTorch notebooks and experimental T9. The [original dated text](../../docs/archive/2026-11-15/colab-support/VALIDATION.md) is preserved with its source revision and checksums.
+
 Validated on **2026-10-21** with full original workloads. The original notebooks, Markdown, code comments, data sizes, model settings and training schedules are preserved; the repaired notebooks are separate `*_colab.ipynb` copies.
 
 | Tutorial | Colab cells passed | Original workload |

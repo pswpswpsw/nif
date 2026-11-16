@@ -1,10 +1,13 @@
 """Exercise development checks under non-default text/build environments."""
+import ast
 import platform
 from pathlib import Path
 
 import pytest
 import test_public_api_regressions as regressions
 from test_tutorial1_lbfgs import solver_cells
+
+from dev_tests import test_tutorial1_gc_behavior as behavior
 
 
 def test_generator_source_read_uses_utf8_under_gbk_default(monkeypatch):
@@ -80,3 +83,32 @@ def test_exact_fingerprints_require_complete_capture_metadata(
     del incomplete["torch_build_config_sha256"]
     with pytest.raises(pytest.skip.Exception, match="torch_build_config_sha256"):
         regressions.require_recorded_fingerprint_environment(incomplete)
+
+
+@pytest.mark.parametrize(
+    "explicit_gc", [False, True], ids=["primary_default", "optional_gc"]
+)
+def test_training_generator_reader_is_utf8_for_both_consumers(monkeypatch, explicit_gc):
+    expected = behavior.sources("generator")
+    original = Path.read_text
+
+    def gbk_default(path, encoding=None, errors=None, **kwargs):
+        return original(path, encoding=encoding or "gbk", errors=errors, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", gbk_default)
+    actual = behavior.sources("generator")
+    assert actual == expected
+    for source in actual:
+        ast.parse(source)
+    # Both consumer choices use this unchanged source reader; no model training.
+    selector = next(
+        node
+        for node in ast.parse(actual[-1]).body
+        if isinstance(node, ast.Assign)
+        and any(
+            isinstance(t, ast.Name) and t.id == "use_gradient_centralization"
+            for t in node.targets
+        )
+    )
+    choice = True if explicit_gc else ast.literal_eval(selector.value)
+    assert choice is explicit_gc

@@ -5,6 +5,8 @@ snippets have one source. HTML never overwrites the tracked legacy site.
 """
 import argparse
 import ast
+import hashlib
+import json
 import os
 import posixpath
 import re
@@ -13,6 +15,7 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+from pathlib import PurePosixPath
 from urllib.parse import quote
 from urllib.parse import unquote
 from urllib.parse import urlsplit
@@ -31,6 +34,10 @@ GUIDES = {
 README_IMAGES = ("myimage.gif", "compare.gif")
 POST_RELEASE_SOURCES = (
     "examples/self_scaled",
+    "dev_tests/provenance",
+    "scripts/tutorial_catalog.py",
+    "tutorial/catalog.json",
+    "docs/legacy-assets.json",
     "tutorial/9_self_scaled_optimizers_pytorch.ipynb",
     "docs/SELF_SCALED_OPTIMIZERS.md",
 )
@@ -72,10 +79,13 @@ def markdown_sections(text):
         yield fence is not None, "".join(buffered)
 
 
-def rewrite_markdown(text, source_name, tag):
+def rewrite_markdown(text, source_name, tag, destination_name="", guides=None):
     """Resolve site links while leaving fenced executable examples verbatim."""
+    pages = {**GUIDES, **(guides or {})}
 
     def source_ref(name):
+        if name.startswith("docs/archive/"):
+            return "main"
         # These experimental files were added after the immutable v2.0.0 tag.
         if any(
             name == prefix or name.startswith(prefix + "/")
@@ -107,14 +117,19 @@ def rewrite_markdown(text, source_name, tag):
         suffix = ("?" + parts.query if parts.query else "") + (
             "#" + parts.fragment if parts.fragment else ""
         )
-        if name in GUIDES:
-            resolved = GUIDES[name]
+        if name in pages:
+            resolved = pages[name]
+        elif name.startswith("docs/archive/") and name.endswith(".md"):
+            resolved = name.removeprefix("docs/")
         elif name in {"misc/" + image for image in README_IMAGES}:
             resolved = "_static/readme/" + posixpath.basename(name)
         elif name.startswith("docs/source/_static/"):
             resolved = name.removeprefix("docs/source/")
         else:
             resolved = f"{REPOSITORY}/blob/{source_ref(name)}/" + quote(name, safe="/")
+            return "](" + resolved + suffix + ")"
+        if posixpath.dirname(destination_name):
+            resolved = posixpath.relpath(resolved, posixpath.dirname(destination_name))
         return "](" + resolved + suffix + ")"
 
     def prose(content):
@@ -155,13 +170,8 @@ def prepare_source(root, source):
     for name, destination in GUIDES.items():
         text = (root / name).read_bytes().decode("utf-8")
         text = rewrite_markdown(text, name, tag)
-        if destination == "validation.md":
-            text = (
-                ":::{note}\nThis page retains the dated validation record. Historical branch names and "
-                "status descriptions below refer to that recorded snapshot. The comparison records "
-                "contain the later tutorial acceptance decisions.\n:::\n\n" + text
-            )
         (source / destination).write_bytes(text.encode("utf-8"))
+    prepare_archives(root, source)
     images = source / "_static/readme"
     images.mkdir(parents=True, exist_ok=True)
     for name in README_IMAGES:
@@ -169,16 +179,128 @@ def prepare_source(root, source):
     return source
 
 
+def checked_relative_path(name, label):
+    """Reject platform-specific and escaping paths in public asset manifests."""
+    if not isinstance(name, str):
+        raise ValueError("Unsafe " + label + " path")
+    relative = PurePosixPath(name)
+    if (
+        relative.is_absolute()
+        or ".." in relative.parts
+        or "\\" in name
+        or ":" in name
+        or name != relative.as_posix()
+        or not relative.parts
+    ):
+        raise ValueError("Unsafe " + label + " path: " + name)
+    return relative
+
+
+def prepare_archives(root, source):
+    """Render dated Markdown snapshots without changing their retained bytes."""
+    root, source = Path(root), Path(source)
+    for path in sorted((root / "docs/archive").glob("*/manifest.json")):
+        record = json.loads(path.read_text(encoding="utf-8"))
+        prefix = path.parent.relative_to(root / "docs").as_posix()
+        pages = {}
+        verified = {}
+        for name, entry in record["records"].items():
+            checked_relative_path(name, "archive source")
+            relative = checked_relative_path(entry["archive"], "archive asset")
+            snapshot = path.parent / relative
+            if not snapshot.resolve().is_relative_to(path.parent.resolve()):
+                raise ValueError("Unsafe archive asset path: " + entry["archive"])
+            data = snapshot.read_bytes()
+            if (
+                hashlib.sha256(data).hexdigest() != entry["sha256"]
+                or len(data) != entry["bytes"]
+            ):
+                raise ValueError("Changed archived document: " + entry["archive"])
+            if snapshot.suffix == ".md":
+                destination = prefix + "/" + relative.as_posix()
+                pages[name] = destination
+                link_source = entry.get("link_source", name)
+                checked_relative_path(link_source, "archive source")
+                verified[name] = data, link_source
+        for name, (data, link_source) in verified.items():
+            destination = pages[name]
+            current = posixpath.relpath("index.rst", posixpath.dirname(destination))
+            notice = (
+                "---\norphan: true\n---\n\n:::{note}\n"
+                + "Historical snapshot recorded on "
+                + record["snapshot_date"]
+                + " at commit `"
+                + record["source_commit"]
+                + "`. See the [current documentation]("
+                + current
+                + ") for the maintained API and tutorial status.\n:::\n\n"
+            )
+            rendered = rewrite_markdown(
+                data.decode("utf-8"),
+                link_source,
+                record["source_commit"],
+                destination_name=destination,
+                guides=pages,
+            )
+            target = source / destination
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes((notice + rendered).encode("utf-8"))
+        index = path.parent / "README.md"
+        if index.is_file() and "docs/" + prefix + "/README.md" not in pages:
+            destination = prefix + "/README.md"
+            rendered = rewrite_markdown(
+                index.read_text(encoding="utf-8"),
+                "docs/" + destination,
+                record["source_commit"],
+                destination_name=destination,
+            )
+            (source / destination).write_text(
+                "---\norphan: true\n---\n\n" + rendered, encoding="utf-8"
+            )
+
+
 def copy_legacy_site(root, output):
-    """Copy only the previously published HTML site and referenced assets."""
+    """Copy the frozen legacy site without importing later documentation assets."""
     docs = Path(root) / "docs"
-    legacy = Path(output) / "legacy/tensorflow"
+    output = validate_output(root, output)
+    manifest = json.loads((docs / "legacy-assets.json").read_text(encoding="utf-8"))
+    if manifest.get("schema_version") != 1 or not isinstance(
+        manifest.get("files"), dict
+    ):
+        raise ValueError("Unsupported legacy asset manifest")
+    verified = {}
+    for name, entry in manifest["files"].items():
+        checked_relative_path(name, "legacy asset")
+        source = docs / name
+        if not source.resolve().is_relative_to(docs.resolve()):
+            raise ValueError("Unsafe legacy asset path: " + name)
+        data = source.read_bytes()
+        canonical = data
+        if entry.get("text_lf") and b"\r" in data:
+            # Accept a uniform Windows checkout, never mixed or lone CRs.
+            if b"\r" in data.replace(b"\r\n", b"") or data.count(b"\n") != data.count(
+                b"\r\n"
+            ):
+                raise ValueError("Changed legacy asset: " + name)
+            canonical = data.replace(b"\r\n", b"\n")
+        if (
+            hashlib.sha256(canonical).hexdigest() != entry["sha256"]
+            or len(canonical) != entry["bytes"]
+        ):
+            raise ValueError("Changed legacy asset: " + name)
+        verified[name] = data
+    legacy = output / "legacy/tensorflow"
+    # Reset only this generated namespace after verifying every original asset.
+    # Resolve before deletion so a symlink cannot redirect cleanup outside output.
+    if legacy.is_symlink() or not legacy.resolve().is_relative_to(output):
+        raise ValueError("Legacy output escaped the build output directory")
+    if legacy.exists():
+        shutil.rmtree(legacy)
     legacy.mkdir(parents=True, exist_ok=True)
-    for path in docs.iterdir():
-        if path.is_file() and path.suffix in {".html", ".js", ".inv"}:
-            shutil.copyfile(path, legacy / path.name)
-    for name in ("_static", "_sources", "source/_static"):
-        shutil.copytree(docs / name, legacy / name, dirs_exist_ok=True)
+    for name, data in verified.items():
+        target = legacy / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(data)
     return legacy
 
 

@@ -109,6 +109,27 @@ contains the immutable source commits, environment versions, numerical results a
 image hashes. CI also executes every code cell in the explicitly shortened SMOKE
 mode, including environment creation and all three optimization paths.
 
+A separate hosted Google Colab FULL run completed all seven original code cells
+and produced eight figures with the same training budgets, CPU FP64 objective
+and shared-start checks. It used Python 3.13.16 and PyTorch 2.14.1+cu130 on CPU;
+the shared warmup took 369.081 seconds. Independent checkpoint restoration
+reproduced its predictions and physical errors. Its additional 45×800 grid gave:
+
+| Method | RMSE | MAE | Maximum absolute error | QN seconds |
+|---|---:|---:|---:|---:|
+| L-BFGS | 5.92239e-5 | 3.96800e-5 | 4.18842e-4 | 268.381 |
+| SSBFGS | 1.20181e-6 | 8.57544e-7 | 6.78848e-6 | 869.558 |
+| SSBroyden | 3.46040e-7 | 2.29437e-7 | 2.62609e-6 | 950.578 |
+
+All three returned finite states after 1,000 iterations with `iteration_limit`.
+The [hosted execution receipt](source/_static/self_scaled/tutorial9_colab_validation.json)
+records this separate run. The later progress-display update changes only the
+notebook's subprocess output transport; the scientific support code is unchanged.
+All seven current code cells also completed in explicit SMOKE mode in both CI
+and Colab; the [hosted short-run receipt](source/_static/self_scaled/tutorial9_colab_smoke_validation.json)
+records their exact source hashes and captured progress. The receipts distinguish
+these short checks from FULL execution.
+
 The recorded results are single-start CPU comparisons, not multi-seed estimates or universal speed rankings. T4, T7 and T8 have no self-scaled comparison in this collection. The fixed full-batch objective is deliberate: random changes of batch between line-search evaluations have not been validated here.
 
 The frozen author SSBroyden backend can produce nonfinite states in degenerate-curvature conditions. The new runner reports such failures and checks finite parameters, gradients and final dense inverse-Hessian state; it does not present these experiments as hardened production optimizers. The historical normal T1 run had finite final parameters and recomputed predictions, but its final dense Hessian was not retained for retrospective inspection.

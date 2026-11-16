@@ -220,7 +220,16 @@
     "original_transport_reproduction": "FAIL (missing notebook-captured child output)",
     "windows_real_small_child_normal_and_failure": "PASS",
     "linux_real_small_child_normal_and_failure": "PASS",
-    "new_whole_notebook_smoke": "Pending coordinator CI/hosted confirmation",
-    "additional_scientific_optimization": false
+    "new_whole_notebook_smoke": {
+      "result": "PASS",
+      "source_commit": "187cd9148b7f5c15a7bd57cf02c70c07925bfa73",
+      "code_cells_executed": 7,
+      "mode": "SMOKE",
+      "local_checkout_override": true,
+      "url": "https://github.com/pswpswpsw/nif/actions/runs/43795040616"
+    },
+    "independent_small_child_checks_optimizer_steps": 0,
+    "additional_full_budget_optimization_after_transport_change": false,
+    "hosted_whole_notebook_smoke_receipt": "tutorial9_colab_smoke_validation.json"
   }
 }

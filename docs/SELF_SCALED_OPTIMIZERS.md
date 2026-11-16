@@ -94,6 +94,21 @@ These are separate extensions of the accepted tutorials. T2, T3, T5 and T6 origi
 
 ## Validation scope and remaining work
 
+Tutorial 9 completed all seven code cells in a fresh Linux Python 3.13 kernel on
+2026-11-15, including the real GitHub checkout and isolated dependency installation.
+The default FULL workload performed 5,000 shared AdaBelief epochs (20,000 updates)
+and 1,000 quasi-Newton iterations per method, producing eight figures. Independent
+checkpoint restoration reproduced the common initial objective and gradient and
+the physical errors on both grids. All three methods reached their iteration
+ceiling with finite states; none is relabeled as converged.
+
+The notebook retains those actual scientific outputs and labels their source;
+installation and progress logs are omitted. **Run all** computes a new comparison.
+The [full execution receipt](source/_static/self_scaled/tutorial9_validation.json)
+contains the immutable source commits, environment versions, numerical results and
+image hashes. CI also executes every code cell in the explicitly shortened SMOKE
+mode, including environment creation and all three optimization paths.
+
 The recorded results are single-start CPU comparisons, not multi-seed estimates or universal speed rankings. T4, T7 and T8 have no self-scaled comparison in this collection. The fixed full-batch objective is deliberate: random changes of batch between line-search evaluations have not been validated here.
 
 The frozen author SSBroyden backend can produce nonfinite states in degenerate-curvature conditions. The new runner reports such failures and checks finite parameters, gradients and final dense inverse-Hessian state; it does not present these experiments as hardened production optimizers. The historical normal T1 run had finite final parameters and recomputed predictions, but its final dense Hessian was not retained for retrospective inspection.

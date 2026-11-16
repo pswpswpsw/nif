@@ -1,6 +1,8 @@
 """Public regressions for the portable experimental self-scaled tutorial."""
+import contextlib
 import hashlib
 import importlib.util
+import io
 import json
 import os
 import py_compile
@@ -245,3 +247,61 @@ def test_notebook_bootstrap_without_ensurepip_targets_only_child_environment(
     assert created and all(not item.get("with_pip") for item in created)
     assert len(installs) == 3
     assert all(command[4] == str(namespace["SS_PYTHON"]) for command in installs)
+
+
+@pytest.mark.parametrize("exit_code", [0, 3])
+def test_notebook_training_forwards_live_child_output_and_nonzero_exit(
+    tmp_path, exit_code
+):
+    notebook = json.loads(
+        (ROOT / "tutorial/9_self_scaled_optimizers_pytorch.ipynb").read_text(
+            encoding="utf-8"
+        )
+    )
+    training = next(
+        "".join(cell["source"])
+        for cell in notebook["cells"]
+        if cell["cell_type"] == "code"
+        and "command = [str(SS_PYTHON)" in "".join(cell["source"])
+    )
+    acknowledgment = tmp_path / "parent-forwarded-progress"
+    program = tmp_path / "tiny_progress_child.py"
+    program.write_text(
+        "import os,sys,time\nfrom pathlib import Path\n"
+        "ack=Path(os.environ['NIF_TRANSPORT_ACK'])\n"
+        "print('live-progress: step 1', flush=True)\n"
+        "deadline=time.monotonic()+2\n"
+        "while not ack.exists() and time.monotonic()<deadline: time.sleep(.01)\n"
+        "print('ack-before-exit='+str(ack.exists()), flush=True)\n"
+        "print('child-stderr: diagnostic', file=sys.stderr, flush=True)\n"
+        f"sys.exit({exit_code})\n",
+        encoding="utf-8",
+    )
+
+    class LiveCapture(io.StringIO):
+        def write(self, value):
+            if "live-progress: step 1" in value:
+                acknowledgment.touch()
+            return super().write(value)
+
+    captured = LiveCapture()
+    namespace = dict(
+        Path=Path,
+        SS_PYTHON=sys.executable,
+        benchmark=program,
+        SMOKE=False,
+        MODE="FULL",
+        tempfile=tempfile,
+        subprocess=subprocess,
+        child_environment=dict(os.environ, NIF_TRANSPORT_ACK=str(acknowledgment)),
+    )
+    with contextlib.redirect_stdout(captured):
+        if exit_code:
+            with pytest.raises(subprocess.CalledProcessError) as caught:
+                exec(compile(training, "tutorial9-live-transport", "exec"), namespace)
+            assert caught.value.returncode == exit_code
+        else:
+            exec(compile(training, "tutorial9-live-transport", "exec"), namespace)
+    assert "live-progress: step 1" in captured.getvalue()
+    assert "ack-before-exit=True" in captured.getvalue()
+    assert "child-stderr: diagnostic" in captured.getvalue()

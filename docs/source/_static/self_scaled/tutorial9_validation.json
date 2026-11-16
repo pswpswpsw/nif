@@ -1,0 +1,226 @@
+{
+  "result": "PASS",
+  "scope": "Complete original C4 fresh Linux FULL execution and independent saved-result recomputation; subsequent notebook output-transport-only change independently checked with real tiny child processes",
+  "notebook_sha256": "5873131b8c8845ff077f94f82cf0699db436e5bd28b7b17312bda6cf01199e19",
+  "code_cell_hashes": [
+    "d6a472e4c146837430ad6cfc1bb85b2a1e184776b39110b2b70cb567c09afe3a",
+    "63d829d0215d6c1d1483d483a46efca94d4e7aee581879d74e76c3e8b9bc9e45",
+    "ae819030d467e8cec0713e5fd76bd0a9fd918caf1b354c91063cefda50b7048f",
+    "7c0e32d06c372b9db19edeb3e77ff9e7d682a11baa76fa3c38a562bfb355b351",
+    "17c9f311d4a15d4757e7615e375d3d0905c6305af02f3179fe2c1354c4d36587",
+    "1bf9fa1a90c349d3d1d6bc7efd0053aef66c9d1c6a69aca0e21185f1213f1e34",
+    "245263c5e096939dd73ee72a5a679dc9d7051535302a66b2a45d1e9113109dad"
+  ],
+  "executed_code_cells": 7,
+  "error_outputs": 0,
+  "mode": "FULL",
+  "support_commit": "40a0a212d5d2d38078a21d0cb27440439e8c5ae4",
+  "core_ref": "v2.0.0",
+  "core_commit": "462ba32c7f1e45ecf4c9d7cc6e0880bf4f9eafc5",
+  "core_source_url": "https://github.com/pswpswpsw/nif.git",
+  "versions": {
+    "python": "3.13.11",
+    "torch": "2.14.1+cpu",
+    "numpy": "2.1.3",
+    "scipy": "1.16.3",
+    "nif": "2.0.0",
+    "matplotlib": "3.10.0",
+    "protobuf": "7.36.2",
+    "google-crc32c": "1.9.0",
+    "tfrecord": "1.14.6"
+  },
+  "warmup_epochs": 5000,
+  "actual_warmup_optimizer_steps": 20000,
+  "full_batch_rows": 2000,
+  "max_iterations_per_method": 1000,
+  "dtype": "float64",
+  "device": "cpu",
+  "threads": 2,
+  "shared_start_parameter_hash": "3b9456cf9cedba7ac4e4766822467685781edc1c4c717a2a24737517fcf05f44",
+  "shared_start_gradient_hash": "00630318961933372993475d1e7248011f47bfbd9671e62dadf8adf197c35db7",
+  "shared_start_objective": 3.467457627350036e-05,
+  "batch_order_sha256": "8fd3cccd4eb7aec18d404df2c609fb177a65e61bd7055a63f10c2f7f3e14c2ae",
+  "train_grid": [
+    10,
+    200
+  ],
+  "extra_interpolation_grid": [
+    45,
+    800
+  ],
+  "figures": 8,
+  "inline_png_outputs": 8,
+  "warmup_seconds": 201.02951969699996,
+  "arms": {
+    "lbfgs": {
+      "metrics": {
+        "train": {
+          "mse": 1.6856387216365382e-09,
+          "rmse": 4.1056530803716696e-05,
+          "mae": 2.6170492776657616e-05,
+          "max_abs": 0.0003024004146950643
+        },
+        "dense": {
+          "mse": 4.417332965881381e-09,
+          "rmse": 6.646301953629086e-05,
+          "mae": 4.1327656464303685e-05,
+          "max_abs": 0.0004492191573882022
+        }
+      },
+      "status": {
+        "converged": false,
+        "failed": false,
+        "state_finite": true,
+        "termination": "iteration_limit",
+        "backend_nit": 1000,
+        "backend_nfev": 2942
+      },
+      "elapsed_seconds": 155.277012173,
+      "iterations": 1000,
+      "evaluations": 2943
+    },
+    "ssbfgs": {
+      "metrics": {
+        "train": {
+          "mse": 8.848754888958804e-13,
+          "rmse": 9.406782068783566e-07,
+          "mae": 7.217860538145911e-07,
+          "max_abs": 4.97387253881737e-06
+        },
+        "dense": {
+          "mse": 8.640933438272086e-13,
+          "rmse": 9.295662127181735e-07,
+          "mae": 7.184142986066432e-07,
+          "max_abs": 5.290453252948531e-06
+        }
+      },
+      "status": {
+        "backend_success": false,
+        "backend_status": 1,
+        "message": "Maximum number of iterations has been exceeded.",
+        "finite": {
+          "x": true,
+          "jac": true,
+          "hess_inv": true,
+          "objective": true
+        },
+        "state_finite": true,
+        "converged": false,
+        "termination": "iteration_limit",
+        "backend_nit": 1000,
+        "backend_nfev": 1023,
+        "backend_njev": 1023
+      },
+      "elapsed_seconds": 428.812900398,
+      "iterations": 1000,
+      "evaluations": 1024
+    },
+    "ssbroyden": {
+      "metrics": {
+        "train": {
+          "mse": 1.0703911368789156e-13,
+          "rmse": 3.271683262296208e-07,
+          "mae": 2.301826963647778e-07,
+          "max_abs": 1.4225771325904821e-06
+        },
+        "dense": {
+          "mse": 4.205498792844807e-13,
+          "rmse": 6.484981721519967e-07,
+          "mae": 3.100714907023428e-07,
+          "max_abs": 1.0375682434498534e-05
+        }
+      },
+      "status": {
+        "backend_success": false,
+        "backend_status": 1,
+        "message": "Maximum number of iterations has been exceeded.",
+        "finite": {
+          "x": true,
+          "jac": true,
+          "hess_inv": true,
+          "objective": true
+        },
+        "state_finite": true,
+        "converged": false,
+        "termination": "iteration_limit",
+        "backend_nit": 1000,
+        "backend_nfev": 1034,
+        "backend_njev": 1034
+      },
+      "elapsed_seconds": 394.2140616190002,
+      "iterations": 1000,
+      "evaluations": 1035
+    }
+  },
+  "interpretation": "Execution, provenance and numerical reporting passed. Raw optimizer termination states remain distinct from convergence; this is a single-start CPU comparison.",
+  "full_notebook_elapsed_seconds_including_setup": 1779.4122647049999,
+  "author_source": {
+    "repository": "EliKiani/Optimizing_the_Optimizer_PINNs",
+    "commit": "990a82c1353cbda9f5afee3200b222fdb821c521",
+    "url": "https://raw.githubusercontent.com/EliKiani/Optimizing_the_Optimizer_PINNs/990a82c1353cbda9f5afee3200b222fdb821c521/_optimize.py",
+    "sha256": "65958e6bba33631ca5aeab9ecc309536199c08a7e380fc0487d404e93ae2687e",
+    "bytes": 160175,
+    "scipy": "1.16.3",
+    "distribution": "Runtime download; author modifications are not redistributed in this repository"
+  },
+  "visual_inspection": "All eight actual FULL PNGs inspected; original-style views and separately labeled physical/absolute-error views retain the specified axes and scales",
+  "executed_source_commit": "23b6909a65e5e0b76c61129537552e519e81ec41",
+  "executed_source_notebook_sha256": "5873131b8c8845ff077f94f82cf0699db436e5bd28b7b17312bda6cf01199e19",
+  "published_notebook_sha256": "274655250fd0e7812a45ad88469fbea38093ab1b46cd21a1dc8f0b2f309e7d24",
+  "published_original_cell_sources_preserved": false,
+  "published_png_bytes_unchanged": true,
+  "published_png_sha256": [
+    "27d31d016f0b9be39b8f3431ea5673453b12924630d2b53f8a9ec8e0a2bbd829",
+    "570314a905ae8390cf45cd63bbe111d8e81811e0d8a3f63a0ab2210ccfe1db6d",
+    "ebd01eda46f6c11bd36a01698f84a51db5e50b87bf25dcdaa6242b0fa3b0176c",
+    "2919da131f8b560afee999372669625259ddb76e435d90d905661de792c8e582",
+    "575facca2767288b7f09fad044f5bc02aac649b15804b2073fe8b5535f67b3a9",
+    "d5425aee7e4cc7be5a60a55b3d4d3ddb38bc29f391eda7d8bd449b5cf0523895",
+    "80f5b137d375c870220b0c277ac21624cb4dcfc71b75a10e318464b259bf9a44",
+    "05abb25f4f048f8dde795515ffa4c5d24ec5ee1d2ec8274787b97054f144eaf9"
+  ],
+  "publication_note": "Actual original C4 Linux FULL outputs retained byte-for-byte for scientific PNGs; one later output-transport-only code cell change independently verified without retraining. Installation/progress logs and local paths omitted; editorial provenance Markdown retained.",
+  "full_execution_code_cell_hashes": [
+    "d6a472e4c146837430ad6cfc1bb85b2a1e184776b39110b2b70cb567c09afe3a",
+    "63d829d0215d6c1d1483d483a46efca94d4e7aee581879d74e76c3e8b9bc9e45",
+    "ae819030d467e8cec0713e5fd76bd0a9fd918caf1b354c91063cefda50b7048f",
+    "7c0e32d06c372b9db19edeb3e77ff9e7d682a11baa76fa3c38a562bfb355b351",
+    "17c9f311d4a15d4757e7615e375d3d0905c6305af02f3179fe2c1354c4d36587",
+    "1bf9fa1a90c349d3d1d6bc7efd0053aef66c9d1c6a69aca0e21185f1213f1e34",
+    "245263c5e096939dd73ee72a5a679dc9d7051535302a66b2a45d1e9113109dad"
+  ],
+  "published_code_cell_hashes": [
+    "d6a472e4c146837430ad6cfc1bb85b2a1e184776b39110b2b70cb567c09afe3a",
+    "63d829d0215d6c1d1483d483a46efca94d4e7aee581879d74e76c3e8b9bc9e45",
+    "21665a23ffda90671a059a3a565f090bdb34d7dd4aa3f07791b3a7a7c814a896",
+    "7c0e32d06c372b9db19edeb3e77ff9e7d682a11baa76fa3c38a562bfb355b351",
+    "17c9f311d4a15d4757e7615e375d3d0905c6305af02f3179fe2c1354c4d36587",
+    "1bf9fa1a90c349d3d1d6bc7efd0053aef66c9d1c6a69aca0e21185f1213f1e34",
+    "245263c5e096939dd73ee72a5a679dc9d7051535302a66b2a45d1e9113109dad"
+  ],
+  "published_code_cell_hashes_by_id": {
+    "ss-tutorial-01": "d6a472e4c146837430ad6cfc1bb85b2a1e184776b39110b2b70cb567c09afe3a",
+    "ss-tutorial-03": "63d829d0215d6c1d1483d483a46efca94d4e7aee581879d74e76c3e8b9bc9e45",
+    "ss-tutorial-05": "21665a23ffda90671a059a3a565f090bdb34d7dd4aa3f07791b3a7a7c814a896",
+    "ss-tutorial-07": "7c0e32d06c372b9db19edeb3e77ff9e7d682a11baa76fa3c38a562bfb355b351",
+    "ss-tutorial-09": "17c9f311d4a15d4757e7615e375d3d0905c6305af02f3179fe2c1354c4d36587",
+    "ss-tutorial-11": "1bf9fa1a90c349d3d1d6bc7efd0053aef66c9d1c6a69aca0e21185f1213f1e34",
+    "ss-tutorial-13": "245263c5e096939dd73ee72a5a679dc9d7051535302a66b2a45d1e9113109dad"
+  },
+  "published_original_cell_source_differences": [
+    "ss-tutorial-05"
+  ],
+  "published_unchanged_original_code_cells": 6,
+  "output_transport_followup": {
+    "scope": "Popen pipe forwards stdout/stderr through notebook parent print and propagates nonzero return codes",
+    "changed_code_cell_id": "ss-tutorial-05",
+    "child_program_arguments_environment_and_cwd_unchanged": true,
+    "scientific_support_commit_unchanged": "40a0a212d5d2d38078a21d0cb27440439e8c5ae4",
+    "full_scientific_outputs_generated_before_transport_change": true,
+    "original_transport_reproduction": "FAIL (missing notebook-captured child output)",
+    "windows_real_small_child_normal_and_failure": "PASS",
+    "linux_real_small_child_normal_and_failure": "PASS",
+    "new_whole_notebook_smoke": "Pending coordinator CI/hosted confirmation",
+    "additional_scientific_optimization": false
+  }
+}

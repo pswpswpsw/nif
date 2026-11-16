@@ -4,7 +4,10 @@ import importlib.util
 import json
 import os
 import py_compile
+import subprocess
 import sys
+import tempfile
+import venv
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -192,3 +195,53 @@ def test_notebook_report_display_works_with_non_utf8_default_locale(
         compile(display_source, "tutorial9-report-display", "exec"),
         dict(RUN_DIR=tmp_path, MODE="SMOKE", json=json),
     )
+
+
+def test_notebook_bootstrap_without_ensurepip_targets_only_child_environment(
+    tmp_path, monkeypatch
+):
+    notebook = json.loads(
+        (ROOT / "tutorial/9_self_scaled_optimizers_pytorch.ipynb").read_text(
+            encoding="utf-8"
+        )
+    )
+    bootstrap = next(
+        "".join(cell["source"])
+        for cell in notebook["cells"]
+        if cell["cell_type"] == "code" and "venv.EnvBuilder" in "".join(cell["source"])
+    )
+    real_builder = venv.EnvBuilder
+    real_output = subprocess.check_output
+    created = []
+    installs = []
+
+    def without_ensurepip(*args, **kwargs):
+        if kwargs.get("with_pip"):
+            raise subprocess.CalledProcessError(1, ["python", "-m", "ensurepip"])
+        created.append(kwargs)
+        return real_builder(*args, **kwargs)
+
+    def capture_installs(command, **kwargs):
+        assert "install" in command
+        assert command[:4] == [sys.executable, "-m", "pip", "--python"]
+        child = Path(command[4]).resolve()
+        assert child.is_relative_to(tmp_path.resolve())
+        assert child != Path(sys.executable).resolve()
+        installs.append(command)
+        return 0
+
+    def bootstrap_output(command, **kwargs):
+        if "import json,sys,nif,torch" in " ".join(command):
+            return json.dumps(dict(nif="2.0.0", numpy="2.1.3", scipy="1.16.3"))
+        return real_output(command, **kwargs)
+
+    monkeypatch.setenv("NIF_SS_LOCAL_REPO", str(ROOT))
+    monkeypatch.setattr(tempfile, "gettempdir", lambda: str(tmp_path))
+    monkeypatch.setattr(venv, "EnvBuilder", without_ensurepip)
+    monkeypatch.setattr(subprocess, "check_call", capture_installs)
+    monkeypatch.setattr(subprocess, "check_output", bootstrap_output)
+    namespace = dict(os=os, SMOKE=True, MODE="SMOKE")
+    exec(compile(bootstrap, "tutorial9-bootstrap", "exec"), namespace)
+    assert created and all(not item.get("with_pip") for item in created)
+    assert len(installs) == 3
+    assert all(command[4] == str(namespace["SS_PYTHON"]) for command in installs)

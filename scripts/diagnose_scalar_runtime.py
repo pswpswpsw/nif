@@ -175,7 +175,7 @@ def main():
     phases = []
     for name, disabled, reference_root in (
         ("automatic", None, None),
-        ("numpy-scalar-power", "AVX512_SKX", None),
+        ("numpy-scalar-power", "AVX512F", None),
         ("numpy-scalar-operators", None, candidate_root),
     ):
         environment = os.environ.copy()
